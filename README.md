@@ -1,5 +1,5 @@
 # PPS-17-cml
-Progetto per il corso di Paradigmi di Programmazione Software AA.2017/2018
+Progetto per il corso di Paradigmi di Programmazione e Sviluppo AA.2017/2018
 
 ## Requisiti 
 
