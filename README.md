@@ -5,9 +5,12 @@ Progetto per il corso di Paradigmi di Programmazione Software AA.2017/2018
 
 ## Getting started
 ### Prerequisites
-Java 1.8 https://www.java.com/it/download/faq/java8.xml
-Scala 2.12 https://www.scala-lang.org/
-Gradle 4.10.2 https://gradle.org/releases/
+Java 1.8 https://www.java.com/it/download/faq/java8.xmln 
+
+Scala 2.12 https://www.scala-lang.org/ 
+
+Gradle 4.10.2 https://gradle.org/releases/ 
+
 
 ## Build with
 
