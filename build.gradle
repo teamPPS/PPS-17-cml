@@ -12,8 +12,9 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.12.2'
 
     //ScalaTest testing framework
-    testCompile 'junit:junit:4.12'
+//    testCompile 'junit:junit:4.12'
     testCompile "org.scalatest:scalatest_2.12:3.0.1"
+    testRuntime 'org.pegdown:pegdown:1.4.2'
 
     // Use Scoverage for checking the tests covered
     scoverage 'org.scoverage:scalac-scoverage-plugin_2.12:1.3.1', 'org.scoverage:scalac-scoverage-runtime_2.12:1.3.1'
