@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'scala'
-//apply plugin: 'scalaStyle'
+apply plugin: 'org.scoverage'
+apply plugin: "com.github.maiflai.scalatest"
 
 repositories {
     jcenter()
@@ -12,22 +13,15 @@ dependencies {
 
     //ScalaTest testing framework
     testCompile 'junit:junit:4.12'
-    testCompile "org.scalatest:scalatest_2.12:3.0.5"
+    testCompile "org.scalatest:scalatest_2.12:3.0.1"
 
     // Use Scoverage for checking the tests covered
-//    scoverage 'org.scoverage:scalac-scoverage-plugin_2.12:1.3.1', 'org.scoverage:scalac-scoverage-runtime_2.12:1.3.1'
+    scoverage 'org.scoverage:scalac-scoverage-plugin_2.12:1.3.1', 'org.scoverage:scalac-scoverage-runtime_2.12:1.3.1'
+
 //    testCompile "org.scalacheck:scalacheck_2.12:1.14.0"
 
-    // Plug-in to show scalaStyle warnings
-//    classpath "org.github.ngbinh.scalastyle:gradle-scalastyle-plugin_2.11:1.0.1"
 }
 
-//scalaStyle {
-//    configLocation = "/path/to/scalaStyle.xml"
-//    includeTestSourceDirectory = true
-//    source = "src/main/scala"
-//    testSource = "src/test/scala"
-//}
 
 // Enabling Checkstyle
 apply plugin: 'checkstyle'
@@ -61,3 +55,29 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
 }
+
+apply plugin: 'scalaStyle'
+scalaStyle {
+    configLocation = "/path/to/scalaStyle.xml" //TODO: cambiare il path
+    includeTestSourceDirectory = true
+    source = "src/main/scala" //TODO: cambiare il path
+    testSource = "src/test/scala" //TODO: cambiare il path
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.maiflai:gradle-scalatest:0.23"
+
+        //scalaStyle warnings (gradlew <project> scalaStyle)
+        classpath "org.github.ngbinh.scalastyle:gradle-scalastyle-plugin_2.11:1.0.1"
+
+        //scoverage
+        classpath "gradle.plugin.org.scoverage:gradle-scoverage:2.3.0"
+    }
+}
+
