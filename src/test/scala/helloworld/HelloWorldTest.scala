@@ -5,7 +5,9 @@ import org.scalatest.FunSuite
 class HelloWorldTest extends FunSuite {
 
   test("testMain") {
-    println("ciao")
+    val left = 1
+    val right = 1
+    assert(left == right)
   }
 
 }
