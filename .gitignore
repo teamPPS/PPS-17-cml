@@ -4,4 +4,4 @@
 build/
 .idea/
 latest-reports/
-config/
+out/

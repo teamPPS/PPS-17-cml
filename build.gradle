@@ -4,6 +4,8 @@ apply plugin: "com.github.maiflai.scalatest"
 apply plugin: 'scalaStyle'
 apply plugin: "org.scoverage"
 
+def scalaStyleReport, scoverageReport
+
 repositories {
     jcenter()
     mavenCentral()
@@ -20,8 +22,9 @@ dependencies {
     scoverage 'org.scoverage:scalac-scoverage-plugin_2.12:1.3.1'
     scoverage 'org.scoverage:scalac-scoverage-runtime_2.12:1.3.1'
 
-    build.finalizedBy scalaStyle
-    build.finalizedBy reportScoverage
+    scalaStyleReport = build.finalizedBy scalaStyle
+    scoverageReport =  build.finalizedBy reportScoverage
+
 }
 
 buildscript {
@@ -45,7 +48,7 @@ scalaStyle {
     testSource = "src/test/scala"
 }
 
-// Crea i report
+// Moves reports to static folder
 reportScoverage.doLast {
     ant.move file: "${buildDir}/reports/scoverage",
             todir: "latest-reports/${project.name}"
