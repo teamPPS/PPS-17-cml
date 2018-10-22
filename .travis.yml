@@ -6,4 +6,7 @@ before_install:
  - chmod +x gradlew
  
 script:
-- './gradlew clean build -P=travis'
+- './gradlew clean build'
+
+
+// -P=travis
