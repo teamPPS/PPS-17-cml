@@ -7,6 +7,3 @@ before_install:
  
 script:
 - './gradlew clean build'
-
-
-// -P=travis
