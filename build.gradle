@@ -51,5 +51,5 @@ scalaStyle {
 // Moves reports to static folder
 reportScoverage.doLast {
     ant.move file: "${buildDir}/reports/scoverage",
-            todir: "latest-reports/${project.name}"
+            todir: "reports/${project.name}"
 }

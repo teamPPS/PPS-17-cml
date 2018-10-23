@@ -1,0 +1,10 @@
+apply plugin: 'scala'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.2'
+
+}
