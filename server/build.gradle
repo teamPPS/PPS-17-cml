@@ -5,6 +5,11 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile 'org.scala-lang:scala-library:2.12.2'
+    implementation 'org.scala-lang:scala-library:2.12.2'
+
+    compile 'io.vertx:vertx-web-client-scala_2.12:3.5.4'
+    compile 'io.vertx:vertx-web-scala_2.12:3.5.4'
+    compile "io.vertx:vertx-lang-scala_2.12:3.5.4"
+    implementation 'io.vertx:vertx-jdbc-client-scala_2.12:3.5.2'
 
 }

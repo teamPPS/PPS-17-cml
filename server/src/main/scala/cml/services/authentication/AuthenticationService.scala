@@ -1,6 +1,6 @@
 package cml.services.authentication
 
-import scala.concurrent.Future
+import scala.concurrent._
 
 /**
   * Trait for authentication service
@@ -15,6 +15,7 @@ trait AuthenticationService {
     * @param password password to register
     * @return a future
     */
+
   def register (username: String, password: String): Future[String]
 
   /**
@@ -23,6 +24,7 @@ trait AuthenticationService {
     * @param password password decided by the user
     * @return a future completes successfully, otherwise it fails.
     */
+
   def login (username: String, password: String): Future[String]
 
   /**
@@ -30,21 +32,40 @@ trait AuthenticationService {
     * @param username username with with which the user authenticates himself
     * @return a future if the user logout successful
     */
+
   def logout (username: String) : Future[Unit]
 
 }
 
+/**
+  *
+  */
 object AuthenticationService {
 
-  // apply
+  private val registerQuery =
+    s"""
+        INSERT INTO user
+        VALUES (?, ?)
+    """
 
-  class AuthenticationServiceImpl extends AuthenticationService{
+  private val USERNAME = "username"
+  private val PASSWORD = "password"
+  private val loginQuery =
+    s"""
+        SELECT *
+        FROM user
+        WHERE $USERNAME = ?
+        AND $PASSWORD = ?
+    """
 
-    override def register(username: String, password: String): Future[String] = ???
-    // POST
-    override def login(username: String, password: String): Future[String] = ???
-    // GET
-    override def logout(username: String): Future[Unit] = ???
-    // PUT ?
-  }
+}
+
+case class AuthenticationServiceImpl() extends AuthenticationService {
+
+  //bisogna fare connessione con il DB
+  override def register(checkUsername: String, checkPassword: String): Future[String] = ???
+
+  override def login(username: String, password: String): Future[String] = ???
+
+  override def logout(username: String): Future[Unit] = ???
 }
