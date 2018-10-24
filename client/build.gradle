@@ -1,0 +1,16 @@
+apply plugin: 'scala'
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.2'
+    compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.12'
+
+    //Akka HTTP
+    compile group: 'com.typesafe.akka', name: 'akka-http_2.12',   version: '10.1.5'
+    compile group: 'com.typesafe.akka', name: 'akka-stream_2.12', version: '2.5.12'
+}
+
