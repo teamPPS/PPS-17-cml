@@ -76,7 +76,7 @@ class AuthenticationVerticle extends RouterVerticle with CheckOperation {
       authenticationService.flatMap(_.delete(username)).onComplete{
         case Success(_) =>
           sendResponse(OK,_)
-        case Failure(_) => sendResponse(UNAUTHORIZED,_)
+        case Failure(_) => sendResponse(UNAUTHORIZED,"")
       }
     }
   }
