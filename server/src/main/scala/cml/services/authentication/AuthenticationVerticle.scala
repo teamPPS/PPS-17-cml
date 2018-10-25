@@ -73,10 +73,10 @@ class AuthenticationVerticle extends RouterVerticle with CheckOperation {
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      authenticationService.flatMap(_.delete(username)).onComplete{
+      /*authenticationService.flatMap(_.delete(username)).onComplete{
         case Success(_) =>
           sendResponse(OK,_)
-        case Failure(_) => sendResponse(UNAUTHORIZED,"")
+        case Failure(_) => sendResponse(UNAUTHORIZED,"")*/
       }
     }
   }
