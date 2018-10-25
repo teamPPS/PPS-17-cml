@@ -3,7 +3,6 @@ package cml.core
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.http.HttpServer
 import io.vertx.scala.ext.web.Router
-
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
 
@@ -11,7 +10,8 @@ import scala.util.{Failure, Success}
   * This is abstract class implements RouterVerticle. In this way, each micro-services allowed to follow its path
   */
 
-abstract class RouterVerticle extends ScalaVerticle{
+abstract class RouterVerticle extends ScalaVerticle {
+
   var server: HttpServer = _
   val PORT = 8080
 
@@ -27,7 +27,7 @@ abstract class RouterVerticle extends ScalaVerticle{
       .onComplete({
         case Success(startedServer) =>
           println(s"Server successfully started on port: $PORT")
-          this.server = startedServer
+          server = startedServer
           p.success(())
         case Failure(ex) =>
           println(s"Server failed to start on port: $PORT, b/c ${ex.getCause}")
@@ -49,5 +49,12 @@ abstract class RouterVerticle extends ScalaVerticle{
     * @param router is router to initialize
     */
   def initializeRouter(router: Router): Unit
+
+  /**
+    * Initializes the server
+    *
+    * @return a future when server is initialized
+    */
+  def initializeServer: Future[_] = Future.successful(())
 
 }
