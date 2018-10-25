@@ -77,7 +77,6 @@ class AuthenticationVerticle extends RouterVerticle with CheckOperation {
         case Success(_) =>
           sendResponse(OK,_)
         case Failure(_) => sendResponse(UNAUTHORIZED,"")*/
-      }
     }
   }
 }
