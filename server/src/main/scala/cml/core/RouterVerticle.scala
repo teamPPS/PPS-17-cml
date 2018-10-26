@@ -57,6 +57,6 @@ abstract class RouterVerticle extends ScalaVerticle {
     *
     * @return a future when server is initialized
     */
-  abstract def initializeServer: Future[_] = Future.successful(())
+  def initializeServer: Future[_] = Future.successful(())
 
 }
