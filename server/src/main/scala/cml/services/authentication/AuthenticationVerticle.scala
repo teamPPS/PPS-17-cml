@@ -1,12 +1,9 @@
 package cml.services.authentication
 
-import cml.core.{CheckOperation, JWTAuthentication, RouterVerticle, TokenAuthentication}
-import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
+import cml.core.{RoutingOperation, JWTAuthentication, RouterVerticle, TokenAuthentication}
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.core.Handler
-import io.vertx.scala.core.http.HttpServerRequest
 import io.vertx.scala.ext.web.{Router, RoutingContext}
-
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
@@ -16,7 +13,7 @@ import scala.util.{Failure, Success}
   * @author Chiara Volonnino
   */
 
-class AuthenticationVerticle extends RouterVerticle with CheckOperation {
+class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
 
   private val GENERAL_PATH = "/api/authentication"
   private val REGISTER_API = "/register"
@@ -36,7 +33,7 @@ class AuthenticationVerticle extends RouterVerticle with CheckOperation {
   private def register: Handler[RoutingContext] = implicit routingContext => {
     println("Receive register request")
     for(
-      request <- gerHeaderRequest;
+      request <- gerRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(request)
     ) yield {
       authenticationService.flatMap(_.register(username, password)).onComplete {
@@ -50,7 +47,7 @@ class AuthenticationVerticle extends RouterVerticle with CheckOperation {
   private def login: Handler[RoutingContext] = implicit routingContext => {
     println("Receive login request")
     for (
-      headerAuthorization <- routingContext.request.getHeader(HttpHeaderNames.AUTHORIZATION.toString());
+      headerAuthorization <- gerRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(headerAuthorization)
     ) yield {
       authenticationService.flatMap(_.login(username, password)).onComplete {
@@ -69,14 +66,15 @@ class AuthenticationVerticle extends RouterVerticle with CheckOperation {
   private def delete: Handler[RoutingContext] = implicit routingContext => {
     println("Receive delete request")
     for (
-      headerAuthorization <- routingContext.request.getHeader(HttpHeaderNames.AUTHORIZATION.toString());
+      headerAuthorization <- gerRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      /*authenticationService.flatMap(_.delete(username)).onComplete{
+      authenticationService.map(_.delete(username)).onComplete {
         case Success(_) =>
-          sendResponse(OK,_)
-        case Failure(_) => sendResponse(UNAUTHORIZED,"")*/
+          sendResponse(OK, _)
+        case Failure(_) => sendResponse(UNAUTHORIZED, "")
+      }
     }
   }
 }

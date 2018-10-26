@@ -20,6 +20,7 @@ object JWTAuthentication {
 
   /**
     * Create a token from a claim
+    *
     * @param claim is the text use to create a token
     * @return token for the request
     */
@@ -30,6 +31,7 @@ object JWTAuthentication {
 
   /**
     * Decode existent token
+    *
     * @param token is the token to decode
     * @return the content of token decoded
     */
@@ -43,6 +45,7 @@ object JWTAuthentication {
 
   /**
     * Validate a token
+    *
     * @param token token to validate
     * @return true if token is valid, false in opposite case
     */
@@ -52,6 +55,7 @@ object JWTAuthentication {
 
   /**
     * Create a token by username
+    *
     * @param username username to encode
     * @return encode token
     */
@@ -62,6 +66,7 @@ object JWTAuthentication {
 
   /**
     * Decode username token
+    *
     * @param token token to decode
     * @return username
     */

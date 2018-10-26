@@ -8,6 +8,8 @@ import scala.util.{Failure, Success}
 
 /**
   * This is abstract class implements RouterVerticle. In this way, each micro-services allowed to follow its path
+  *
+  * @author Chiara Volonnino
   */
 
 abstract class RouterVerticle extends ScalaVerticle {
@@ -55,6 +57,6 @@ abstract class RouterVerticle extends ScalaVerticle {
     *
     * @return a future when server is initialized
     */
-  def initializeServer: Future[_] = Future.successful(())
+  abstract def initializeServer: Future[_] = Future.successful(())
 
 }

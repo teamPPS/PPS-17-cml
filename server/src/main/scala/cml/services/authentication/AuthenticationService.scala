@@ -38,7 +38,6 @@ trait AuthenticationService {
   /**
     * To delete user from database
     * @param username username to delete
-    * @param password password to delete
     * @return a future if the delete user successful
     */
   def delete (username: String): Future[Unit]
@@ -52,7 +51,7 @@ trait AuthenticationService {
 }
 
 /**
-  *
+  * This object allows you to create a SQLQueries
   */
 object AuthenticationService {
 
@@ -82,7 +81,7 @@ object AuthenticationService {
 
 }
 
-case class AuthenticationServiceImpl() extends AuthenticationService {
+class AuthenticationServiceImpl() extends AuthenticationService {
 
   //bisogna fare connessione con il DB
   override def register(checkUsername: String, checkPassword: String): Future[String] = ???
