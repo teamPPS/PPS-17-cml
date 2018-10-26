@@ -72,7 +72,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
     ) yield {
       authenticationService.map(_.delete(username)).onComplete {
         case Success(_) =>
-          sendResponse(OK, _)
+          sendResponse(OK, username)
         case Failure(_) => sendResponse(UNAUTHORIZED, "")
       }
     }
