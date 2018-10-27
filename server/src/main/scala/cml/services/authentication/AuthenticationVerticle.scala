@@ -20,6 +20,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
   private val LOGIN_API = "/login"
   private val LOGOUT_API = "/logout"
   private val DELETE_API = "/delete"
+  private val VALIDATION_TOKEN_API = "/validationToken"
 
   private var authenticationService: Future[AuthenticationService] = _
 
@@ -28,12 +29,13 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
     router get GENERAL_PATH + LOGIN_API handler login
     router put GENERAL_PATH + LOGOUT_API handler logout
     router delete GENERAL_PATH + DELETE_API handler delete
+    router get GENERAL_PATH + VALIDATION_TOKEN_API handler validationToken
   }
 
   private def register: Handler[RoutingContext] = implicit routingContext => {
     println("Receive register request")
     for(
-      request <- gerRequestAndHeader;
+      request <- getRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(request)
     ) yield {
       authenticationService.flatMap(_.register(username, password)).onComplete {
@@ -47,7 +49,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
   private def login: Handler[RoutingContext] = implicit routingContext => {
     println("Receive login request")
     for (
-      headerAuthorization <- gerRequestAndHeader;
+      headerAuthorization <- getRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(headerAuthorization)
     ) yield {
       authenticationService.flatMap(_.login(username, password)).onComplete {
@@ -66,15 +68,29 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
   private def delete: Handler[RoutingContext] = implicit routingContext => {
     println("Receive delete request")
     for (
-      headerAuthorization <- gerRequestAndHeader;
+      headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
       authenticationService.map(_.delete(username)).onComplete {
-        case Success(_) =>
-          sendResponse(OK, username)
+        case Success(_) => sendResponse(OK, username)
         case Failure(_) => sendResponse(UNAUTHORIZED, "")
       }
     }
+  }
+
+  private def validationToken: Handler[RoutingContext] = implicit routingContext => {
+    println("Receive validationToken request")
+    for (
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      authenticationService.map(_.validationToken(username)).onComplete {
+        case Success(_) => sendResponse(OK, username)
+        case Failure(_) => sendResponse(UNAUTHORIZED, "")
+      }
+    }
+
   }
 }

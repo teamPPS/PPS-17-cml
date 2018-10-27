@@ -14,7 +14,6 @@ import scala.util.{Failure, Success}
 object JWTAuthentication {
 
   val USERNAME: String = "username"
-
   private val secretKey = "secretKey"
   private val withAlgorithm = JwtAlgorithm.HS256
 

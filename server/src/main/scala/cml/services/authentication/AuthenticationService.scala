@@ -43,6 +43,13 @@ trait AuthenticationService {
   def delete (username: String): Future[Unit]
 
   /**
+    * Check username and then valid a token
+    * @param username to check
+    * @return a future if username found
+    */
+  def validationToken(username: String): Future[Unit]
+
+  /**
     * To connect service with database
     * @return
     */
@@ -78,6 +85,13 @@ object AuthenticationService {
         WHERE $USERNAME_DELETE= ?
     """
 
+  private val USERNAME_VALIDATION_TOKEN = "username_validationToken"
+  private val validationTokenQuery =
+    s"""
+       SELECT *
+       FROM user
+       WHERE $USERNAME_VALIDATION_TOKEN = ?
+     """
 
 }
 
@@ -91,6 +105,8 @@ class AuthenticationServiceImpl() extends AuthenticationService {
   override def logout(username: String): Future[Unit] = ???
 
   override def delete(username: String): Future[Unit] = ???
+
+  override def validationToken(username: String): Future[Unit] = ???
 
   override def connection: Future[Unit] = ???
 }

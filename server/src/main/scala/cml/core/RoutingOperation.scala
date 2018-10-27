@@ -17,7 +17,7 @@ trait RoutingOperation {
     * @param routingContext is implicit routing context
     * @return A Optional with the header or None
     */
-  def gerRequestAndHeader(implicit routingContext: RoutingContext): Option[String] = {
+  def getRequestAndHeader(implicit routingContext: RoutingContext): Option[String] = {
     routingContext.request().getHeader(HttpHeaderNames.AUTHORIZATION.toString())
   }
 
