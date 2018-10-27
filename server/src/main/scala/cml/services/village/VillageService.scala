@@ -1,30 +1,49 @@
 package cml.services.village
 
-import java.util.Optional
+import scala.concurrent.Future
+
 
 /**
-  * Trail for village service
+  * Village service
   *
-  * @author Chiara Volonnino
+  * @author ecavina
   */
-trait VillageService {
+sealed trait VillageService {
 
-  def createVillage(villageIdentifier: String, villageName: String) : Optional[String]
+  /**
+    * To execute creation of a village
+    * @param villageIdentifier
+    * @param villageName
+    * @return a scala future
+    */
+  def createVillage(villageIdentifier: String, villageName: String) : Future[String]
 
-  def enterVillage(villageIdentifier: String) : Optional[Unit]
+  /**
+    * To enter the village
+    * @param villageIdentifier
+    * @return a scala future
+    */
+  def enterVillage(villageIdentifier: String) : Future[Unit]
 
-  def exitVillage(villageIdentifier: String) : Optional[Unit]
+  /**
+    * To exit the village
+    * @param villageIdentifier
+    * @return a scala future
+    */
+  def exitVillage(villageIdentifier: String) : Future[Unit]
 }
 
 object VillageService {
 
-  class VillageServiceImpl extends VillageService {
+  def apply(): VillageService = VillageServiceImpl()
 
-    override def createVillage(villageId: String, villageName: String): Optional[String] = ???
+  case class VillageServiceImpl() extends VillageService {
+
+    override def createVillage(villageId: String, villageName: String): Future[String] = ???
     // POST
-    override def enterVillage(villageId: String): Optional[Unit] = ???
+    override def enterVillage(villageId: String): Future[Unit] = ???
     // PUT
-    override def exitVillage(villageId: String): Optional[Unit] = ???
+    override def exitVillage(villageId: String): Future[Unit] = ???
     // PUT
   }
 }
