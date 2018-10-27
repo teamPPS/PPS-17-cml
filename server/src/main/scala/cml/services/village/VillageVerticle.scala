@@ -33,19 +33,17 @@ class VillageVerticle extends RouterVerticle {
 
   //qui ci vanno gli handler con routing context e richiamano i metodi in villageservice
 
+  //usare le routing operation di chiara qui
   private def create: Handler[RoutingContext] = implicit routingContext => {
     println("Request to create village ", routingContext request())
-    routingContext response() end "creazione completata"
   }
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
     println("Request to enter village ", routingContext request())
-    routingContext response() end "enter village completata"
   }
 
   private def exit: Handler[RoutingContext] = implicit routingContext => {
     println("Request to exit village ", routingContext request())
-    routingContext response() end "exit completata"
   }
 
   def checkUserAuthorizationToken(): Boolean = true // dummy
