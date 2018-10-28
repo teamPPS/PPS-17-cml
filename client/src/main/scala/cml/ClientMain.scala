@@ -1,8 +1,6 @@
 package cml
 
-import akka.actor.{ActorSystem, Props}
-import cml.controller.AuthenticationActor
-import cml.controller.messages.AuthenticationRequest.Login
+
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
