@@ -23,23 +23,37 @@ class AuthenticationController {
   @FXML var loginBtn: Button = _
   @FXML var formMsgLabel: Label = _
 
-  val system = ActorSystem("mySystem")
-  val authenticationActor: ActorRef = system.actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
-
   var username: String = _
   var password: String = _
+
+  var system = ActorSystem("mySystem")
+  var authenticationActor: ActorRef = system.actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
 
   def initialize(): Unit = {
     loginBtn.setOnAction((_: ActionEvent) => requestAuthentication(LOGIN))
     registerBtn.setOnAction((_: ActionEvent) => requestAuthentication(REGISTER))
   }
 
+  /**
+    * Sends requests to the actor which manages the authentication
+    * @param msg defines which message to send to the authentication actor
+    */
   def requestAuthentication(msg: String): Unit = {
     username = usernameField.getText()
     password = passwordField.getText()
 
-    if (msg == LOGIN) authenticationActor ! Login(username, password)
-    else if (msg == REGISTER) authenticationActor ! Register(username, password)
+    val usrExp: String = "([A-Za-z0-9])"
+    val pswExp: String = "([A-Za-z0-9])"
+      //"^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"  //Minimum eight characters, at least one letter and one number:
+
+    if(username.isEmpty || password.isEmpty){
+      formMsgLabel.setText("Some fields are empty")
+    }
+
+//    if(username.matches(usrExp) && password.matches(pswExp)){
+      if (msg == LOGIN) authenticationActor ! Login(username, password)
+      else if (msg == REGISTER) authenticationActor ! Register(username, password)
+//    }
   }
 
 }

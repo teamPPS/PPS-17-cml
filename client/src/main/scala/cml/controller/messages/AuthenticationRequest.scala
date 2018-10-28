@@ -26,7 +26,7 @@ object AuthenticationRequest{
 
   /**
     * Request to log the user out from the system
-    * @param username user's username7
+    * @param username user's username
     */
   case class Logout(username: String) extends AuthenticationRequest
 
