@@ -1,58 +1,118 @@
 package cml.controller
 
+import akka.actor.{ActorRef, ActorSystem, Props}
+import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
 import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-import javafx.application.Platform
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
+/**
+  * This trait describes the Vertx client
+  * @author Monica Gondolini
+  */
 trait ClientVertx {
 
-  def register (username: String, password: String): Unit
+  /**
+    * Requests the registration of a user into the system
+    * @param username player's username
+    * @param password player's password
+    */
+  def register(username: String, password: String): Unit
 
-  def login (username: String, password: String): Future[String]
+  /**
+    * Requests the login of a user into the system
+    * @param username player's username
+    * @param password player's password
+    */
+  def login(username: String, password: String): Unit
 
-  def logout(username: String) : Future[Unit]
+  /**
+    * Requests the logout of a user from the system
+    * @param username player's username
+    */
+  def logout(username: String) : Unit
 
-  def delete (username: String): Future[Unit]
-
+  /**
+    * Requests the deletion of a user from the system
+    * @param username player's username
+    */
+  def delete(username: String): Unit
 }
 
+/**
+  * Companion object
+  */
 object ClientVertx{
 
   var vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
-
   def apply(controller: AuthenticationController): ClientVertx = new ClientVertxImpl(controller)
+
+  /**
+    * This class implements the Vertx Client
+    * @param controller authentication view controller instance
+    */
   private class ClientVertxImpl(controller: AuthenticationController) extends ClientVertx{
 
+    var system = ActorSystem("mySystem")
+    var authenticationActor: ActorRef = system.actorOf(Props(new AuthenticationActor(controller)), "authenticationActor")
+
     override def register(username: String, password: String): Unit = {
+      println(s"sending registration request from username:$username with password:$password") //debug
+      disableButtons(true)
+
       client.post(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
         .onComplete{
-          case Success(result) =>
-            println(result)
-            Platform.runLater(() => controller.formMsgLabel.setText(AuthenticationMsg.loginSuccess))
-          //sostituire la view con quella del villaggio mandando un messaggio all'attore del villaggio (?)
-          case Failure(cause) =>
-            println("Failure")
-            //Response msg
-
-              Platform.runLater(() => controller.formMsgLabel.setText(AuthenticationMsg.loginFailure))
-          //      disableButtons(false)
+          case Success(result) => authenticationActor ! RegisterSuccess(AuthenticationMsg.registerSuccess)
+            println("Success: "+result) //debug
+          case Failure(cause) => authenticationActor ! RegisterFailure(AuthenticationMsg.registerFailure)
+            println("Failure: "+cause) //debug
+            disableButtons(false)
         }
     }
 
-    override def login(username: String, password: String): Future[String] = ???
+    override def login(username: String, password: String): Unit = {
+      println(s"sending login request from username:$username with password:$password") //debug
+      disableButtons(true)
 
-    override def delete(username: String): Future[Unit] = ???
+      client.get(Connection.port, Connection.host, Connection.requestUri)
+        .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
+        .onComplete{
+          case Success(result) => authenticationActor ! LoginSuccess(AuthenticationMsg.loginSuccess)
+            println("Success: "+result)//debug
+          case Failure(cause) => authenticationActor ! LoginFailure(AuthenticationMsg.loginFailure)
+            println("Failure: "+cause)//debug
+            disableButtons(false)
+        }
+    }
 
-    override def logout(username: String): Future[Unit] = ???
+    override def delete(username: String): Unit = {
+      client.delete(Connection.port, Connection.host, Connection.requestUri)
+        .sendJsonObjectFuture(new JsonObject().put("username", username))
+        .onComplete{
+          case Success(result) => println("Success: "+result)//debug
+          case Failure(cause) => println("Failure: "+cause)//debug
+        }
+    }
+
+    override def logout(username: String): Unit = ???
+
+    /**
+      * Switches on and off GUI buttons
+      * @param b boolean
+      */
+    def disableButtons(b: Boolean): Unit ={
+      controller.registerBtn.setDisable(b)
+      controller.loginBtn.setDisable(b)
+    }
   }
+
+
 }
 

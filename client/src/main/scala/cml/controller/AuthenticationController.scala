@@ -49,8 +49,8 @@ class AuthenticationController {
     }
 
     if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
-      if (msg == LOGIN) authenticationActor ! Login(username, password)
-      else if (msg == REGISTER) authenticationActor ! Register(username, password)
+      if (msg.equals(LOGIN)) authenticationActor ! Login(username, password)
+      else if (msg.equals(REGISTER)) authenticationActor ! Register(username, password)
     }
   }
 
