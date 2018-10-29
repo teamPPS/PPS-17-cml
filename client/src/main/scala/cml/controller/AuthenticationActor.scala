@@ -9,6 +9,7 @@ import javafx.application.Platform
 
 import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
+import cml.utils.Configuration.{Connection, AuthenticationMsg}
 
 
 /**
@@ -34,17 +35,16 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
       println(s"sending login request from username:$username with password:$password")
       disableButtons(true)
 
-      client.post(8080, "myserver.mycompany.com", "/some-uri")
+      client.post(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
         .onComplete{
           case Success(result) =>
             println(result)
-            Platform.runLater(() => controller.formMsgLabel.setText("Login avvenuto con successo!"))
-            waitFor(MILLIS)
+            Platform.runLater(() => controller.formMsgLabel.setText(AuthenticationMsg.loginSuccess))
             //sostituire la view con quella del villaggio mandando un messaggio all'attore del villaggio (?)
           case Failure(cause) =>
             println("Failure")
-            Platform.runLater(() => controller.formMsgLabel.setText("Login rifiutato"))
+            Platform.runLater(() => controller.formMsgLabel.setText(AuthenticationMsg.loginFailure))
             disableButtons(false)
         }
 
@@ -52,21 +52,22 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
       println(s"sending registration request from username:$username with password:$password")
       disableButtons(true)
 
-      client.post(8080, "myserver.mycompany.com", "/some-uri")
+      client.post(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
         .onComplete{
           case Success(result) =>
             println(result)
-            Platform.runLater(() => controller.formMsgLabel.setText("Registrazione completata con successo!"))
+            Platform.runLater(() => controller.formMsgLabel.setText(AuthenticationMsg.registerSuccess))
           case Failure(cause) =>
             println("Failure")
-            Platform.runLater(() => controller.formMsgLabel.setText("C'è stato un problema, la registrazione non è stata effettuata."))
+            Platform.runLater(() => controller.formMsgLabel.setText(AuthenticationMsg.registerFailure))
             disableButtons(false)
         }
 
     case Logout(username) => ??? //rimuove utente dalla view del gioco (deve stare qui?)
 
   }
+
 
   /**
     * Switches on and off GUI buttons
@@ -77,12 +78,5 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     controller.loginBtn.setDisable(b)
   }
 
-  /**
-    * Waits for some milliseconds before doing another action
-    * @param millis time to wait
-    */
-  def waitFor(millis: Int){
-    Platform.runLater(() => controller.formMsgLabel.setText("Caricamento..."))
-    Thread.sleep(millis)
-  }
+
 }
