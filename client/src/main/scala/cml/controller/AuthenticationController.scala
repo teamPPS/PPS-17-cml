@@ -6,6 +6,7 @@ import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
+import cml.utils.Configuration.InputControl
 
 /**
   * Controller for the graphic user interface
@@ -43,14 +44,11 @@ class AuthenticationController {
     username = usernameField.getText()
     password = passwordField.getText()
 
-    val usrExp: String = "^[A-Za-z0-9]+$"
-    val pswExp: String = "^[A-Za-z0-9]+$"
-
     if(username.isEmpty || password.isEmpty){
-      formMsgLabel.setText("Some fields are empty")
+      formMsgLabel.setText(InputControl.emptyFields)
     }
 
-    if(username.matches(usrExp) && password.matches(pswExp)){
+    if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
       if (msg == LOGIN) authenticationActor ! Login(username, password)
       else if (msg == REGISTER) authenticationActor ! Register(username, password)
     }
