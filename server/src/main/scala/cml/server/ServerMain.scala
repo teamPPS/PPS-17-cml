@@ -1,5 +1,6 @@
 package cml.server
 
+import cml.services.village.VillageVerticle
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.Vertx
 
@@ -16,4 +17,5 @@ object ServerMain extends App {
 //  vertx.deployVerticle(ScalaVerticle.nameForVerticle[HelloWorldVerticle])
 
   vertx.deployVerticle(ScalaVerticle.nameForVerticle[ScalaExampleVerticle])
+  vertx.deployVerticle(ScalaVerticle.nameForVerticle[VillageVerticle])
 }
