@@ -6,21 +6,21 @@ package cml.utils
 object Configuration {
 
   object Connection{
-    final val port: Int = 8080
-    final val host: String = "myserver.mycompany.com"
-    final val requestUri: String = "/some-uri"
+    val port: Int = 8080
+    val host: String = "myserver.mycompany.com"
+    val requestUri: String = "/some-uri"
   }
 
   object AuthenticationMsg{
-    final val loginSuccess: String  = "Login avvenuto con successo!"
-    final val loginFailure: String  = "Login rifiutato."
-    final val registerSuccess: String  = "Registrazione completata con successo!"
-    final val registerFailure: String  = "C'è stato un problema, la registrazione non è stata effettuata."
+    val loginSuccess: String  = "Login succeeded!"
+    val loginFailure: String  = "Login denied."
+    val registerSuccess: String  = "Registration completed!"
+    val registerFailure: String  = "Error, registration not completed."
   }
 
   object InputControl{
-    final val emptyFields: String = "Some fields are empty"
-    final val userExp: String = "^[A-Za-z0-9]+$"
-    final val pswExp: String = "^[A-Za-z0-9]+$"
+    val emptyFields: String = "Some fields are empty."
+    val userExp: String = "^[A-Za-z0-9]+$"
+    val pswExp: String = "^[A-Za-z0-9]+$"
   }
 }
