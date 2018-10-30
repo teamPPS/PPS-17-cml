@@ -23,4 +23,11 @@ object Configuration {
     val userExp: String = "^[A-Za-z0-9]+$"
     val pswExp: String = "^[A-Za-z0-9]+$"
   }
+
+  object AuthenticationWindow{
+    val path: String = "view/authentication_view.fxml"
+    val title: String = "Creature Mania Legends"
+    val width: Int = 600
+    val heigth: Int = 400
+  }
 }
