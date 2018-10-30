@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSelection, ActorSystem, Props}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
 import io.vertx.lang.scala.json.JsonObject
@@ -59,8 +59,9 @@ object ClientVertx{
     */
   private class ClientVertxImpl(controller: AuthenticationController) extends ClientVertx{
 
-    var system = ActorSystem("mySystem")
-    var authenticationActor: ActorRef = system.actorOf(Props(new AuthenticationActor(controller)), "authenticationActor")
+//    var system = ActorSystem("mySystem")
+    var authenticationActor: ActorRef = controller.authenticationActor //usare actorselection o un altro modo
+
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password") //debug
