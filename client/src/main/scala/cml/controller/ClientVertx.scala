@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.{ActorRef, ActorSelection, ActorSystem, Props}
+import akka.actor.{ActorContext, ActorRef, ActorSelection, ActorSystem, Props}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
 import io.vertx.lang.scala.json.JsonObject
@@ -51,21 +51,18 @@ object ClientVertx{
   var vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
-  def apply(controller: AuthenticationController): ClientVertx = new ClientVertxImpl(controller)
+  def apply(authenticationActor: ActorRef): ClientVertx = new ClientVertxImpl(authenticationActor)
 
   /**
     * This class implements the Vertx Client
-    * @param controller authentication view controller instance
+    * @param actor authentication view controller instance
     */
-  private class ClientVertxImpl(controller: AuthenticationController) extends ClientVertx{
+  private class ClientVertxImpl(authenticationActor: ActorRef) extends ClientVertx{
 
-//    var system = ActorSystem("mySystem")
-    var authenticationActor: ActorRef = controller.authenticationActor //usare actorselection o un altro modo
-
+//    var authenticationActor: ActorSelection = system.actorSelection("controller\\AuthenticationActor")
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password") //debug
-      disableButtons(true)
 
       client.post(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
@@ -74,13 +71,11 @@ object ClientVertx{
             println("Success: "+result) //debug
           case Failure(cause) => authenticationActor ! RegisterFailure(AuthenticationMsg.registerFailure)
             println("Failure: "+cause) //debug
-            disableButtons(false)
         }
     }
 
     override def login(username: String, password: String): Unit = {
       println(s"sending login request from username:$username with password:$password") //debug
-      disableButtons(true)
 
       client.get(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
@@ -89,7 +84,6 @@ object ClientVertx{
             println("Success: "+result)//debug
           case Failure(cause) => authenticationActor ! LoginFailure(AuthenticationMsg.loginFailure)
             println("Failure: "+cause)//debug
-            disableButtons(false)
         }
     }
 
@@ -104,14 +98,7 @@ object ClientVertx{
 
     override def logout(username: String): Unit = ???
 
-    /**
-      * Switches on and off GUI buttons
-      * @param b boolean
-      */
-    def disableButtons(b: Boolean): Unit ={
-      controller.registerBtn.setDisable(b)
-      controller.loginBtn.setDisable(b)
-    }
+
   }
 
 

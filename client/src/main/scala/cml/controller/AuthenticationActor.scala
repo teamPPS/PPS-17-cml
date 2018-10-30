@@ -12,7 +12,7 @@ import javafx.application.Platform
   */
 class AuthenticationActor(controller: AuthenticationController) extends Actor{
 
-  var clientVertx = ClientVertx(controller) //this
+  var clientVertx = ClientVertx(controller.authenticationActor)
 
   override def receive: Receive = authenticationBehaviour
 
@@ -37,6 +37,13 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     Platform.runLater(() => controller.formMsgLabel.setText(m))
   }
 
-
+  /**
+    * Switches on and off GUI buttons
+    * @param b boolean
+    */
+  def disableButtons(b: Boolean): Unit ={
+    controller.registerBtn.setDisable(b)
+    controller.loginBtn.setDisable(b)
+  }
 
 }
