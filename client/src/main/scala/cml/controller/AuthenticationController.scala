@@ -6,7 +6,7 @@ import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
-import cml.utils.Configuration.InputControl
+import cml.utils.Configuration.{ControllerMsg, InputControl}
 
 /**
   * Controller for the graphic user interface
@@ -14,9 +14,6 @@ import cml.utils.Configuration.InputControl
   */
 
 class AuthenticationController {
-
-  final var LOGIN: String = "login"
-  final var REGISTER: String = "register"
 
   @FXML var usernameField: TextField = _
   @FXML var passwordField: PasswordField = _
@@ -49,8 +46,8 @@ class AuthenticationController {
     }
 
     if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
-      if (msg.equals(LOGIN)) authenticationActor ! Login(username, password)
-      else if (msg.equals(REGISTER)) authenticationActor ! Register(username, password)
+      if (msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
+      else if (msg.equals(ControllerMsg.register)) authenticationActor ! Register(username, password)
     }
   }
 

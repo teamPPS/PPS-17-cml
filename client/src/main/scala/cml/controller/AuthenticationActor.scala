@@ -23,7 +23,7 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     case Register(username, password) => clientVertx.register(username, password)
     case Login(username, password) => clientVertx.login(username, password)
     case Logout(username) => clientVertx.logout(username) //rimuove utente dalla view del gioco (deve stare qui?)
-    case RegisterSuccess(succ) => displayMsg(succ)
+    case RegisterSuccess(succ) => displayMsg(succ) //fare login subito dopo
     case RegisterFailure(err) => displayMsg(err)
     case LoginSuccess(succ) =>  displayMsg(succ) //cambio view con quella del villaggio
     case LoginFailure(err) => displayMsg(err)

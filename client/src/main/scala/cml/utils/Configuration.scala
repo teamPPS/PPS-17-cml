@@ -6,9 +6,9 @@ package cml.utils
 object Configuration {
 
   object Connection{
-    val port: Int = 8080
-    val host: String = "myserver.mycompany.com"
-    val requestUri: String = "/some-uri"
+    val port: Int = 8000
+    val host: String = "jsonplaceholder.typicode.com"  //"localhost"
+    val requestUri: String ="/posts/42" // "/uri"
   }
 
   object AuthenticationMsg{
@@ -22,6 +22,11 @@ object Configuration {
     val emptyFields: String = "Some fields are empty."
     val userExp: String = "^[A-Za-z0-9]+$"
     val pswExp: String = "^[A-Za-z0-9]+$"
+  }
+
+  object ControllerMsg{
+    val login: String = "login"
+    val register: String = "register"
   }
 
   object AuthenticationWindow{

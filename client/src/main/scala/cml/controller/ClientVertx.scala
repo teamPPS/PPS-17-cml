@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.{ActorContext, ActorRef, ActorSelection, ActorSystem, Props}
+import akka.actor.ActorRef
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
 import io.vertx.lang.scala.json.JsonObject
@@ -51,38 +51,34 @@ object ClientVertx{
   var vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
-  def apply(authenticationActor: ActorRef): ClientVertx = new ClientVertxImpl(authenticationActor)
+  def apply(actor: ActorRef): ClientVertx = new ClientVertxImpl(actor)
 
   /**
     * This class implements the Vertx Client
-    * @param actor authentication view controller instance
+    * @param actor the actor i want to send messages to
     */
-  private class ClientVertxImpl(authenticationActor: ActorRef) extends ClientVertx{
-
-//    var authenticationActor: ActorSelection = system.actorSelection("controller\\AuthenticationActor")
+  private class ClientVertxImpl(actor: ActorRef) extends ClientVertx{
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password") //debug
-
       client.post(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
         .onComplete{
-          case Success(result) => authenticationActor ! RegisterSuccess(AuthenticationMsg.registerSuccess)
+          case Success(result) => actor ! RegisterSuccess(AuthenticationMsg.registerSuccess)
             println("Success: "+result) //debug
-          case Failure(cause) => authenticationActor ! RegisterFailure(AuthenticationMsg.registerFailure)
+          case Failure(cause) => actor ! RegisterFailure(AuthenticationMsg.registerFailure)
             println("Failure: "+cause) //debug
         }
     }
 
     override def login(username: String, password: String): Unit = {
       println(s"sending login request from username:$username with password:$password") //debug
-
       client.get(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
         .onComplete{
-          case Success(result) => authenticationActor ! LoginSuccess(AuthenticationMsg.loginSuccess)
+          case Success(result) => actor ! LoginSuccess(AuthenticationMsg.loginSuccess)
             println("Success: "+result)//debug
-          case Failure(cause) => authenticationActor ! LoginFailure(AuthenticationMsg.loginFailure)
+          case Failure(cause) => actor ! LoginFailure(AuthenticationMsg.loginFailure)
             println("Failure: "+cause)//debug
         }
     }
@@ -96,11 +92,14 @@ object ClientVertx{
         }
     }
 
-    override def logout(username: String): Unit = ???
-
-
+    override def logout(username: String): Unit = {
+      client.get(Connection.port, Connection.host, Connection.requestUri)
+        .sendJsonObjectFuture(new JsonObject().put("username", username))
+        .onComplete {
+          case Success(result) => println("Success: " + result) //debug
+          case Failure(cause) => println("Failure: " + cause) //debug
+        }
+    }
   }
-
-
 }
 
