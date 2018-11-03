@@ -29,8 +29,8 @@ class AuthenticationController {
 
 
   def initialize(): Unit = {
-    loginBtn.setOnAction((_: ActionEvent) => requestAuthentication(LOGIN))
-    registerBtn.setOnAction((_: ActionEvent) => requestAuthentication(REGISTER))
+    loginBtn.setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg.login))
+    registerBtn.setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg.register))
   }
 
   /**
