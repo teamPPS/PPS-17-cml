@@ -13,7 +13,7 @@ import scala.concurrent.Promise
 
 class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
-/*  test("Login test") {
+  test("Login test") {
     val vertx: Vertx = Vertx.vertx()
     val promise = Promise[String]
     vertx.createHttpClient()
@@ -26,7 +26,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
       println("login " + res)
       assert (res equals HttpMessage.BAD_REQUEST)
     })
-  }*/
+  }
 
   test("Validation token test") {
     val vertx: Vertx = Vertx.vertx()
@@ -41,19 +41,6 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     promiseValidation.future.map(res => {
       println("validation: " + res)
       assert(res equals HttpMessage.BAD_REQUEST)
-    })
-
-    val promiseLogin = Promise[String]
-    vertx.createHttpClient()
-      .getNow(8080, "127.0.0.1", AuthenticationUrl.LOGIN_API,
-        response => {
-          response.exceptionHandler(promiseLogin.failure)
-          response.bodyHandler(buffer => promiseLogin.success(buffer.toString))
-          response.statusCode()
-        })
-    promiseLogin.future.map(res => {
-      println("login " + res)
-      assert (res equals HttpMessage.BAD_REQUEST)
     })
   }
 }
