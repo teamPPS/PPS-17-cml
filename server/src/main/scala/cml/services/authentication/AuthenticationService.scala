@@ -62,37 +62,24 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  private val registerQuery =
-    s"""
-        INSERT INTO user
-        VALUES (?, ?)
-    """
+  private val USERNAME_REGISTER = "username_login"
+  private val PASSWORD_REGISTER = "password_login"
+  private val registerQuery = ""
+    //db.user.insert({USERNAME_REGISTER: "?" , $PASSWORD_REGISTER: "?" })
 
   private val USERNAME_LOGIN = "username_login"
   private val PASSWORD_LOGIN = "password_login"
-  private val loginQuery =
-    s"""
-        SELECT *
-        FROM user
-        WHERE $USERNAME_LOGIN = ?
-        AND $PASSWORD_LOGIN = ?
-    """
+  private val loginQuery = ""
+    //db.user.find({USERNAME_REGISTER: "?", PASSWORD_REGISTER: "?" })
+
   // forse var ridondanti da provare, non saprei dire
   private val USERNAME_DELETE = "username_delete"
-  private val deleteQuery =
-    s"""
-        DELETE FROM user
-        WHERE $USERNAME_DELETE= ?
-    """
+  private val deleteQuery = ""
+    //db.user.deleteOne({USERNAME_REGISTER: "?" })
 
   private val USERNAME_VALIDATION_TOKEN = "username_validationToken"
-  private val validationTokenQuery =
-    s"""
-       SELECT *
-       FROM user
-       WHERE $USERNAME_VALIDATION_TOKEN = ?
-     """
-
+  private val validationTokenQuery = ""
+    //db.user.find({USERNAME_REGISTER: "?" })
 }
 
 class AuthenticationServiceImpl() extends AuthenticationService {
