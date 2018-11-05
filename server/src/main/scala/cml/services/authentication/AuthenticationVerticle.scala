@@ -22,8 +22,8 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
 
   override def initializeRouter(router: Router): Unit = {
     router post AuthenticationUrl.REGISTER_API handler register
-    router get AuthenticationUrl.LOGIN_API handler login
-    router post AuthenticationUrl.LOGOUT_API handler logout
+    router put AuthenticationUrl.LOGIN_API handler login
+    router put AuthenticationUrl.LOGOUT_API handler logout
     router delete AuthenticationUrl.DELETE_API handler delete
     router get AuthenticationUrl.VALIDATION_TOKEN_API handler validationToken
   }
