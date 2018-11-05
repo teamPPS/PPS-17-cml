@@ -57,7 +57,7 @@ object ClientVertx{
     * This class implements the Vertx Client
     * @param actor the actor i want to send messages to
     */
-  private class ClientVertxImpl(actor: ActorRef) extends ClientVertx{
+  case class ClientVertxImpl(actor: ActorRef) extends ClientVertx{
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password") //debug
@@ -93,7 +93,7 @@ object ClientVertx{
     }
 
     override def logout(username: String): Unit = {
-      client.get(Connection.port, Connection.host, Connection.requestUri)
+      client.put(Connection.port, Connection.host, Connection.requestUri)
         .sendJsonObjectFuture(new JsonObject().put("username", username))
         .onComplete {
           case Success(result) => println("Success: " + result) //debug

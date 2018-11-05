@@ -6,7 +6,7 @@ package cml.utils
 object Configuration {
 
   object Connection{
-    val port: Int = 8000
+    val port: Int = 80
     val host: String = "jsonplaceholder.typicode.com"  //"localhost"
     val requestUri: String ="/posts/42" // "/uri"
   }

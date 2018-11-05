@@ -12,7 +12,7 @@ import javafx.application.Platform
   */
 class AuthenticationActor(controller: AuthenticationController) extends Actor{
 
-  var clientVertx = ClientVertx(controller.authenticationActor)
+  val clientVertx = ClientVertx(controller.authenticationActor)
 
   override def receive: Receive = authenticationBehaviour
 
