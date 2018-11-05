@@ -51,7 +51,7 @@ object ClientVertx{
   var vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
-  def apply(actor: ActorRef): ClientVertx = new ClientVertxImpl(actor)
+  def apply(actor: ActorRef): ClientVertx = ClientVertxImpl(actor)
 
   /**
     * This class implements the Vertx Client
