@@ -16,26 +16,27 @@ abstract class RouterVerticle extends ScalaVerticle {
 
   var server: HttpServer = _
   val PORT = 8080
+  val LOCAL_HOST = "0.0.0.0"
 
   override def startFuture(): Future[Unit] = {
     println("Starting AuthenticationVerticle")
 
-    val p = Promise[Unit]()
+    val promise = Promise[Unit]()
     val router = Router.router(vertx)
     initializeRouter(router)
     vertx.createHttpServer()
       .requestHandler(router.accept)
-      .listenFuture(PORT)
+      .listenFuture(PORT, LOCAL_HOST)
       .onComplete({
         case Success(startedServer) =>
           println(s"Server successfully started on port: $PORT")
           server = startedServer
-          p.success(())
+          promise.success(())
         case Failure(ex) =>
           println(s"Server failed to start on port: $PORT, b/c ${ex.getCause}")
-          p.failure(ex)
+          promise.failure(ex)
       })
-    p.future
+    promise.future
   }
 
   override def stopFuture(): Future[Unit] = {
@@ -57,6 +58,6 @@ abstract class RouterVerticle extends ScalaVerticle {
     *
     * @return a future when server is initialized
     */
-  def initializeServer: Future[_] = Future.successful(())
+  def initializeService: Future[_] = Future.successful(())
 
 }

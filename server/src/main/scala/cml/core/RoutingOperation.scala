@@ -39,7 +39,9 @@ trait RoutingOperation {
     * @param message to send to the client
     */
   def sendResponse(httpCode: HttpResponseStatus, message: String)(implicit routingContext: RoutingContext): Unit = {
-    getResponse.setStatusCode(httpCode.asInstanceOf[Int])
+    val code = httpCode.code()
+    getResponse.setStatusCode(code).end(message)
+    println("response: " + httpCode)
   }
 }
 
