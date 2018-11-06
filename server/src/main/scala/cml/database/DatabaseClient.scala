@@ -1,52 +1,99 @@
 package cml.database
 
+import cml.utils.Configuration.DbConfig
+import org.mongodb.scala._
+import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+
 /**
   * Connector to the MongoDB database
   *
   * @author Filippo Portolani
   */
 
-import org.mongodb.scala._
-import java.util.concurrent.CountDownLatch
+trait DatabaseClient{
 
-case class DatabaseClient(uri:String, db:String, coll:String) {
-  import DatabaseClient._
+  /**
+    * Inserts a new document in the Collection
+    * @param document to be inserted
+    * @return Observable
+    */
+  def insert(document: Document):Observable[Completed]
 
-  val mongoClient: MongoClient = MongoClient(uri)
-  val database: MongoDatabase = mongoClient getDatabase (db)
-  val collection: MongoCollection[Document] = database getCollection (coll)
+  /**
+    * Delete a specific document from the database
+    * @param query
+    * @return SingleObservable
+    */
+  def delete(query: Document):SingleObservable[DeleteResult]
 
-  def document:Document = createDoc()
-  //insertOne(collection,document)
-  findFirst(collection)
+  /**
+    * Update a document with a given query
+    * @param query
+    * @param update
+    * @return Observable
+    */
+  def update(query:Document, update:Document):Observable[UpdateResult]
+
+  /**
+    * Find a requested document
+    * @param query
+    * @return Observable
+    */
+  def find(query: Document):Observable[Document]
+
+  /**
+    * Allow to insert multiple documents in the database
+    * @param documents
+    * @return Observable
+    */
+
+  def multipleInsert(documents: Array[Document]):Observable[Completed]
+
+  def multipleDelete(documents: Array[Document]):Observable[Completed] // da riguardare
+
 }
 
+/**
+  * Companion Object
+  */
+
 object DatabaseClient {
+  val mongoClient: MongoClient = MongoClient(DbConfig.uri)
+  val database: MongoDatabase = mongoClient getDatabase DbConfig.dbName
 
-  def createDoc():Document = {
-    val doc: Document = Document("_id" -> 1, "name" -> "MongoDB", "type" -> "database",
-      "count" -> 1, "info" -> Document("x" -> 203, "y" -> 103))
+  def apply(coll: String): DatabaseClient = DatabaseClientImpl(coll: String)
+  case class DatabaseClientImpl(coll: String) extends DatabaseClient {
 
-    doc
+    val collection: MongoCollection[Document] = database getCollection coll
+
+    override def insert(document: Document): Observable[Completed] = {
+      val observable: Observable[Completed] = collection.insertOne(document)
+      observable
+    }
+
+    override def delete(query: Document): SingleObservable[DeleteResult] = {
+      val observable: SingleObservable[DeleteResult] = collection.deleteOne(query)
+      observable
+    }
+
+    override def update(query: Document, update: Document): Observable[UpdateResult] = {
+      val observable: Observable[UpdateResult] = collection.updateOne(query, update)
+      observable
+    }
+
+    override def find(query: Document): Observable[Document] = {
+      val observable: Observable[Document] = collection.find(query)
+      observable
+    }
+
+    override def multipleInsert(documents: Array[Document]): Observable[Completed] = {
+      val observable: Observable[Completed] = collection.insertMany(documents)
+      observable
+    }
+
+    override def multipleDelete(documents: Array[Document]): Observable[Completed] = {
+      val observable: Observable[Completed] = collection.insertMany(documents)
+      observable
+    }
   }
-  def insertOne(collection: MongoCollection[Document], document: Document): Unit = {
-    val latch = new CountDownLatch(1)
-    val observable: Observable[Completed] = collection insertOne(document)
-    observable.subscribe(new Observer[Completed]{
-      override def onNext(result: Completed): Unit = {
-        println("Inserted")
-        latch countDown()
-      }
-      override def onError(e: Throwable): Unit = println("Failed")
-      override def onComplete(): Unit = {println("Completed")
-      }
-    })
-    latch await()
-  }
-
-  def findFirst(collection: MongoCollection[Document]): Unit ={
-
-
-  }
-
 }
