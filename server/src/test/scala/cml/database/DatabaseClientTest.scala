@@ -25,11 +25,11 @@ class DatabaseClientTest extends AsyncFunSuite{
     val doc1: Document = Document("_id" -> 1, "name" -> "PPS", "type" -> "database",
       "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
 
-    val query: Document = Document("_id"->0)
+    val query: Document = Document("type"->"database")
 
     val queryFind: Document = Document("name" -> "MongoDB")
 
-    val updateQuery: Document = Document("$set" -> Document("name" -> "PPS"))
+    val updateQuery: Document = Document("$set" -> Document("name" -> "Database"))
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
@@ -78,14 +78,23 @@ class DatabaseClientTest extends AsyncFunSuite{
       override def onComplete(): Unit = println("[MULTIPLE INSERTION] Completed")
     })
 
-    //    client.multipleDelete(Array(doc,doc1)).subscribe(new Observer[Completed] {
-    //      override def onNext(result: Completed): Unit = {
-    //        println("[MULTIPLE DELETION] Deleted "+result)
-    //        latch countDown()
-    //      }
-    //      override def onError(e: Throwable): Unit = println("[MULTIPLE DELETION] Failed "+e)
-    //      override def onComplete(): Unit = println("[MULTIPLE DELETION] Completed")
-    //    })
+    client.multipleDelete(query).subscribe(new Observer[DeleteResult] {
+      override def onNext(result: DeleteResult): Unit = {
+        println("[MULTIPLE DELETION] Deleted "+result)
+        latch countDown()
+      }
+      override def onError(e: Throwable): Unit = println("[MULTIPLE DELETION] Failed "+e)
+      override def onComplete(): Unit = println("[MULTIPLE DELETION] Completed")
+    })
+
+    client.multipleUpdate(query, updateQuery).subscribe(new Observer[UpdateResult] {
+      override def onNext(result: UpdateResult): Unit = {
+        println("[MULTIPLE UPDATE] Updated "+result)
+        latch countDown()
+      }
+      override def onError(e: Throwable): Unit = println("[MULTIPLE UPDATE] Failed "+e)
+      override def onComplete(): Unit = println("[MULTIPLE UPDATE] Completed")
+    })
 
     latch await()
     assert(1==1)

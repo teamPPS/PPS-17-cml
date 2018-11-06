@@ -21,35 +21,49 @@ trait DatabaseClient{
 
   /**
     * Delete a specific document from the database
-    * @param query
+    * @param query select the document we want to delete
     * @return SingleObservable
     */
   def delete(query: Document):SingleObservable[DeleteResult]
 
   /**
     * Update a document with a given query
-    * @param query
-    * @param update
+    * @param query choose the document
+    * @param update the change we want to make on the document
     * @return Observable
     */
   def update(query:Document, update:Document):Observable[UpdateResult]
 
   /**
     * Find a requested document
-    * @param query
+    * @param query what we want to find
     * @return Observable
     */
   def find(query: Document):Observable[Document]
 
   /**
     * Allow to insert multiple documents in the database
-    * @param documents
+    * @param documents to insert
     * @return Observable
     */
 
   def multipleInsert(documents: Array[Document]):Observable[Completed]
 
-  def multipleDelete(documents: Array[Document]):Observable[Completed] // da riguardare
+  /**
+    * Delete multiple documents
+    * @param documents to delete
+    * @return SingleObservable
+    */
+  def multipleDelete(documents: Document):SingleObservable[DeleteResult]
+
+  /**
+    * Update multiple documents
+    * @param query choose the document
+    * @param update the change we want to make on the document
+    * @return Observable
+    */
+
+  def multipleUpdate(query:Document, update:Document):Observable[UpdateResult]
 
 }
 
@@ -91,8 +105,13 @@ object DatabaseClient {
       observable
     }
 
-    override def multipleDelete(documents: Array[Document]): Observable[Completed] = {
-      val observable: Observable[Completed] = collection.insertMany(documents)
+    override def multipleDelete(documents:Document): SingleObservable[DeleteResult] = {
+      val observable: SingleObservable[DeleteResult] = collection.deleteMany(documents)
+      observable
+    }
+
+    override def multipleUpdate(query: Document, update: Document): Observable[UpdateResult] = {
+      val observable = collection.updateMany(query,update)
       observable
     }
   }
