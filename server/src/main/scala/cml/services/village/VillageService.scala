@@ -40,10 +40,13 @@ object VillageService {
   case class VillageServiceImpl() extends VillageService {
 
     override def createVillage(villageId: String, villageName: String): Future[String] = ???
+    //Creare Documento db.insert(doc)
     // POST
     override def enterVillage(villageId: String): Future[Unit] = ???
+    //db.find(doc)
     // PUT
     override def exitVillage(villageId: String): Future[Unit] = ???
+    //db.find(doc)
     // PUT
   }
 }

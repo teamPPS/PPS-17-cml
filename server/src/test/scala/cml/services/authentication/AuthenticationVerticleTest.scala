@@ -17,7 +17,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     val vertx: Vertx = Vertx.vertx()
     val promiseValidation = Promise[String]
     vertx.createHttpClient()
-      .getNow(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API,
+      .getNow(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API, //REGISTER_API per test registrazione
         response => {
           response.exceptionHandler(promiseValidation.failure)
           response.bodyHandler(buffer => promiseValidation.success(buffer.toString))

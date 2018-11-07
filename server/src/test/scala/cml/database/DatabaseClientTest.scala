@@ -2,99 +2,80 @@ package cml.database
 
 import java.util.concurrent.CountDownLatch
 
-import cml.utils.Configuration.DbConfig
-import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import cml.database.utils.Configuration.DbConfig
+
 import org.scalatest.AsyncFunSuite
-import org.mongodb.scala.{Completed, Document, Observer}
+import org.mongodb.scala.Document
+
+import scala.concurrent.Future
 
 /**
   * Test for DatabaseClient class
   *
   * @author Filippo Portolani
   */
-
 class DatabaseClientTest extends AsyncFunSuite{
 
   test("testDatabaseConnection"){
 
-    val client : DatabaseClient = DatabaseClient(DbConfig.usersColl)
+    val database : DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
-    val doc: Document = Document("_id" -> 0, "name" -> "MongoDB", "type" -> "database",
+    val doc: Document = Document("_id"->2, "name" -> "MongoDB", "type" -> "database",
       "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
 
-    val doc1: Document = Document("_id" -> 1, "name" -> "PPS", "type" -> "database",
+    val doc1: Document = Document( "name" -> "PPS", "type" -> "database",
       "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
+
+    val userDoc: Document = Document("username" -> "CMLuser", "password" -> "pps")
+
+    val villageDoc: Document = Document("villageName" -> "PPSvillage", "username" -> "CMLuser", "food" -> 10, "gold" ->100,
+      "building" -> Document("buildingId"->0, "buildingType"-> "farm", "buildingLevel" -> 0),
+      "habitat" -> Document("habitatId"->0, "buildingLevel" -> 0, "element"-> "fire",
+            "creature"->Document("creatureId"->0, "creatureName" -> "fireCreature","creatureLevel" -> 0, "element"-> "fire")))
 
     val query: Document = Document("type"->"database")
-
     val queryFind: Document = Document("name" -> "MongoDB")
-
     val updateQuery: Document = Document("$set" -> Document("name" -> "Database"))
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    client.insert(doc).subscribe(new Observer[Completed] {
-      override def onNext(result: Completed): Unit ={
-        println("[INSERTION] Inserted "+result)
-        latch countDown()
-      }
-      override def onError(e: Throwable): Unit = println("[INSERTION] Failed "+e)
-      override def onComplete(): Unit = println("[INSERTION] Completed")
-    })
+    database.insert(doc).recoverWith{case e: Throwable =>
+      println(e)
+      Future.failed(e)
+    }.map(_ => "Completed")
+//    latch countDown()
 
-    client.delete(query).subscribe(new Observer[DeleteResult] {
-      override def onNext(result: DeleteResult): Unit = {
-        println("[DELETION] Deleted "+result)
-        latch countDown()
-      }
-      override def onError(e: Throwable): Unit =  println("[DELETION] Failed "+e)
-      override def onComplete(): Unit = println("[DELETION] Completed")
-    })
+    database.find(queryFind).recoverWith{case e: Throwable =>
+      println(e)
+      Future.failed(e)
+    }.map(_ => "Completed")
 
-    client.update(query, updateQuery).subscribe(new Observer[UpdateResult] {
-      override def onNext(result: UpdateResult): Unit = {
-        println("[UPDATE] Updated "+result)
-        latch.countDown()
-      }
-      override def onError(e: Throwable): Unit = println("[UPDATE] Failed "+e)
-      override def onComplete(): Unit = println("[UPDATE] Completed")
-    })
+    database.delete(query).recoverWith{case e: Throwable =>
+      println(e)
+      Future.failed(e)
+    }.map(_ => "Completed")
 
-    client.find(queryFind).subscribe(new Observer[Document] {
-      override def onNext(result: Document): Unit = {
-        println("[FIND] Found "+result)
-        latch.countDown()
-      }
-      override def onError(e: Throwable): Unit = println("[FIND] Failed "+e)
-      override def onComplete(): Unit = println("[FIND] Completed")
-    })
+    database.update(query, updateQuery).recoverWith{case e: Throwable =>
+      println(e)
+      Future.failed(e)
+    }.map(_ => "Completed")
 
-    client.multipleInsert(Array(doc,doc1)).subscribe(new Observer[Completed] {
-      override def onNext(result: Completed): Unit ={
-        println("[MULTIPLE INSERTION] Inserted "+result)
-        latch countDown()
-      }
-      override def onError(e: Throwable): Unit = println("[MULTIPLE INSERTION] Failed "+e)
-      override def onComplete(): Unit = println("[MULTIPLE INSERTION] Completed")
-    })
+/* -------------------- ACTIONS ON MULTIPLE DOCUMENTS---------------------------*/
 
-    client.multipleDelete(query).subscribe(new Observer[DeleteResult] {
-      override def onNext(result: DeleteResult): Unit = {
-        println("[MULTIPLE DELETION] Deleted "+result)
-        latch countDown()
-      }
-      override def onError(e: Throwable): Unit = println("[MULTIPLE DELETION] Failed "+e)
-      override def onComplete(): Unit = println("[MULTIPLE DELETION] Completed")
-    })
+//    database.multipleInsert(Array(userDoc,villageDoc)).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
+//
+//    database.multipleDelete(query).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
 
-    client.multipleUpdate(query, updateQuery).subscribe(new Observer[UpdateResult] {
-      override def onNext(result: UpdateResult): Unit = {
-        println("[MULTIPLE UPDATE] Updated "+result)
-        latch countDown()
-      }
-      override def onError(e: Throwable): Unit = println("[MULTIPLE UPDATE] Failed "+e)
-      override def onComplete(): Unit = println("[MULTIPLE UPDATE] Completed")
-    })
+//    database.multipleUpdate(query, updateQuery).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
 
     latch await()
     assert(1==1)

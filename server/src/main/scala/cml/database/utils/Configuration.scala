@@ -1,4 +1,9 @@
-package cml.utils
+package cml.database.utils
+
+/**
+  * This object contains all the Server configurations
+  * @author MonicaGondolini
+  */
 
 object Configuration{
 

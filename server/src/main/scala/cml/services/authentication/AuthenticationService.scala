@@ -1,11 +1,15 @@
 package cml.services.authentication
 
+import cml.database.DatabaseClient
+import cml.database.utils.Configuration.DbConfig
+import org.mongodb.scala.{Completed, Document, ObservableImplicits, Observer}
+
 import scala.concurrent._
 
 /**
   * Trait for authentication service
   *
-  * @author Chiara Volonnino
+  * @author Chiara Volonnino, Monica Gondolini
   */
 
 trait AuthenticationService {
@@ -16,7 +20,7 @@ trait AuthenticationService {
     * @return a future
     */
 
-  def register (username: String, password: String): Future[String]
+  def register (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * To execute login into a system.
@@ -25,7 +29,7 @@ trait AuthenticationService {
     * @return a future completes successfully, otherwise it fails.
     */
 
-  def login (username: String, password: String): Future[String]
+  def login (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Allow user to logout from the system.
@@ -33,21 +37,21 @@ trait AuthenticationService {
     * @return a future if the user logout successful
     */
 
-  def logout (username: String) : Future[Unit]
+  def logout (username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * To delete user from database
     * @param username username to delete
     * @return a future if the delete user successful
     */
-  def delete (username: String): Future[Unit]
+  def delete (username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * Check username and then valid a token
     * @param username to check
     * @return a future if username found
     */
-  def validationToken(username: String): Future[Unit]
+  def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * To connect service with database
@@ -62,38 +66,43 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  private val USERNAME_REGISTER = "username_login"
-  private val PASSWORD_REGISTER = "password_login"
-  private val registerQuery = ""
-    //db.user.insert({USERNAME_REGISTER: "?" , $PASSWORD_REGISTER: "?" })
+  private val USERNAME = "username"
+  private val PASSWORD = "password"
 
-  private val USERNAME_LOGIN = "username_login"
-  private val PASSWORD_LOGIN = "password_login"
-  private val loginQuery = ""
-    //db.user.find({USERNAME_REGISTER: "?", PASSWORD_REGISTER: "?" })
+  val database: DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
-  // forse var ridondanti da provare, non saprei dire
-  private val USERNAME_DELETE = "username_delete"
-  private val deleteQuery = ""
-    //db.user.deleteOne({USERNAME_REGISTER: "?" })
+  def apply(): AuthenticationService = AuthenticationServiceImpl()
+  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits{
 
-  private val USERNAME_VALIDATION_TOKEN = "username_validationToken"
-  private val validationTokenQuery = ""
-    //db.user.find({USERNAME_REGISTER: "?" })
+    var document: Document = _
+
+    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(USERNAME->username, PASSWORD->password)
+      database.insert(document).map(_ => "Completed")
+    }
+
+    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(USERNAME->username, PASSWORD->password)
+      database.find(document).map(_ => "Completed")
+    }
+
+    override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
+      document = Document(USERNAME->username)
+      database.find(document).map(_ => "Completed")
+    }
+
+    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
+      document = Document(USERNAME->username)
+      database.delete(document).map(_ => "Completed")
+    }
+
+    override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
+      document = Document(USERNAME->username)
+      database.find(document).map(_ => "Completed")
+    }
+
+    override def connection: Future[Unit] = ???
+  }
+
 }
 
-class AuthenticationServiceImpl() extends AuthenticationService {
-
-  //bisogna fare connessione con il DB
-  override def register(checkUsername: String, checkPassword: String): Future[String] = ???
-
-  override def login(username: String, password: String): Future[String] = ???
-
-  override def logout(username: String): Future[Unit] = ???
-
-  override def delete(username: String): Future[Unit] = ???
-
-  override def validationToken(username: String): Future[Unit] = ???
-
-  override def connection: Future[Unit] = ???
-}
