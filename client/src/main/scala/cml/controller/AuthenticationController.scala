@@ -10,7 +10,7 @@ import cml.utils.Configuration.{ControllerMsg, InputControl}
 
 /**
   * Controller for the graphic user interface
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 
 class AuthenticationController {

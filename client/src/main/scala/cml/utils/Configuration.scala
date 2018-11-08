@@ -1,7 +1,7 @@
 package cml.utils
 /**
   * Configuration constants of the application
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 object Configuration {
 
@@ -30,7 +30,7 @@ object Configuration {
   }
 
   object AuthenticationWindow{
-    val path: String = "view/authentication_view.fxml"
+    val path: String = "fxml/authentication_view.fxml"
     val title: String = "Creature Mania Legends"
     val width: Int = 600
     val heigth: Int = 400

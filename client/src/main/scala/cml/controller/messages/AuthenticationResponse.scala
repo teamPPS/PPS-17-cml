@@ -2,7 +2,7 @@ package cml.controller.messages
 
 /**
   * Authentication response messages
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 
 object AuthenticationResponse {
@@ -12,7 +12,7 @@ object AuthenticationResponse {
   sealed trait LoginResponse extends AuthenticationResponse
 
   /**
-    * Response for user'registration succeeded
+    * Response for user registration succeeded
     * @param succ success message
     */
   case class RegisterSuccess(succ: String) extends RegisterResponse
