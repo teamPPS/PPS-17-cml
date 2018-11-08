@@ -35,4 +35,12 @@ object Configuration {
     val width: Int = 600
     val heigth: Int = 400
   }
+
+  object BattleWindows {
+    val path: String = "/../resources/fxml/BattleView.fxml"
+    val title: String = "Battle window"
+    val width: Int = 600
+    val height: Int = 400
+
+  }
 }
