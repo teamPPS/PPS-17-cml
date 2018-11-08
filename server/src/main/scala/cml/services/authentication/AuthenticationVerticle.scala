@@ -7,7 +7,7 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
-import cml.services.authentication.utils.AuthenticationUrl
+import cml.services.authentication.utils.AuthenticationConfig.AuthenticationUrl
 import cml.core.HttpMessage
 
 /**

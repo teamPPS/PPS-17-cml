@@ -2,7 +2,8 @@ package cml.services.authentication
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import org.mongodb.scala.{Completed, Document, ObservableImplicits, Observer}
+import cml.services.authentication.utils.AuthenticationConfig.User
+import org.mongodb.scala.{Document, ObservableImplicits}
 
 import scala.concurrent._
 
@@ -66,9 +67,6 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  private val USERNAME = "username"
-  private val PASSWORD = "password"
-
   val database: DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
@@ -77,27 +75,27 @@ object AuthenticationService {
     var document: Document = _
 
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
-      document = Document(USERNAME->username, PASSWORD->password)
+      document = Document(User.USERNAME->username, User.PASSWORD->password)
       database.insert(document).map(_ => "Completed")
     }
 
     override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
-      document = Document(USERNAME->username, PASSWORD->password)
+      document = Document(User.USERNAME->username, User.PASSWORD->password)
       database.find(document).map(_ => "Completed")
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
+      document = Document(User.USERNAME->username)
       database.find(document).map(_ => "Completed")
     }
 
     override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
+      document = Document(User.USERNAME->username)
       database.delete(document).map(_ => "Completed")
     }
 
     override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
+      document = Document(User.USERNAME->username)
       database.find(document).map(_ => "Completed")
     }
 

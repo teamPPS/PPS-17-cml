@@ -6,7 +6,7 @@ package cml.services.authentication
   * @author Chiara Volonnino
   */
 import cml.core.{BeforeAndAfterTest, HttpMessage, VerticleTesting}
-import cml.services.authentication.utils.AuthenticationUrl
+import cml.services.authentication.utils.AuthenticationConfig.AuthenticationUrl
 import io.vertx.core.Vertx
 
 import scala.concurrent.Promise

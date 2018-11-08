@@ -6,6 +6,7 @@ import org.mongodb.scala.ObservableImplicits
 
 import scala.concurrent.{ExecutionContext, Future}
 
+
 /**
   * Connector to the MongoDB database
   *
@@ -88,10 +89,13 @@ object DatabaseClient {
 
     override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
       collection.insertOne(document).toFuture()
-        .recover{case e: Throwable =>
-          println(e)
-          Future.failed(e)
-        }.map(result => result.toString)
+        .map(result => result.toString)
+        .recoverWith{
+          case e =>
+            println("error")
+            Future.failed(e)
+        }
+
     }
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {

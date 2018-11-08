@@ -3,11 +3,12 @@ package cml.database
 import java.util.concurrent.CountDownLatch
 
 import cml.database.utils.Configuration.DbConfig
-
+import cml.services.authentication.utils.AuthenticationConfig.User
+import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Village}
 import org.scalatest.AsyncFunSuite
 import org.mongodb.scala.Document
 
-import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 /**
   * Test for DatabaseClient class
@@ -19,46 +20,53 @@ class DatabaseClientTest extends AsyncFunSuite{
   test("testDatabaseConnection"){
 
     val database : DatabaseClient = DatabaseClient(DbConfig.usersColl)
+    val dbVillage : DatabaseClient = DatabaseClient(DbConfig.villageColl)
 
-    val doc: Document = Document("_id"->2, "name" -> "MongoDB", "type" -> "database",
-      "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
+    val doc: Document = Document("_id" -> 0, "name" -> "prova")
+    val userDoc: Document = Document(User.USERNAME -> "CMLuser", User.PASSWORD -> "pps")
 
-    val doc1: Document = Document( "name" -> "PPS", "type" -> "database",
-      "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
+    val villageDoc: Document = Document(Village.NAME -> "PPSvillage", Village.USERNAME  -> "CMLuser", Village.FOOD -> 10, Village.GOLD ->100,
+      Village.BUILDING -> Document(Building.ID -> 0, Building.TYPE -> "farm", Building.LEVEL -> 0),
+      Village.HABITAT -> Document(Habitat.ID->0, Habitat.LEVEL -> 0, Habitat.ELEMENT-> "fire",
+          Habitat.CREATURE -> Document(Creature.ID ->0, Creature.NAME -> "fireCreature", Creature.LEVEL -> 0, Creature.ELEMENT-> "fire")))
 
-    val userDoc: Document = Document("username" -> "CMLuser", "password" -> "pps")
-
-    val villageDoc: Document = Document("villageName" -> "PPSvillage", "username" -> "CMLuser", "food" -> 10, "gold" ->100,
-      "building" -> Document("buildingId"->0, "buildingType"-> "farm", "buildingLevel" -> 0),
-      "habitat" -> Document("habitatId"->0, "buildingLevel" -> 0, "element"-> "fire",
-            "creature"->Document("creatureId"->0, "creatureName" -> "fireCreature","creatureLevel" -> 0, "element"-> "fire")))
-
-    val query: Document = Document("type"->"database")
-    val queryFind: Document = Document("name" -> "MongoDB")
-    val updateQuery: Document = Document("$set" -> Document("name" -> "Database"))
+    val query: Document = Document(User.USERNAME->"CMLuser")
+    val queryFind: Document = Document(Village.NAME -> "PPSVillage")
+    val updateQuery: Document = Document("$set" -> Document(Village.FOOD -> 1000))
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    database.insert(doc).recoverWith{case e: Throwable =>
-      println(e)
-      Future.failed(e)
-    }.map(_ => "Completed")
+    database.insert(doc).map(_=>"Completed").onComplete{
+        case Success(result) =>
+          println("Success "+result)
+          latch countDown()
+
+        case Failure(error) =>
+          println("Failure" + error)
+          latch countDown()
+    }
+
 //    latch countDown()
 
-    database.find(queryFind).recoverWith{case e: Throwable =>
-      println(e)
-      Future.failed(e)
-    }.map(_ => "Completed")
-
-    database.delete(query).recoverWith{case e: Throwable =>
-      println(e)
-      Future.failed(e)
-    }.map(_ => "Completed")
-
-    database.update(query, updateQuery).recoverWith{case e: Throwable =>
-      println(e)
-      Future.failed(e)
-    }.map(_ => "Completed")
+//    dbVillage.insert(villageDoc).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
+////
+//    database.find(queryFind).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
+//
+//    database.delete(query).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
+//
+//    database.update(query, updateQuery).recoverWith{case e: Throwable =>
+//      println(e)
+//      Future.failed(e)
+//    }.map(_ => "Completed")
 
 /* -------------------- ACTIONS ON MULTIPLE DOCUMENTS---------------------------*/
 

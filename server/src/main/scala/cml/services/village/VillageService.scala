@@ -1,5 +1,8 @@
 package cml.services.village
 
+import cml.database.DatabaseClient
+import cml.database.utils.Configuration.DbConfig
+
 import scala.concurrent.Future
 
 
@@ -34,6 +37,8 @@ sealed trait VillageService {
 }
 
 object VillageService {
+
+  val database: DatabaseClient = DatabaseClient(DbConfig.villageColl)
 
   def apply(): VillageService = VillageServiceImpl()
 
