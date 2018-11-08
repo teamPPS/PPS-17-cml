@@ -4,7 +4,8 @@ import cml.database.utils.Configuration.DbConfig
 import org.mongodb.scala._
 import org.mongodb.scala.ObservableImplicits
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.util.Success
 
 
 /**
@@ -88,14 +89,25 @@ object DatabaseClient {
     val collection: MongoCollection[Document] = database getCollection coll
 
     override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
-      collection.insertOne(document).toFuture()
-        .map(result => result.toString)
-        .recoverWith{
-          case e =>
-            println("error")
-            Future.failed(e)
+      val res = collection.insertOne(document)
+      val promise: Promise[String] = Promise()
+      res.subscribe(new Observer[Completed] {
+        var empty: Boolean = true
+        override def onNext(result: Completed): Unit = {
+          println("inserted "+result)
+          empty = false
+          promise.success(result.toString)
         }
-
+        override def onError(e: Throwable): Unit ={
+          println("error "+e)
+          promise.failure(e)
+        }
+        override def onComplete(): Unit =  {
+          println("completed")
+          if(empty) promise.success("")
+        }
+      })
+      promise.future
     }
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
@@ -103,7 +115,7 @@ object DatabaseClient {
         .recoverWith{case e: Throwable =>
         println(e)
         Future.failed(e)
-      }.map(result => result.toString)
+      }.map(result => result)
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
@@ -111,7 +123,7 @@ object DatabaseClient {
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result.toString)
+        }.map(result => result)
     }
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
@@ -119,7 +131,7 @@ object DatabaseClient {
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result.toString)
+        }.map(result => result)
     }
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
@@ -135,7 +147,7 @@ object DatabaseClient {
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result.toString)
+        }.map(result => result)
     }
 
     override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
@@ -143,7 +155,7 @@ object DatabaseClient {
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result.toString)
+        }.map(result => result)
     }
   }
 }

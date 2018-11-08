@@ -8,6 +8,7 @@ import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Vi
 import org.scalatest.AsyncFunSuite
 import org.mongodb.scala.Document
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -36,17 +37,12 @@ class DatabaseClientTest extends AsyncFunSuite{
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    database.insert(doc).map(_=>"Completed").onComplete{
-        case Success(result) =>
-          println("Success "+result)
-          latch countDown()
-
-        case Failure(error) =>
-          println("Failure" + error)
-          latch countDown()
+    database.insert(doc).map(_=>"Completed").onComplete {
+      case Success(res) => println(res)
+      case Failure(err) => println(err)
+      latch countDown()
     }
 
-//    latch countDown()
 
 //    dbVillage.insert(villageDoc).recoverWith{case e: Throwable =>
 //      println(e)
