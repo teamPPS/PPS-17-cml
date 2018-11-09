@@ -20,6 +20,7 @@ class BattleViewApplication extends Application {
     primaryStage.setScene(scene)
     primaryStage.setResizable(false)
     primaryStage.setOnCloseRequest(_ => {
+      println("Village View")
       Platform.exit()
       System.exit(0)
     })
