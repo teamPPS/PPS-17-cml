@@ -1,5 +1,7 @@
 package cml.database
 
+import java.util.concurrent.CountDownLatch
+
 import cml.database.utils.Configuration.DbConfig
 import org.mongodb.scala._
 import org.mongodb.scala.ObservableImplicits
@@ -22,7 +24,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def insert(document: Document)(implicit ec: ExecutionContext): Future[String]
+  def insert(document: Document, latch: CountDownLatch)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Delete a specific document from the database
@@ -88,7 +90,7 @@ object DatabaseClient {
   case class DatabaseClientImpl(coll: String) extends DatabaseClient with ObservableImplicits {
     val collection: MongoCollection[Document] = database getCollection coll
 
-    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
+    override def insert(document: Document, latch: CountDownLatch)(implicit ec: ExecutionContext): Future[String] = {
       val res = collection.insertOne(document)
       val promise: Promise[String] = Promise()
       res.subscribe(new Observer[Completed] {
@@ -101,10 +103,12 @@ object DatabaseClient {
         override def onError(e: Throwable): Unit ={
           println("error "+e)
           promise.failure(e)
+          latch countDown()
         }
         override def onComplete(): Unit =  {
           println("completed")
           if(empty) promise.success("")
+          latch countDown()
         }
       })
       promise.future
@@ -112,50 +116,56 @@ object DatabaseClient {
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
       collection.deleteOne(document).toFuture()
+        .map(_ => {})
         .recoverWith{case e: Throwable =>
-        println(e)
-        Future.failed(e)
-      }.map(result => result)
+          println(e)
+          Future.failed(e)
+        }
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
       collection.updateOne(document,update).toFuture()
+        .map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result)
+        }
     }
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
       collection.find(document).toFuture()
+        .map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result)
+        }
     }
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
       collection.insertMany(documents).toFuture()
+        .map(_ => "Completed")
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result.toString)
+        }
     }
 
     override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
       collection.deleteMany(documents).toFuture()
+        .map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result)
+        }
     }
 
     override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
       collection.updateMany(document,update).toFuture()
+        .map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
-        }.map(result => result)
+        }
     }
   }
 }

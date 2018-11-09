@@ -37,11 +37,12 @@ class DatabaseClientTest extends AsyncFunSuite{
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    database.insert(doc).map(_=>"Completed").onComplete {
+    database.insert(doc,latch).onComplete {
       case Success(res) => println(res)
-      case Failure(err) => println(err)
-      latch countDown()
+      case Failure(err) => println("FAILURE"+err)
     }
+    
+    latch await()
 
 
 //    dbVillage.insert(villageDoc).recoverWith{case e: Throwable =>
@@ -81,7 +82,6 @@ class DatabaseClientTest extends AsyncFunSuite{
 //      Future.failed(e)
 //    }.map(_ => "Completed")
 
-    latch await()
     assert(1==1)
   }
 

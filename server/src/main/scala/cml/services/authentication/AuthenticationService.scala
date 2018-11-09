@@ -74,30 +74,35 @@ object AuthenticationService {
 
     var document: Document = _
 
-    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
-      document = Document(User.USERNAME->username, User.PASSWORD->password)
-      database.insert(document).map(_ => "Completed")
-    }
+    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = ???
+//    {
+//      document = Document(User.USERNAME->username, User.PASSWORD->password)
+//      database.insert(document).map(_ => "Completed")
+//    }
 
-    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
-      document = Document(User.USERNAME->username, User.PASSWORD->password)
-      database.find(document).map(_ => "Completed")
-    }
+    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = ???
+//    {
+//      document = Document(User.USERNAME->username, User.PASSWORD->password)
+//      database.find(document).map(_ => "Completed")
+//    }
 
-    override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
+    override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = ???
+//    {
+//      document = Document(User.USERNAME->username)
+//      database.find(document).map(_ => {})
+//    }
+
+    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = ???
+//    {
+//      document = Document(User.USERNAME->username)
+//      database.delete(document).map(_ => {})
+//    }
+
+    override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = ???
+/*    {
       document = Document(User.USERNAME->username)
-      database.find(document).map(_ => "Completed")
-    }
-
-    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(User.USERNAME->username)
-      database.delete(document).map(_ => "Completed")
-    }
-
-    override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(User.USERNAME->username)
-      database.find(document).map(_ => "Completed")
-    }
+      database.find(document).map(_ => {})
+    }*/
 
     override def connection: Future[Unit] = ???
   }
