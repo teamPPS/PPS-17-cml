@@ -37,14 +37,14 @@ object Configuration {
   }
 
   object BattleWindows {
-    val path: String = "/../resources/fxml/BattleView.fxml"
+    val path: String = "fxml/BattleView.fxml"
     val title: String = "Battle window"
     val width: Int = 600
     val height: Int = 400
   }
 
   object ArenaWindows {
-    val path: String = "/../resources/fxml/ArenaView.fxml"
+    val path: String = "fxml/ArenaView.fxml"
     val title: String = "Arena window"
     val width: Int = 600
     val height: Int = 400

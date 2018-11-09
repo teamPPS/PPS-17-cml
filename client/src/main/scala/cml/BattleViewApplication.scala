@@ -14,7 +14,7 @@ import javafx.stage.Stage
 
 class BattleViewApplication extends Application {
   override def start(primaryStage: Stage): Unit = {
-    val root: Parent = FXMLLoader.load(getClass.getResource(BattleWindows.path))
+    val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(BattleWindows.path))
     val scene : Scene = new Scene(root, BattleWindows.width, BattleWindows.height)
     primaryStage.setTitle(BattleWindows.title)
     primaryStage.setScene(scene)

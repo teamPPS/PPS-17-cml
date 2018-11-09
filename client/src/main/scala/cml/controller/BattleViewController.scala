@@ -37,7 +37,7 @@ class BattleViewController {
       println("Arena view -----> wait another user for battle")
 
       val primaryStage: Stage = new Stage()
-      val root: Parent = FXMLLoader.load(getClass.getResource(ArenaWindows.path))
+      val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(ArenaWindows.path))
       val scene : Scene = new Scene(root, ArenaWindows.width, ArenaWindows.height)
 
       primaryStage.setTitle(ArenaWindows.title)
