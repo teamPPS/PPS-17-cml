@@ -41,26 +41,28 @@ class DatabaseClientTest extends AsyncFunSuite{
       case Failure(err) => println("Insertion FAILURE "+err)
     }
 
-    dbVillage.insert(villageDoc) onComplete{
-      case Success(res) => println("Insertion SUCCESS "+res)
-      case Failure(err) => println("Insertion FAILURE "+err)
-    }
+    latch countDown()
 
-    database.find(userDoc) onComplete {
-      case Success(res) => println("Find SUCCESS "+res)
-      case Failure(err) => println("Find FAILURE "+err)
-    }
-
-    database.delete(userDoc) onComplete {
-      case Success(res) => println("Deletion SUCCESS"+res)
-      case Failure(err) => println("Deletion FAILURE"+err)
-    }
-
-    database.update(userDoc, updateQuery) onComplete {
-      case Success(res) => println("Update SUCCESS "+res)
-      case Failure(err) => println("Update FAILURE "+err)
-
-    }
+//    dbVillage.insert(villageDoc) onComplete{
+//      case Success(res) => println("Insertion SUCCESS "+res)
+//      case Failure(err) => println("Insertion FAILURE "+err)
+//    }
+//
+//    database.find(userDoc) onComplete {
+//      case Success(res) => println("Find SUCCESS "+res)
+//      case Failure(err) => println("Find FAILURE "+err)
+//    }
+//
+//    database.delete(userDoc) onComplete {
+//      case Success(res) => println("Deletion SUCCESS"+res)
+//      case Failure(err) => println("Deletion FAILURE"+err)
+//    }
+//
+//    database.update(userDoc, updateQuery) onComplete {
+//      case Success(res) => println("Update SUCCESS "+res)
+//      case Failure(err) => println("Update FAILURE "+err)
+//
+//    }
 
     latch await()
     assert(1==1)
