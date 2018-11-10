@@ -42,8 +42,8 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     * @param b boolean
     */
   def disableButtons(b: Boolean): Unit ={
-    controller.registerBtn.setDisable(b)
-    controller.loginBtn.setDisable(b)
+    controller.registerButton.setDisable(b)
+    controller.loginButton.setDisable(b)
   }
 
 }

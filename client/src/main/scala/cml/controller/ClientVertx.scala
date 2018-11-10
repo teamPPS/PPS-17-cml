@@ -6,25 +6,24 @@ import cml.utils.Configuration.{AuthenticationMsg, Connection}
 import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 /**
   * This trait describes the Vertx client
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 trait ClientVertx {
 
   /**
-    * Requests the registration of a user into the system
+    * Requests a user registration into the system
     * @param username player's username
     * @param password player's password
     */
   def register(username: String, password: String): Unit
 
   /**
-    * Requests the login of a user into the system
+    * Requests the login of a specific user into the system
     * @param username player's username
     * @param password player's password
     */
