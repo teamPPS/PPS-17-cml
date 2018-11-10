@@ -14,10 +14,11 @@ import scala.concurrent.Promise
 class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
   test("Validation token test") {
+    println("Validation Token test")
     val vertx: Vertx = Vertx.vertx()
     val promiseValidation = Promise[String]
     vertx.createHttpClient()
-      .getNow(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API, //REGISTER_API per test registrazione
+      .getNow(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API,
         response => {
           response.exceptionHandler(promiseValidation.failure)
           response.bodyHandler(buffer => promiseValidation.success(buffer.toString))
@@ -28,4 +29,5 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
       assert(res equals HttpMessage.BAD_REQUEST)
     })
   }
+
 }

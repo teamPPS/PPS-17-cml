@@ -2,6 +2,8 @@ package cml.services.village
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
+import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Village}
+import org.mongodb.scala.Document
 
 import scala.concurrent.Future
 
@@ -43,6 +45,14 @@ object VillageService {
   def apply(): VillageService = VillageServiceImpl()
 
   case class VillageServiceImpl() extends VillageService {
+
+    //Esempio Documento villaggio
+   /*
+    val villageDoc: Document = Document(Village.NAME -> "PPSvillage", Village.USERNAME  -> "CMLuser", Village.FOOD -> 10, Village.GOLD ->100,
+      Village.BUILDING -> Document(Building.ID -> 0, Building.TYPE -> "farm", Building.LEVEL -> 0),
+      Village.HABITAT -> Document(Habitat.ID->0, Habitat.LEVEL -> 0, Habitat.ELEMENT-> "fire",
+        Habitat.CREATURE -> Document(Creature.ID ->0, Creature.NAME -> "fireCreature", Creature.LEVEL -> 0, Creature.ELEMENT-> "fire")))
+    */
 
     override def createVillage(villageId: String, villageName: String): Future[String] = ???
     //Creare Documento db.insert(doc)

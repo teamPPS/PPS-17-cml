@@ -54,12 +54,6 @@ trait AuthenticationService {
     */
   def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit]
 
-  /**
-    * To connect service with database
-    * @return
-    */
-  def connection: Future[Unit]
-
 }
 
 /**
@@ -74,38 +68,51 @@ object AuthenticationService {
 
     var document: Document = _
 
-    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = ???
-//    {
-//      document = Document(User.USERNAME->username, User.PASSWORD->password)
-//      database.insert(document).map(_ => "Completed")
-//    }
+    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
+      document = Document(User.USERNAME->username, User.PASSWORD->password)
+      database.insert(document).map(_ => "Insertion Completed")
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = ???
-//    {
-//      document = Document(User.USERNAME->username, User.PASSWORD->password)
-//      database.find(document).map(_ => "Completed")
-//    }
+    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] =  {
+      document = Document(User.USERNAME->username, User.PASSWORD->password)
+      database.find(document).map(_ => "Find Completed")
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = ???
-//    {
-//      document = Document(User.USERNAME->username)
-//      database.find(document).map(_ => {})
-//    }
-
-    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = ???
-//    {
-//      document = Document(User.USERNAME->username)
-//      database.delete(document).map(_ => {})
-//    }
-
-    override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = ???
-/*    {
+    override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
       document = Document(User.USERNAME->username)
       database.find(document).map(_ => {})
-    }*/
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    override def connection: Future[Unit] = ???
+    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
+      document = Document(User.USERNAME->username)
+      database.delete(document).map(_ => {})
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
+
+    override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
+      document = Document(User.USERNAME->username)
+      database.find(document).map(_ => {})
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
+
   }
-
 }
 

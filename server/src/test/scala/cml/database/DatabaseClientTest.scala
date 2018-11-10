@@ -8,7 +8,6 @@ import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Vi
 import org.scalatest.AsyncFunSuite
 import org.mongodb.scala.Document
 
-import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -33,55 +32,37 @@ class DatabaseClientTest extends AsyncFunSuite{
 
     val query: Document = Document(User.USERNAME->"CMLuser")
     val queryFind: Document = Document(Village.NAME -> "PPSVillage")
-    val updateQuery: Document = Document("$set" -> Document(Village.FOOD -> 1000))
+    val updateQuery: Document = Document("$set" -> Document(User.USERNAME -> "PPS"))
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    database.insert(doc,latch).onComplete {
-      case Success(res) => println(res)
-      case Failure(err) => println("FAILURE"+err)
+    database.insert(userDoc) onComplete{
+      case Success(res) => println("Insertion SUCCESS "+res)
+      case Failure(err) => println("Insertion FAILURE "+err)
     }
-    
+
+    dbVillage.insert(villageDoc) onComplete{
+      case Success(res) => println("Insertion SUCCESS "+res)
+      case Failure(err) => println("Insertion FAILURE "+err)
+    }
+
+    database.find(userDoc) onComplete {
+      case Success(res) => println("Find SUCCESS "+res)
+      case Failure(err) => println("Find FAILURE "+err)
+    }
+
+    database.delete(userDoc) onComplete {
+      case Success(res) => println("Deletion SUCCESS"+res)
+      case Failure(err) => println("Deletion FAILURE"+err)
+    }
+
+    database.update(userDoc, updateQuery) onComplete {
+      case Success(res) => println("Update SUCCESS "+res)
+      case Failure(err) => println("Update FAILURE "+err)
+
+    }
+
     latch await()
-
-
-//    dbVillage.insert(villageDoc).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-////
-//    database.find(queryFind).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-//
-//    database.delete(query).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-//
-//    database.update(query, updateQuery).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-
-/* -------------------- ACTIONS ON MULTIPLE DOCUMENTS---------------------------*/
-
-//    database.multipleInsert(Array(userDoc,villageDoc)).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-//
-//    database.multipleDelete(query).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-
-//    database.multipleUpdate(query, updateQuery).recoverWith{case e: Throwable =>
-//      println(e)
-//      Future.failed(e)
-//    }.map(_ => "Completed")
-
     assert(1==1)
   }
 
