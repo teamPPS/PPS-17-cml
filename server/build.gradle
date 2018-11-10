@@ -10,7 +10,7 @@ dependencies {
     implementation 'com.pauldijou:jwt-core_2.12:0.16.0'
     compile 'io.vertx:vertx-web-scala_2.12:3.5.4'
     compile "io.vertx:vertx-lang-scala_2.12:3.5.4"
-    compile 'io.vertx:vertx-web-client:3.5.4'
+    compile 'io.vertx:vertx-web-client-scala_2.12:3.5.4'
 
     // scala test
     testCompile "org.scalatest:scalatest_2.12:3.0.1"
