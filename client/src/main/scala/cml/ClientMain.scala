@@ -14,7 +14,7 @@ import cml.utils.Configuration.AuthenticationWindow
 class ClientMain extends Application{
 
   override def start(primaryStage: Stage): Unit = {
-    val root: Parent = FXMLLoader.load(getClass.getResource(AuthenticationWindow.path))
+    val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path))
     val scene : Scene = new Scene(root, AuthenticationWindow.width, AuthenticationWindow.heigth)
     primaryStage.setTitle(AuthenticationWindow.title)
     primaryStage.setScene(scene)
