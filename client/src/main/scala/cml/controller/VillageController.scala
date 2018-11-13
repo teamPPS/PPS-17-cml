@@ -60,11 +60,10 @@ class VillageController {
     // flyweight tile https://www.baeldung.com/java-flyweight https://refactoring.guru/design-patterns/flyweight/java/example
 
     loop(0, 20) foreach {
-      case(x, y) => {
+      case(x, y) =>
         var mapLabel = new Label("terrain")
         addDragAndDropTargetHandler(mapLabel)
         villageMap add(mapLabel, x, y)
-      }
     }
 
     def loop(s: Int, e: Int) =
@@ -79,8 +78,9 @@ class VillageController {
   def addDragAndDropSourceHandler(n: Label): Unit = { //al posto di Label ci andrà il tile personalizzato
 
     n setOnDragDetected((event: MouseEvent) => {
-      var dragBoard: Dragboard = n startDragAndDrop TransferMode.COPY
-      var content: ClipboardContent = new ClipboardContent
+      val dragBoard: Dragboard = n startDragAndDrop TransferMode.COPY
+//      dragBoard setDragView(image) icona vicino mouse mentre si fa il drag
+      val content: ClipboardContent = new ClipboardContent
       content putString(n getText)
       dragBoard setContent content
       event consume()
