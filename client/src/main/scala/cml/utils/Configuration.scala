@@ -1,14 +1,14 @@
 package cml.utils
 /**
   * Configuration constants of the application
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 object Configuration {
 
   object Connection{
-    val port: Int = 80
-    val host: String = "jsonplaceholder.typicode.com"  //"localhost"
-    val requestUri: String ="/posts/42" // "/uri"
+    val port: Int = 8080
+    val host: String = "localhost"  //"localhost"
+    val requestUri: String ="/api/authentication/register" // "/uri"
   }
 
   object AuthenticationMsg{
@@ -30,7 +30,7 @@ object Configuration {
   }
 
   object AuthenticationWindow{
-    val path: String = "view/authentication_view.fxml"
+    val path: String = "fxml/authentication_view.fxml"
     val title: String = "Creature Mania Legends"
     val width: Int = 600
     val heigth: Int = 400

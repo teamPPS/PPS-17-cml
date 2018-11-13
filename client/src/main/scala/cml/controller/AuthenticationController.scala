@@ -10,45 +10,48 @@ import cml.utils.Configuration.{ControllerMsg, InputControl}
 
 /**
   * Controller for the graphic user interface
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 
 class AuthenticationController {
 
-  @FXML var usernameField: TextField = _
-  @FXML var passwordField: PasswordField = _
-  @FXML var registerBtn: Button = _
-  @FXML var loginBtn: Button = _
+  @FXML var registrationUsernameField: TextField = _
+  @FXML var registrationPasswordField: PasswordField = _
+  @FXML var loginUsernameField: TextField = _
+  @FXML var loginPasswordField: PasswordField = _
+  @FXML var registerButton: Button = _
+  @FXML var loginButton: Button = _
   @FXML var formMsgLabel: Label = _
 
-  var username: String = _
-  var password: String = _
-
   var system = ActorSystem("mySystem")
-  var authenticationActor: ActorRef = system.actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
+  var authenticationActor: ActorRef = system actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
 
 
   def initialize(): Unit = {
-    loginBtn.setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg.login))
-    registerBtn.setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg.register))
+    registerButton setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg register, registrationUsernameField , registrationPasswordField))
+    loginButton setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg login, loginUsernameField, loginPasswordField))
   }
 
   /**
-    * Sends requests to the actor which manages the authentication,
+    * Sends requests to the actor which manages the authentication
     * @param msg defines which message to send to the authentication actor
     */
-  def requestAuthentication(msg: String): Unit = {
-    username = usernameField.getText()
-    password = passwordField.getText()
 
-    if(username.isEmpty || password.isEmpty){
-      formMsgLabel.setText(InputControl.emptyFields)
-    }
+  def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
+      val username = usernameField getText()
+      val password = passwordField getText()
 
-    if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
-      if (msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
-      else if (msg.equals(ControllerMsg.register)) authenticationActor ! Register(username, password)
-    }
+      if(username.isEmpty ||password.isEmpty) {
+        formMsgLabel setText (InputControl emptyFields)
+      }
+
+      if(username.matches(InputControl userExp) && password.matches(InputControl pswExp)){
+        if(msg.equals(ControllerMsg register)) authenticationActor ! Register(username, password)
+        else if(msg.equals(ControllerMsg login)) authenticationActor ! Login(username, password)
+      }
+
+      registrationUsernameField setText("")
+      registrationPasswordField setText("")
   }
 
 }

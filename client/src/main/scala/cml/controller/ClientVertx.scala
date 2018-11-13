@@ -1,8 +1,11 @@
 package cml.controller
 
+import java.util.Base64
+
 import akka.actor.ActorRef
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
+import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
@@ -12,19 +15,19 @@ import scala.util.{Failure, Success}
 
 /**
   * This trait describes the Vertx client
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   */
 trait ClientVertx {
 
   /**
-    * Requests the registration of a user into the system
+    * Requests a user registration into the system
     * @param username player's username
     * @param password player's password
     */
   def register(username: String, password: String): Unit
 
   /**
-    * Requests the login of a user into the system
+    * Requests the login of a specific user into the system
     * @param username player's username
     * @param password player's password
     */
@@ -61,8 +64,10 @@ object ClientVertx{
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password") //debug
+      val header = s"base64" + Base64.getEncoder.encodeToString(s"$username:$password".getBytes())
       client.post(Connection.port, Connection.host, Connection.requestUri)
-        .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header)
+        .sendFuture
         .onComplete{
           case Success(result) => actor ! RegisterSuccess(AuthenticationMsg.registerSuccess)
             println("Success: "+result) //debug
@@ -73,8 +78,10 @@ object ClientVertx{
 
     override def login(username: String, password: String): Unit = {
       println(s"sending login request from username:$username with password:$password") //debug
-      client.get(Connection.port, Connection.host, Connection.requestUri)
-        .sendJsonObjectFuture(new JsonObject().put("username", username).put("password", password))
+      val header = s"base64" + Base64.getEncoder.encodeToString(s"$username:$password".getBytes())
+      client.put(Connection.port, Connection.host, Connection.requestUri)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header)
+        .sendFuture
         .onComplete{
           case Success(result) => actor ! LoginSuccess(AuthenticationMsg.loginSuccess)
             println("Success: "+result)//debug

@@ -33,7 +33,7 @@ class DatabaseClientTest extends AsyncFunSuite{
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    client.insert(doc).subscribe(new Observer[Completed] {
+    client.insert(doc1).subscribe(new Observer[Completed] {
       override def onNext(result: Completed): Unit ={
         println("[INSERTION] Inserted "+result)
         latch countDown()

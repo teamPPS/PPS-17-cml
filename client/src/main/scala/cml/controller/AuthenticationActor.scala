@@ -7,7 +7,7 @@ import javafx.application.Platform
 
 /**
   * Class that implements the actor which manages the authentication process
-  * @author Monica Gondolini
+  * @author Monica Gondolini,Filippo Portolani
   * @param controller controller of the authentication view
   */
 class AuthenticationActor(controller: AuthenticationController) extends Actor{
@@ -42,8 +42,8 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     * @param b boolean
     */
   def disableButtons(b: Boolean): Unit ={
-    controller.registerBtn.setDisable(b)
-    controller.loginBtn.setDisable(b)
+    controller.registerButton.setDisable(b)
+    controller.loginButton.setDisable(b)
   }
 
 }
