@@ -8,7 +8,6 @@ package cml.services.authentication.utils
 
 object AuthenticationConfig {
 
-
   object AuthenticationUrl {
 
     private val GENERAL_PATH = "/api/authentication"

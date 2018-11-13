@@ -3,7 +3,7 @@ package cml.services.authentication
 /**
   * This test class mach AuthenticationVerticle class is correct
   *
-  * @author Chiara Volonnino
+  * @author Chiara Volonnino, Monica Gondolini
   */
 
 import cml.core.{BeforeAndAfterTest, HttpMessage, TokenAuthentication}
@@ -15,28 +15,29 @@ import scala.concurrent.Promise
 
 class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
-
   val username: String = "pps"
   val password: String = "cml"
 
-/*
   test("Validation token test") {
     println("Validation Token test")
     val vertx: Vertx = Vertx.vertx()
     val promiseValidation = Promise[String]
+
+    val base64 =  TokenAuthentication.base64Authentication(username,password)
+
     vertx.createHttpClient()
-      .getNow(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API,
-        response => {
+      .get(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API)
+      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
+      .handler(response => {
           response.exceptionHandler(promiseValidation.failure)
           response.bodyHandler(buffer => promiseValidation.success(buffer.toString))
           response.statusCode()
-        })
+        }).end()
     promiseValidation.future.map(res => {
       println("validation: " + res)
       assert(res equals HttpMessage.BAD_REQUEST)
     })
   }
-*/
 
   test("Registration test"){
     println("Registration test")
@@ -82,28 +83,8 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     })
   }
 
-/*  test("Logout test"){
-    println("Logout test")
-    val vertx: Vertx = Vertx.vertx()
-    val promiseLogin = Promise[String]
 
-    val body: String = "{'username':'pps'}"
-
-    vertx.createHttpClient().put(8080, "127.0.0.1", AuthenticationUrl.LOGIN_API)
-      .putHeader("content-length", "1000")
-      .handler(response =>{
-        response.exceptionHandler(promiseLogin.failure)
-        response.bodyHandler(buffer => promiseLogin.success(buffer.toString))
-        response.statusCode()
-      }).write(body).end()
-
-    promiseLogin.future.map(res=>{
-      println("logout: " + res)
-      assert(res equals HttpMessage.BAD_REQUEST)
-    })
-  }*/
-
-/*  test("Delete test"){
+  test("Delete test"){
     println("Delete test")
     val vertx: Vertx = Vertx.vertx()
     val promiseDelete = Promise[String]
@@ -122,5 +103,5 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
       println("delete: " + res)
       assert(res equals HttpMessage.BAD_REQUEST)
     })
-  }*/
+  }
 }
