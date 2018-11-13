@@ -15,7 +15,7 @@ class ClientMain extends Application{
 
   override def start(primaryStage: Stage): Unit = {
     val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path))
-    val scene : Scene = new Scene(root, AuthenticationWindow.width, AuthenticationWindow.heigth)
+    val scene : Scene = new Scene(root, AuthenticationWindow.width, AuthenticationWindow.height)
     primaryStage.setTitle(AuthenticationWindow.title)
     primaryStage.setScene(scene)
     primaryStage.setResizable(false)
@@ -25,5 +25,4 @@ class ClientMain extends Application{
     })
     primaryStage.show()
   }
-
 }

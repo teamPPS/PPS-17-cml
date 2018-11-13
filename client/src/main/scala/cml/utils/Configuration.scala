@@ -33,7 +33,7 @@ object Configuration {
     val path: String = "fxml/authentication_view.fxml"
     val title: String = "Creature Mania Legends"
     val width: Int = 600
-    val heigth: Int = 400
+    val height: Int = 400
   }
 
   object BattleWindows {

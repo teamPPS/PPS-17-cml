@@ -1,9 +1,8 @@
 package cml.controller
 
-import java.util.Base64
-
 import akka.actor.ActorRef
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
+import cml.core.TokenAuthentication
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.lang.scala.json.JsonObject
@@ -15,7 +14,8 @@ import scala.util.{Failure, Success}
 
 /**
   * This trait describes the Vertx client
-  * @author Monica Gondolini,Filippo Portolani
+  * @author Monica Gondolini, Filippo Portolani
+  * @author (modified by) Chiara Volonnino
   */
 trait ClientVertx {
 
@@ -64,9 +64,9 @@ object ClientVertx{
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password") //debug
-      val header = s"base64" + Base64.getEncoder.encodeToString(s"$username:$password".getBytes())
+      val header = TokenAuthentication.base64Authentication(username, password)
       client.post(Connection.port, Connection.host, Connection.requestUri)
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header.get)
         .sendFuture
         .onComplete{
           case Success(result) => actor ! RegisterSuccess(AuthenticationMsg.registerSuccess)
@@ -78,9 +78,9 @@ object ClientVertx{
 
     override def login(username: String, password: String): Unit = {
       println(s"sending login request from username:$username with password:$password") //debug
-      val header = s"base64" + Base64.getEncoder.encodeToString(s"$username:$password".getBytes())
+      val header = TokenAuthentication.base64Authentication(username, password)
       client.put(Connection.port, Connection.host, Connection.requestUri)
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header.get)
         .sendFuture
         .onComplete{
           case Success(result) => actor ! LoginSuccess(AuthenticationMsg.loginSuccess)
