@@ -10,5 +10,6 @@ object HttpMessage {
 
   val BAD_REQUEST = "bad_request"
   val UNAUTHORIZED = "unauthorized"
+  val OK = "created"
 
 }

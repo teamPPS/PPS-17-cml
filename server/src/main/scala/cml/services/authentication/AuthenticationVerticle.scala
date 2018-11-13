@@ -5,9 +5,8 @@ import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
 
-import scala.concurrent.Future
 import scala.util.{Failure, Success}
-import cml.services.authentication.utils.AuthenticationUrl
+import cml.services.authentication.utils.AuthenticationConfig.AuthenticationUrl
 import cml.core.HttpMessage
 
 /**
@@ -18,7 +17,7 @@ import cml.core.HttpMessage
 
 class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
 
-  private var authenticationService: Future[AuthenticationService] = _
+  private val authenticationService: AuthenticationService =  AuthenticationService()
 
   override def initializeRouter(router: Router): Unit = {
     router post AuthenticationUrl.REGISTER_API handler register
@@ -34,7 +33,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
       request <- getRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(request)
     ) yield {
-      authenticationService flatMap(_.register(username, password)) onComplete {
+      authenticationService register(username,password) onComplete {
         case Success(_) =>
           JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(CREATED,_))
         case Failure(_) => sendResponse(BAD_REQUEST, "")
@@ -48,7 +47,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
       headerAuthorization <- getRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(headerAuthorization)
     ) yield {
-      authenticationService flatMap(_.login(username, password)) onComplete {
+      authenticationService login(username, password) onComplete {
         case Success(_) =>
           JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(OK,_))
         case Failure(_) => sendResponse(UNAUTHORIZED, HttpMessage.UNAUTHORIZED)
@@ -68,7 +67,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      authenticationService map(_.delete(username)) onComplete {
+      authenticationService delete username onComplete {
         case Success(_) => sendResponse(OK, username)
         case Failure(_) => sendResponse(UNAUTHORIZED, HttpMessage.UNAUTHORIZED)
       }
@@ -82,7 +81,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      authenticationService map(_.validationToken(username)) onComplete {
+      authenticationService validationToken username onComplete {
         case Success(_) => sendResponse(OK, username)
         case Failure(_) => sendResponse(UNAUTHORIZED, HttpMessage.UNAUTHORIZED)
       }

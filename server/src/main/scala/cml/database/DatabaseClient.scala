@@ -1,13 +1,16 @@
 package cml.database
 
-import cml.utils.Configuration.DbConfig
+import cml.database.utils.Configuration.DbConfig
 import org.mongodb.scala._
-import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import org.mongodb.scala.ObservableImplicits
+
+import scala.concurrent.{ExecutionContext, Future}
+
 
 /**
   * Connector to the MongoDB database
   *
-  * @author Filippo Portolani
+  * @author Filippo Portolani, Monica Gondolini
   */
 
 trait DatabaseClient{
@@ -15,104 +18,108 @@ trait DatabaseClient{
   /**
     * Inserts a new document in the Collection
     * @param document to be inserted
-    * @return Observable
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
-  def insert(document: Document):Observable[Completed]
+  def insert(document: Document)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Delete a specific document from the database
-    * @param query select the document we want to delete
-    * @return SingleObservable
+    * @param document select the document we want to delete
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
-  def delete(query: Document):SingleObservable[DeleteResult]
+  def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * Update a document with a given query
-    * @param query choose the document
+    * @param document choose the document
     * @param update the change we want to make on the document
-    * @return Observable
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
-  def update(query:Document, update:Document):Observable[UpdateResult]
+  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * Find a requested document
-    * @param query what we want to find
-    * @return Observable
+    * @param document what we want to find
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
-  def find(query: Document):Observable[Document]
+  def find(document: Document)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * Allow to insert multiple documents in the database
     * @param documents to insert
-    * @return Observable
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
 
-  def multipleInsert(documents: Array[Document]):Observable[Completed]
+  def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Delete multiple documents
     * @param documents to delete
-    * @return SingleObservable
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
-  def multipleDelete(documents: Document):SingleObservable[DeleteResult]
+  def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * Update multiple documents
     * @param query choose the document
     * @param update the change we want to make on the document
-    * @return Observable
+    * @param ec implicit for ExecutionContext
+    * @return a future
     */
-
-  def multipleUpdate(query:Document, update:Document):Observable[UpdateResult]
-
+  def multipleUpdate(query:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
 }
 
 /**
   * Companion Object
   */
-
 object DatabaseClient {
   val mongoClient: MongoClient = MongoClient(DbConfig.uri)
   val database: MongoDatabase = mongoClient getDatabase DbConfig.dbName
 
   def apply(coll: String): DatabaseClient = DatabaseClientImpl(coll: String)
-  case class DatabaseClientImpl(coll: String) extends DatabaseClient {
 
+  case class DatabaseClientImpl(coll: String) extends DatabaseClient with ObservableImplicits {
     val collection: MongoCollection[Document] = database getCollection coll
 
-    override def insert(document: Document): Observable[Completed] = {
-      val observable: Observable[Completed] = collection.insertOne(document)
-      observable
+    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
+      val future = collection insertOne(document) toFuture()
+      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e)}
     }
 
-    override def delete(query: Document): SingleObservable[DeleteResult] = {
-      val observable: SingleObservable[DeleteResult] = collection.deleteOne(query)
-      observable
+    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+      val future = collection deleteOne(document) toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
     }
 
-    override def update(query: Document, update: Document): Observable[UpdateResult] = {
-      val observable: Observable[UpdateResult] = collection.updateOne(query, update)
-      observable
+    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+      val future = collection updateOne(document,update) toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
     }
 
-    override def find(query: Document): Observable[Document] = {
-      val observable: Observable[Document] = collection.find(query)
-      observable
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+      val future = collection find(document) toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
     }
 
-    override def multipleInsert(documents: Array[Document]): Observable[Completed] = {
-      val observable: Observable[Completed] = collection.insertMany(documents)
-      observable
+    override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
+      val future = collection insertMany(documents) toFuture()
+      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => Future.failed(e)}
     }
 
-    override def multipleDelete(documents:Document): SingleObservable[DeleteResult] = {
-      val observable: SingleObservable[DeleteResult] = collection.deleteMany(documents)
-      observable
+    override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
+      val future = collection deleteMany(documents) toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
     }
 
-    override def multipleUpdate(query: Document, update: Document): Observable[UpdateResult] = {
-      val observable = collection.updateMany(query,update)
-      observable
+    override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+      val future = collection updateMany(document,update) toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
     }
   }
 }
