@@ -23,50 +23,35 @@ class AuthenticationController {
   @FXML var loginButton: Button = _
   @FXML var formMsgLabel: Label = _
 
-  var registrationUsername: String = _
-  var registrationPassword: String = _
-  var loginUsername: String = _
-  var loginPassword: String = _
-
   var system = ActorSystem("mySystem")
   var authenticationActor: ActorRef = system actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
 
 
   def initialize(): Unit = {
-    registerButton setOnAction((_: ActionEvent) => requestRegistration(ControllerMsg register))
-    loginButton setOnAction((_: ActionEvent) => requestLogin(ControllerMsg login))
+    registerButton setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg register, registrationUsernameField , registrationPasswordField))
+    loginButton setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg login, loginUsernameField, loginPasswordField))
   }
 
   /**
     * Sends requests to the actor which manages the authentication
     * @param msg defines which message to send to the authentication actor
     */
-  def requestRegistration(msg: String): Unit = {
-    registrationUsername = registrationUsernameField getText()
-    registrationPassword = registrationPasswordField getText()
 
-    if(registrationUsername.isEmpty || registrationPassword.isEmpty){
-      formMsgLabel setText(InputControl emptyFields)
-    }
+  def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
+      val username = usernameField getText()
+      val password = passwordField getText()
 
-    if(registrationUsername.matches(InputControl userExp) && registrationPassword.matches(InputControl pswExp)){
-      authenticationActor ! Register(registrationUsername, registrationPassword)
-    }
-    registrationUsernameField setText("")
-    registrationPasswordField setText("")
-  }
+      if(username.isEmpty ||password.isEmpty) {
+        formMsgLabel setText (InputControl emptyFields)
+      }
 
-  def requestLogin(msg: String): Unit = {
-    loginUsername = loginUsernameField getText()
-    loginPassword = loginPasswordField getText()
+      if(username.matches(InputControl userExp) && password.matches(InputControl pswExp)){
+        if(msg.equals(ControllerMsg register)) authenticationActor ! Register(username, password)
+        else if(msg.equals(ControllerMsg login)) authenticationActor ! Login(username, password)
+      }
 
-    if(loginUsername.isEmpty || loginPassword.isEmpty){
-      formMsgLabel setText(InputControl emptyFields)
-    }
-    authenticationActor ! Login(loginUsername,loginPassword)
-
-    loginUsernameField setText("")
-    loginPasswordField setText("")
+      registrationUsernameField setText("")
+      registrationPasswordField setText("")
   }
 
 }
