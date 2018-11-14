@@ -6,8 +6,9 @@ package cml.services.authentication
   * @author Chiara Volonnino, Monica Gondolini
   */
 
-import cml.core.{BeforeAndAfterTest, HttpMessage, TokenAuthentication}
-import cml.services.authentication.utils.AuthenticationConfig.{AuthenticationUrl, User}
+import cml.core.utils.HttpMessage
+import cml.core.{BeforeAndAfterTest, TokenAuthentication}
+import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.core.Vertx
 
@@ -26,7 +27,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     val base64 =  TokenAuthentication.base64Authentication(username,password)
 
     vertx.createHttpClient()
-      .get(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API)
+      .get(8080, "127.0.0.1", AuthenticationUrl.ValidationTokenApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response => {
           response.exceptionHandler(promiseValidation.failure)
@@ -35,7 +36,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
         }).end()
     promiseValidation.future.map(res => {
       println("validation: " + res)
-      assert(res equals HttpMessage.BAD_REQUEST)
+      assert(res equals HttpMessage.BadRequest)
     })
   }
 
@@ -46,7 +47,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
     val base64 =  TokenAuthentication.base64Authentication(username,password)
 
-    vertx.createHttpClient().post(8080, "127.0.0.1", AuthenticationUrl.REGISTER_API)
+    vertx.createHttpClient().post(8080, "127.0.0.1", AuthenticationUrl.RegisterApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response =>{
           response.exceptionHandler(promiseRegister.failure)
@@ -68,7 +69,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
     val base64 =  TokenAuthentication.base64Authentication(username,password)
 
-    vertx.createHttpClient().put(8080, "127.0.0.1", AuthenticationUrl.LOGIN_API)
+    vertx.createHttpClient().put(8080, "127.0.0.1", AuthenticationUrl.LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response =>{
         response.exceptionHandler(promiseLogin.failure)
@@ -91,7 +92,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
     val base64 =  TokenAuthentication.base64Authentication(username,password)
 
-    vertx.createHttpClient().delete(8080, "127.0.0.1", AuthenticationUrl.DELETE_API)
+    vertx.createHttpClient().delete(8080, "127.0.0.1", AuthenticationUrl.DeleteApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response =>{
         response.exceptionHandler(promiseDelete.failure)
@@ -101,7 +102,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
     promiseDelete.future.map(res=>{
       println("delete: " + res)
-      assert(res equals HttpMessage.BAD_REQUEST)
+      assert(res equals HttpMessage.BadRequest)
     })
   }
 }

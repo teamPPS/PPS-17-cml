@@ -5,6 +5,7 @@ import io.vertx.scala.core.http.HttpServer
 import io.vertx.scala.ext.web.Router
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
+import cml.core.utils.NetworkConfiguration._
 
 /**
   * This is abstract class implements RouterVerticle. In this way, each micro-services allowed to follow its path
@@ -15,8 +16,6 @@ import scala.util.{Failure, Success}
 abstract class RouterVerticle extends ScalaVerticle {
 
   var server: HttpServer = _
-  val PORT = 8080
-  val LOCAL_HOST = "0.0.0.0"
 
   override def startFuture(): Future[Unit] = {
     println("Starting AuthenticationVerticle")
@@ -26,14 +25,14 @@ abstract class RouterVerticle extends ScalaVerticle {
     initializeRouter(router)
     vertx.createHttpServer()
       .requestHandler(router.accept)
-      .listenFuture(PORT, LOCAL_HOST)
+      .listenFuture(AuthenticationServicePort, ServiceHost)
       .onComplete({
         case Success(startedServer) =>
-          println(s"Server successfully started on port: $PORT")
+          println(s"Server successfully started on port: $AuthenticationServicePort")
           server = startedServer
           promise.success(())
         case Failure(ex) =>
-          println(s"Server failed to start on port: $PORT, b/c ${ex.getCause}")
+          println(s"Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}")
           promise.failure(ex)
       })
     promise.future

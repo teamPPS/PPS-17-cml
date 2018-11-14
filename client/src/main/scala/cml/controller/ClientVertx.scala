@@ -63,10 +63,9 @@ object ClientVertx{
   case class ClientVertxImpl(actor: ActorRef) extends ClientVertx{
 
     override def register(username: String, password: String): Unit = {
-      println(s"sending registration request from username:$username with password:$password") //debug
-      val header = TokenAuthentication.base64Authentication(username, password)
+      println(s"sending registration request from username:$username with password:$password")
       client.post(Connection.port, Connection.host, Connection.requestUri)
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header.get)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .onComplete{
           case Success(result) => actor ! RegisterSuccess(AuthenticationMsg.registerSuccess)

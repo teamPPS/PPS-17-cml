@@ -1,4 +1,4 @@
-package cml.core
+package cml.core.utils
 
 /**
   * Utils class for http message. This class assist server test
@@ -8,8 +8,8 @@ package cml.core
 
 object HttpMessage {
 
-  val BAD_REQUEST = "bad_request"
-  val UNAUTHORIZED = "unauthorized"
-  val OK = "created"
+  val BadRequest = "bad_request"
+  val Unauthorized = "unauthorized"
+  val Ok = "ok"
 
 }
