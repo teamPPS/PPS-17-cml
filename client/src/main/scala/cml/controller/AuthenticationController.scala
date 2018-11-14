@@ -36,7 +36,6 @@ class AuthenticationController {
     * Sends requests to the actor which manages the authentication
     * @param msg defines which message to send to the authentication actor
     */
-
   def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
       val username = usernameField getText()
       val password = passwordField getText()
@@ -45,7 +44,7 @@ class AuthenticationController {
         formMsgLabel setText (InputControl emptyFields)
       }
 
-      if(username.matches(InputControl userExp) && password.matches(InputControl pswExp)){
+      if(username.matches(InputControl userExp) && password.matches(InputControl pswExp)) {
         if(msg.equals(ControllerMsg register)) authenticationActor ! Register(username, password)
         else if(msg.equals(ControllerMsg login)) authenticationActor ! Login(username, password)
       }
@@ -53,5 +52,6 @@ class AuthenticationController {
       registrationUsernameField setText("")
       registrationPasswordField setText("")
   }
+
 
 }

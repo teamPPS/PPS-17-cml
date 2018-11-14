@@ -1,11 +1,10 @@
 package cml
 
-
+import cml.utils.Configuration.AuthenticationWindow
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
-import cml.utils.Configuration.AuthenticationWindow
 
 /**
   * @author Monica Gondolini,Filippo Portolani
@@ -14,8 +13,9 @@ import cml.utils.Configuration.AuthenticationWindow
 class ClientMain extends Application{
 
   override def start(primaryStage: Stage): Unit = {
-    val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path))
-    val scene : Scene = new Scene(root, AuthenticationWindow.width, AuthenticationWindow.height)
+    val authenticationScreen: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path))
+    val scene : Scene = new Scene(authenticationScreen, AuthenticationWindow.width, AuthenticationWindow.height)
+
     primaryStage.setTitle(AuthenticationWindow.title)
     primaryStage.setScene(scene)
     primaryStage.setResizable(false)
@@ -24,5 +24,9 @@ class ClientMain extends Application{
         System.exit(0)
     })
     primaryStage.show()
+  }
+
+  def main(args: Array[String]): Unit = {
+    Application.launch()
   }
 }
