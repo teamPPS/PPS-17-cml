@@ -1,6 +1,6 @@
 package cml.controller
 
-import cml.utils.Configuration.ArenaWindows
+import cml.utils.Configuration.ArenaWindow
 import javafx.application.Platform
 import javafx.fxml.{FXML, FXMLLoader}
 import javafx.scene.{Parent, Scene}
@@ -37,10 +37,10 @@ class BattleViewController {
       println("Arena view -----> wait another user for battle")
 
       val primaryStage: Stage = new Stage()
-      val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(ArenaWindows.path))
-      val scene : Scene = new Scene(root, ArenaWindows.width, ArenaWindows.height)
+      val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(ArenaWindow.path))
+      val scene : Scene = new Scene(root, ArenaWindow.width, ArenaWindow.height)
 
-      primaryStage.setTitle(ArenaWindows.title)
+      primaryStage.setTitle(ArenaWindow.title)
       primaryStage.setScene(scene)
       primaryStage.setResizable(false)
       primaryStage.setOnCloseRequest(_ => {
