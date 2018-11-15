@@ -9,11 +9,14 @@ import javafx.application.Platform
 /**
   * Class that implements the actor which manages the authentication process
   * @author Monica Gondolini,Filippo Portolani
+  *
   * @param controller controller of the authentication view
   */
 class AuthenticationActor(controller: AuthenticationController) extends Actor{
 
   val clientVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
+
+  var token: String = _
 
   override def receive: Receive = authenticationBehaviour
 
@@ -24,9 +27,13 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     case Register(username, password) => clientVertx.register(username, password)
     case Login(username, password) => clientVertx.login(username, password)
     case Logout(username) => clientVertx.logout(username) //rimuove utente dalla view del gioco (deve stare qui?)
-    case RegisterSuccess(succ) => displayMsg(succ) //fare login subito dopo
+    case RegisterSuccess(succ, token) =>
+      displayMsg(succ) //fare login subito dopo
+      successCase(token)
     case RegisterFailure(err) => displayMsg(err)
-    case LoginSuccess(succ) =>  displayMsg(succ) //cambio view con quella del villaggio
+    case LoginSuccess(succ, token) =>
+      displayMsg(succ) //cambio view con quella del villaggio
+      successCase(token)
     case LoginFailure(err) => displayMsg(err)
   }
 
@@ -36,6 +43,10 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     */
   def displayMsg(m: String):Unit = {
     Platform.runLater(() => controller.formMsgLabel.setText(m))
+  }
+
+  def successCase(tokenValue: String): Unit = {
+    token = tokenValue // token da appicciacare ad ogni richiesta
   }
 
   /**

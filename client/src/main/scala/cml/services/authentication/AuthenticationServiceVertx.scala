@@ -4,13 +4,14 @@ import akka.actor.ActorRef
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.core.TokenAuthentication
 import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl._
-import cml.utils.Configuration.{AuthenticationMsg, Connection}
+import cml.utils.Configuration.AuthenticationMsg
 import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
-import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -36,15 +37,17 @@ trait AuthenticationServiceVertx {
 
   /**
     * Requests the logout of a user from the system
-    * @param username player's username
+    * @param token token to delete
     */
-  def logout(username: String) : Unit
+  def logout(token: String) : Unit
 
   /**
     * Requests the deletion of a user from the system
     * @param username player's username
     */
   def delete(username: String): Unit
+
+  def validationToken(token: String): Unit
 }
 
 /**
@@ -69,7 +72,8 @@ object AuthenticationServiceVertx{
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .onComplete{
-          case Success(result) => actor ! RegisterSuccess(AuthenticationMsg.registerSuccess)
+          case Success(result) =>
+            actor ! RegisterSuccess(AuthenticationMsg.registerSuccess, "token")
             println("Success: "+result) //debug
           case Failure(cause) => actor ! RegisterFailure(AuthenticationMsg.registerFailure)
             println("Failure: "+cause) //debug
@@ -78,34 +82,42 @@ object AuthenticationServiceVertx{
 
     override def login(username: String, password: String): Unit = {
       println(s"sending login request from username:$username with password:$password") //debug
-      val header = TokenAuthentication.base64Authentication(username, password)
-      client.put(Connection.port, Connection.host, Connection.requestUri)
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(),header.get)
+      client.put(AuthenticationServicePort, ServiceHost, LoginApi)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .onComplete{
-          case Success(result) => actor ! LoginSuccess(AuthenticationMsg.loginSuccess)
+          case Success(result) => actor ! LoginSuccess(AuthenticationMsg.loginSuccess, "token")
             println("Success: "+result)//debug
           case Failure(cause) => actor ! LoginFailure(AuthenticationMsg.loginFailure)
             println("Failure: "+cause)//debug
         }
     }
 
-    override def delete(username: String): Unit = {
-      client.delete(Connection.port, Connection.host, Connection.requestUri)
-        .sendJsonObjectFuture(new JsonObject().put("username", username))
+    override def logout(token: String): Unit = {
+      println(s"sending logout request with token: $token")
+      client.delete(AuthenticationServicePort, ServiceHost, DeleteApi)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
+        .sendFuture
         .onComplete{
           case Success(result) => println("Success: "+result)//debug
           case Failure(cause) => println("Failure: "+cause)//debug
         }
     }
 
-    override def logout(username: String): Unit = {
-      client.put(Connection.port, Connection.host, Connection.requestUri)
-        .sendJsonObjectFuture(new JsonObject().put("username", username))
-        .onComplete {
-          case Success(result) => println("Success: " + result) //debug
-          case Failure(cause) => println("Failure: " + cause) //debug
+    override def delete(username: String): Unit = {
+      client.delete(AuthenticationServicePort, ServiceHost, LogoutApi) // add token?
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(username).get)
+        .sendFuture
+        .onComplete{
+          case Success(result) => println("Success: "+result)//debug
+          case Failure(cause) => println("Failure: "+cause)//debug
         }
+    }
+
+    override def validationToken(token: String): Unit = {
+      client.get(AuthenticationServicePort, ServiceHost, ValidationTokenApi)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), token)
+        .sendFuture
     }
   }
 }

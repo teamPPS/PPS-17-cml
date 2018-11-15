@@ -55,12 +55,21 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
   }
 
   private def logout: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive logout request")
-
+    println("Receive logout request") // delete only token
+    (for (
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      authenticationService delete username onComplete {
+        case Success(_) => sendResponse(OK, username)
+        case Failure(_) => sendResponse(UNAUTHORIZED, Unauthorized)
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))
   }
 
   private def delete: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive delete request")
+    println("Receive delete request") // delete all
     (for (
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);

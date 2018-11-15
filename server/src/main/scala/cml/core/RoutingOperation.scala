@@ -4,6 +4,8 @@ import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
 import io.vertx.scala.core.http.HttpServerResponse
 import io.vertx.scala.ext.web.RoutingContext
 
+import scala.concurrent.Future
+
 /**
   * This trait is useful to implement AuthenticationVerticle
   *
@@ -43,5 +45,16 @@ trait RoutingOperation {
     getResponse.setStatusCode(code).end(message)
     println("response: " + httpCode)
   }
+
+/*  def checkInputAndCreateToken(implicit routingContext: RoutingContext): Future[Unit] = {
+    getRequestAndHeader match {
+      case Some(header) =>
+        println("atorizzato")
+        Future.successful(header)
+      case None =>
+        println("Non sei autorizzato")
+        Future.failed(Exception)
+    }
+  }*/
 }
 
