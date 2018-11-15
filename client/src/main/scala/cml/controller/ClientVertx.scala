@@ -14,8 +14,8 @@ import scala.util.{Failure, Success}
 
 /**
   * This trait describes the Vertx client
-  * @author Monica Gondolini, Filippo Portolani
-  * @author (modified by) Chiara Volonnino
+  * @author Monica Gondolini
+  * @author (edited by)  Chiara Volonnino, Filippo Portolani
   */
 trait ClientVertx {
 
