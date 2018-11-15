@@ -3,6 +3,7 @@ package cml.controller
 import akka.actor.Actor
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
+import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import javafx.application.Platform
 
 /**
@@ -12,7 +13,7 @@ import javafx.application.Platform
   */
 class AuthenticationActor(controller: AuthenticationController) extends Actor{
 
-  val clientVertx = ClientVertx(controller.authenticationActor)
+  val clientVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
 
   override def receive: Receive = authenticationBehaviour
 

@@ -1,14 +1,15 @@
-package cml.controller
+package cml.services.authentication
 
 import akka.actor.ActorRef
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.core.TokenAuthentication
+import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl._
 import cml.utils.Configuration.{AuthenticationMsg, Connection}
+import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
@@ -17,7 +18,7 @@ import scala.util.{Failure, Success}
   * @author Monica Gondolini, Filippo Portolani
   * @author (modified by) Chiara Volonnino
   */
-trait ClientVertx {
+trait AuthenticationServiceVertx {
 
   /**
     * Requests a user registration into the system
@@ -49,22 +50,22 @@ trait ClientVertx {
 /**
   * Companion object
   */
-object ClientVertx{
+object AuthenticationServiceVertx{
 
   var vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
-  def apply(actor: ActorRef): ClientVertx = ClientVertxImpl(actor)
+  def apply(actor: ActorRef): AuthenticationServiceVertx = AuthenticationServiceVertxImpl(actor)
 
   /**
     * This class implements the Vertx Client
     * @param actor the actor i want to send messages to
     */
-  case class ClientVertxImpl(actor: ActorRef) extends ClientVertx{
+  case class AuthenticationServiceVertxImpl(actor: ActorRef) extends AuthenticationServiceVertx{
 
     override def register(username: String, password: String): Unit = {
       println(s"sending registration request from username:$username with password:$password")
-      client.post(Connection.port, Connection.host, Connection.requestUri)
+      client.post(AuthenticationServicePort, ServiceHost, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .onComplete{
