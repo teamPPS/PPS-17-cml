@@ -21,24 +21,6 @@
         <Label fx:id="formMsgLabel" layoutX="72.0" layoutY="350.0" prefHeight="21.0" prefWidth="464.0" textAlignment="CENTER" />
         <TabPane layoutX="-6.0" prefHeight="400.0" prefWidth="612.0" tabClosingPolicy="UNAVAILABLE">
           <tabs>
-            <Tab text="Registration">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="280.0" prefWidth="586.0">
-                  <children>
-                    <Label fx:id="registrationUsernameLabel" layoutX="90.0" layoutY="126.0" prefHeight="21.0" prefWidth="76.0" text="Username" />
-                    <TextField fx:id="registrationUsernameField" layoutX="194.0" layoutY="126.0" promptText="username" />
-                    <Label fx:id="registrationPasswordLabel" layoutX="93.0" layoutY="201.0" prefHeight="21.0" prefWidth="70.0" text="Password" />
-                    <PasswordField fx:id="registrationPasswordField" layoutX="194.0" layoutY="196.0" promptText="password" />
-                    <Button fx:id="registerButton" layoutX="235.0" layoutY="263.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="105.0" text="Sign Up" />
-                    <Label alignment="CENTER" layoutX="68.0" layoutY="14.0" prefHeight="82.0" prefWidth="464.0" text="Creature Mania Legends">
-                      <font>
-                        <Font size="30.0" fx:id="x1" />
-                      </font>
-                    </Label>
-                  </children>
-                </AnchorPane>
-              </content>
-            </Tab>
             <Tab text="Log In">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="280.0" prefWidth="586.0">
@@ -48,6 +30,24 @@
                     <Label fx:id="loginPasswordLabel" layoutX="93.0" layoutY="201.0" prefHeight="21.0" prefWidth="70.0" text="Password" />
                     <PasswordField fx:id="loginPasswordField" layoutX="194.0" layoutY="196.0" promptText="password" />
                     <Button fx:id="loginButton" layoutX="235.0" layoutY="263.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="105.0" text="Sign In" />
+                    <Label alignment="CENTER" layoutX="68.0" layoutY="14.0" prefHeight="82.0" prefWidth="464.0" text="Creature Mania Legends">
+                      <font>
+                        <Font size="30.0" fx:id="x1" />
+                      </font>
+                    </Label>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Registration">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="280.0" prefWidth="586.0">
+                  <children>
+                    <Label fx:id="registrationUsernameLabel" layoutX="90.0" layoutY="126.0" prefHeight="21.0" prefWidth="76.0" text="Username" />
+                    <TextField fx:id="registrationUsernameField" layoutX="194.0" layoutY="126.0" promptText="username" />
+                    <Label fx:id="registrationPasswordLabel" layoutX="93.0" layoutY="201.0" prefHeight="21.0" prefWidth="70.0" text="Password" />
+                    <PasswordField fx:id="registrationPasswordField" layoutX="194.0" layoutY="196.0" promptText="password" />
+                    <Button fx:id="registerButton" layoutX="235.0" layoutY="263.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="105.0" text="Sign Up" />
                     <Label alignment="CENTER" font="$x1" layoutX="68.0" layoutY="14.0" prefHeight="82.0" prefWidth="464.0" text="Creature Mania Legends" />
                   </children>
                 </AnchorPane>

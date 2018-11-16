@@ -45,7 +45,7 @@ object Configuration {
   }
 
   object VillageWindow {
-    val path: String = "fxml/authentication_view.fxml"
+    val path: String = "fxml/my_village_view.fxml"
     val title: String = "Village"
     val width: Int = NORMAL_WIDTH
     val height: Int = NORMAL_HEIGHT

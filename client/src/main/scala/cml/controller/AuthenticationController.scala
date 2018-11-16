@@ -6,7 +6,8 @@ import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
-import cml.utils.Configuration.{ControllerMsg, InputControl}
+import cml.utils.Configuration.{ControllerMsg, InputControl, VillageWindow}
+import cml.view.ViewSwitch
 
 /**
   * Controller for the graphic user interface
@@ -49,9 +50,7 @@ class AuthenticationController {
         else if(msg.equals(ControllerMsg login)) authenticationActor ! Login(username, password)
       }
 
-      registrationUsernameField setText("")
-      registrationPasswordField setText("")
+      ViewSwitch.activate(VillageWindow.path, loginButton.getScene) //technical debt, have to change when login succesfull
   }
-
 
 }
