@@ -18,5 +18,5 @@ object ServerMain extends App {
 //  vertx.deployVerticle(ScalaVerticle.nameForVerticle[HelloWorldVerticle])
 
   vertx.deployVerticle(ScalaVerticle.nameForVerticle[AuthenticationVerticle])
-  vertx.deployVerticle(ScalaVerticle.nameForVerticle[VillageVerticle])
+  //vertx.deployVerticle(ScalaVerticle.nameForVerticle[VillageVerticle])
 }

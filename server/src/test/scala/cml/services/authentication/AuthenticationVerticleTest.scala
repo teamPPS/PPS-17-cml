@@ -16,7 +16,7 @@ import scala.concurrent.Promise
 
 class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
- /* val username: String = "pps"
+/* /* val username: String = "pps"
   val password: String = "cml"*/
 
   test("Validation token test") {
@@ -99,5 +99,5 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
       println("delete: " + res)
       assert(res equals HttpMessage.BadRequest)
     })
-  }
+  }*/
 }

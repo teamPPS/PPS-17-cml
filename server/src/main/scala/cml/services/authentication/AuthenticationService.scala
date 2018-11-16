@@ -64,12 +64,14 @@ object AuthenticationService {
   val collection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
-  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits{
 
+  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits{
+    println("SONO IN SERVICE AUTHETICATIONs")
     var document: Document = _
 
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
       document = Document(Username->username, Password->password)
+      println(document)
       collection.insert(document).map(_ => "Insertion Completed")
         .recoverWith{case e: Throwable =>
           println(e)
@@ -79,6 +81,7 @@ object AuthenticationService {
 
     override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] =  {
       document = Document(Username->username, Password->password)
+      println(document)
       collection.find(document).map(_ => "Find Completed")
         .recoverWith{case e: Throwable =>
           println(e)

@@ -1,15 +1,15 @@
 package cml.services.authentication
 
 import akka.actor.ActorRef
-import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.core.TokenAuthentication
 import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl._
-import cml.utils.Configuration.AuthenticationMsg
 import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -24,14 +24,14 @@ trait AuthenticationServiceVertx {
     * @param username player's username
     * @param password player's password
     */
-  def register(username: String, password: String): Unit
+  def register(username: String, password: String): Future[String]
 
   /**
     * Requests the login of a specific user into the system
     * @param username player's username
     * @param password player's password
     */
-  def login(username: String, password: String): Unit
+  def login(username: String, password: String): Future[String]
 
   /**
     * Requests the logout of a user from the system
@@ -51,7 +51,7 @@ trait AuthenticationServiceVertx {
 /**
   * Companion object
   */
-object AuthenticationServiceVertx{
+object AuthenticationServiceVertx {
 
   var vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
@@ -64,31 +64,26 @@ object AuthenticationServiceVertx{
     */
   case class AuthenticationServiceVertxImpl(actor: ActorRef) extends AuthenticationServiceVertx{
 
-    override def register(username: String, password: String): Unit = {
+    override def register(username: String, password: String): Future[String] = {
       println(s"sending registration request from username:$username with password:$password")
-      client.post(AuthenticationServicePort, ServiceHost, RegisterApi)
+      client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
-        .onComplete{
-          case Success(result) =>
-            actor ! RegisterSuccess("token")
-            println("Success: " +result) //debug
-          case Failure(cause) => actor ! RegisterFailure(AuthenticationMsg.registerFailure)
-            println("Failure: " +cause) //debug
-        }
+        .map(_.bodyAsString().getOrElse(""))
     }
 
-    override def login(username: String, password: String): Unit = {
+    override def login(username: String, password: String): Future[String] = {
       println(s"sending login request from username:$username with password:$password") //debug
-      client.put(AuthenticationServicePort, ServiceHost, LoginApi)
+      client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
-        .onComplete{
+        .map(_.bodyAsString().getOrElse(""))
+        /*.onComplete{
           case Success(result) => actor ! LoginSuccess("token")
             println("Success: " + result)//debug
           case Failure(cause) => actor ! LoginFailure(AuthenticationMsg.loginFailure)
             println("Failure: " + cause)//debug
-        }
+        }*/
     }
 
     override def logout(token: String): Unit = {

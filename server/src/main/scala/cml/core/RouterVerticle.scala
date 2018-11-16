@@ -23,6 +23,7 @@ abstract class RouterVerticle extends ScalaVerticle {
     val promise = Promise[Unit]()
     val router = Router.router(vertx)
     initializeRouter(router)
+    initializeService
     vertx.createHttpServer()
       .requestHandler(router.accept)
       .listenFuture(AuthenticationServicePort, ServiceHost)
@@ -53,10 +54,10 @@ abstract class RouterVerticle extends ScalaVerticle {
   def initializeRouter(router: Router): Unit
 
   /**
-    * Initializes the server
+    * Initializes the services
     *
-    * @return a future when server is initialized
+    * @return
     */
-  def initializeService: Future[_] = Future.successful(())
+  def initializeService: Unit
 
 }

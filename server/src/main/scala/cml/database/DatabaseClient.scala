@@ -46,7 +46,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def find(document: Document)(implicit ec: ExecutionContext): Future[Unit]
+  def find(document: Document)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Allow to insert multiple documents in the database
@@ -88,37 +88,37 @@ object DatabaseClient {
     val collection: MongoCollection[Document] = database getCollection coll
 
     override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
-      val future = collection insertOne(document) toFuture()
-      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e)}
+      val future = collection.insertOne(document).toFuture()
+      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
-      val future = collection deleteOne(document) toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
+      val future = collection.deleteOne(document).toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
-      val future = collection updateOne(document,update) toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
+      val future = collection.updateOne(document,update).toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def find(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
-      val future = collection find(document) toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[String] = {
+      val future = collection.find(document).toFuture()
+      future map(_ => "Find Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
-      val future = collection insertMany(documents) toFuture()
-      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => Future.failed(e)}
+      val future = collection.insertMany(documents).toFuture()
+      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
-      val future = collection deleteMany(documents) toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
+      val future = collection.deleteMany(documents).toFuture()
+      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
-      val future = collection updateMany(document,update) toFuture()
+      val future = collection.updateMany(document,update).toFuture()
       future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
     }
   }
