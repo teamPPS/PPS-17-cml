@@ -1,7 +1,7 @@
 package cml.controller
 
 import akka.actor.Actor
-import cml.controller.fx.AuthenticationController
+import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import javafx.application.Platform
@@ -11,7 +11,7 @@ import javafx.application.Platform
   * @author Monica Gondolini,Filippo Portolani
   * @param controller controller of the authentication view
   */
-class AuthenticationActor(controller: AuthenticationController) extends Actor{
+class AuthenticationActor(controller: AuthenticationViewController) extends Actor{
 
   val clientVertx = ClientVertx(controller.authenticationActor)
 

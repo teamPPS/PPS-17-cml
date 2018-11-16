@@ -14,7 +14,7 @@ import javafx.scene.control.{Button, Label, PasswordField, TextField}
   * @author Monica Gondolini,Filippo Portolani
   */
 
-class AuthenticationController {
+class AuthenticationViewController {
 
   @FXML var registrationUsernameField: TextField = _
   @FXML var registrationPasswordField: PasswordField = _

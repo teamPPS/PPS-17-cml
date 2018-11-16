@@ -7,7 +7,7 @@ import javafx.scene.control._
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
 
-class VillageController {
+class VillageViewController {
 
   @FXML var playerLevelLabel: Label = _
   @FXML var goldLabel: Label = _
