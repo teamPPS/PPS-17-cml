@@ -1,6 +1,7 @@
 package cml.controller
 
 import akka.actor.Actor
+import cml.controller.fx.AuthenticationController
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import javafx.application.Platform

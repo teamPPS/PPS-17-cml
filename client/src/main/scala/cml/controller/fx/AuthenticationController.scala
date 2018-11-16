@@ -1,13 +1,13 @@
-package cml.controller
-
+package cml.controller.fx
 
 import akka.actor.{ActorRef, ActorSystem, Props}
+import cml.controller.AuthenticationActor
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.utils.Configuration.{ControllerMsg, InputControl, VillageWindow}
+import cml.view.ViewSwitch
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
-import cml.utils.Configuration.{ControllerMsg, InputControl, VillageWindow}
-import cml.view.ViewSwitch
 
 /**
   * Controller for the graphic user interface

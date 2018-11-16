@@ -1,5 +1,7 @@
-package cml.controller
+package cml.controller.fx
 
+import cml.utils.Configuration.{AuthenticationWindow, BattleWindow}
+import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.input._
@@ -21,8 +23,8 @@ class VillageController {
 
   def initialize(): Unit = {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
-    logoutMenuItem setOnAction (_ => println("Pressed logout submenu button")) // logout and go back to auth scene
-    battleButton setOnAction (_ => println("Pressed battle button")) // open battle scene
+    logoutMenuItem setOnAction (_ => ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene))
+    battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     villageMap = new GridPane
     villageMap setHgap 10

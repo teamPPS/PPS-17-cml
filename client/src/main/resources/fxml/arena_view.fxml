@@ -14,7 +14,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cml.controller.ArenaViewController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cml.controller.fx.ArenaViewController">
   <children>
     <BorderPane prefHeight="694.0" prefWidth="1064.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <bottom>
@@ -33,7 +33,7 @@
       <center>
         <Pane prefHeight="446.0" prefWidth="757.0" BorderPane.alignment="CENTER">
           <children>
-            <ImageView fitHeight="410.4375" fitWidth="700.4800239651942" layoutX="8.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="exitArenaButton" fitHeight="410.4375" fitWidth="700.4800239651942" layoutX="8.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true">
               <image>
                 <Image url="@../image/arena_background.png" />
               </image>

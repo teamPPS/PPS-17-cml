@@ -1,8 +1,10 @@
-package cml.controller
+package cml.controller.fx
 
+import cml.utils.Configuration.VillageWindow
+import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, ButtonType}
+import javafx.scene.control.{Alert, Button, ButtonType}
 
 /**
   * Controller class for graphic arena view
@@ -11,6 +13,8 @@ import javafx.scene.control.{Alert, ButtonType}
   */
 
 class ArenaViewController {
+
+  @FXML var exitButton: Button = _
 
   @FXML
   def pauseOption(): Unit = {
@@ -32,7 +36,7 @@ class ArenaViewController {
 
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
-      println("VillageView")
+      ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
     }
   }
 
