@@ -4,7 +4,9 @@ import akka.actor.Actor
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
+import cml.utils.Configuration.AuthenticationMsg._
 import javafx.application.Platform
+
 
 /**
   * Class that implements the actor which manages the authentication process
@@ -26,14 +28,14 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
   private def authenticationBehaviour: Receive = {
     case Register(username, password) => clientVertx.register(username, password)
     case Login(username, password) => clientVertx.login(username, password)
-    case Logout(username) => clientVertx.logout(username) //rimuove utente dalla view del gioco (deve stare qui?)
-    case RegisterSuccess(succ, token) =>
-      displayMsg(succ) //fare login subito dopo
+    //case Logout(username) => clientVertx.logout(username) //rimuove utente dalla view del gioco (deve stare qui?)
+    case RegisterSuccess(token) =>
       successCase(token)
+      displayMsg(registerSuccess)
     case RegisterFailure(err) => displayMsg(err)
-    case LoginSuccess(succ, token) =>
-      displayMsg(succ) //cambio view con quella del villaggio
+    case LoginSuccess(token) =>
       successCase(token)
+      displayMsg(loginSuccess)
     case LoginFailure(err) => displayMsg(err)
   }
 
@@ -47,6 +49,7 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
 
   def successCase(tokenValue: String): Unit = {
     token = tokenValue // token da appicciacare ad ogni richiesta
+    println("TOKEN: " + token)
   }
 
   /**

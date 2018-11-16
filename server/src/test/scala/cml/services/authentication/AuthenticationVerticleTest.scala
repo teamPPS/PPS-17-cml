@@ -16,19 +16,19 @@ import scala.concurrent.Promise
 
 class AuthenticationVerticleTest extends BeforeAndAfterTest {
 
-  val username: String = "pps"
-  val password: String = "cml"
+ /* val username: String = "pps"
+  val password: String = "cml"*/
 
   test("Validation token test") {
     println("Validation Token test")
     val vertx: Vertx = Vertx.vertx()
     val promiseValidation = Promise[String]
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
+    //val base64 =  TokenAuthentication.base64Authentication(username,password)
 
     vertx.createHttpClient()
       .get(8080, "127.0.0.1", AuthenticationUrl.ValidationTokenApi)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
+      //.putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response => {
           response.exceptionHandler(promiseValidation.failure)
           response.bodyHandler(buffer => promiseValidation.success(buffer.toString))
@@ -46,10 +46,8 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     val vertx: Vertx = Vertx.vertx()
     val promiseRegister = Promise[String]
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
-
     vertx.createHttpClient().post(8080, "127.0.0.1", AuthenticationUrl.RegisterApi)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
+      //.putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response =>{
           response.exceptionHandler(promiseRegister.failure)
           response.bodyHandler(buffer => promiseRegister.success(buffer.toString))
@@ -68,10 +66,8 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     val vertx: Vertx = Vertx.vertx()
     val promiseLogin = Promise[String]
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
-
     vertx.createHttpClient().put(8080, "127.0.0.1", AuthenticationUrl.LoginApi)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
+      //.putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response =>{
         response.exceptionHandler(promiseLogin.failure)
         response.bodyHandler(buffer => promiseLogin.success(buffer.toString))
@@ -91,10 +87,8 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
     val vertx: Vertx = Vertx.vertx()
     val promiseDelete = Promise[String]
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
-
     vertx.createHttpClient().delete(8080, "127.0.0.1", AuthenticationUrl.DeleteApi)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
+      //.putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response =>{
         response.exceptionHandler(promiseDelete.failure)
         response.bodyHandler(buffer => promiseDelete.success(buffer.toString))

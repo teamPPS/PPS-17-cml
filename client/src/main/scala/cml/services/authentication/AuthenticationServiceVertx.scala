@@ -9,9 +9,7 @@ import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -73,10 +71,10 @@ object AuthenticationServiceVertx{
         .sendFuture
         .onComplete{
           case Success(result) =>
-            actor ! RegisterSuccess(AuthenticationMsg.registerSuccess, "token")
-            println("Success: "+result) //debug
+            actor ! RegisterSuccess("token")
+            println("Success: " +result) //debug
           case Failure(cause) => actor ! RegisterFailure(AuthenticationMsg.registerFailure)
-            println("Failure: "+cause) //debug
+            println("Failure: " +cause) //debug
         }
     }
 
@@ -86,10 +84,10 @@ object AuthenticationServiceVertx{
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .onComplete{
-          case Success(result) => actor ! LoginSuccess(AuthenticationMsg.loginSuccess, "token")
-            println("Success: "+result)//debug
+          case Success(result) => actor ! LoginSuccess("token")
+            println("Success: " + result)//debug
           case Failure(cause) => actor ! LoginFailure(AuthenticationMsg.loginFailure)
-            println("Failure: "+cause)//debug
+            println("Failure: " + cause)//debug
         }
     }
 
@@ -99,8 +97,8 @@ object AuthenticationServiceVertx{
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
         .sendFuture
         .onComplete{
-          case Success(result) => println("Success: "+result)//debug
-          case Failure(cause) => println("Failure: "+cause)//debug
+          case Success(result) => println("Success: " + result)//debug
+          case Failure(cause) => println("Failure: " + cause)//debug
         }
     }
 
@@ -109,8 +107,8 @@ object AuthenticationServiceVertx{
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(username).get)
         .sendFuture
         .onComplete{
-          case Success(result) => println("Success: "+result)//debug
-          case Failure(cause) => println("Failure: "+cause)//debug
+          case Success(result) => println("Success: " + result)//debug
+          case Failure(cause) => println("Failure: " + cause)//debug
         }
     }
 

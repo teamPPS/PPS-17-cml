@@ -35,6 +35,7 @@ class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
       authenticationService register(username,password) onComplete {
         case Success(_) =>
           JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(CREATED,_))
+          println("Secces service")
         case Failure(_) => sendResponse(BAD_REQUEST, BadRequest)
       }
     }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))

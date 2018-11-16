@@ -13,7 +13,7 @@ trait ClientVertx extends ScalaVerticle {
 
   var Client: WebClient = _
 
-  var OptionClient: WebClientOptions
+  var optionClient: WebClientOptions // uno per ogni servizio? optionClient (AuthenticationPort) && optionClient(ServerPort)
 
 
 

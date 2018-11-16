@@ -16,7 +16,7 @@ object AuthenticationResponse {
     * @param succ success message
     * @param token is the token for user request
     */
-  case class RegisterSuccess(succ: String, token: String) extends RegisterResponse
+  case class RegisterSuccess(token: String) extends RegisterResponse
 
   /**
     * Response for user registration failed
@@ -29,7 +29,7 @@ object AuthenticationResponse {
     * @param succ success message
     * @param token is the token for user request
     */
-  case class LoginSuccess(succ: String, token: String) extends LoginResponse
+  case class LoginSuccess(token: String) extends LoginResponse
 
   /**
     * Response for a user login failure
