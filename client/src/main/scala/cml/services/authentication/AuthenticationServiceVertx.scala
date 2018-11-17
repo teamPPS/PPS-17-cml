@@ -7,7 +7,6 @@ import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -78,12 +77,6 @@ object AuthenticationServiceVertx {
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .map(_.bodyAsString().getOrElse(""))
-        /*.onComplete{
-          case Success(result) => actor ! LoginSuccess("token")
-            println("Success: " + result)//debug
-          case Failure(cause) => actor ! LoginFailure(AuthenticationMsg.loginFailure)
-            println("Failure: " + cause)//debug
-        }*/
     }
 
     override def logout(token: String): Unit = {
@@ -114,4 +107,3 @@ object AuthenticationServiceVertx {
     }
   }
 }
-

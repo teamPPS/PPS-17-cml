@@ -1,7 +1,7 @@
 package cml.services
 
 import io.vertx.lang.scala.ScalaVerticle
-import io.vertx.scala.ext.web.client.{WebClient, WebClientOptions}
+import io.vertx.scala.ext.web.client.WebClient
 
 /**
   * General web client fot utils micro-services request
@@ -11,11 +11,7 @@ import io.vertx.scala.ext.web.client.{WebClient, WebClientOptions}
 
 trait ClientVertx extends ScalaVerticle {
 
-  var Client: WebClient = _
+  var client: WebClient = WebClient.create(vertx)
 
-  var optionClient: WebClientOptions // uno per ogni servizio? optionClient (AuthenticationPort) && optionClient(ServerPort)
-
-
-
-
+  // webClientOption per istanziare 2 opzioni - 1 per ogni servizio
 }

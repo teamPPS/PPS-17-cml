@@ -8,9 +8,6 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl._
 import cml.core.utils.HttpMessage._
-import cml.services.authentication.AuthenticationService.AuthenticationServiceImpl
-
-import scala.concurrent.Future
 
 /**
   * This class implements AuthenticationVerticle

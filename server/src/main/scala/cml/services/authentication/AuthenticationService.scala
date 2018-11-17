@@ -10,7 +10,8 @@ import scala.concurrent._
 /**
   * Trait for authentication service
   *
-  * @author Chiara Volonnino, Monica Gondolini
+  * @author Chiara Volonnino
+  * @author Monica Gondolini
   */
 
 trait AuthenticationService {
@@ -18,7 +19,7 @@ trait AuthenticationService {
     * To execute register into a system.
     * @param username username to register
     * @param password password to register
-    * @return a future
+    * @return a future completes successfully, otherwise it fails.
     */
 
   def register (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
@@ -65,8 +66,7 @@ object AuthenticationService {
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
 
-  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits{
-    println("SONO IN SERVICE AUTHETICATIONs")
+  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits {
     var document: Document = _
 
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={

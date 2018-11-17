@@ -33,7 +33,7 @@ class VillageVerticle extends RouterVerticle {
   }
 
   override def initializeService: Unit = {
-    
+
   }
 
   //qui ci vanno gli handler con routing context e richiamano i metodi in villageservice
