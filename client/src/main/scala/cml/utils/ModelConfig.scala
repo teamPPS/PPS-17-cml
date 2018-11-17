@@ -13,6 +13,7 @@ object ModelConfig {
 
   object Resource{
     val INC_BY_10: Int = 10
+    val INIT_VALUE: Int = 0
   }
 
   object Elements{

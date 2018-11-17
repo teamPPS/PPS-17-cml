@@ -1,4 +1,4 @@
-package cml.model.structures
+package cml.model.base
 
 /**
   * Represents a position in the village grid
