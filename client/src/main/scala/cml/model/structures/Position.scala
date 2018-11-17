@@ -7,7 +7,7 @@ package cml.model.structures
   *  @author Monica Gondolini
   */
 
-case class Position(x:Int, y:Int)
+case class Position(x: Int, y: Int)
 
 
 

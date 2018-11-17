@@ -11,10 +11,16 @@ object ModelConfig {
     val LEVEL_INIT: Int = 1
   }
 
+  object Resource{
+    val INC_BY_10: Int = 10
+  }
+
   object Elements{
     val WATER: String = "water"
     val FIRE: String = "fire"
     val HEARTH: String = "hearth"
     val AIR: String = "air"
   }
+
+
 }

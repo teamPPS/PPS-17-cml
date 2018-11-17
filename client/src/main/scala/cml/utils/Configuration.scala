@@ -6,6 +6,7 @@ object Configuration {
     val port: Int = 8080
     val host: String = "127.0.0.1"  //"localhost"
     val requestUri: String ="/api/authentication/register" // "/uri"
+    val login: String = "/api/authentication/login"
   }
 
   object AuthenticationMsg{
