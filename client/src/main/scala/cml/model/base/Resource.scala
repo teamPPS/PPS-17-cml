@@ -17,7 +17,6 @@ trait Resource{
   */
 case class Money(var value: Int) extends Resource {
   override def inc(): Unit = value += INC_BY_10
-
   override def take(): Int = {
     val amount = value
     value = INIT_VALUE
@@ -31,7 +30,6 @@ case class Money(var value: Int) extends Resource {
   */
 case class Food(var value: Int) extends Resource {
   override def inc(): Unit = value += INC_BY_10
-
   override def take(): Int = {
     val amount = value
     value = INIT_VALUE

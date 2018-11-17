@@ -18,21 +18,54 @@ trait Structure{
   */
 case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends Structure {
 
-  var food = Food(INIT_VALUE) //aggiungere controllo per tipo
+//  def resource(buildingType: String):Resource = buildingType match{
+//    case TYPE_FARM => {
+//      Food(INIT_VALUE)
+//    }
+//  }
+
+  //aggiungere controllo per tipo building
+  val food = Food(INIT_VALUE)
   override def levelUp(): Unit = buildingLevel += 1
 }
 
-/**
-  * Implementation of structure habitat
-  * @param element of the habitat
-  * @param habitatPosition coordinates of the habitat in the village
-  * @param habitatLevel level of the habitat
-  * @param creatures list of creatures living in this habitat
-  */
-case class Habitat(element: String, habitatPosition: Position,
-                   var habitatLevel: Int,creatures: List[String]) extends Structure {//Al posto di String ci andrà tipo Creature
 
-  val money = Money(INIT_VALUE)
-  override def levelUp(): Unit = habitatLevel += 1
+object Habitat {
+
+  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creatures: List[String]) : Habitat =
+     Habitat(element, habitatPosition, habitatLevel, creatures)
+
+  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creature: String): SingleHabitat =
+    SingleHabitat(element, habitatPosition, habitatLevel, creature)
+
+  /**
+    * Implementation of structure habitat
+    *
+    * @param element         of the habitat
+    * @param habitatPosition coordinates of the habitat in the village
+    * @param habitatLevel    level of the habitat
+    * @param creatures       list of creatures living in this habitat
+    */
+  case class Habitat(element: String, habitatPosition: Position,
+                     var habitatLevel: Int, creatures: List[String]) extends Structure { //Al posto di String ci andrà tipo Creature
+
+    val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature (?)
+    override def levelUp(): Unit = habitatLevel += 1
+  }
+
+  /**
+    * Implementation of structure habitat
+    *
+    * @param element         of the habitat
+    * @param habitatPosition coordinates of the habitat in the village
+    * @param habitatLevel    level of the habitat
+    * @param creature        single creature living in this habitat
+    */
+  case class SingleHabitat(element: String, habitatPosition: Position,
+                           var habitatLevel: Int, creature: String) extends Structure {
+    val money = Money(INIT_VALUE)
+    override def levelUp(): Unit = habitatLevel += 1
+  }
+
 }
 
