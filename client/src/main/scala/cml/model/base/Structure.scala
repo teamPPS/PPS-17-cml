@@ -7,6 +7,9 @@ import cml.utils.ModelConfig.Building.TYPE_FARM
   * @author Monica Gondolini
   */
 trait Structure{
+  /**
+    * Increments Structure level
+    */
   def levelUp(): Unit
 }
 
@@ -23,7 +26,6 @@ case class Building(buildingType: String, buildingPosition: Position, var buildi
 //      Food(INIT_VALUE)
 //    }
 //  }
-
   //aggiungere controllo per tipo building
   val food = Food(INIT_VALUE)
   override def levelUp(): Unit = buildingLevel += 1
@@ -40,29 +42,24 @@ object Habitat {
 
   /**
     * Implementation of structure habitat
-    *
     * @param element         of the habitat
     * @param habitatPosition coordinates of the habitat in the village
     * @param habitatLevel    level of the habitat
     * @param creatures       list of creatures living in this habitat
     */
-  case class Habitat(element: String, habitatPosition: Position,
-                     var habitatLevel: Int, creatures: List[String]) extends Structure { //Al posto di String ci andrà tipo Creature
-
+  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[String]) extends Structure { //Al posto di String ci andrà tipo Creature
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature (?)
     override def levelUp(): Unit = habitatLevel += 1
   }
 
   /**
     * Implementation of structure habitat
-    *
     * @param element         of the habitat
     * @param habitatPosition coordinates of the habitat in the village
     * @param habitatLevel    level of the habitat
     * @param creature        single creature living in this habitat
     */
-  case class SingleHabitat(element: String, habitatPosition: Position,
-                           var habitatLevel: Int, creature: String) extends Structure {
+  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: String) extends Structure {
     val money = Money(INIT_VALUE)
     override def levelUp(): Unit = habitatLevel += 1
   }

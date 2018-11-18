@@ -7,8 +7,17 @@ import cml.utils.ModelConfig.Resource.{INC_BY_10, INIT_VALUE}
   * @author Monica Gondolini
   */
 trait Resource{
-  def inc(): Unit //incremento le risorse
-  def take(): Int //prendo le risorse e azzero il valore
+
+  /**
+    * Resource increment
+    */
+  def inc(): Unit
+
+  /**
+    * Retrieve the resource
+    * @return the amount of resources
+    */
+  def take(): Int
 }
 
 /**
