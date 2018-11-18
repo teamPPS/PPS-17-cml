@@ -7,10 +7,9 @@ import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+
 
 /**
   * This trait describes the Vertx client
@@ -23,6 +22,7 @@ trait AuthenticationServiceVertx {
     * Requests a user registration into the system
     * @param username player's username
     * @param password player's password
+    * @return future if register completes successfully, otherwise it fails.
     */
   def register(username: String, password: String): Future[String]
 
@@ -30,22 +30,30 @@ trait AuthenticationServiceVertx {
     * Requests the login of a specific user into the system
     * @param username player's username
     * @param password player's password
+    * @return future if login completes successfully, otherwise it fails.
     */
   def login(username: String, password: String): Future[String]
 
   /**
     * Requests the logout of a user from the system
     * @param token token to delete
+    * @return future if logout completes successfully, otherwise it fails.
     */
-  def logout(token: String) : Unit
+  def logout(token: String) : Future[Unit]
 
   /**
     * Requests the deletion of a user from the system
     * @param username player's username
+    * @return future if delete completes successfully, otherwise it fails.
     */
-  def delete(username: String): Unit
+  def delete(username: String): Future[Unit]
 
-  def validationToken(token: String): Unit
+  /**
+    * Check username and then valid a token
+    * @param username to check
+    * @return a future if username found
+    */
+  def validationToken(token: String): Future[Unit]
 }
 
 /**
@@ -80,31 +88,26 @@ object AuthenticationServiceVertx {
         .map(_.bodyAsString().getOrElse(""))
     }
 
-    override def logout(token: String): Unit = {
+    override def logout(token: String): Future[Unit] = {
       println(s"sending logout request with token: $token")
       client.delete(AuthenticationServicePort, ServiceHost, DeleteApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
         .sendFuture
-        .onComplete{
-          case Success(result) => println("Success: " + result)//debug
-          case Failure(cause) => println("Failure: " + cause)//debug
-        }
+        .map(() => _)
     }
 
-    override def delete(username: String): Unit = {
+    override def delete(username: String): Future[Unit] = {
       client.delete(AuthenticationServicePort, ServiceHost, LogoutApi) // add token?
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(username).get)
         .sendFuture
-        .onComplete{
-          case Success(result) => println("Success: " + result)//debug
-          case Failure(cause) => println("Failure: " + cause)//debug
-        }
+        .map(()=>_)
     }
 
-    override def validationToken(token: String): Unit = {
+    override def validationToken(token: String): Future[Unit] = {
       client.get(AuthenticationServicePort, ServiceHost, ValidationTokenApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), token)
         .sendFuture
+        .map(() => _)
     }
   }
 }

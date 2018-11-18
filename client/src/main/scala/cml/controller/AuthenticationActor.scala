@@ -1,11 +1,12 @@
 package cml.controller
 
 import akka.actor.Actor
-import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
-import cml.controller.messages.AuthenticationResponse.{LoginFailure, LoginSuccess, RegisterFailure, RegisterSuccess}
+import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import cml.utils.Configuration.AuthenticationMsg._
 import javafx.application.Platform
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
 import scala.util.{Failure, Success}
@@ -13,6 +14,7 @@ import scala.util.{Failure, Success}
 /**
   * Class that implements the actor which manages the authentication process
   * @author Monica Gondolini,Filippo Portolani
+  * @author (modified by) Chiara Volonnino
   *
   * @param controller controller of the authentication view
   */
@@ -32,19 +34,18 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
       authenticationVertx.register(username, password)
     .onComplete{
         case Success(tokenResponse) =>
-          successCase(tokenResponse)
+          successAuthenticationCase(tokenResponse)
           displayMsg(registerSuccess)
-          println("Success this is server response with the token: " + tokenResponse)//debug
-        case Failure(cause) => LoginFailure(cause.getMessage)
+          println("Success this is server response with the token: " + tokenResponse)
+        case Failure(cause) => RegisterFailure(cause.getMessage)
       }
     case Login(username, password) => authenticationVertx.login(username, password)
       .onComplete{
         case Success(tokenResponse) =>
-          successCase(tokenResponse)
-          println("Success this is server response with the token: " + tokenResponse)//debug
+          successAuthenticationCase(tokenResponse)
+          println("Success this is server response with the token: " + tokenResponse)
         case Failure(cause) => LoginFailure(cause.getMessage)
       }
-    //case Logout(username) => clientVertx.logout(username) //rimuove utente dalla view del gioco (deve stare qui?)
   }
 
   /**
@@ -55,8 +56,8 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
     Platform.runLater(() => controller.formMsgLabel.setText(m))
   }
 
-  def successCase(tokenValue: String): Unit = {
-    token = tokenValue // token da appicciacare ad ogni richiesta
+  def successAuthenticationCase(tokenValue: String): Unit = {
+    token = tokenValue
     println("TOKEN: " + token)
   }
 
