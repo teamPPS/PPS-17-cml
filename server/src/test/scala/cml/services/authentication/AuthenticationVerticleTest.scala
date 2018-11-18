@@ -8,27 +8,24 @@ package cml.services.authentication
 
 import cml.core.utils.HttpMessage
 import cml.core.{BeforeAndAfterTest, TokenAuthentication}
-import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl
+import cml.services.authentication.utils.AuthenticationUrl
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.core.Vertx
 
 import scala.concurrent.Promise
 
-class AuthenticationVerticleTest extends BeforeAndAfterTest {
+class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
-/* /* val username: String = "pps"
-  val password: String = "cml"*/
+  val username: String = "pps"
+  val password: String = "cml"
 
   test("Validation token test") {
     println("Validation Token test")
     val vertx: Vertx = Vertx.vertx()
     val promiseValidation = Promise[String]
 
-    //val base64 =  TokenAuthentication.base64Authentication(username,password)
-
     vertx.createHttpClient()
       .get(8080, "127.0.0.1", AuthenticationUrl.ValidationTokenApi)
-      //.putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
       .handler(response => {
           response.exceptionHandler(promiseValidation.failure)
           response.bodyHandler(buffer => promiseValidation.success(buffer.toString))
@@ -36,8 +33,7 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
         }).end()
     promiseValidation.future.map(res => {
       println("validation: " + res)
-      //assert(res equals HttpMessage.BadRequest)
-      assert(1==1)
+      assert(res equals HttpMessage.BadRequest)
     })
   }
 
@@ -99,5 +95,5 @@ class AuthenticationVerticleTest extends BeforeAndAfterTest {
       println("delete: " + res)
       assert(res equals HttpMessage.BadRequest)
     })
-  }*/
+  }
 }

@@ -1,7 +1,6 @@
 package cml.server
 
 import cml.services.authentication.AuthenticationVerticle
-import cml.services.village.VillageVerticle
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.Vertx
 

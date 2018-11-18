@@ -2,7 +2,7 @@ package cml.services.authentication
 
 import akka.actor.ActorRef
 import cml.core.TokenAuthentication
-import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl._
+import cml.services.authentication.utils.AuthenticationUrl._
 import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.scala.core.Vertx

@@ -6,7 +6,7 @@ import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
 
 import scala.util.{Failure, Success}
-import cml.services.authentication.utils.AuthenticationUrl.AuthenticationUrl._
+import cml.services.authentication.utils.AuthenticationUrl._
 import cml.core.utils.HttpMessage._
 
 /**
@@ -15,7 +15,7 @@ import cml.core.utils.HttpMessage._
   * @author Chiara Volonnino
   */
 
-class AuthenticationVerticle extends RouterVerticle with RoutingOperation {
+case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation {
 
   private var authenticationService: AuthenticationService = _
 

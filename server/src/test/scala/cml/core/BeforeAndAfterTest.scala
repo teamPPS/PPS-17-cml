@@ -1,21 +1,31 @@
 package cml.core
 
-import cml.services.authentication.AuthenticationVerticle
-import io.vertx.core.Vertx
 import io.vertx.lang.scala.ScalaVerticle
-import org.scalatest.{BeforeAndAfter, _}
+import org.scalatest._
 
-class BeforeAndAfterTest {
-/*
+/**
+  * This trait is utils for services test. In this trait deploy all service to require for test, and the undeploy this.
+  *
+  * @author Chiara Volonnino
+  */
 
-  VerticleTesting[AuthenticationVerticle] with BeforeAndAfter
+trait BeforeAndAfterTest extends VerticleTest with BeforeAndAfter {
 
-  val vertx = Vertx.vertx()
+  this: VertxTest =>
 
-  before {
-    println("service init")
-    vertx.deployVerticle(ScalaVerticle.nameForVerticle[AuthenticationVerticle])
+  /**
+    * It contains the list of service to deploy before each test.
+    *
+    * @return a Traversable containing all the services to deploy
+    */
+  protected def serviceList: Traversable[ScalaVerticle]
+  protected val verticleToUse: Unit
+  before{
+    verticleToUse(verticleToUse) // ancora non ottimizzato
+    deploy(serviceList)
   }
-*/
 
+  after {
+    undeploy()
+  }
 }
