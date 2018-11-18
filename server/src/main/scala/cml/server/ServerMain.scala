@@ -8,14 +8,11 @@ import io.vertx.scala.core.Vertx
 /**
   * Launcher of all Verticle Services
   *
-  * @ecavina
+  * @author ecavina
   */
 object ServerMain extends App {
 
   var vertx = Vertx.vertx()
-
-//  How to istantiate services verticles:
-//  vertx.deployVerticle(ScalaVerticle.nameForVerticle[HelloWorldVerticle])
 
   vertx.deployVerticle(ScalaVerticle.nameForVerticle[AuthenticationVerticle])
   //vertx.deployVerticle(ScalaVerticle.nameForVerticle[VillageVerticle])

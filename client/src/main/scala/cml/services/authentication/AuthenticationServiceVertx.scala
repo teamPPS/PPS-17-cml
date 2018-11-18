@@ -7,6 +7,7 @@ import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -52,7 +53,7 @@ trait AuthenticationServiceVertx {
   */
 object AuthenticationServiceVertx {
 
-  var vertx: Vertx = Vertx.vertx()
+  val vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
   def apply(actor: ActorRef): AuthenticationServiceVertx = AuthenticationServiceVertxImpl(actor)
@@ -61,7 +62,7 @@ object AuthenticationServiceVertx {
     * This class implements the Vertx Client
     * @param actor the actor i want to send messages to
     */
-  case class AuthenticationServiceVertxImpl(actor: ActorRef) extends AuthenticationServiceVertx{
+  case class AuthenticationServiceVertxImpl(actor: ActorRef) extends AuthenticationServiceVertx {
 
     override def register(username: String, password: String): Future[String] = {
       println(s"sending registration request from username:$username with password:$password")
