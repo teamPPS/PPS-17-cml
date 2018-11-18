@@ -43,18 +43,6 @@ trait RoutingOperation {
   def sendResponse(httpCode: HttpResponseStatus, message: String)(implicit routingContext: RoutingContext): Unit = {
     val code = httpCode.code()
     getResponse.setStatusCode(code).end(message)
-    println("response: " + httpCode)
   }
-
-/*  def checkInputAndCreateToken(implicit routingContext: RoutingContext): Future[Unit] = {
-    getRequestAndHeader match {
-      case Some(header) =>
-        println("atorizzato")
-        Future.successful(header)
-      case None =>
-        println("Non sei autorizzato")
-        Future.failed(Exception)
-    }
-  }*/
 }
 

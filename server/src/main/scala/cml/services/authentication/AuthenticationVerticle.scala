@@ -7,7 +7,6 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
-import cml.core.utils.HttpMessage._
 
 /**
   * This class implements AuthenticationVerticle
@@ -40,9 +39,9 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       authenticationService.register(username,password).onComplete {
         case Success(_) =>
           JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(CREATED,_))
-        case Failure(_) => sendResponse(BAD_REQUEST, BadRequest)
+        case Failure(_) => sendResponse(BAD_REQUEST, BAD_REQUEST.toString)
       }
-    }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def login: Handler[RoutingContext] = implicit routingContext => {
@@ -54,9 +53,9 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       authenticationService.login(username, password).onComplete {
         case Success(_) =>
           JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(OK,_))
-        case Failure(_) => sendResponse(UNAUTHORIZED, Unauthorized)
+        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
       }
-    }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def logout: Handler[RoutingContext] = implicit routingContext => {
@@ -68,9 +67,9 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
     ) yield {
       authenticationService.delete(username).onComplete {
         case Success(_) => sendResponse(OK, username)
-        case Failure(_) => sendResponse(UNAUTHORIZED, Unauthorized)
+        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
       }
-    }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def delete: Handler[RoutingContext] = implicit routingContext => {
@@ -82,9 +81,9 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
     ) yield {
       authenticationService.delete(username).onComplete {
         case Success(_) => sendResponse(OK, username)
-        case Failure(_) => sendResponse(UNAUTHORIZED, Unauthorized)
+        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
       }
-    }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def validationToken: Handler[RoutingContext] = implicit routingContext => {
@@ -96,8 +95,8 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
     ) yield {
       authenticationService.validationToken(username).onComplete {
         case Success(_) => sendResponse(OK, username)
-        case Failure(_) => sendResponse(UNAUTHORIZED, Unauthorized)
+        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
       }
-    }).getOrElse(sendResponse(BAD_REQUEST, BadRequest))
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 }

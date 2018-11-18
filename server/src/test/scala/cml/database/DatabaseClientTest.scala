@@ -15,9 +15,8 @@ import scala.util.{Failure, Success}
   *
   * @author Filippo Portolani
   */
-class DatabaseClientTest extends AsyncFunSuite{
-
-  test("testDatabaseConnection"){
+class DatabaseClientTest {
+//  test("testDatabaseConnection"){
 
     /*val database : DatabaseClient = DatabaseClient(DbConfig.usersColl)
     val dbVillage : DatabaseClient = DatabaseClient(DbConfig.villageColl)
@@ -64,10 +63,7 @@ class DatabaseClientTest extends AsyncFunSuite{
 //
 //    }
 
-
     //latch await()
-    assert(1==1)
-  }
 
 }
 
