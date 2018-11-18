@@ -1,7 +1,7 @@
 package cml.controller.fx
 
 import cml.utils.Configuration.{AuthenticationWindow, BattleWindow}
-import cml.view.ViewSwitch
+import cml.view.{BaseGridInitializer, ViewSwitch}
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.input._
@@ -27,34 +27,12 @@ class VillageViewController {
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     villageMap = new GridPane
-    villageMap setHgap 10
-    villageMap setVgap 10
+    BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
-    initVillageMap()
 
     buildingsMenu = new GridPane
-    buildingsMenu setHgap 5
-    buildingsMenu setVgap 5
+    BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
-    initBuildingsMenu()
-
-  }
-
-  // testing purpose
-  def initBuildingsMenu(): Unit = {
-    // builder/factory per i tile di menu, devono estendere Node, con anche gli handler
-    var farmLabel = new Label("FARM")
-    addDragAndDropSourceHandler(farmLabel)
-    var habitatLabel = new Label("HABITAT")
-    addDragAndDropSourceHandler(habitatLabel)
-    var caveLabel = new Label("CAVE")
-    addDragAndDropSourceHandler(caveLabel)
-    var terrain = new Label("terrain")
-    addDragAndDropSourceHandler(terrain)
-    buildingsMenu add(farmLabel, 0, 0)
-    buildingsMenu add(habitatLabel, 0, 1)
-    buildingsMenu add(caveLabel, 1, 0)
-    buildingsMenu add(terrain, 1, 1)
   }
 
   // testing purpose
