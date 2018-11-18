@@ -19,8 +19,9 @@ trait GridInitializer {
   /**
     * Initialize a grid as a village
     * @param grid to initialize
+    * @param informationArea where show elements in grid informations
     */
-  def initializeVillage(grid: GridPane)
+  def initializeVillage[A](grid: GridPane, informationArea: A)
 
 }
 
@@ -46,8 +47,6 @@ object Setup {
   val setupVillage: Setup = {
     grid: GridPane => { // scorrere model
 
-      //aggiungere handler per click sinistro per mostrare informazioni sulla gui
-
       val baseTile = tileSet.filter(t => t.description.equals("TERRAIN")).head
 
       loop(0, 10) foreach { // INVECE CHE GENERARE DA ZERO SCORRO IL MODEL E SETTO LE TILE CORRISPONDENTI
@@ -55,6 +54,7 @@ object Setup {
           val imageTile = new ImageView()
           imageTile.setImage(baseTile.imageSprite.snapshot(new SnapshotParameters, null))
           addDragAndDropTargetHandler(imageTile)
+          addClickHandler(imageTile)
           grid add(imageTile, x, y)
       }
 
@@ -93,22 +93,21 @@ object Setup {
     })
   }
 
-  def addDragAndDropTargetHandler(c: ImageView): Unit = {
-    c setOnDragOver ((event: DragEvent) => {
+  def addDragAndDropTargetHandler(i: ImageView): Unit = {
+    i setOnDragOver ((event: DragEvent) => {
       event acceptTransferModes TransferMode.COPY
       event consume()
     })
 
-    c setOnDragDropped ((event: DragEvent) => {
+    i setOnDragDropped ((event: DragEvent) => {
       val dragBoard: Dragboard = event getDragboard()
       val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
-      c setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
-      val y = GridPane.getColumnIndex(c)
-      val x = GridPane.getRowIndex(c)
+      i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
+      val y = GridPane.getColumnIndex(i)
+      val x = GridPane.getRowIndex(i)
       println("Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")")
       event consume()
-      // UPDATE MODEL senza(???) modificare la GUI e send al server
-      // se ??? TODO aggiungere engine che renderizza il model abbastanza rapido da fare sembrare all'utente che droppando aggiunge l'elemento
+      // UPDATE MODEL e send al server
     })
   }
 }
@@ -121,11 +120,19 @@ object BaseGridInitializer extends GridInitializer {
     setup.configure(grid)
   }
 
+  def addClickHandler(i: ImageView): Unit = {
+    i setOnMouseClicked(mouseEvent => {
+      val y = GridPane.getColumnIndex(i)
+      val x = GridPane.getRowIndex(i)
+      println("Mouse clicked in coords: ("+x+","+y+")")
+    })
+  }
+
   override def initializeBuildingsMenu(grid: GridPane): Unit = {
     setupGrid(grid, Setup.setupBuildingsMenu)
   }
 
-  override def initializeVillage(grid: GridPane): Unit = {
+  override def initializeVillage[TextArea](grid: GridPane, area: TextArea): Unit = {
     setupGrid(grid, Setup.setupVillage)
   }
 
