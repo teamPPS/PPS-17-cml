@@ -16,7 +16,6 @@ trait Creature {
   * @param creatureName name of the creature
   * @param creatureElement the type of the creature
   * @param creatureLevel level of the creature
-  * @param habitatPosition where the creature must be positioned
   */
 
 case class Creature1(creatureName: String, creatureElement: String,var creatureLevel: Int) extends Creature { //could be a dragon or something else
