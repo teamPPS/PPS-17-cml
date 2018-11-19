@@ -15,19 +15,21 @@ import scala.concurrent._
   */
 
 trait AuthenticationService {
+
   /**
     * To execute register into a system.
     * @param username username to register
     * @param password password to register
+    * @param ec is implicit fot execution context
     * @return a future completes successfully, otherwise it fails.
     */
-
   def register (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * To execute login into a system.
     * @param username username with with which the user authenticates himself
     * @param password password decided by the user
+    * @param ec is implicit fot execution context
     * @return a future completes successfully, otherwise it fails.
     */
 
@@ -36,14 +38,16 @@ trait AuthenticationService {
   /**
     * Allow user to logout from the system.
     * @param username username with which the user authenticates himself
+    * @param ec is implicit fot execution context
     * @return a future if the user logout successful
     */
-
   def logout (username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * To delete user from database
+    *
     * @param username username to delete
+    * @param ec is implicit fot execution context
     * @return a future if the delete user successful
     */
   def delete (username: String)(implicit ec: ExecutionContext): Future[Unit]
@@ -51,6 +55,7 @@ trait AuthenticationService {
   /**
     * Check username and then valid a token
     * @param username to check
+    * @param ec is implicit fot execution context
     * @return a future if username found
     */
   def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit]

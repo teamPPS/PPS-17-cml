@@ -6,7 +6,6 @@ import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFai
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import cml.utils.Configuration.AuthenticationMsg._
 import javafx.application.Platform
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
 import scala.util.{Failure, Success}
@@ -37,14 +36,14 @@ class AuthenticationActor(controller: AuthenticationController) extends Actor{
           successAuthenticationCase(tokenResponse)
           displayMsg(registerSuccess)
           println("Success this is server response with the token: " + tokenResponse)
-        case Failure(cause) => RegisterFailure(cause.getMessage)
+        case Failure(exception) => RegisterFailure(exception.getMessage)
       }
     case Login(username, password) => authenticationVertx.login(username, password)
       .onComplete{
         case Success(tokenResponse) =>
           successAuthenticationCase(tokenResponse)
           println("Success this is server response with the token: " + tokenResponse)
-        case Failure(cause) => LoginFailure(cause.getMessage)
+        case Failure(exception) => LoginFailure(exception.getMessage)
       }
   }
 

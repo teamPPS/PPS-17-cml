@@ -4,7 +4,6 @@ import cml.core.{JWTAuthentication, RouterVerticle, RoutingOperation, TokenAuthe
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
-
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
 
@@ -59,7 +58,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   }
 
   private def logout: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive logout request") // delete only token
+    println("Receive logout request") // delete only token da valutare, così non va bene! o salviamo il token nel db o non soS
     (for (
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);

@@ -43,17 +43,17 @@ trait AuthenticationServiceVertx {
 
   /**
     * Requests the deletion of a user from the system
-    * @param username player's username
+    * @param token token with match request
     * @return future if delete completes successfully, otherwise it fails.
     */
-  def delete(username: String): Future[Unit]
+  def delete(token: String): Future[Unit]
 
   /**
     * Check username and then valid a token
-    * @param username to check
-    * @return a future if username found
+    * @param header to check
+    * @return a future if header found
     */
-  def validationToken(token: String): Future[Unit]
+  def validationToken(header: String): Future[Unit]
 }
 
 /**
@@ -96,16 +96,16 @@ object AuthenticationServiceVertx {
         .map(() => _)
     }
 
-    override def delete(username: String): Future[Unit] = {
+    override def delete(token: String): Future[Unit] = {
       client.delete(AuthenticationServicePort, ServiceHost, LogoutApi) // add token?
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(username).get)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
         .sendFuture
         .map(()=>_)
     }
 
-    override def validationToken(token: String): Future[Unit] = {
+    override def validationToken(header: String): Future[Unit] = {
       client.get(AuthenticationServicePort, ServiceHost, ValidationTokenApi)
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), token)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
         .sendFuture
         .map(() => _)
     }
