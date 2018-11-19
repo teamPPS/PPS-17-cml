@@ -37,30 +37,30 @@ class DatabaseClientTest extends AsyncFunSuite{
     val latch: CountDownLatch = new CountDownLatch(1)
 
     database.insert(userDoc) onComplete{
-      case Success(res) => println("Insertion SUCCESS "+res)
-      case Failure(err) => println("Insertion FAILURE "+err)
+      case Success(result) => println("Insertion SUCCESS "+result)
+      case Failure(error) => println("Insertion FAILURE "+error)
     }
 
     latch countDown()
-
+//
 //    dbVillage.insert(villageDoc) onComplete{
-//      case Success(res) => println("Insertion SUCCESS "+res)
-//      case Failure(err) => println("Insertion FAILURE "+err)
+//      case Success(result) => println("Insertion SUCCESS "+result)
+//      case Failure(error) => println("Insertion FAILURE "+error)
 //    }
 //
 //    database.find(userDoc) onComplete {
-//      case Success(res) => println("Find SUCCESS "+res)
-//      case Failure(err) => println("Find FAILURE "+err)
+//      case Success(result) => println("Find SUCCESS "+result)
+//      case Failure(error) => println("Find FAILURE "+error)
 //    }
-//
+
 //    database.delete(userDoc) onComplete {
-//      case Success(res) => println("Deletion SUCCESS"+res)
-//      case Failure(err) => println("Deletion FAILURE"+err)
+//      case Success(result) => println("Deletion SUCCESS"+result)
+//      case Failure(error) => println("Deletion FAILURE"+error)
 //    }
 //
 //    database.update(userDoc, updateQuery) onComplete {
-//      case Success(res) => println("Update SUCCESS "+res)
-//      case Failure(err) => println("Update FAILURE "+err)
+//      case Success(result) => println("Update SUCCESS "+result)
+//      case Failure(error) => println("Update FAILURE "+error)
 //
 //    }
 

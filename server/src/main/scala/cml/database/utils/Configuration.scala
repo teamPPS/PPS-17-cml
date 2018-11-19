@@ -13,4 +13,8 @@ object Configuration{
     val usersColl: String = "Users"
     val villageColl: String = "Village"
   }
+
+  object DocumentNotFoundException{
+    val DocumentNotFoundException: String = "DocumentNotFoundException"
+  }
 }
