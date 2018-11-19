@@ -19,9 +19,8 @@ trait GridInitializer {
   /**
     * Initialize a grid as a village
     * @param grid to initialize
-    * @param informationArea where show elements in grid informations
     */
-  def initializeVillage[A](grid: GridPane, informationArea: A)
+  def initializeVillage(grid: GridPane)
 
 }
 
@@ -80,6 +79,14 @@ object Setup {
     }
   }
 
+  def addClickHandler(i: ImageView): Unit = { // ANDREBBE SPOSTATO FUORI E BISOGNA AGGIUNGERE COME PARAMETRO IL LUOGO DOVE MOSTRARE LE INFO
+    i setOnMouseClicked(mouseEvent => {
+      val y = GridPane.getColumnIndex(i)
+      val x = GridPane.getRowIndex(i)
+      println("Mouse clicked in coords: ("+x+","+y+")")
+    })
+  }
+
   def addDragAndDropSourceHandler(t: Tile): Unit = {
     val canvas = t.imageSprite
     canvas setOnDragDetected((event: MouseEvent) => {
@@ -120,19 +127,11 @@ object BaseGridInitializer extends GridInitializer {
     setup.configure(grid)
   }
 
-  def addClickHandler(i: ImageView): Unit = {
-    i setOnMouseClicked(mouseEvent => {
-      val y = GridPane.getColumnIndex(i)
-      val x = GridPane.getRowIndex(i)
-      println("Mouse clicked in coords: ("+x+","+y+")")
-    })
-  }
-
   override def initializeBuildingsMenu(grid: GridPane): Unit = {
     setupGrid(grid, Setup.setupBuildingsMenu)
   }
 
-  override def initializeVillage[TextArea](grid: GridPane, area: TextArea): Unit = {
+  override def initializeVillage(grid: GridPane): Unit = {
     setupGrid(grid, Setup.setupVillage)
   }
 
