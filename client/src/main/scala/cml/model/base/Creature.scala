@@ -19,7 +19,7 @@ trait Creature {
   * @param habitatPosition where the creature must be positioned
   */
 
-case class Creature1(creatureName: String, creatureElement: String,var creatureLevel: Int, habitatPosition: Position ) extends Creature { //could be a dragon or something else
+case class Creature1(creatureName: String, creatureElement: String,var creatureLevel: Int) extends Creature { //could be a dragon or something else
 
   val initialHp = ModelConfig.Creature.HEALTH_POINT
   override def levelUp(): Unit = creatureLevel += 1
