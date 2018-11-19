@@ -13,11 +13,6 @@ trait Resource{
     */
   def inc(level: Int): Unit
 
-//  /**
-//    * Resource decrement
-//    */
-//  def dec(value: Int): Unit
-
   /**
     * Retrieve the resource
     * @return the amount of resources
@@ -31,11 +26,8 @@ trait Resource{
   */
 case class Money(var amount: Int) extends Resource {
   override def inc(level: Int): Unit = {
-    amount += (level*10)
+    amount += (level*INC_BY_10)
   }
-//  override def dec(value: Int): Unit = {
-//    if(amount != INIT_VALUE) amount -= value
-//  } //aggiungere controllo
   override def take(): Int = {
     val taken = amount
     amount = INIT_VALUE
@@ -43,22 +35,14 @@ case class Money(var amount: Int) extends Resource {
   }
 }
 
-/*
-isPossible(res) se true allora decremento
- */
-
 /**
   * Implementation of resource food
   * @param amount food amount
   */
 case class Food(var amount: Int) extends Resource {
   override def inc(level: Int): Unit ={
-    amount += (level*10)
+    amount += (level*INC_BY_10)
   }
-//  override def dec(value: Int): Unit = {
-//    if(amount-value >= 0) amount -= value
-//    else println("messaggio di errore")
-//  } //aggiungere controllo
   override def take(): Int = {
     val taken = amount
     amount = INIT_VALUE
