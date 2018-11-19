@@ -19,8 +19,8 @@ class DatabaseClientTest extends AsyncFunSuite{
 
   test("testDatabaseConnection"){
 
-    val database : DatabaseClient = DatabaseClient(DbConfig.usersColl)
-    val dbVillage : DatabaseClient = DatabaseClient(DbConfig.villageColl)
+    val usersCollection : DatabaseClient = DatabaseClient(DbConfig.usersColl)
+    val villageCollection : DatabaseClient = DatabaseClient(DbConfig.villageColl)
 
     val doc: Document = Document("_id" -> 0, "name" -> "prova")
     val userDoc: Document = Document(User.USERNAME -> "CMLuser", User.PASSWORD -> "pps")
@@ -30,35 +30,34 @@ class DatabaseClientTest extends AsyncFunSuite{
       Village.HABITAT -> Document(Habitat.ID->0, Habitat.LEVEL -> 0, Habitat.ELEMENT-> "fire",
           Habitat.CREATURE -> Document(Creature.ID ->0, Creature.NAME -> "fireCreature", Creature.LEVEL -> 0, Creature.ELEMENT-> "fire")))
 
-    val query: Document = Document(User.USERNAME->"CMLuser")
-    val queryFind: Document = Document(Village.NAME -> "PPSVillage")
+
     val updateQuery: Document = Document("$set" -> Document(User.USERNAME -> "PPS"))
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
-    database.insert(userDoc) onComplete{
+    usersCollection.insert(userDoc) onComplete{
       case Success(result) => println("Insertion SUCCESS "+result)
       case Failure(error) => println("Insertion FAILURE "+error)
     }
 
     latch countDown()
 //
-//    dbVillage.insert(villageDoc) onComplete{
+//    villageCollection.insert(villageDoc) onComplete{
 //      case Success(result) => println("Insertion SUCCESS "+result)
 //      case Failure(error) => println("Insertion FAILURE "+error)
 //    }
 //
-//    database.find(userDoc) onComplete {
+//    usersCollection.find(userDoc) onComplete {
 //      case Success(result) => println("Find SUCCESS "+result)
 //      case Failure(error) => println("Find FAILURE "+error)
 //    }
-
-//    database.delete(userDoc) onComplete {
+//
+//    usersCollection.delete(userDoc) onComplete {
 //      case Success(result) => println("Deletion SUCCESS"+result)
 //      case Failure(error) => println("Deletion FAILURE"+error)
 //    }
 //
-//    database.update(userDoc, updateQuery) onComplete {
+//    usersCollection.update(userDoc, updateQuery) onComplete {
 //      case Success(result) => println("Update SUCCESS "+result)
 //      case Failure(error) => println("Update FAILURE "+error)
 //
