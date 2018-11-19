@@ -1,9 +1,11 @@
 package cml.services.authentication
 
-import cml.core.{JWTAuthentication, RouterVerticle, RoutingOperation, TokenAuthentication}
+import cml.core.utils.JWTAuthentication
+import cml.core.{RouterVerticle, RoutingOperation, TokenAuthentication}
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
+
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
 

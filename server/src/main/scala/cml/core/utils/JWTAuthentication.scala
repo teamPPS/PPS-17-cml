@@ -1,7 +1,8 @@
-package cml.core
+package cml.core.utils
 
 import io.vertx.core.json.JsonObject
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
+
 import scala.util.{Failure, Success}
 
 /**
