@@ -12,6 +12,6 @@ trait User {
 }
 
 object User {
-  val Username = "username"
-  val Password = "password"
+  val USERNAME = "username"
+  val PASSWORD = "password"
 }

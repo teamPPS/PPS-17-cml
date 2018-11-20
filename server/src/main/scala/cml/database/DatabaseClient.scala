@@ -1,10 +1,11 @@
 package cml.database
 
 import cml.database.utils.Configuration.DbConfig
+import cml.database.utils.Configuration.DocumentNotFoundException.DocumentNotFoundException
 import org.mongodb.scala._
 import org.mongodb.scala.ObservableImplicits
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 
 
 /**
@@ -46,7 +47,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def find(document: Document)(implicit ec: ExecutionContext): Future[String]
+  def find(document: Document)(implicit ec: ExecutionContext):  Future[FindObservable[Document]]
 
   /**
     * Allow to insert multiple documents in the database
@@ -102,9 +103,17 @@ object DatabaseClient {
       future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def find(document: Document)(implicit ec: ExecutionContext): Future[String] = {
-      val future = collection.find(document).toFuture()
-      future map(_ => "Find Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[FindObservable[Document]] = {
+      val promise: Promise[FindObservable[Document]] = Promise()
+      collection.countDocuments(document).subscribe(new Observer[Long] {
+        override def onNext(result: Long): Unit = result match {
+          case _ => promise.success(collection.find(document))
+          case 0 => onError(new Throwable(DocumentNotFoundException))
+        }
+        override def onError(error: Throwable): Unit = promise.failure(error)
+        override def onComplete(): Unit = println("Find request completed")
+      })
+      promise.future
     }
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {

@@ -75,7 +75,7 @@ object AuthenticationService {
     var document: Document = _
 
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
-      document = Document(Username->username, Password->password)
+      document = Document(USERNAME->username, PASSWORD->password)
       println(document)
       collection.insert(document).map(_ => "Insertion Completed")
         .recoverWith{case e: Throwable =>
@@ -85,7 +85,7 @@ object AuthenticationService {
     }
 
     override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] =  {
-      document = Document(Username->username, Password->password)
+      document = Document(USERNAME->username, PASSWORD->password)
       println(document)
       collection.find(document).map(_ => "Find Completed")
         .recoverWith{case e: Throwable =>
@@ -95,7 +95,7 @@ object AuthenticationService {
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(Username->username)
+      document = Document(USERNAME->username)
       collection.find(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
@@ -104,7 +104,7 @@ object AuthenticationService {
     }
 
     override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(Username->username)
+      document = Document(USERNAME->username)
       collection.delete(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
@@ -113,7 +113,7 @@ object AuthenticationService {
     }
 
     override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(Username->username)
+      document = Document(USERNAME->username)
       collection.find(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
