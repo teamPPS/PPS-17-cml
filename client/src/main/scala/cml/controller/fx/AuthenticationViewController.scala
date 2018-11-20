@@ -11,7 +11,7 @@ import javafx.scene.control.{Button, Label, PasswordField, TextField}
 
 /**
   * Controller for the graphic user interface
-  * @author Monica Gondolini,Filippo Portolani
+  * @author Monica Gondolini, Filippo Portolani
   */
 
 class AuthenticationViewController {

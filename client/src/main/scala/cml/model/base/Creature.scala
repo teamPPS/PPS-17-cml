@@ -7,7 +7,9 @@ import cml.utils.ModelConfig
   */
 
 trait Creature {
-
+  /**
+    * Increments Creature level
+    */
   def levelUp(): Unit
 }
 

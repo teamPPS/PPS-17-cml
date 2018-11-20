@@ -1,10 +1,5 @@
 package cml.utils
 
-/**
-  * Configuration constants of the application
-  *
-  * @author Monica Gondolini,Filippo Portolani
-  */
 object Configuration {
 
   private val SMALL_WIDTH: Int = 600

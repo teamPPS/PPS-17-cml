@@ -15,8 +15,8 @@ import scala.util.{Failure, Success}
 /**
   * Class that implements the actor which manages the authentication process
   *
-  * @author Monica Gondolini,Filippo Portolani
-  * @author (modified by) Chiara Volonnino
+  * @author Monica Gondolini
+  * @author (edited by) Chiara Volonnino, Filippo Portolani
   * @param controller controller of the authentication view
   */
 class AuthenticationActor(controller: AuthenticationViewController) extends Actor {

@@ -47,8 +47,8 @@ object Habitat {
     * @param habitatLevel    level of the habitat
     * @param creatures       list of creatures living in this habitat
     */
-  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[String]) extends Structure { //Al posto di String ci andrà tipo Creature
-    val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature (?)
+  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[Creature]) extends Structure { //Al posto di String ci andrà tipo Creature
+    val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
   }
 
@@ -59,7 +59,7 @@ object Habitat {
     * @param habitatLevel    level of the habitat
     * @param creature        single creature living in this habitat
     */
-  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: String) extends Structure {
+  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends Structure {
     val money = Money(INIT_VALUE)
     override def levelUp(): Unit = habitatLevel += 1
   }
