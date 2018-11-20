@@ -81,7 +81,7 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
   test("Logout test") {
     println("Response bad request because handler is empty")
-    client.delete(AuthenticationServicePort, ServiceHost, LogoutApi)
+    client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
@@ -117,7 +117,7 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
   test("Validation token test") {
     println("Response bad request because handler is empty")
-    client.get(AuthenticationServicePort, ServiceHost, ValidationTokenApi)
+    client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
     }
