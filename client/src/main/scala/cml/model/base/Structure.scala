@@ -34,10 +34,10 @@ case class Building(buildingType: String, buildingPosition: Position, var buildi
 
 object Habitat {
 
-  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creatures: List[String]) : Habitat =
+  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creatures: List[Creature]) : Habitat =
      Habitat(element, habitatPosition, habitatLevel, creatures)
 
-  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creature: String): SingleHabitat =
+  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creature: Creature): SingleHabitat =
     SingleHabitat(element, habitatPosition, habitatLevel, creature)
 
   /**
