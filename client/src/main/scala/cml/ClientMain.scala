@@ -1,11 +1,11 @@
 package cml
 
-import cml.utils.Configuration.{ArenaWindow, AuthenticationWindow, BattleWindow, VillageWindow}
 import cml.view.ViewSwitchConfig
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
+import cml.utils.ViewConfig._
 
 class ClientMain extends Application{
 

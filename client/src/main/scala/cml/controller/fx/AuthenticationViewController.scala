@@ -3,9 +3,9 @@ package cml.controller.fx
 import akka.actor.{ActorRef, ActorSystem, Props}
 import cml.controller.AuthenticationActor
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
-import cml.utils.Configuration.{ControllerMsg, InputControl, VillageWindow}
 import cml.view.ViewSwitch
-import javafx.event.ActionEvent
+import cml.controller.actor.utils.InputControl._
+import cml.utils.ViewConfig._
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
 
@@ -29,8 +29,8 @@ class AuthenticationViewController {
 
 
   def initialize(): Unit = {
-    registerButton setOnAction(_ => requestAuthentication(ControllerMsg.register, registrationUsernameField , registrationPasswordField))
-    loginButton setOnAction(_ => requestAuthentication(ControllerMsg.login, loginUsernameField, loginPasswordField))
+    registerButton setOnAction(_ => requestAuthentication(register, registrationUsernameField , registrationPasswordField))
+    loginButton setOnAction(_ => requestAuthentication(login, loginUsernameField, loginPasswordField))
   }
 
   /**
@@ -42,12 +42,12 @@ class AuthenticationViewController {
     val password = passwordField getText()
 
     if(username.isEmpty || password.isEmpty) {
-      formMsgLabel setText InputControl.emptyFields
+      formMsgLabel setText emptyFields
     }
 
-    if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
-      if(msg.equals(ControllerMsg.register)) authenticationActor ! Register(username, password)
-      else if(msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
+    if(username.matches(userExp) && password.matches(pswExp)){
+      if(msg.equals(register)) authenticationActor ! Register(username, password)
+      else if(msg.equals(login)) authenticationActor ! Login(username, password)
     }
   }
 

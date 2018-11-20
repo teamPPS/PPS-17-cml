@@ -1,10 +1,10 @@
 package cml.controller.fx
 
-import cml.utils.Configuration.{ArenaWindow, VillageWindow}
 import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
+import cml.utils.ViewConfig._
 
 /**
   * Controller class for graphic battle view

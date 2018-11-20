@@ -1,7 +1,7 @@
 package cml.controller.fx
 
-import cml.utils.Configuration.{AuthenticationWindow, BattleWindow}
 import cml.view.{BaseGridInitializer, ViewSwitch}
+import cml.utils.ViewConfig._
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.layout.GridPane

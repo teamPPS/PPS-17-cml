@@ -1,6 +1,6 @@
 package cml.controller.fx
 
-import cml.utils.Configuration.VillageWindow
+import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
