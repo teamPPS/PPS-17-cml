@@ -28,8 +28,8 @@ class AuthenticationController {
 
 
   def initialize(): Unit = {
-    registerButton setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg register, registrationUsernameField , registrationPasswordField))
-    loginButton setOnAction((_: ActionEvent) => requestAuthentication(ControllerMsg login, loginUsernameField, loginPasswordField))
+    registerButton setOnAction(_ => requestAuthentication(ControllerMsg.register, registrationUsernameField , registrationPasswordField))
+    loginButton setOnAction(_ => requestAuthentication(ControllerMsg.login, loginUsernameField, loginPasswordField))
   }
 
   /**
@@ -41,17 +41,17 @@ class AuthenticationController {
       val username = usernameField getText()
       val password = passwordField getText()
 
-      if(username.isEmpty ||password.isEmpty) {
-        formMsgLabel setText (InputControl emptyFields)
+      if(username.isEmpty || password.isEmpty) {
+        formMsgLabel setText InputControl.emptyFields
       }
 
-      if(username.matches(InputControl userExp) && password.matches(InputControl pswExp)){
-        if(msg.equals(ControllerMsg register)) authenticationActor ! Register(username, password)
-        else if(msg.equals(ControllerMsg login)) authenticationActor ! Login(username, password)
+      if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
+        if(msg.equals(ControllerMsg.register)) authenticationActor ! Register(username, password)
+        else if(msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
       }
 
-      registrationUsernameField setText("")
-      registrationPasswordField setText("")
+      registrationUsernameField setText ""
+      registrationPasswordField setText ""
   }
 
 }

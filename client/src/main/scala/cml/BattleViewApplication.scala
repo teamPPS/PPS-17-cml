@@ -1,6 +1,6 @@
 package cml
 
-import cml.utils.Configuration.BattleWindows
+import cml.utils.ViewConfig.BattleWindows
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}

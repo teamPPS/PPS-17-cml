@@ -5,10 +5,10 @@ import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
-import cml.utils.Configuration.AuthenticationWindow
+import cml.utils.ViewConfig.AuthenticationWindow
 
 /**
-  * @author Monica Gondolini,Filippo Portolani
+  * @author Monica Gondolini
  */
 
 class ClientMain extends Application{

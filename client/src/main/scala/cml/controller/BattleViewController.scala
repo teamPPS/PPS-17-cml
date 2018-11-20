@@ -1,6 +1,6 @@
 package cml.controller
 
-import cml.utils.Configuration.ArenaWindows
+import cml.utils.ViewConfig.ArenaWindows
 import javafx.application.Platform
 import javafx.fxml.{FXML, FXMLLoader}
 import javafx.scene.{Parent, Scene}
