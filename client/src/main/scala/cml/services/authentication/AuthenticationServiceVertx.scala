@@ -4,9 +4,10 @@ import akka.actor.ActorRef
 import cml.core.TokenAuthentication
 import cml.services.authentication.utils.AuthenticationUrl._
 import cml.core.utils.NetworkConfiguration._
-import io.netty.handler.codec.http.HttpHeaderNames
+import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
 import io.vertx.scala.core.Vertx
-import io.vertx.scala.ext.web.client.WebClient
+import io.vertx.scala.ext.web.client.{HttpRequest, WebClient}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -63,6 +64,8 @@ object AuthenticationServiceVertx {
 
   val vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
+  val successfulRegisterResponse: Int = HttpResponseStatus.CREATED.code
+  val successfulLoginResponse: Int = HttpResponseStatus.OK.code
 
   def apply(actor: ActorRef): AuthenticationServiceVertx = AuthenticationServiceVertxImpl(actor)
 
@@ -77,7 +80,10 @@ object AuthenticationServiceVertx {
       client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
-        .map(_.bodyAsString().getOrElse(""))
+        .map(r => r.statusCode match { // technical debt?
+          case `successfulRegisterResponse` => r.bodyAsString().getOrElse("")
+          case _ => "Not a valid request"
+        })
     }
 
     override def login(username: String, password: String): Future[String] = {
@@ -85,7 +91,10 @@ object AuthenticationServiceVertx {
       client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
-        .map(_.bodyAsString().getOrElse(""))
+        .map(r => r.statusCode match { //technical debt?
+          case `successfulLoginResponse` => r.bodyAsString().getOrElse("")
+          case _ => "Not a valid request"
+        })
     }
 
     override def logout(token: String): Future[Unit] = {

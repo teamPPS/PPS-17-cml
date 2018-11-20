@@ -38,18 +38,20 @@ class AuthenticationViewController {
     * @param msg defines which message to send to the authentication actor
     */
   def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
-      val username = usernameField getText()
-      val password = passwordField getText()
+    val username = usernameField getText()
+    val password = passwordField getText()
 
-      if(username.isEmpty || password.isEmpty) {
-        formMsgLabel setText InputControl.emptyFields
-      }
+    if(username.isEmpty || password.isEmpty) {
+      formMsgLabel setText InputControl.emptyFields
+    }
 
-      if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
-        if(msg.equals(ControllerMsg.register)) authenticationActor ! Register(username, password)
-        else if(msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
-      }
+    if(username.matches(InputControl.userExp) && password.matches(InputControl.pswExp)){
+      if(msg.equals(ControllerMsg.register)) authenticationActor ! Register(username, password)
+      else if(msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
+    }
+  }
 
-      ViewSwitch.activate(VillageWindow.path, loginButton.getScene) //technical debt, have to change when login succesfull
+  def openVillageView(): Unit = {
+    ViewSwitch.activate(VillageWindow.path, loginButton.getScene)
   }
 }
