@@ -1,11 +1,13 @@
 package cml.controller
 
 import akka.actor.Actor
+import cml.controller.actor.utils.ViewAuthenticationMessage._
+import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
-import cml.controller.actor.utils.ViewAuthenticationMessage._
 import javafx.application.Platform
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
 import scala.util.{Failure, Success}
@@ -16,7 +18,7 @@ import scala.util.{Failure, Success}
   * @author (modified by) Chiara Volonnino
   * @param controller controller of the authentication view
   */
-class AuthenticationActor(controller: AuthenticationController) extends Actor{
+class AuthenticationActor(controller: AuthenticationViewController) extends Actor{
 
   val authenticationVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
 

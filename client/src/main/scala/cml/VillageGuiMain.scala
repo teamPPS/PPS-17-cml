@@ -1,5 +1,6 @@
 package cml
 
+import cml.utils.Configuration.VillageWindow
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
@@ -9,7 +10,7 @@ class VillageGuiMain extends Application {
 
   override def start(primaryStage: Stage): Unit = {
     val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource("fxml/my_village_view.fxml"))
-    val scene: Scene = new Scene(root)
+    val scene: Scene = new Scene(root, VillageWindow.width, VillageWindow.height)
     primaryStage.setTitle("Village")
     primaryStage.setScene(scene)
     primaryStage.setResizable(true)

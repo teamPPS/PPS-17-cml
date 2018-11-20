@@ -1,6 +1,6 @@
 package cml
 
-import cml.utils.ViewConfig.BattleWindows
+import cml.utils.Configuration.BattleWindow
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
@@ -14,9 +14,9 @@ import javafx.stage.Stage
 
 class BattleViewApplication extends Application {
   override def start(primaryStage: Stage): Unit = {
-    val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(BattleWindows.path))
-    val scene : Scene = new Scene(root, BattleWindows.width, BattleWindows.height)
-    primaryStage.setTitle(BattleWindows.title)
+    val root: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(BattleWindow.path))
+    val scene : Scene = new Scene(root, BattleWindow.width, BattleWindow.height)
+    primaryStage.setTitle(BattleWindow.title)
     primaryStage.setScene(scene)
     primaryStage.setResizable(false)
     primaryStage.setOnCloseRequest(_ => {

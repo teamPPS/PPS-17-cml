@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cml.controller.VillageController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cml.controller.fx.VillageViewController">
   <children>
     <BorderPane prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <bottom>
@@ -44,12 +43,12 @@
               <children>
                 <Label fx:id="playerLevelLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="PlayerLVL" HBox.hgrow="ALWAYS">
                   <HBox.margin>
-                    <Insets left="10.0" fx:id="x1" />
+                    <Insets left="10.0" fx:id="x3" />
                   </HBox.margin>
                 </Label>
                 <Label fx:id="goldLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Gold" HBox.hgrow="ALWAYS" />
                 <Label fx:id="foodLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Food" HBox.hgrow="ALWAYS" />
-                <MenuButton id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="169.0" text="Menu" HBox.hgrow="ALWAYS" HBox.margin="$x2">
+                <MenuButton id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="169.0" text="Menu" HBox.hgrow="ALWAYS" HBox.margin="$x3">
                   <items>
                     <MenuItem mnemonicParsing="false" text="Settings" fx:id="settingsMenuItem" />
                     <MenuItem mnemonicParsing="false" text="Logout" fx:id="logoutMenuItem" />

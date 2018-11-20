@@ -1,19 +1,20 @@
-package cml.controller
-
+package cml.controller.fx
 
 import akka.actor.{ActorRef, ActorSystem, Props}
+import cml.controller.AuthenticationActor
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.utils.Configuration.{ControllerMsg, InputControl, VillageWindow}
+import cml.view.ViewSwitch
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
-import cml.utils.Configuration.{ControllerMsg, InputControl}
 
 /**
   * Controller for the graphic user interface
   * @author Monica Gondolini,Filippo Portolani
   */
 
-class AuthenticationController {
+class AuthenticationViewController {
 
   @FXML var registrationUsernameField: TextField = _
   @FXML var registrationPasswordField: PasswordField = _
@@ -36,7 +37,6 @@ class AuthenticationController {
     * Sends requests to the actor which manages the authentication
     * @param msg defines which message to send to the authentication actor
     */
-
   def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
       val username = usernameField getText()
       val password = passwordField getText()
@@ -50,8 +50,6 @@ class AuthenticationController {
         else if(msg.equals(ControllerMsg.login)) authenticationActor ! Login(username, password)
       }
 
-      registrationUsernameField setText ""
-      registrationPasswordField setText ""
+      ViewSwitch.activate(VillageWindow.path, loginButton.getScene) //technical debt, have to change when login succesfull
   }
-
 }
