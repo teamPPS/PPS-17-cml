@@ -1,12 +1,11 @@
-package cml.model
+package cml.model.base
 
 import java.util.{Timer, TimerTask}
 
-import cml.model.base.Habitat.Habitat
-import cml.model.base._
 import cml.utils.ModelConfig.Building.{LEVEL_INIT, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.FIRE
 import cml.utils.ModelConfig.Resource.INIT_VALUE
+import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
 import org.scalatest.FunSuite
 
 /**
@@ -15,7 +14,7 @@ import org.scalatest.FunSuite
 class ResourceProductionTest extends FunSuite{
 
   test("Resource production during time test") {
-    val creatures: List[String] = List("c1", "c2", "c3")
+    val creatures: List[Creature] = List(Creature1("creatura", FIRE, INITIAL_LEVEL))
     val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
     val habitat = Habitat(FIRE,Position(100,100), LEVEL_INIT, creatures)
 
@@ -34,7 +33,7 @@ class ResourceProductionTest extends FunSuite{
   }
 
   test("Resource retrieve test"){
-    val creatures: List[String] = List("c1", "c2", "c3")
+    val creatures: List[Creature] = List(Creature1("creatura", FIRE, INITIAL_LEVEL))
     val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
     val habitat = Habitat(FIRE,Position(100,100), LEVEL_INIT, creatures)
 

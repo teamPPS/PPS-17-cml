@@ -1,10 +1,10 @@
-package cml.model
+package cml.model.base
 
-import cml.model.base.Habitat.{Habitat, SingleHabitat}
-import cml.model.base._
-import org.scalatest.FunSuite
+import cml.model.base.Habitat.SingleHabitat
 import cml.utils.ModelConfig.Building.{LEVEL_INIT, TYPE_FARM}
-import cml.utils.ModelConfig.Elements.FIRE
+import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
+import cml.utils.ModelConfig.Elements.{FIRE,WATER}
+import org.scalatest.FunSuite
 
 /**
   * @author Monica Gondolini
@@ -19,9 +19,9 @@ class StructureTest extends FunSuite{
 
 
   test("Habitat level up test"){
-    val creatures: List[String] = List("c1", "c2", "c3")
+    val creatures: List[Creature] = List(Creature1("creatura", FIRE, INITIAL_LEVEL))
     val habitat = Habitat(FIRE,Position(100,100), LEVEL_INIT, creatures)
-    val singleHabitat = SingleHabitat(FIRE,Position(50,50), LEVEL_INIT, "creatura")
+    val singleHabitat = SingleHabitat(WATER,Position(50,50), LEVEL_INIT, Creature1("creatura2", WATER, INITIAL_LEVEL))
 
     habitat levelUp()
     singleHabitat levelUp()
