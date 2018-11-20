@@ -18,17 +18,22 @@ class VillageVerticle extends RouterVerticle {
   //TODO village interactions
   //TODO check token before interactions
 
-  private val villageService = VillageService()
+  private var villageService: VillageService = _
 
   /**
     * Initialize router
     *
     * @param router is router to initialize
     */
+
   override def initializeRouter(router: Router): Unit = {
     router post GENERAL_PATH + CREATE_VILLAGE  handler create
     router put ENTER_VILLAGE handler enter
     router put EXIT_VILLAGE handler exit
+  }
+
+  override def initializeService: Unit = {
+
   }
 
   //qui ci vanno gli handler con routing context e richiamano i metodi in villageservice
@@ -47,4 +52,9 @@ class VillageVerticle extends RouterVerticle {
   }
 
   def checkUserAuthorizationToken(): Boolean = true // dummy
+  /**
+    * Initializes the services
+    *
+    * @return
+    */
 }

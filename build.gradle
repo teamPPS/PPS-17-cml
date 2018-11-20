@@ -16,9 +16,11 @@ subprojects {
     apply plugin: "com.github.maiflai.scalatest"
     apply plugin: 'scalaStyle'
     apply plugin: "org.scoverage"
-    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     dependencies {
+        if(project.name != 'server') implementation project(':server')
+
         implementation 'org.scala-lang:scala-library:2.12.2'
 
         // Vert.x
@@ -49,14 +51,14 @@ subprojects {
         testSource = "src/test/scala"
     }
 
-    reportScoverage.doLast {
+   reportScoverage.doLast {
         ant.move file: "${buildDir}/reports/scoverage",
                  todir: "reports/${project.name}"
     }
 
     scaladoc{"${buildDir}/docs"}
     javadoc{"${buildDir}/docs"}
-
+         
     shadowJar {
         baseName = 'PPS-17-cml'
         classifier = project.name
@@ -64,7 +66,7 @@ subprojects {
         // mergeServiceFiles {
         //    path = 'META-INF/custom'
         //  }
-        destinationDir = file("${rootDir}/distributions")
+        destinationDir = file("${rootDir}/distributions") 
     }
 }
 

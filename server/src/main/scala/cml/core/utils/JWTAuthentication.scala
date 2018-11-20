@@ -1,7 +1,8 @@
-package cml.core
+package cml.core.utils
 
 import io.vertx.core.json.JsonObject
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
+
 import scala.util.{Failure, Success}
 
 /**
@@ -12,7 +13,7 @@ import scala.util.{Failure, Success}
 
 object JWTAuthentication {
 
-  val USERNAME: String = "username"
+  val Username: String = "username"
   private val secretKey = "secretKey"
   private val withAlgorithm = JwtAlgorithm.HS256
 
@@ -59,7 +60,7 @@ object JWTAuthentication {
     */
   def encodeUsernameToken(username: String): Option[String] = username match {
     case null => None
-    case _ => encodeToken(JwtClaim(new JsonObject().put(USERNAME, username).encode()))
+    case _ => encodeToken(JwtClaim(new JsonObject().put(Username, username).encode()))
   }
 
   /**
@@ -69,6 +70,6 @@ object JWTAuthentication {
     * @return username
     */
   def decodeUsernameToken(token: String): Option[String] = {
-    decodeToken(token).map(decoded => new JsonObject(decoded.content).getString(USERNAME))
+    decodeToken(token).map(decoded => new JsonObject(decoded.content).getString(Username))
   }
 }

@@ -2,7 +2,7 @@ package cml.services.authentication
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import cml.services.authentication.utils.AuthenticationConfig.User
+import cml.schema.User._
 import org.mongodb.scala.{Document, ObservableImplicits}
 
 import scala.concurrent._
@@ -10,23 +10,26 @@ import scala.concurrent._
 /**
   * Trait for authentication service
   *
-  * @author Chiara Volonnino, Monica Gondolini
+  * @author Chiara Volonnino
+  * @author Monica Gondolini
   */
 
 trait AuthenticationService {
+
   /**
     * To execute register into a system.
     * @param username username to register
     * @param password password to register
-    * @return a future
+    * @param ec is implicit fot execution context
+    * @return a future completes successfully, otherwise it fails.
     */
-
   def register (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * To execute login into a system.
     * @param username username with with which the user authenticates himself
     * @param password password decided by the user
+    * @param ec is implicit fot execution context
     * @return a future completes successfully, otherwise it fails.
     */
 
@@ -35,14 +38,16 @@ trait AuthenticationService {
   /**
     * Allow user to logout from the system.
     * @param username username with which the user authenticates himself
+    * @param ec is implicit fot execution context
     * @return a future if the user logout successful
     */
-
   def logout (username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * To delete user from database
+    *
     * @param username username to delete
+    * @param ec is implicit fot execution context
     * @return a future if the delete user successful
     */
   def delete (username: String)(implicit ec: ExecutionContext): Future[Unit]
@@ -50,6 +55,7 @@ trait AuthenticationService {
   /**
     * Check username and then valid a token
     * @param username to check
+    * @param ec is implicit fot execution context
     * @return a future if username found
     */
   def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit]
@@ -61,16 +67,17 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  val database: DatabaseClient = DatabaseClient(DbConfig.usersColl)
+  val collection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
-  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits{
 
+  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits {
     var document: Document = _
 
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
-      document = Document(User.USERNAME->username, User.PASSWORD->password)
-      database.insert(document).map(_ => "Insertion Completed")
+      document = Document(Username->username, Password->password)
+      println(document)
+      collection.insert(document).map(_ => "Insertion Completed")
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -78,8 +85,9 @@ object AuthenticationService {
     }
 
     override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] =  {
-      document = Document(User.USERNAME->username, User.PASSWORD->password)
-      database.find(document).map(_ => "Find Completed")
+      document = Document(Username->username, Password->password)
+      println(document)
+      collection.find(document).map(_ => "Find Completed")
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -87,8 +95,8 @@ object AuthenticationService {
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(User.USERNAME->username)
-      database.find(document).map(_ => {})
+      document = Document(Username->username)
+      collection.find(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -96,8 +104,8 @@ object AuthenticationService {
     }
 
     override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(User.USERNAME->username)
-      database.delete(document).map(_ => {})
+      document = Document(Username->username)
+      collection.delete(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -105,14 +113,13 @@ object AuthenticationService {
     }
 
     override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(User.USERNAME->username)
-      database.find(document).map(_ => {})
+      document = Document(Username->username)
+      collection.find(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
         }
     }
-
   }
 }
 

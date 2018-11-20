@@ -3,7 +3,7 @@ package cml.database
 import java.util.concurrent.CountDownLatch
 
 import cml.database.utils.Configuration.DbConfig
-import cml.services.authentication.utils.AuthenticationConfig.User
+import cml.schema.User._
 import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Village}
 import org.scalatest.AsyncFunSuite
 import org.mongodb.scala.Document
@@ -15,24 +15,23 @@ import scala.util.{Failure, Success}
   *
   * @author Filippo Portolani
   */
-class DatabaseClientTest extends AsyncFunSuite{
+class DatabaseClientTest {
+//  test("testDatabaseConnection"){
 
-  test("testDatabaseConnection"){
-
-    val database : DatabaseClient = DatabaseClient(DbConfig.usersColl)
+    /*val database : DatabaseClient = DatabaseClient(DbConfig.usersColl)
     val dbVillage : DatabaseClient = DatabaseClient(DbConfig.villageColl)
 
     val doc: Document = Document("_id" -> 0, "name" -> "prova")
-    val userDoc: Document = Document(User.USERNAME -> "CMLuser", User.PASSWORD -> "pps")
+    val userDoc: Document = Document( Username -> "CMLuser", Password -> "pps")
 
     val villageDoc: Document = Document(Village.NAME -> "PPSvillage", Village.USERNAME  -> "CMLuser", Village.FOOD -> 10, Village.GOLD ->100,
       Village.BUILDING -> Document(Building.ID -> 0, Building.TYPE -> "farm", Building.LEVEL -> 0),
       Village.HABITAT -> Document(Habitat.ID->0, Habitat.LEVEL -> 0, Habitat.ELEMENT-> "fire",
           Habitat.CREATURE -> Document(Creature.ID ->0, Creature.NAME -> "fireCreature", Creature.LEVEL -> 0, Creature.ELEMENT-> "fire")))
 
-    val query: Document = Document(User.USERNAME->"CMLuser")
+    val query: Document = Document(Username->"CMLuser")
     val queryFind: Document = Document(Village.NAME -> "PPSVillage")
-    val updateQuery: Document = Document("$set" -> Document(User.USERNAME -> "PPS"))
+    val updateQuery: Document = Document("$set" -> Document(Username -> "PPS"))
 
     val latch: CountDownLatch = new CountDownLatch(1)
 
@@ -42,7 +41,7 @@ class DatabaseClientTest extends AsyncFunSuite{
     }
 
     latch countDown()
-
+*/
 //    dbVillage.insert(villageDoc) onComplete{
 //      case Success(res) => println("Insertion SUCCESS "+res)
 //      case Failure(err) => println("Insertion FAILURE "+err)
@@ -64,10 +63,7 @@ class DatabaseClientTest extends AsyncFunSuite{
 //
 //    }
 
-
-    latch await()
-    assert(1==1)
-  }
+    //latch await()
 
 }
 

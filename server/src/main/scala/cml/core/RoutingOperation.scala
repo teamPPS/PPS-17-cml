@@ -4,6 +4,8 @@ import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
 import io.vertx.scala.core.http.HttpServerResponse
 import io.vertx.scala.ext.web.RoutingContext
 
+import scala.concurrent.Future
+
 /**
   * This trait is useful to implement AuthenticationVerticle
   *
@@ -41,7 +43,6 @@ trait RoutingOperation {
   def sendResponse(httpCode: HttpResponseStatus, message: String)(implicit routingContext: RoutingContext): Unit = {
     val code = httpCode.code()
     getResponse.setStatusCode(code).end(message)
-    println("response: " + httpCode)
   }
 }
 

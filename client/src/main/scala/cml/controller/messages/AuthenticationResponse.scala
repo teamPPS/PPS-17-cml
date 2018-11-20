@@ -5,6 +5,8 @@ package cml.controller.messages
   * @author Monica Gondolini,Filippo Portolani
   */
 
+// PER IL MOMENTO NON LI USIAMO, LASCIO PERCHè POTREMMO SEMPRE USARLI.
+
 object AuthenticationResponse {
 
   sealed trait AuthenticationResponse
@@ -14,8 +16,9 @@ object AuthenticationResponse {
   /**
     * Response for user registration succeeded
     * @param succ success message
+    * @param token is the token for user request
     */
-  case class RegisterSuccess(succ: String) extends RegisterResponse
+  case class RegisterSuccess(token: String) extends RegisterResponse
 
   /**
     * Response for user registration failed
@@ -26,8 +29,9 @@ object AuthenticationResponse {
   /**
     * Response for a user login succeeded
     * @param succ success message
+    * @param token is the token for user request
     */
-  case class LoginSuccess(succ: String) extends LoginResponse
+  case class LoginSuccess(token: String) extends LoginResponse
 
   /**
     * Response for a user login failure

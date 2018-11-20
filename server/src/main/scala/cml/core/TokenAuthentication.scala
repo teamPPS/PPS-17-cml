@@ -72,7 +72,7 @@ object TokenAuthentication extends TokenAuthentication {
   override def checkAuthenticationToken(header: String): Option[String] = {
     for (
       checkHeader <- Option(header) if checkHeader.nonEmpty;
-      token = header if checkHeader.nonEmpty
+      token = header if token.nonEmpty
     ) yield token
   }
 }

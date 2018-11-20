@@ -3,105 +3,123 @@ package cml.services.authentication
 /**
   * This test class mach AuthenticationVerticle class is correct
   *
-  * @author Chiara Volonnino, Monica Gondolini
+  * @author Chiara Volonnino
   */
 
-import cml.core.{BeforeAndAfterTest, HttpMessage, TokenAuthentication}
-import cml.services.authentication.utils.AuthenticationConfig.{AuthenticationUrl, User}
+import cml.core.TokenAuthentication
+import cml.services.authentication.utils.AuthenticationUrl._
+import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
-import io.vertx.core.Vertx
+import io.netty.handler.codec.http.HttpResponseStatus._
+import io.vertx.scala.core.Vertx
+import io.vertx.scala.ext.web.client.WebClient
+import scala.language.implicitConversions
+import scala.util.{Failure, Success}
 
-import scala.concurrent.Promise
+class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
-class AuthenticationVerticleTest extends BeforeAndAfterTest {
+  private val vertx: Vertx = Vertx.vertx()
+  private val client: WebClient = WebClient.create(vertx)
 
-  val username: String = "pps"
-  val password: String = "cml"
+  private val inputTest: String = "test"
+  private val invalidPassword: String = "test1"
+  private val inputForTokenReturn: String = "testToken"
+  private var token: String = _
+  private val invalidToken = "ppp"
 
-  test("Validation token test") {
-    println("Validation Token test")
-    val vertx: Vertx = Vertx.vertx()
-    val promiseValidation = Promise[String]
+  private def base64Test(username: String, password: String): String = {
+    val handler = TokenAuthentication.base64Authentication(username, password)
+    handler.get
+  }
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
-
-    vertx.createHttpClient()
-      .get(8080, "127.0.0.1", AuthenticationUrl.VALIDATION_TOKEN_API)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
-      .handler(response => {
-          response.exceptionHandler(promiseValidation.failure)
-          response.bodyHandler(buffer => promiseValidation.success(buffer.toString))
-          response.statusCode()
-        }).end()
-    promiseValidation.future.map(res => {
-      println("validation: " + res)
-      assert(res equals HttpMessage.BAD_REQUEST)
-    })
+  private def tokenTest(token: String): String = {
+    val handler = TokenAuthentication.authenticationToken(token)
+    handler.get
   }
 
   test("Registration test"){
-    println("Registration test")
-    val vertx: Vertx = Vertx.vertx()
-    val promiseRegister = Promise[String]
+    println("Response bad request because handler is empty")
+    client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
+    println("Response create because handler is corrected create")
+    client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
+      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
+      .sendFuture
+      .map(response =>
+        assert(response.statusCode().toString equals CREATED.code().toString))
 
-    vertx.createHttpClient().post(8080, "127.0.0.1", AuthenticationUrl.REGISTER_API)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
-      .handler(response =>{
-          response.exceptionHandler(promiseRegister.failure)
-          response.bodyHandler(buffer => promiseRegister.success(buffer.toString))
-          response.statusCode()
-      }).end()
-
-    promiseRegister.future.map(res=>{
-      println("registration: " + res)
-//      assert(res equals HttpMessage.OK) //estrapolare da res il valore
-      assert(1==1)
-    })
+    println("Response bad request because handler is invalid")
+    client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
+      .putHeader("", "")
+      .sendFuture
+      .map({ response =>
+        assert(response.statusCode().toString equals BAD_REQUEST.code().toString)
+      })
   }
 
-  test("Login test"){
-    println("Login test")
-    val vertx: Vertx = Vertx.vertx()
-    val promiseLogin = Promise[String]
+  test("Login test") {
+    println("Response bad request because handler is empty")
+    client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
+    println("Response ok because handler is corrected create")
+    client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals OK.code().toString))
 
-    vertx.createHttpClient().put(8080, "127.0.0.1", AuthenticationUrl.LOGIN_API)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
-      .handler(response =>{
-        response.exceptionHandler(promiseLogin.failure)
-        response.bodyHandler(buffer => promiseLogin.success(buffer.toString))
-        response.statusCode()
-      }).end()
-
-    promiseLogin.future.map(res=>{
-      println("login: " + res)
-//      assert(res equals HttpMessage.BAD_REQUEST)
-      assert(1==1)
-    })
+    /* DA SCOMMENTARE QUANDO DB RISPONDE BENE
+    println("Response unauthorized because handler is incorrect")
+    client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(username, invalidPassword))
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
   }
 
+  test("Logout test") {
+    println("Response bad request because handler is empty")
+    client.delete(AuthenticationServicePort, ServiceHost, LogoutApi)
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-  test("Delete test"){
-    println("Delete test")
-    val vertx: Vertx = Vertx.vertx()
-    val promiseDelete = Promise[String]
+    //Stessa storia find non giusta? DA RIGUARDARE
+   /* println("Response ok because token success delete")
+    client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputForTokenReturn, inputForTokenReturn))
+      .sendFuture
+      .onComplete{
+        case Success(tokenValue) =>
+          token = tokenValue.bodyAsString().get
+          println("token------------------------------- " + token + "token value " + tokenValue.bodyAsString().get)
+        case Failure(exception) => exception.getCause
+      }
 
-    val base64 =  TokenAuthentication.base64Authentication(username,password)
+    println("tokennnnnnnnnwnsjdhkjGDUI gkag au gfdusa f a     " + token )
+    client.delete(AuthenticationServicePort, ServiceHost, LogoutApi)
+      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), tokenTest(token))
+      .sendFuture
+      .map(response => {
+        println("Response: "  + response.statusCode().toString)
+        println("..................................................................................." + OK.code().toString)
+        println("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" + token)
+        assert(response.statusCode().toString equals OK.code().toString)})*/
 
-    vertx.createHttpClient().delete(8080, "127.0.0.1", AuthenticationUrl.DELETE_API)
-      .putHeader(HttpHeaderNames.AUTHORIZATION, base64.getOrElse("Base64 error"))
-      .handler(response =>{
-        response.exceptionHandler(promiseDelete.failure)
-        response.bodyHandler(buffer => promiseDelete.success(buffer.toString))
-        response.statusCode()
-      }).end()
-
-    promiseDelete.future.map(res=>{
-      println("delete: " + res)
-      assert(res equals HttpMessage.BAD_REQUEST)
-    })
+    /* Da provare
+    println("Response bad request because token is invalid")
+    client.delete(AuthenticationServicePort, ServiceHost, LogoutApi)
+      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), tokenTest(invalidToken))
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
   }
-}
+
+  test("Validation token test") {
+    println("Response bad request because handler is empty")
+    client.get(AuthenticationServicePort, ServiceHost, ValidationTokenApi)
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
+    }
+
+  }
