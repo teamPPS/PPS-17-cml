@@ -107,8 +107,8 @@ object DatabaseClient {
       val promise: Promise[FindObservable[Document]] = Promise()
       collection.countDocuments(document).subscribe(new Observer[Long] {
         override def onNext(result: Long): Unit = result match {
-          case _ => promise.success(collection.find(document))
           case 0 => onError(new Throwable(DocumentNotFoundException))
+          case _ => promise.success(collection.find(document))
         }
         override def onError(error: Throwable): Unit = promise.failure(error)
         override def onComplete(): Unit = println("Find request completed")

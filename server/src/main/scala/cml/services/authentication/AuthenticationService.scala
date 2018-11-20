@@ -2,7 +2,7 @@ package cml.services.authentication
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import cml.schema.User._
+import cml.schema.User.{USERNAME, PASSWORD}
 import org.mongodb.scala.{Document, ObservableImplicits}
 
 import scala.concurrent._
