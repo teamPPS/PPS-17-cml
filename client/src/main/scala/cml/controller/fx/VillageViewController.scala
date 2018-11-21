@@ -13,7 +13,7 @@ class VillageViewController {
   @FXML var foodLabel: Label = _
   @FXML var settingsMenuItem: MenuItem = _
   @FXML var logoutMenuItem: MenuItem = _
-  @FXML var aboutSelection: TextArea = _
+  @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
@@ -29,13 +29,13 @@ class VillageViewController {
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
 
-    ConcreteHandlerSetup.setupVillageHandlers(villageMap, aboutSelection)
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, selectionInfo)
 
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
 
-    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, aboutSelection)
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, selectionInfo)
   }
 
 }

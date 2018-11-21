@@ -25,8 +25,6 @@ trait Handler {
 
 object Handler{
 
-  val baseTile = tileSet.filter(t => t.description.equals("TERRAIN")).head
-
   val handleVillage: Handler = {
     (elem: Node, info: TextArea) =>
       addClickHandler(elem, info)
@@ -50,7 +48,7 @@ object Handler{
 
   private def addDragAndDropSourceHandler(t: Tile, info: TextArea): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked(_ => {
+    canvas setOnMouseClicked(_ => { //TODO hover
         info setText "Element selected: "+ t.description
     })
     canvas setOnDragDetected((event: MouseEvent) => {
