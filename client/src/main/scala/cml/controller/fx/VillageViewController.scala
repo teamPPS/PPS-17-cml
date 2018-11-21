@@ -1,6 +1,6 @@
 package cml.controller.fx
 
-import cml.view.{BaseGridInitializer, ViewSwitch}
+import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
 import javafx.scene.control._
@@ -28,6 +28,8 @@ class VillageViewController {
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
+
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, aboutSelection)
 
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
