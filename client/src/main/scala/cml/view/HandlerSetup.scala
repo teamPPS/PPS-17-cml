@@ -5,7 +5,7 @@ import java.util.Observable
 import cml.view.utils.TileConfig._
 import javafx.collections.ObservableList
 import javafx.scene.{Node, SnapshotParameters}
-import javafx.scene.control.TextArea
+import javafx.scene.control.{TextArea, Tooltip}
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
@@ -48,8 +48,8 @@ object Handler{
 
   private def addDragAndDropSourceHandler(t: Tile, info: TextArea): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked(_ => { //TODO hover
-        info setText "Element selected: "+ t.description
+    canvas setOnMouseClicked(_ => { //TODO hover (tooltip venuta male)
+        info setText "Element selected: "+ t.description + "Price: [PRICE]"
     })
     canvas setOnDragDetected((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
