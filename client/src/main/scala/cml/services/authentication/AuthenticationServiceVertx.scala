@@ -4,6 +4,7 @@ import akka.actor.ActorRef
 import cml.core.TokenAuthentication
 import cml.services.authentication.utils.AuthenticationUrl._
 import cml.core.utils.NetworkConfiguration._
+import cml.services.ClientVertx
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.{HttpRequest, WebClient}
@@ -60,7 +61,7 @@ trait AuthenticationServiceVertx {
 /**
   * Companion object
   */
-object AuthenticationServiceVertx {
+object AuthenticationServiceVertx{
 
   val vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
