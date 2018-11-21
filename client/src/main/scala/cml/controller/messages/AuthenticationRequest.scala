@@ -2,7 +2,7 @@ package cml.controller.messages
 
 /**
   * Authentication request messages
-  * @author Monica Gondolini,Filippo Portolani
+  * @author Monica Gondolini
   */
 
 object AuthenticationRequest{
