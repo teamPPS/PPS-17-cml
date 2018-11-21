@@ -9,7 +9,7 @@ import javafx.scene.layout.GridPane
 
 /**
   * Initialize Game GridPanes with costume settings
-  * @author ecavina, Monica Gondolini
+  * @author ecavina
   */
 trait GridInitializer {
 
@@ -44,8 +44,6 @@ object Setup {
         case(x, y) =>
           val imageTile = new ImageView()
           imageTile.setImage(baseTile.imageSprite.snapshot(new SnapshotParameters, null))
-//          addDragAndDropTargetHandler(imageTile)
-//          addClickHandler(imageTile)
           grid add(imageTile, x, y)
       }
 
