@@ -38,9 +38,13 @@ object Handler{
 
 object ConcreteHandlerSetup extends HandlerSetup {
 
-  private def setHandlers(grid: GridPane, info: TextArea, handler: Handler): Unit = ???
+  private def setHandlers(grid: GridPane, info: TextArea, handler: Handler): Unit = {
+    for(
+      gridElement <- grid.getChildren
+    ) handler.handle(gridElement, info)
+  }
 
-  override def setupVillageHandlers(grid: GridPane, info: TextArea): Unit = ???
+  override def setupVillageHandlers(grid: GridPane, info: TextArea): Unit = setHandlers(grid, info, Handler.handleVillage)
 
-  override def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit = ???
+  override def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit = setHandlers(grid, info, Handler.handleBuilding)
 }
