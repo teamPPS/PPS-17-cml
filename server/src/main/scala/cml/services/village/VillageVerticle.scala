@@ -1,6 +1,7 @@
 package cml.services.village
 
-import cml.core.RouterVerticle
+import cml.core.utils.JWTAuthentication
+import cml.core.{RouterVerticle, RoutingOperation, TokenAuthentication}
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
 import cml.services.village.utils.VillageUrl._
@@ -11,7 +12,7 @@ import cml.services.authentication.utils.AuthenticationUrl._
   *
   * @author ecavina
   */
-class VillageVerticle extends RouterVerticle {
+case class VillageVerticle extends RouterVerticle with RoutingOperation {
 
   //TODO village interactions
   //TODO check token before interactions
@@ -33,14 +34,18 @@ class VillageVerticle extends RouterVerticle {
   }
 
   override def initializeService: Unit = {
-
+    villageService =  _
   }
 
   //qui ci vanno gli handler con routing context e richiamano i metodi in villageservice
 
-  //usare le routing operation di chiara qui
   private def create: Handler[RoutingContext] = implicit routingContext => {
     println("Request to create village ", routingContext request())
+    for(
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield username
   }
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
@@ -60,9 +65,5 @@ class VillageVerticle extends RouterVerticle {
   }
 
   def checkUserAuthorizationToken(): Boolean = true // dummy
-  /**
-    * Initializes the services
-    *
-    * @return
-    */
+
 }
