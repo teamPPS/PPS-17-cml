@@ -5,6 +5,10 @@ import javafx.scene.control.TextArea
 import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
 
+/**
+  * @author Monica Gondolini, ecavina
+  */
+
 trait HandlerSetup {
   def setupVillageHandlers(grid: GridPane, info: TextArea): Unit
   def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit
@@ -37,9 +41,11 @@ object Handler{
 object ConcreteHandlerSetup extends HandlerSetup {
 
   private def setHandlers(grid: GridPane, info: TextArea, handler: Handler): Unit = {
-    for(
-      gridElement <- grid.getChildren
-    ) handler.handle(gridElement, info)
+//    for(
+      val gridElement = grid.getChildren
+//    )
+
+    handler.handle(gridElement, info)
   }
 
   override def setupVillageHandlers(grid: GridPane, info: TextArea): Unit = setHandlers(grid, info, Handler.handleVillage)

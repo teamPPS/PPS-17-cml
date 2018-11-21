@@ -8,7 +8,8 @@ import javafx.scene.input._
 import javafx.scene.layout.GridPane
 
 /**
-  * Initialize Game GridPanes with style classes
+  * Initialize Game GridPanes with costume settings
+  * @author ecavina, Monica Gondolini
   */
 trait GridInitializer {
 
