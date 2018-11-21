@@ -3,6 +3,8 @@ package cml.services.village
 import cml.core.RouterVerticle
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
+import cml.services.village.utils.VillageUrl._
+import cml.services.authentication.utils.AuthenticationUrl._
 
 /**
   * This class implement VillagesVerticle
@@ -11,10 +13,6 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
   */
 class VillageVerticle extends RouterVerticle {
 
-  private val GENERAL_PATH = "/api/villages"
-  private val CREATE_VILLAGE = "/villages"
-  private val ENTER_VILLAGE = "/village/" //id?
-  private val EXIT_VILLAGE = "/village/" //id
   //TODO village interactions
   //TODO check token before interactions
 
@@ -27,9 +25,11 @@ class VillageVerticle extends RouterVerticle {
     */
 
   override def initializeRouter(router: Router): Unit = {
-    router post GENERAL_PATH + CREATE_VILLAGE  handler create
-    router put ENTER_VILLAGE handler enter
-    router put EXIT_VILLAGE handler exit
+    router get VillagesAPI handler enter
+    router post VillagesAPI handler create
+    router put VillagesAPI handler update
+    router delete VillagesAPI handler delete
+    router put LogoutApi handler exit
   }
 
   override def initializeService: Unit = {
@@ -44,6 +44,14 @@ class VillageVerticle extends RouterVerticle {
   }
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
+    println("Request to enter village ", routingContext request())
+  }
+
+  private def update: Handler[RoutingContext] = implicit routingContext => {
+    println("Request to enter village ", routingContext request())
+  }
+
+  private def delete: Handler[RoutingContext] = implicit routingContext => {
     println("Request to enter village ", routingContext request())
   }
 
