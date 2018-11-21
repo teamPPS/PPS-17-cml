@@ -15,12 +15,16 @@ import io.vertx.scala.ext.web.client.{WebClient, WebClientOptions}
 abstract class ClientVertx extends ScalaVerticle {
 
   var authenticationOpt = WebClientOptions()
-  authenticationOpt.setDefaultPort(AuthenticationServicePort).setDefaultHost(ServiceHostForRequest)
+  authenticationOpt setDefaultPort AuthenticationServicePort
+  authenticationOpt setDefaultHost ServiceHostForRequest
+  authenticationOpt setKeepAlive false
 
   var authenticationClient: WebClient = WebClient.create(vertx, authenticationOpt)
 
   var villageOpt = WebClientOptions()
-  villageOpt.setDefaultPort(8000).setDefaultHost("127.0.0.1")
+  villageOpt setDefaultPort 8000
+  villageOpt setDefaultHost "127.0.0.1"
+  villageOpt setKeepAlive false
 
   var villageClient: WebClient = WebClient.create(vertx, villageOpt)
   // webClientOption per istanziare 2 opzioni - 1 per ogni servizio
