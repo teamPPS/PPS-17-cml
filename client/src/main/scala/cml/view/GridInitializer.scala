@@ -45,7 +45,7 @@ object Setup {
           val imageTile = new ImageView()
           imageTile.setImage(baseTile.imageSprite.snapshot(new SnapshotParameters, null))
           addDragAndDropTargetHandler(imageTile)
-          addClickHandler(imageTile)
+//          addClickHandler(imageTile)
           grid add(imageTile, x, y)
       }
 

@@ -53,7 +53,7 @@ object Handler{
 object ConcreteHandlerSetup extends HandlerSetup {
 
   private def setHandlers(grid: GridPane, info: TextArea, handler: Handler): Unit = {
-    val children: ObservableList[Node] = grid.getChildren
+    val children = grid.getChildren
     children.forEach(handler.handle(_, info))
   }
 
