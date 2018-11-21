@@ -1,15 +1,13 @@
 package cml.view
 
+import cml.view.utils.TileConfig._
 import javafx.scene.control.TextArea
 import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
 
-
-
 trait HandlerSetup {
   def setupVillageHandlers(grid: GridPane, info: TextArea): Unit
   def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit
-
 }
 
 trait Handler {

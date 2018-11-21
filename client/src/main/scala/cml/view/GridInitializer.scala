@@ -1,5 +1,7 @@
 package cml.view
 
+import cml.view.utils.TileConfig.{tileSet,slicer,spriteSheet}
+
 import javafx.scene.SnapshotParameters
 import javafx.scene.image.{Image, ImageView}
 import javafx.scene.input._
@@ -31,17 +33,6 @@ trait Setup {
 }
 
 object Setup {
-
-  // LA PARTE DELLE TILE VA PORTATA FUORI, E' USATA IN PIU LUOGHI
-  val spriteSheet: Image =  new Image(getClass.getClassLoader.getResource("image/Town64x64.png").toString, false)
-  val slicer: ImageSlicer = new ImageSlicer(spriteSheet, 16, 16)
-  val tileSet: Set[Tile] = Set[Tile](
-    Tile("FARM", slicer.sliceAt(2, 3)),
-    Tile("HABITAT", slicer.sliceAt(2, 3)),
-    Tile("CAVE", slicer.sliceAt(2, 3)),
-    Tile("TERRAIN", slicer.sliceAt(5, 3))
-  )
-
 
   val setupVillage: Setup = {
     grid: GridPane => { // scorrere model
