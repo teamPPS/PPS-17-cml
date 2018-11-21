@@ -62,7 +62,6 @@ object Setup {
       var pos = 0
       for(tile <- tileSet) {
         grid add(tile.imageSprite, 0, pos)
-        addDragAndDropSourceHandler(tile)
         pos += 1
       }
       grid

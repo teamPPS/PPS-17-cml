@@ -35,22 +35,24 @@ object Handler{
 
   val handleBuilding: Handler = {
     (elem: Node, info: TextArea) =>
-      var el = elem
       for(tile <- tileSet){
-        //TODO
+        addDragAndDropSourceHandler(tile, info)
       }
   }
 
   private def addClickHandler(n: Node, info: TextArea): Unit = {
-    n setOnMouseClicked(mouseEvent => {
+    n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      info setText "Mouse clicked in coords: ("+x+","+y+")"
+      info setText "Mouse clicked in coords: ("+x+","+y+")\n" //TODO elemento selezionato dal click
     })
   }
 
   private def addDragAndDropSourceHandler(t: Tile, info: TextArea): Unit = {
     val canvas = t.imageSprite
+    canvas setOnMouseClicked(_ => {
+        info setText "Element selected: "+ t.description
+    })
     canvas setOnDragDetected((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
@@ -58,7 +60,7 @@ object Handler{
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
-      info setText "Element " + dragBoard.getString
+      info setText "Dragged element " + dragBoard.getString
       event consume()
     })
   }

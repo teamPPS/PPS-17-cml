@@ -34,6 +34,8 @@ class VillageViewController {
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
+
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, aboutSelection)
   }
 
 }
