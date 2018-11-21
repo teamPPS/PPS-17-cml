@@ -7,7 +7,7 @@ import javafx.collections.ObservableList
 import javafx.scene.{Node, SnapshotParameters}
 import javafx.scene.control.TextArea
 import javafx.scene.image.ImageView
-import javafx.scene.input.{DragEvent, Dragboard, TransferMode}
+import javafx.scene.input._
 import javafx.scene.layout.GridPane
 
 /**
@@ -29,10 +29,8 @@ object Handler{
 
   val handleVillage: Handler = {
     (elem: Node, info: TextArea) =>
-      val imageTile = new ImageView()
-      imageTile.setImage(baseTile.imageSprite.snapshot(new SnapshotParameters, null))
       addClickHandler(elem, info)
-      addDragAndDropTargetHandler(imageTile, info)
+      addDragAndDropTargetHandler(elem, info)
   }
 
   val handleBuilding: Handler = {
@@ -44,26 +42,38 @@ object Handler{
     n setOnMouseClicked(mouseEvent => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      println("Mouse clicked in coords: ("+x+","+y+")")
       info setText "Mouse clicked in coords: ("+x+","+y+")"
     })
   }
 
-  private def addDragAndDropSourceHandler(t: Tile): Unit = ???
+  private def addDragAndDropSourceHandler(t: Tile): Unit = {
+    val canvas = t.imageSprite
+    canvas setOnDragDetected((event: MouseEvent) => {
+      val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
+      val image = canvas.snapshot(new SnapshotParameters, null)
+      dragBoard setDragView image
+      val content: ClipboardContent = new ClipboardContent
+      content putString t.description
+      dragBoard setContent content
+      event consume()
+    })
+  }
 
-  private def addDragAndDropTargetHandler(i: ImageView, info: TextArea): Unit = {
-    i setOnDragOver ((event: DragEvent) => {
+  private def addDragAndDropTargetHandler(n: Node, info: TextArea): Unit = {
+    n setOnDragOver ((event: DragEvent) => {
       event acceptTransferModes TransferMode.COPY
       event consume()
     })
 
-    i setOnDragDropped ((event: DragEvent) => {
+    n setOnDragDropped ((event: DragEvent) => {
       val dragBoard: Dragboard = event getDragboard()
       val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
-      i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
-      val y = GridPane.getColumnIndex(i)
-      val x = GridPane.getRowIndex(i)
-      println("Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")")
+      n match {
+        case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
+        case _ => throw new ClassCastException
+      }
+      val y = GridPane.getColumnIndex(n)
+      val x = GridPane.getRowIndex(n)
       info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
       event consume()
       // UPDATE MODEL e send al server
