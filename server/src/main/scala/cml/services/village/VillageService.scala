@@ -1,12 +1,6 @@
 package cml.services.village
 
-import cml.database.DatabaseClient
-import cml.database.utils.Configuration.DbConfig
-import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Village}
-import org.mongodb.scala.Document
-
-import scala.concurrent.Future
-
+import scala.concurrent._
 
 /**
   * Village service
@@ -16,24 +10,27 @@ import scala.concurrent.Future
 sealed trait VillageService {
 
   /**
-    * To execute creation of a village
-    * @param villageIdentifier
-    * @param villageName
-    * @return a scala future
+    * Insert a new Document with base resources value, username and village name
+    * and get created Document in JSON
+    * @param username using to create a specific village for this user
+    * @return a future string representing the new village in JSON
     */
-  def createVillage(villageIdentifier: String, villageName: String) : Future[String]
+  def createVillage(username: String): Future[String]
 
   /**
-    * To enter the village
-    * @param villageIdentifier
-    * @return a scala future
+    * Get a future string with user's village in JSON
+    * @param username using to find personal village
+    * @return a future string representing the village in jSON
     */
-  def enterVillage(villageIdentifier: String) : Future[Unit]
+  def enterVillage(username: String): Future[String]
 
   /**
-    * To exit the village
-    * @param villageIdentifier
-    * @return a scala future
+    *
+    * @param username using to find personal village
+    * @param update a json describing what to update
+    * @return successful or failed update
     */
-  def exitVillage(villageIdentifier: String) : Future[Unit]
+  def updateVillage(username: String, update: String): Future[Boolean]
+
+  // TODO delete?
 }

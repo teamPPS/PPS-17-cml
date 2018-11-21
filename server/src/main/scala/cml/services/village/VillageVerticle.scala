@@ -12,7 +12,7 @@ import cml.services.authentication.utils.AuthenticationUrl._
   *
   * @author ecavina
   */
-case class VillageVerticle extends RouterVerticle with RoutingOperation {
+case class VillageVerticle() extends RouterVerticle with RoutingOperation {
 
   //TODO village interactions
   //TODO check token before interactions
@@ -36,8 +36,6 @@ case class VillageVerticle extends RouterVerticle with RoutingOperation {
   override def initializeService: Unit = {
     villageService =  _
   }
-
-  //qui ci vanno gli handler con routing context e richiamano i metodi in villageservice
 
   private def create: Handler[RoutingContext] = implicit routingContext => {
     println("Request to create village ", routingContext request())
@@ -63,7 +61,5 @@ case class VillageVerticle extends RouterVerticle with RoutingOperation {
   private def exit: Handler[RoutingContext] = implicit routingContext => {
     println("Request to exit village ", routingContext request())
   }
-
-  def checkUserAuthorizationToken(): Boolean = true // dummy
 
 }
