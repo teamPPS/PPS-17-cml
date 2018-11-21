@@ -18,6 +18,21 @@ trait Handler {
 
 object Handler{
 
+  val handleVillage: Handler = {
+    (elem: ImageView, info: TextArea) => ???
+
+  }
+
+  val handleBuilding: Handler = {
+    (elem: ImageView, info: TextArea) => ???
+
+  }
+
+  private def addClickHandler(i: ImageView): Unit = ???
+
+  private def addDragAndDropSourceHandler(t: Tile): Unit = ???
+
+  private def addDragAndDropTargetHandler(i: ImageView): Unit = ???
 
 }
 
