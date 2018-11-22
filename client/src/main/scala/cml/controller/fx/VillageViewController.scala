@@ -15,6 +15,7 @@ class VillageViewController {
   @FXML var logoutMenuItem: MenuItem = _
   @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
+  @FXML var levelUPButton: Button = _
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
   var villageMap: GridPane = _
