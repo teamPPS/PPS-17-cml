@@ -33,7 +33,7 @@
                     <Insets />
                   </HBox.margin>
                 </TextArea>
-                        <Pane fx:id="levelUpPane" prefHeight="97.0" prefWidth="106.0">
+                        <Pane fx:id="upgradePane" prefHeight="97.0" prefWidth="106.0">
                            <children>
                               <Button fx:id="levelUpButton" disable="true" layoutX="2.0" layoutY="26.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="102.0" text="Level Up" />
                            </children>

@@ -4,7 +4,7 @@ import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
 import javafx.scene.control._
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.{GridPane, Pane}
 
 class VillageViewController {
 
@@ -16,6 +16,7 @@ class VillageViewController {
   @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
   @FXML var levelUPButton: Button = _
+  @FXML var upgradePane: Pane = _
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
   var villageMap: GridPane = _
@@ -30,13 +31,13 @@ class VillageViewController {
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
 
-    ConcreteHandlerSetup.setupVillageHandlers(villageMap, selectionInfo)
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, selectionInfo, upgradePane)
 
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
 
-    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, selectionInfo)
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, selectionInfo, upgradePane)
   }
 
 }

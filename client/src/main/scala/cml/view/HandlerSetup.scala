@@ -4,7 +4,7 @@ import cml.view.utils.TileConfig._
 import javafx.scene.control.TextArea
 import javafx.scene.image.ImageView
 import javafx.scene.input._
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.{GridPane, Pane}
 import javafx.scene.{Node, SnapshotParameters}
 
 /**
@@ -18,47 +18,54 @@ trait HandlerSetup {
     * @param grid to handle
     * @param info to show information
     */
-  def setupVillageHandlers(grid: GridPane, info: TextArea): Unit
+  def setupVillageHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit
 
   /**
     * Setup handlers for buildings menu
     * @param grid to handle
     * @param info to show information
     */
-  def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit
+  def setupBuildingsHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit
 }
 
 trait Handler {
-  def handle(elem: Node, info: TextArea): Unit
+  def handle(elem: Node, info: TextArea, upgrade: Pane): Unit
 }
 
 object Handler {
 
   val handleVillage: Handler = {
-    (elem: Node, info: TextArea) =>
-      addClickHandler(elem, info)
+    (elem: Node, info: TextArea, upgrade: Pane) =>
+      val upgradeLevel = upgrade.getChildren
+      upgradeLevel.forEach(addClickHandler(elem, info, _))
       addDragAndDropTargetHandler(elem, info)
   }
 
   val handleBuilding: Handler = {
-    (elem: Node, info: TextArea) =>
+    (elem: Node, info: TextArea, upgrade: Pane) =>
       for(tile <- tileSet){
         addDragAndDropSourceHandler(tile, info)
       }
   }
 
-  private def addClickHandler(n: Node, info: TextArea): Unit = {
+  private def addClickHandler(n: Node, info: TextArea, lvlUp: Node): Unit = {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      info setText "Mouse clicked in coords: ("+x+","+y+")\n" //TODO elemento selezionato dal click
+      info setText "Mouse clicked in coords: ("+x+","+y+")\n"
+      lvlUp.setDisable(false)
+      //settare il click
+      lvlUp.setOnMouseClicked(_ =>{
+        //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
+        info setText "Level up: $level \nfood-- \nmoney--"
+      })
     })
   }
 
   private def addDragAndDropSourceHandler(t: Tile, info: TextArea): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked(_ => { //TODO hover (tooltip venuta male)
-        info setText "Element selected: "+ t.description + "Price: [PRICE]"
+    canvas setOnMouseClicked(_ => {
+        info setText "Element selected: "+ t.description + "\nPrice: $$$"
     })
     canvas setOnDragDetected((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
@@ -97,12 +104,12 @@ object Handler {
 
 object ConcreteHandlerSetup extends HandlerSetup {
 
-  private def setHandlers(grid: GridPane, info: TextArea, handler: Handler): Unit = {
+  private def setHandlers(grid: GridPane, info: TextArea, upgrade: Pane, handler: Handler): Unit = {
     val children = grid.getChildren
-    children forEach(handler.handle(_, info))
+    children forEach(handler.handle(_, info, upgrade))
   }
 
-  override def setupVillageHandlers(grid: GridPane, info: TextArea): Unit = setHandlers(grid, info, Handler.handleVillage)
+  override def setupVillageHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit = setHandlers(grid, info, upgrade, Handler.handleVillage)
 
-  override def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit = setHandlers(grid, info, Handler.handleBuilding)
+  override def setupBuildingsHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit = setHandlers(grid, info, upgrade, Handler.handleBuilding)
 }
