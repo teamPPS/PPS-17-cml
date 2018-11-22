@@ -25,12 +25,17 @@ sealed trait VillageService {
   def enterVillage(username: String): Future[String]
 
   /**
-    *
+    * Update a user's village with updated information
     * @param username using to find personal village
     * @param update a json describing what to update
     * @return successful or failed update
     */
   def updateVillage(username: String, update: String): Future[Boolean]
 
-  // TODO delete?
+  /**
+    * Delete user's village and account
+    * @param username target village to delete
+    * @return delete successful
+    */
+  def deleteVillageAndUser(username: String): Future[Boolean]
 }
