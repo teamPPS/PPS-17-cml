@@ -7,9 +7,9 @@ import cml.controller.fx.VillageViewController
 /**
   * Class that implements the actor which manages the village interaction with user
   * @author Monica Gondolini
-  * @param controller
+//  * @param controller
   */
-class VillageActor(controller: VillageViewController) extends Actor{
+class VillageActor() extends Actor{ //controller: VillageViewController
 
   /**
     *

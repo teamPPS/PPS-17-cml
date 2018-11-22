@@ -1,10 +1,11 @@
 package cml.controller
 
-import akka.actor.Actor
+import akka.actor.{Actor, ActorRef, Props}
 import cml.controller.actor.utils.ViewAuthenticationMessage._
 import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
+import cml.controller.messages.VillageRequest.{CreateVillage, EnterVillage}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import javafx.application.Platform
 
@@ -22,6 +23,7 @@ import scala.util.{Failure, Success}
 class AuthenticationActor(controller: AuthenticationViewController) extends Actor {
 
   val authenticationVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
+  final val villageActor: ActorRef = context.actorOf(Props(new VillageActor()), "VillageActor")
 
   var token: String = _
 
@@ -35,6 +37,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, registerSuccess, registerFailure)
+          villageActor ! CreateVillage(username)
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)
@@ -43,6 +46,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
+          villageActor ! EnterVillage(username)
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)

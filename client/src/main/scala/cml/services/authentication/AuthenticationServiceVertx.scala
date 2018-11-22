@@ -61,10 +61,11 @@ trait AuthenticationServiceVertx {
 /**
   * Companion object
   */
-object AuthenticationServiceVertx{
+object AuthenticationServiceVertx extends ClientVertx {
 
-  val vertx: Vertx = Vertx.vertx()
-  var client: WebClient = WebClient.create(vertx)
+//  val vertx: Vertx = Vertx.vertx()
+//  var client: WebClient = WebClient.create(vertx)
+  var client: WebClient = authenticationClient
   val successfulRegisterResponse: Int = HttpResponseStatus.CREATED.code
   val successfulLoginResponse: Int = HttpResponseStatus.OK.code
 
