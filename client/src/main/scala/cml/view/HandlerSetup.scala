@@ -1,21 +1,30 @@
 package cml.view
 
-import java.util.Observable
-
 import cml.view.utils.TileConfig._
-import javafx.collections.ObservableList
-import javafx.scene.{Node, SnapshotParameters}
-import javafx.scene.control.{TextArea, Tooltip}
+import javafx.scene.control.TextArea
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
+import javafx.scene.{Node, SnapshotParameters}
 
 /**
+  * Setup handlers with costume settings
   * @author Monica Gondolini, ecavina
   */
-
 trait HandlerSetup {
+
+  /**
+    * Setup handlers for the village
+    * @param grid to handle
+    * @param info to show information
+    */
   def setupVillageHandlers(grid: GridPane, info: TextArea): Unit
+
+  /**
+    * Setup handlers for buildings menu
+    * @param grid to handle
+    * @param info to show information
+    */
   def setupBuildingsHandlers(grid: GridPane, info: TextArea): Unit
 }
 
@@ -23,7 +32,7 @@ trait Handler {
   def handle(elem: Node, info: TextArea): Unit
 }
 
-object Handler{
+object Handler {
 
   val handleVillage: Handler = {
     (elem: Node, info: TextArea) =>
@@ -90,7 +99,7 @@ object ConcreteHandlerSetup extends HandlerSetup {
 
   private def setHandlers(grid: GridPane, info: TextArea, handler: Handler): Unit = {
     val children = grid.getChildren
-    children.forEach(handler.handle(_, info))
+    children forEach(handler.handle(_, info))
   }
 
   override def setupVillageHandlers(grid: GridPane, info: TextArea): Unit = setHandlers(grid, info, Handler.handleVillage)
