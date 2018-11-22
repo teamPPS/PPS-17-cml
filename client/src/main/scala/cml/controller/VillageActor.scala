@@ -23,24 +23,24 @@ class VillageActor() extends Actor{ //controller: VillageViewController
     */
   override def receive: Receive = {
     case CreateVillage(username) => villageVertx.createVillage(username)
-        .onComplete{
+/*        .onComplete{
           case Success(httpResponse) => ???
           case Failure(exception) => ???
-        }
+        }*/
     case EnterVillage(username) => villageVertx.enterVillage(username)
-      .onComplete{
+/*      .onComplete{
         case Success(httpResponse) => ???
         case Failure(exception) => ???
-      }
+      }*/
     case UpdateVillage(username, update) => villageVertx.updateVillage(username,update)
-      .onComplete{
+/*      .onComplete{
         case Success(httpResponse) => ???
         case Failure(exception) => ???
-      }
+      }*/
     case DeleteVillage(username) => villageVertx.deleteVillageAndUser(username)
-      .onComplete{
+/*      .onComplete{
         case Success(httpResponse) => ???
         case Failure(exception) => ???
-      }
+      }*/
   }
 }
