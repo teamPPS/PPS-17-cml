@@ -13,12 +13,33 @@ import scala.concurrent.Future
   */
 trait VillageServiceVertx {
 
+  /**
+    * Create a user village
+    * @param username used to create the corresponding village
+    * @return successful or failed deletion
+    */
   def createVillage(username: String): Future[String]
 
+  /**
+    * Enter the user's village
+    * @param username used to find the corresponding village
+    * @return successful or failed deletion
+    */
   def enterVillage(username: String): Future[String]
 
+  /**
+    * Update the user's village
+    * @param username used to create the corresponding village
+    * @param update what to update
+    * @return successful or failed deletion
+    */
   def updateVillage(username: String, update: String): Future[Unit]
 
+  /**
+    * Delete the user's village
+    * @param username used to find the corresponding village
+    * @return successful or failed deletion
+    */
   def deleteVillageAndUser(username: String): Future[Unit]
 
 }
