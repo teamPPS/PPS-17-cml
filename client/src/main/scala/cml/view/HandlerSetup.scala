@@ -1,7 +1,7 @@
 package cml.view
 
 import cml.view.utils.TileConfig._
-import javafx.scene.control.TextArea
+import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.{GridPane, Pane}
@@ -15,56 +15,68 @@ trait HandlerSetup {
 
   /**
     * Setup handlers for the village
-    * @param grid to handle
-    * @param info to show information
+    * @param grid what we need to handle
+    * @param upgrade actions to perform
     */
-  def setupVillageHandlers(grid: GridPane, info: TextArea, pane: Pane): Unit
+  def setupVillageHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit
 
   /**
     * Setup handlers for buildings menu
-    * @param grid to handle
-    * @param info to show information
+    * @param grid what we need to handle
+    * @param upgrade actions to perform
     */
-  def setupBuildingsHandlers(grid: GridPane, info: TextArea, pane: Pane): Unit
+  def setupBuildingsHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit
 }
 
 trait Handler {
-  def handle(elem: Node, info: TextArea, upgrade: Node): Unit
+  def handle(elem: Node, area: Node, upgrade: Node): Unit
 }
 
 object Handler {
 
   val handleVillage: Handler = {
-    (elem: Node, info: TextArea, upgrade: Node) =>
-      addClickHandler(elem, info, upgrade)
-      addDragAndDropTargetHandler(elem, info)
+    (elem: Node, area: Node, upgrade: Node) =>
+      addClickHandler(elem, area, upgrade)
+      addDragAndDropTargetHandler(elem, area)
   }
 
   val handleBuilding: Handler = {
-    (_: Node, info: TextArea, upgrade: Node) =>
+    (_: Node, area: Node, _: Node) =>
       for(tile <- tileSet){
-        addDragAndDropSourceHandler(tile, info)
+        addDragAndDropSourceHandler(tile, area)
       }
   }
 
-  private def addClickHandler(n: Node, info: TextArea, lvlUp: Node): Unit = {
+  private def addClickHandler(n: Node, a:Node, up: Node): Unit = {
+
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      info setText "Mouse clicked in coords: ("+x+","+y+")\n"
-      lvlUp.setDisable(false)
-      //se è terrain il tipo non devo poter aumentare il livello
-      lvlUp.setOnMouseClicked(_ =>{
-        //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-        info setText "Level up: $level \nfood-- \nmoney--"
-      })
+      a match {
+        case info: TextArea => info setText "Mouse clicked in coords: ("+x+","+y+")\n"
+        case _ => throw new ClassCastException
+      }
+      up match {
+        case levelUp: Button =>
+          levelUp.setDisable(false)
+          //se è terrain il tipo non devo poter aumentare il livello
+          levelUp.setOnMouseClicked(_ =>{
+            //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
+            println("Level up: $level \nfood-- \nmoney--")
+            levelUp.setDisable(true)
+          })
+        case _ => throw new ClassCastException
+      }
     })
   }
 
-  private def addDragAndDropSourceHandler(t: Tile, info: TextArea): Unit = {
+  private def addDragAndDropSourceHandler(t: Tile, a: Node): Unit = {
     val canvas = t.imageSprite
     canvas setOnMouseClicked(_ => {
-        info setText "Element selected: "+ t.description + "\nPrice: $$$"
+      a match {
+        case info: TextArea => info setText "Element selected: "+ t.description + "\nPrice: $$$"
+        case _ => throw new ClassCastException
+      }
     })
     canvas setOnDragDetected((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
@@ -73,12 +85,15 @@ object Handler {
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
-      info setText "Dragged element " + dragBoard.getString
+      a match {
+        case info: TextArea => info setText "Dragged element " + dragBoard.getString
+        case _ => throw new ClassCastException
+      }
       event consume()
     })
   }
 
-  private def addDragAndDropTargetHandler(n: Node, info: TextArea): Unit = {
+  private def addDragAndDropTargetHandler(n: Node, a: Node): Unit = {
     n setOnDragOver ((event: DragEvent) => {
       event acceptTransferModes TransferMode.COPY
       event consume()
@@ -93,7 +108,11 @@ object Handler {
       }
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
+      // questo può anche non andarci
+      a match {
+        case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
+        case _ => throw new ClassCastException
+      }
       event consume()
       // UPDATE MODEL e send al server
     })
@@ -103,17 +122,19 @@ object Handler {
 
 object ConcreteHandlerSetup extends HandlerSetup {
 
-  private def setHandlers(grid: GridPane, info: TextArea, pane: Pane, handler: Handler): Unit = {
+  private def setHandlers(grid: GridPane, area: Pane, upgrade: Pane, handler: Handler): Unit = {
     val gridChildren = grid.getChildren
-    val paneChildren = pane.getChildren
+    val paneChildren = upgrade.getChildren
+    val areaChildren = area.getChildren
     gridChildren forEach(g => {
-      paneChildren forEach(p =>
-        handler.handle(g, info, p)
+      areaChildren forEach(a =>{
+        paneChildren forEach(up =>
+        handler.handle(g, a,  up)
       )}
-    )
+    )})
   }
 
-  override def setupVillageHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit = setHandlers(grid, info, upgrade, Handler.handleVillage)
+  override def setupVillageHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit = setHandlers(grid, area, upgrade, Handler.handleVillage)
 
-  override def setupBuildingsHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit = setHandlers(grid, info, upgrade, Handler.handleBuilding)
+  override def setupBuildingsHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit = setHandlers(grid, area, upgrade, Handler.handleBuilding)
 }

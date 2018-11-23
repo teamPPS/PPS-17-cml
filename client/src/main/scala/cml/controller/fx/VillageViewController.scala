@@ -17,6 +17,7 @@ class VillageViewController {
   @FXML var battleButton: Button = _
   @FXML var levelUPButton: Button = _
   @FXML var upgradePane: Pane = _
+  @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
   var villageMap: GridPane = _
@@ -31,13 +32,13 @@ class VillageViewController {
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
 
-    ConcreteHandlerSetup.setupVillageHandlers(villageMap, selectionInfo, upgradePane)
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, areaPane, upgradePane)
 
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
 
-    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, selectionInfo, upgradePane)
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, areaPane, upgradePane)
   }
 
 }
