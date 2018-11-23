@@ -6,6 +6,10 @@ import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
 import cml.services.village.utils.VillageUrl._
 import cml.services.authentication.utils.AuthenticationUrl._
+import io.netty.handler.codec.http.HttpResponseStatus
+import io.vertx.core.json.Json
+
+import scala.util.{Failure, Success}
 
 /**
   * This class implement VillagesVerticle
@@ -43,7 +47,14 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
-    ) yield username
+    ) yield {
+        villageService.createVillage(username).onComplete {
+          case Success(document) => getResponse
+            .putHeader("content-type", "application/json; charset=utf-8")
+              .end(Json.encode(document))
+          case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
+        }
+    }
   }
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
