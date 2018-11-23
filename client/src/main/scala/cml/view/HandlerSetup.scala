@@ -18,31 +18,30 @@ trait HandlerSetup {
     * @param grid to handle
     * @param info to show information
     */
-  def setupVillageHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit
+  def setupVillageHandlers(grid: GridPane, info: TextArea, pane: Pane): Unit
 
   /**
     * Setup handlers for buildings menu
     * @param grid to handle
     * @param info to show information
     */
-  def setupBuildingsHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit
+  def setupBuildingsHandlers(grid: GridPane, info: TextArea, pane: Pane): Unit
 }
 
 trait Handler {
-  def handle(elem: Node, info: TextArea, upgrade: Pane): Unit
+  def handle(elem: Node, info: TextArea, upgrade: Node): Unit
 }
 
 object Handler {
 
   val handleVillage: Handler = {
-    (elem: Node, info: TextArea, upgrade: Pane) =>
-      val upgradeLevel = upgrade.getChildren
-      upgradeLevel.forEach(addClickHandler(elem, info, _))
+    (elem: Node, info: TextArea, upgrade: Node) =>
+      addClickHandler(elem, info, upgrade)
       addDragAndDropTargetHandler(elem, info)
   }
 
   val handleBuilding: Handler = {
-    (elem: Node, info: TextArea, upgrade: Pane) =>
+    (_: Node, info: TextArea, upgrade: Node) =>
       for(tile <- tileSet){
         addDragAndDropSourceHandler(tile, info)
       }
@@ -104,9 +103,14 @@ object Handler {
 
 object ConcreteHandlerSetup extends HandlerSetup {
 
-  private def setHandlers(grid: GridPane, info: TextArea, upgrade: Pane, handler: Handler): Unit = {
-    val children = grid.getChildren
-    children forEach(handler.handle(_, info, upgrade))
+  private def setHandlers(grid: GridPane, info: TextArea, pane: Pane, handler: Handler): Unit = {
+    val gridChildren = grid.getChildren
+    val paneChildren = pane.getChildren
+    gridChildren forEach(g => {
+      paneChildren forEach(p =>
+        handler.handle(g, info, p)
+      )}
+    )
   }
 
   override def setupVillageHandlers(grid: GridPane, info: TextArea, upgrade: Pane): Unit = setHandlers(grid, info, upgrade, Handler.handleVillage)
