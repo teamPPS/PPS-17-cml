@@ -1,6 +1,6 @@
 apply plugin: 'application'
 
-mainClassName = 'cml.client.ClientMain'
+mainClassName = 'cml.ClientMain'
 
 dependencies {
     implementation project(':server')
