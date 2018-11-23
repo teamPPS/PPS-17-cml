@@ -1,5 +1,7 @@
 package cml.model.base
 
+import java.io.UncheckedIOException
+
 import cml.utils.ModelConfig
 
 /**
@@ -11,6 +13,7 @@ trait Creature {
     * Increments Creature level
     */
   def levelUp(): Unit
+  def attack(): Unit
 }
 
 /**
@@ -23,7 +26,9 @@ trait Creature {
 case class Creature1(creatureName: String, creatureElement: String,var creatureLevel: Int) extends Creature { //could be a dragon or something else
 
   val initialHp = ModelConfig.Creature.HEALTH_POINT
+  var attackValue = ModelConfig.Creature.ATTACK_VALUE
   override def levelUp(): Unit = creatureLevel += 1
+  override def attack(): Unit = _
 }
 
 

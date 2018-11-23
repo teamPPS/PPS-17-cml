@@ -5,6 +5,7 @@ object ModelConfig {
   object Creature {
     val INITIAL_LEVEL: Int = 1
     val HEALTH_POINT: Int = 100
+    val ATTACK_VALUE: Int = 5
   }
 
   object Building {
