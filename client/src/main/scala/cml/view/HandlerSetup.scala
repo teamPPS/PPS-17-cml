@@ -53,7 +53,7 @@ object Handler {
       val x = GridPane.getRowIndex(n)
       info setText "Mouse clicked in coords: ("+x+","+y+")\n"
       lvlUp.setDisable(false)
-      //settare il click
+      //se è terrain il tipo non devo poter aumentare il livello
       lvlUp.setOnMouseClicked(_ =>{
         //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
         info setText "Level up: $level \nfood-- \nmoney--"
