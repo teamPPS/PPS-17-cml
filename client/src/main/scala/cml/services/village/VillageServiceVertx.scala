@@ -70,10 +70,10 @@ object VillageServiceVertx{
         })
     }
 
-    override def enterVillage(username: String): Future[String] = ???
+    override def enterVillage(): Future[String] = ???
 
-    override def updateVillage(username: String, update: String): Future[Unit] = ???
+    override def updateVillage(update: String): Future[Unit] = ???
 
-    override def deleteVillageAndUser(username: String): Future[Unit] = ???
+    override def deleteVillageAndUser(): Future[Unit] = ???
   }
 }

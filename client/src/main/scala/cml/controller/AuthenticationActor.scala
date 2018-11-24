@@ -38,8 +38,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, registerSuccess, registerFailure)
-          villageActor ! CreateVillage(username) //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
-          villageActor ! EnterVillage(username) //Nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
+          villageActor ! CreateVillage //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
+          villageActor ! EnterVillage //Nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)
@@ -48,7 +48,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
-          villageActor ! EnterVillage(username) //nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
+          villageActor ! EnterVillage //nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)

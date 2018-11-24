@@ -10,27 +10,23 @@ object VillageRequest {
 
   /**
     * Request to create a new VIllage
-    * @param username village user
     */
-  case class CreateVillage(username: String) extends VillageRequest
+  case class CreateVillage() extends VillageRequest
 
   /**
     * Resuest to enter a village
-    * @param username village user
     */
-  case class EnterVillage(username: String) extends VillageRequest
+  case class EnterVillage() extends VillageRequest
 
   /**
     * Request to update a village
-    * @param username village user
     * @param update village user
     */
-  case class UpdateVillage(username:String, update: String) extends VillageRequest
+  case class UpdateVillage(update: String) extends VillageRequest
 
   /**
     * Request to delete a village
-    * @param username village user
     */
-  case class DeleteVillage(username: String) extends VillageRequest
+  case class DeleteVillage() extends VillageRequest
 
 }
