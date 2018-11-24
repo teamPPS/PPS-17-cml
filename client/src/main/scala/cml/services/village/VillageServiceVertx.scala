@@ -81,7 +81,7 @@ object VillageServiceVertx{
 
     override def updateVillage(update: String): Future[Unit] = {
       client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
-        .sendJsonFuture(new JsonObject().put("update", update))
+        .sendJsonFuture(new JsonObject().put("update", update)) //cambiare!!!!
         .map(r => r.statusCode() match {
           case `successfulUpdateResponse` => r.bodyAsString().getOrElse("")
           case _ => "Not a valid request"
