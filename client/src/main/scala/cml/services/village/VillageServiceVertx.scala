@@ -1,6 +1,8 @@
 package cml.services.village
 
 import akka.actor.ActorRef
+import io.netty.handler.codec.http.HttpResponseStatus
+import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
 
@@ -49,6 +51,11 @@ object VillageServiceVertx{
   val vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
 
+  val successfulCreationResponse: Int = HttpResponseStatus.CREATED.code
+  val successfulEnteringResponse: Int = HttpResponseStatus.OK.code
+  val successfulUpdateResponse: Int = HttpResponseStatus.OK.code
+//  val successfulDeleteResponse: Int = HttpResponseStatus.OK.code
+
   def apply(actor: ActorRef): VillageServiceVertx = VillageServiceVertxImpl(actor)
 
   /**
@@ -57,7 +64,15 @@ object VillageServiceVertx{
     */
   case class VillageServiceVertxImpl(actor: ActorRef) extends VillageServiceVertx{
 
-    override def createVillage(username: String): Future[String] = ???
+    override def createVillage(username: String): Future[String] = {
+      println(s"sending create village request from username:$username") //debug
+      client.post(8080, "127.0.0.1", "village")
+        .sendJsonFuture(new JsonObject().put("username", username)) //da creare con cose del villaggio
+        .map(r => r.statusCode match { //technical debt?
+          case `successfulCreationResponse` => r.bodyAsString().getOrElse("")
+          case _ => "Not a valid request"
+        })
+    }
 
     override def enterVillage(username: String): Future[String] = ???
 

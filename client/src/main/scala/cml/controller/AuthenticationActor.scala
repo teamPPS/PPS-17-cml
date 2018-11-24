@@ -6,6 +6,7 @@ import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.controller.messages.VillageRequest.{CreateVillage, EnterVillage}
+import cml.controller.messages.VillageResponse.EnterVillageSuccess
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import javafx.application.Platform
 
@@ -27,7 +28,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   var token: String = _
 
-  override def receive: Receive = authenticationBehaviour orElse enterVIllageBehaviour
+  override def receive: Receive = authenticationBehaviour orElse enterVillageBehaviour
 
   /**
     * @return the authentication behaviour
@@ -58,7 +59,9 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
   /**
     * @return behaviour when entering a village
     */
-  private def enterVIllageBehaviour: Receive = ???
+  private def enterVillageBehaviour: Receive = {
+    case EnterVillageSuccess => loginSucceedOnGui()
+  }
 
   /**
     * Displays text on the GUI through a label
