@@ -33,13 +33,13 @@ trait VillageServiceVertx {
     * @param update what to update
     * @return successful or failed deletion
     */
-  def updateVillage(update: String): Future[Unit]
+  def updateVillage(update: JsonObject): Future[Unit]
 
   /**
     * Delete the user's village
     * @return successful or failed deletion
     */
-  def deleteVillageAndUser(): Future[Unit]
+  def deleteVillageAndUser(token: String): Future[Unit]
 
 }
 
@@ -72,7 +72,7 @@ object VillageServiceVertx{
     }
 
     override def enterVillage(): Future[String] = {
-      client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
+      client.get(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulEnteringResponse` => r.bodyAsString().getOrElse("")
@@ -80,13 +80,13 @@ object VillageServiceVertx{
         })
     }
 
-    override def updateVillage(update: String): Future[Unit] = {
+    override def updateVillage(update: JsonObject): Future[Unit] = {
       client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
-        .sendJsonFuture(new JsonObject().put("update", update)) //cambiare!!!!
+        .sendJsonFuture(update)
         .map(()=>_)
     }
 
-    override def deleteVillageAndUser(): Future[Unit] = {
+    override def deleteVillageAndUser(token: String): Future[Unit] = { //passandogli il token
       client.delete(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
         .map(()=>_)

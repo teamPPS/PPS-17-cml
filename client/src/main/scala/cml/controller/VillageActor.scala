@@ -14,7 +14,6 @@ import scala.util.{Failure, Success}
 /**
   * Class that implements the actor which manages the village interaction with user
   * @author Monica Gondolini
-//  * @param controller
   */
 class VillageActor() extends Actor{ //controller: VillageViewController
 
@@ -24,11 +23,13 @@ class VillageActor() extends Actor{ //controller: VillageViewController
     * @return village behaviour
     */
   override def receive: Receive = {
+
     case CreateVillage() => villageVertx.createVillage()
       .onComplete{
         case Success(httpResponse) => CreateVillageSuccess
         case Failure(exception) => VillageFailure(createFailure)
       }
+
     case EnterVillage() => villageVertx.enterVillage()
       .onComplete{
         case Success(httpResponse) => sender() ! EnterVillageSuccess
@@ -37,13 +38,14 @@ class VillageActor() extends Actor{ //controller: VillageViewController
 
     case UpdateVillage(update) => villageVertx.updateVillage(update)
       .onComplete{
-        case Success(httpResponse) => ??? //modificare model
-        case Failure(exception) => ???
+        case Success(httpResponse) => println(httpResponse) //modificare model
+        case Failure(exception) => println(exception)
       }
-    case DeleteVillage() => villageVertx.deleteVillageAndUser()
+
+    case DeleteVillage(token) => villageVertx.deleteVillageAndUser(token)
       .onComplete{
-        case Success(httpResponse) => ??? //cancella tutto torna alla schermata ti autenticazione
-        case Failure(exception) => ???
+        case Success(httpResponse) => println(httpResponse) //cancella tutto torna alla schermata di autenticazione
+        case Failure(exception) => println(exception)
       }
   }
 }

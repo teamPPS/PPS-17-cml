@@ -1,7 +1,10 @@
 package cml.controller.messages
 
+import io.vertx.lang.scala.json.JsonObject
+
 /**
   * Village request messages
+  *
   * @author Monica Gondolini
   */
 object VillageRequest {
@@ -22,11 +25,11 @@ object VillageRequest {
     * Request to update a village
     * @param update village user
     */
-  case class UpdateVillage(update: String) extends VillageRequest
+  case class UpdateVillage(update: JsonObject) extends VillageRequest
 
   /**
     * Request to delete a village
     */
-  case class DeleteVillage() extends VillageRequest
+  case class DeleteVillage(token: String) extends VillageRequest
 
 }

@@ -86,7 +86,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case _ =>
       successAuthenticationCase(str)
       displayMsg(successMessage)
-      loginSucceedOnGui() //questo è da portare fuori, si fa quando viene ricevuta la risposta di entrata al villaggio
+//      loginSucceedOnGui() //questo si fa quando viene ricevuta la risposta di entrata al villaggio
       println("Success this is server response with the token: " + str)
   }
 
