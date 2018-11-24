@@ -6,6 +6,7 @@ import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
@@ -82,13 +83,13 @@ object VillageServiceVertx{
     override def updateVillage(update: String): Future[Unit] = {
       client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendJsonFuture(new JsonObject().put("update", update)) //cambiare!!!!
-        .map(() => _)
+        .map(()=>_)
     }
 
     override def deleteVillageAndUser(): Future[Unit] = {
       client.delete(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
-        .map(() => _)
+        .map(()=>_)
     }
   }
 }
