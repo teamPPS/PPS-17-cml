@@ -4,7 +4,7 @@ import io.vertx.lang.scala.json.JsonObject
 
 /**
   * Village request messages
-  *
+ *
   * @author Monica Gondolini
   */
 object VillageRequest {
@@ -30,6 +30,6 @@ object VillageRequest {
   /**
     * Request to delete a village
     */
-  case class DeleteVillage(token: String) extends VillageRequest
+  case class DeleteVillage() extends VillageRequest
 
 }

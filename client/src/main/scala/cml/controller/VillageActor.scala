@@ -42,7 +42,7 @@ class VillageActor() extends Actor{ //controller: VillageViewController
         case Failure(exception) => println(exception)
       }
 
-    case DeleteVillage(token) => villageVertx.deleteVillageAndUser(token)
+    case DeleteVillage() => villageVertx.deleteVillageAndUser()
       .onComplete{
         case Success(httpResponse) => println(httpResponse) //cancella tutto torna alla schermata di autenticazione
         case Failure(exception) => println(exception)

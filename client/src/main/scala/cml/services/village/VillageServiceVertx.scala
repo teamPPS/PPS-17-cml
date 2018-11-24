@@ -39,7 +39,7 @@ trait VillageServiceVertx {
     * Delete the user's village
     * @return successful or failed deletion
     */
-  def deleteVillageAndUser(token: String): Future[Unit]
+  def deleteVillageAndUser(): Future[Unit]
 
 }
 
@@ -86,7 +86,7 @@ object VillageServiceVertx{
         .map(()=>_)
     }
 
-    override def deleteVillageAndUser(token: String): Future[Unit] = { //passandogli il token
+    override def deleteVillageAndUser(): Future[Unit] = { //passandogli il token ?
       client.delete(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
         .map(()=>_)
