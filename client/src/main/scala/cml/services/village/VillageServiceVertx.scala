@@ -70,7 +70,14 @@ object VillageServiceVertx{
         })
     }
 
-    override def enterVillage(): Future[String] = ???
+    override def enterVillage(): Future[String] = {
+      client.put(8080, "127.0.0.1", "/api/villages/")
+        .sendFuture
+        .map(r => r.statusCode match {
+          case `successfulEnteringResponse` => r.bodyAsString().getOrElse("")
+          case _ => "Not a valid request"
+        })
+    }
 
     override def updateVillage(update: String): Future[Unit] = ???
 
