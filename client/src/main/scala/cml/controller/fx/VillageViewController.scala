@@ -1,5 +1,8 @@
 package cml.controller.fx
 
+import akka.actor.{ActorRef, Props}
+import cml.controller.VillageActor
+import cml.controller.actor.utils.AppActorSystem.system
 import cml.view.{BaseGridInitializer, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
@@ -19,6 +22,8 @@ class VillageViewController {
   @FXML var buildingsGrid: ScrollPane = _
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
+
+  val villageActor: ActorRef = system actorOf(Props(new VillageActor()), "VillageActor")
 
   def initialize(): Unit = {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog

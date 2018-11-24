@@ -1,5 +1,6 @@
 package cml
 
+import akka.actor.ActorSystem
 import cml.view.ViewSwitchConfig
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader

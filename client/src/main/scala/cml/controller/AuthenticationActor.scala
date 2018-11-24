@@ -27,7 +27,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   var token: String = _
 
-  override def receive: Receive = authenticationBehaviour
+  override def receive: Receive = authenticationBehaviour orElse enterVIllageBehaviour
 
   /**
     * @return the authentication behaviour
@@ -37,7 +37,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, registerSuccess, registerFailure)
-          villageActor ! CreateVillage(username)
+          villageActor ! CreateVillage(username) //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
+          villageActor ! EnterVillage(username) //Nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)
@@ -46,12 +47,18 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
-          villageActor ! EnterVillage(username)
+          villageActor ! EnterVillage(username) //nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)
       }
   }
+
+
+  /**
+    * @return behaviour when entering a village
+    */
+  private def enterVIllageBehaviour: Receive = ???
 
   /**
     * Displays text on the GUI through a label
@@ -76,7 +83,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case _ =>
       successAuthenticationCase(str)
       displayMsg(successMessage)
-      loginSucceedOnGui()
+      loginSucceedOnGui() //questo è da portare fuori, si fa quando viene ricevuta la risposta di entrata al villaggio
       println("Success this is server response with the token: " + str)
   }
 

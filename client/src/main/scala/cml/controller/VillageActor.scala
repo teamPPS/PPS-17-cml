@@ -17,8 +17,8 @@ import scala.util.{Failure, Success}
 class VillageActor() extends Actor{ //controller: VillageViewController
 
   val villageVertx = VillageServiceVertxImpl(self)
+
   /**
-    *
     * @return village behaviour
     */
   override def receive: Receive = {

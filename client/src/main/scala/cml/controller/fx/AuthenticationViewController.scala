@@ -1,8 +1,9 @@
 package cml.controller.fx
 
-import akka.actor.{ActorRef, ActorSystem, Props}
+import akka.actor.{ActorRef, Props}
 import cml.controller.AuthenticationActor
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.controller.actor.utils.AppActorSystem.system
 import cml.view.ViewSwitch
 import cml.controller.actor.utils.InputControl._
 import cml.utils.ViewConfig._
@@ -24,7 +25,7 @@ class AuthenticationViewController {
   @FXML var loginButton: Button = _
   @FXML var formMsgLabel: Label = _
 
-  var system = ActorSystem("mySystem")
+
   var authenticationActor: ActorRef = system actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
 
 
