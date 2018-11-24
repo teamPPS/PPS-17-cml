@@ -17,32 +17,28 @@ trait VillageServiceVertx {
 
   /**
     * Create a user village
-    * @param username used to create the corresponding village
     * @return successful or failed deletion
     */
-  def createVillage(username: String): Future[String]
+  def createVillage(): Future[String]
 
   /**
     * Enter the user's village
-    * @param username used to find the corresponding village
     * @return successful or failed deletion
     */
-  def enterVillage(username: String): Future[String]
+  def enterVillage(): Future[String]
 
   /**
     * Update the user's village
-    * @param username used to create the corresponding village
     * @param update what to update
     * @return successful or failed deletion
     */
-  def updateVillage(username: String, update: String): Future[Unit]
+  def updateVillage(update: String): Future[Unit]
 
   /**
     * Delete the user's village
-    * @param username used to find the corresponding village
     * @return successful or failed deletion
     */
-  def deleteVillageAndUser(username: String): Future[Unit]
+  def deleteVillageAndUser(): Future[Unit]
 
 }
 
@@ -64,11 +60,11 @@ object VillageServiceVertx{
     */
   case class VillageServiceVertxImpl(actor: ActorRef) extends VillageServiceVertx{
 
-    override def createVillage(username: String): Future[String] = {
-      println(s"sending create village request from username:$username") //debug
-      client.post(8080, "127.0.0.1", "village")
-        .sendJsonFuture(new JsonObject().put("username", username)) //da creare con cose del villaggio
-        .map(r => r.statusCode match { //technical debt?
+    override def createVillage(): Future[String] = {
+      println(s"sending create village request") //debug
+      client.post(8080, "127.0.0.1", "/api/villages/")
+        .sendFuture
+        .map(r => r.statusCode match {
           case `successfulCreationResponse` => r.bodyAsString().getOrElse("")
           case _ => "Not a valid request"
         })
