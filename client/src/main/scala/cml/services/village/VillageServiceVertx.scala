@@ -82,12 +82,13 @@ object VillageServiceVertx{
     override def updateVillage(update: String): Future[Unit] = {
       client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendJsonFuture(new JsonObject().put("update", update)) //cambiare!!!!
-        .map(r => r.statusCode() match {
-          case `successfulUpdateResponse` => r.bodyAsString().getOrElse("")
-          case _ => "Not a valid request"
-        })
+        .map(() => _)
     }
 
-    override def deleteVillageAndUser(): Future[Unit] = ???
+    override def deleteVillageAndUser(): Future[Unit] = {
+      client.delete(8080, "127.0.0.1", "/api/villages/") //cambiare
+        .sendFuture
+        .map(() => _)
+    }
   }
 }
