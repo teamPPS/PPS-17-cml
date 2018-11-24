@@ -2,11 +2,11 @@ package cml.services.village
 
 import cml.database.DatabaseClient
 import org.mongodb.scala.{Document, FindObservable}
-import org.scalatest.{BeforeAndAfter, FunSuite}
+import org.scalatest.{AsyncFunSuite, BeforeAndAfter}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class VillageServiceTest extends FunSuite with BeforeAndAfter {
+class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   var databaseClient: DatabaseClient = _
   var villageService: VillageService = _
@@ -18,35 +18,59 @@ class VillageServiceTest extends FunSuite with BeforeAndAfter {
 
   test("testEnterVillage") {
     villageService
+      .enterVillage("user1")
+      .map(result => assert(result.contains("Farm")))
   }
 
   test("testUpdateVillage") {
-
+    villageService
+      .updateVillage("user1", "")
+      .map(result => assert(result, true))
   }
 
   test("testCreateVillage") {
-
+    villageService
+      .createVillage("antonio")
+      .map { document => assert(document.contains("antonio"))}
   }
 
   test("testDeleteVillageAndUser") {
-
+    villageService
+      .deleteVillageAndUser("user1").map(result => assert(result, true))
   }
 
-}
+  class MockDatabaseClient extends DatabaseClient {
 
-class MockDatabaseClient extends DatabaseClient {
+    val villageList: List[Document] = List(
+      Document(
+        "username" -> "user1",
+        "food" -> 200,
+        "gold" -> 200,
+        "buildings" -> Document(
+          "1" -> Document(
+            "buildingsType" -> "Farm"
+          ),
+          "2" -> Document(
+            "buildingsType" -> "Cave"
+          )
+        )
+      )
+    )
 
-  override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = ???
+    def getVillageList: List[Document] = villageList
 
-  override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = Future { document.toJson() }(executionContext)
 
-  override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {  }(executionContext)
 
-  override def find(document: Document)(implicit ec: ExecutionContext): Future[FindObservable[Document]] = ???
+    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {  }(executionContext)
 
-  override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = ???
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[FindObservable[Document]] = ???
 
-  override def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+    override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = ???
 
-  override def multipleUpdate(query: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+    override def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+
+    override def multipleUpdate(query: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+  }
 }

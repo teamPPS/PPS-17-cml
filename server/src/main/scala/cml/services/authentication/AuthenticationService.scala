@@ -63,7 +63,7 @@ trait AuthenticationService {
 }
 
 /**
-  * This object allows you to create a SQLQueries
+  * This object allows you to communicate with a Mongo Database
   */
 object AuthenticationService {
 
