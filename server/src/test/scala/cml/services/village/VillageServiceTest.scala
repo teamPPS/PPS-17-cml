@@ -6,7 +6,6 @@ class VillageServiceTest extends FunSuite {
 
   test("testEnterVillage") {
 
-    VillageService
   }
 
   test("testUpdateVillage") {

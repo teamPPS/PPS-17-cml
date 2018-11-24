@@ -38,7 +38,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   override def initializeService: Unit = {
-    villageService =  _
+    villageService =  VillageService()
   }
 
   private def create: Handler[RoutingContext] = implicit routingContext => {

@@ -1,5 +1,8 @@
 package cml.services.village
 
+import cml.database.DatabaseClient
+import cml.database.utils.Configuration.DbConfig
+
 import scala.concurrent._
 
 /**
@@ -38,4 +41,22 @@ sealed trait VillageService {
     * @return delete successful
     */
   def deleteVillageAndUser(username: String): Future[Boolean]
+}
+
+object VillageService {
+
+  val villageCollection: DatabaseClient = DatabaseClient(DbConfig.villageColl)
+
+  def apply(): VillageService = VillageServiceImpl()
+
+  case class VillageServiceImpl() extends VillageService {
+
+    override def createVillage(username: String): Future[String] = ???
+
+    override def enterVillage(username: String): Future[String] = ???
+
+    override def updateVillage(username: String, update: String): Future[Boolean] = ???
+
+    override def deleteVillageAndUser(username: String): Future[Boolean] = ???
+}
 }
