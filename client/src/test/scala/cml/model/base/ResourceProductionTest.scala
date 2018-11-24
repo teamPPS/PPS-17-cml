@@ -1,9 +1,9 @@
 package cml.model.base
 
 import java.util.{Timer, TimerTask}
-
+import cml.model.creatures.Dragon
 import cml.utils.ModelConfig.Building.{LEVEL_INIT, TYPE_FARM}
-import cml.utils.ModelConfig.Elements.FIRE
+import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Resource.INIT_VALUE
 import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
 import org.scalatest.FunSuite
@@ -14,9 +14,9 @@ import org.scalatest.FunSuite
 class ResourceProductionTest extends FunSuite{
 
   test("Resource production during time test") {
-    val creatures: List[Creature] = List(Creature1("creatura", FIRE, INITIAL_LEVEL))
+    val creatures: List[Creature] = List(Dragon("drago", AIR))
     val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
-    val habitat = Habitat(FIRE,Position(100,100), LEVEL_INIT, creatures)
+    val habitat = Habitat(AIR,Position(100,100), LEVEL_INIT, creatures)
 
     val timer = new Timer()
     val task = new TimerTask {
@@ -33,9 +33,9 @@ class ResourceProductionTest extends FunSuite{
   }
 
   test("Resource retrieve test"){
-    val creatures: List[Creature] = List(Creature1("creatura", FIRE, INITIAL_LEVEL))
+    val creatures: List[Creature] = List(Dragon("drago", AIR))
     val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
-    val habitat = Habitat(FIRE,Position(100,100), LEVEL_INIT, creatures)
+    val habitat = Habitat(AIR,Position(100,100), LEVEL_INIT, creatures)
 
     for(i <- 1 to 10 ){
       building.food.inc(building.buildingLevel)
