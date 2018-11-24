@@ -29,9 +29,10 @@ class VillageActor() extends Actor{ //controller: VillageViewController
         }*/
     case EnterVillage(username) => villageVertx.enterVillage(username)
 /*      .onComplete{
-        case Success(httpResponse) => ???
+        case Success(httpResponse) => sender() ! EnterVillageSuccess
         case Failure(exception) => ???
       }*/
+
     case UpdateVillage(username, update) => villageVertx.updateVillage(username,update)
 /*      .onComplete{
         case Success(httpResponse) => ???

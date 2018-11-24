@@ -23,7 +23,8 @@ class VillageViewController {
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
-  val villageActor: ActorRef = system actorOf(Props(new VillageActor()), "VillageActor")
+  val villageActor: ActorRef = system actorOf(Props(new VillageActor()), "VillageActor") //da mettere in handler dopo il merge
+  //per ogni cambiamento del model manda un messaggio di update villageActor ! UpdateVillage(json)
 
   def initialize(): Unit = {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
