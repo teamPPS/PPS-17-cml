@@ -45,11 +45,10 @@ sealed trait VillageService {
 
 object VillageService {
 
-  val villageCollection: DatabaseClient = DatabaseClient(DbConfig.villageColl)
+  def apply(databaseClient: DatabaseClient = DatabaseClient(DbConfig.villageColl)): VillageService =
+    VillageServiceImpl(databaseClient)
 
-  def apply(): VillageService = VillageServiceImpl()
-
-  case class VillageServiceImpl() extends VillageService {
+  case class VillageServiceImpl(villageCollection: DatabaseClient) extends VillageService {
 
     override def createVillage(username: String): Future[String] = ???
 
