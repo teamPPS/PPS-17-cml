@@ -5,6 +5,11 @@ object VillageResponse {
   sealed trait VillageResponse
 
   /**
+    * Response for village creation succeeded
+    */
+  case class CreateVillageSuccess() extends VillageResponse
+
+  /**
     * Response for entering the village succeeded
     */
   case class EnterVillageSuccess() extends VillageResponse

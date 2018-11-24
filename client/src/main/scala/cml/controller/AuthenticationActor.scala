@@ -6,7 +6,7 @@ import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.controller.messages.VillageRequest.{CreateVillage, EnterVillage}
-import cml.controller.messages.VillageResponse.{EnterVillageSuccess, VillageFailure}
+import cml.controller.messages.VillageResponse.{CreateVillageSuccess, EnterVillageSuccess, VillageFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import javafx.application.Platform
 
@@ -28,7 +28,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   var token: String = _
 
-  override def receive: Receive = authenticationBehaviour orElse enterVillageBehaviour
+  override def receive: Receive = authenticationBehaviour orElse villageBehaviour
 
   /**
     * @return the authentication behaviour
@@ -39,7 +39,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
         case Success(httpResponse) =>
           checkResponse(httpResponse, registerSuccess, registerFailure)
           villageActor ! CreateVillage //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
-          villageActor ! EnterVillage //Nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)
@@ -59,7 +58,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
   /**
     * @return behaviour when entering a village
     */
-  private def enterVillageBehaviour: Receive = {
+  private def villageBehaviour: Receive = {
+    case CreateVillageSuccess => villageActor ! EnterVillage
     case EnterVillageSuccess => loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
   }
