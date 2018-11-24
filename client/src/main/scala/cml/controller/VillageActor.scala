@@ -6,6 +6,8 @@ import cml.controller.messages.VillageRequest.{CreateVillage, DeleteVillage, Ent
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, EnterVillageSuccess, VillageFailure}
 import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.implicitConversions
 import scala.util.{Failure, Success}
 
 

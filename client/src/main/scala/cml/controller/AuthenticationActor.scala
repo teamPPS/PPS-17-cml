@@ -54,7 +54,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       }
   }
 
-
   /**
     * @return behaviour when creating and entering a village
     */
