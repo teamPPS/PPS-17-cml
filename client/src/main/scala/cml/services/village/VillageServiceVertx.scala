@@ -62,7 +62,7 @@ object VillageServiceVertx{
 
     override def createVillage(): Future[String] = {
       println(s"sending create village request") //debug
-      client.post(8080, "127.0.0.1", "/api/villages/")
+      client.post(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulCreationResponse` => r.bodyAsString().getOrElse("")
@@ -71,7 +71,7 @@ object VillageServiceVertx{
     }
 
     override def enterVillage(): Future[String] = {
-      client.put(8080, "127.0.0.1", "/api/villages/")
+      client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulEnteringResponse` => r.bodyAsString().getOrElse("")
@@ -79,7 +79,14 @@ object VillageServiceVertx{
         })
     }
 
-    override def updateVillage(update: String): Future[Unit] = ???
+    override def updateVillage(update: String): Future[Unit] = {
+      client.put(8080, "127.0.0.1", "/api/villages/") //cambiare
+        .sendJsonFuture(new JsonObject().put("update", update))
+        .map(r => r.statusCode() match {
+          case `successfulUpdateResponse` => r.bodyAsString().getOrElse("")
+          case _ => "Not a valid request"
+        })
+    }
 
     override def deleteVillageAndUser(): Future[Unit] = ???
   }
