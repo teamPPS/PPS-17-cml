@@ -14,7 +14,8 @@ trait Creature {
   val initialHp = ModelConfig.Creature.HEALTH_POINT
   var attackValue = ModelConfig.Creature.ATTACK_VALUE
   def levelUp(): Unit
-  def attack(): Unit
+  def setAttack(): Unit
+  def setLevel(): Unit
 }
 
 

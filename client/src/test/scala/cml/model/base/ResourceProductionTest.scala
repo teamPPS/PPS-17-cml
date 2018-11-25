@@ -14,7 +14,7 @@ import org.scalatest.FunSuite
 class ResourceProductionTest extends FunSuite{
 
   test("Resource production during time test") {
-    val creatures: List[Creature] = List(Dragon("drago", AIR))
+    val creatures: List[Creature] = List(Dragon("drago", AIR, 1))
     val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
     val habitat = Habitat(AIR,Position(100,100), LEVEL_INIT, creatures)
 
@@ -33,7 +33,7 @@ class ResourceProductionTest extends FunSuite{
   }
 
   test("Resource retrieve test"){
-    val creatures: List[Creature] = List(Dragon("drago", AIR))
+    val creatures: List[Creature] = List(Dragon("drago", AIR, 1))
     val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
     val habitat = Habitat(AIR,Position(100,100), LEVEL_INIT, creatures)
 

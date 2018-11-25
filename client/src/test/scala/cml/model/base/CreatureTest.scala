@@ -13,7 +13,7 @@ import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
 class CreatureTest extends FunSuite {
 
   test("Creature level up test"){
-    val creature: Dragon = Dragon("Smaug", AIR)
+    val creature: Dragon = Dragon("Smaug", AIR, 4)
     creature.levelUp()
     assert(creature.currentLevel > INITIAL_LEVEL)
   }
