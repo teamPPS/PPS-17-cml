@@ -1,8 +1,7 @@
 package cml.controller.fx
 
-import akka.actor.{ActorRef, Props}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import cml.controller.VillageActor
-import cml.controller.actor.utils.AppActorSystem.system
 import cml.view.{BaseGridInitializer, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
@@ -23,6 +22,7 @@ class VillageViewController {
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
+  val system: ActorSystem = ActorSystem("cml1")
   val villageActor: ActorRef = system actorOf(Props(new VillageActor()), "VillageActor") //da mettere in handler dopo il merge
   //per ogni cambiamento del model manda un messaggio di update villageActor ! UpdateVillage(json)
 

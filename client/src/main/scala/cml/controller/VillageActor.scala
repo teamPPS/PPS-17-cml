@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.Actor
+import akka.actor.{Actor, ActorRef}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
 import cml.controller.messages.VillageRequest.{CreateVillage, DeleteVillage, EnterVillage, UpdateVillage}
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, EnterVillageSuccess, VillageFailure}
@@ -26,14 +26,24 @@ class VillageActor() extends Actor{
 
     case CreateVillage() => villageVertx.createVillage()
       .onComplete {
-        case Success(httpResponse) => CreateVillageSuccess
-        case Failure(exception) => VillageFailure(createFailure)
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => sender ! VillageFailure(createFailure)
+            case _ => sender ! CreateVillageSuccess()
+              println("Success")
+          }
+        case Failure(exception) => sender ! VillageFailure(createFailure)
       }
 
     case EnterVillage() => villageVertx.enterVillage()
       .onComplete {
-        case Success(httpResponse) => sender() ! EnterVillageSuccess
-        case Failure(exception) => sender() ! VillageFailure(enterFailure)
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => sender ! VillageFailure(enterFailure)
+            case _ => sender ! EnterVillageSuccess()
+              println("Success")
+          }
+        case Failure(exception) => sender ! VillageFailure(enterFailure)
       }
 
     case UpdateVillage(update) => villageVertx.updateVillage(update)
@@ -48,4 +58,10 @@ class VillageActor() extends Actor{
         case Failure(exception) => println(exception) // visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
       }
   }
+
+/*  def checkResponse(str: String, sender: ActorRef, m: String): Unit = str match { //technical debt?
+    case "Not a valid request" => sender ! VillageFailure(m)
+    case _ => sender !
+      println("Success this is server response with the token: " + str)
+  }*/
 }

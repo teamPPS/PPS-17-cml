@@ -72,6 +72,7 @@ object VillageServiceVertx{
     }
 
     override def enterVillage(): Future[String] = {
+      println(s"sending enter village request") //debug
       client.get(8080, "127.0.0.1", "/api/villages/") //cambiare
         .sendFuture
         .map(r => r.statusCode match {

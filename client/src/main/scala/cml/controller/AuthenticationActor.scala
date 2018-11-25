@@ -24,8 +24,7 @@ import scala.util.{Failure, Success}
 class AuthenticationActor(controller: AuthenticationViewController) extends Actor {
 
   val authenticationVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
-  final val villageActor = context.actorSelection("VillageActor")
-//    context.actorOf(Props(new VillageActor()), "VillageActor")
+  val villageActor: ActorRef = context.system.actorOf(Props(new VillageActor()), "VillageActor")
 
   var token: String = _
 
@@ -39,7 +38,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, registerSuccess, registerFailure)
-          villageActor ! CreateVillage //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
+          villageActor ! CreateVillage() //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)
@@ -48,7 +47,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
-          villageActor ! EnterVillage //nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
+          villageActor ! EnterVillage() //nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)
@@ -59,8 +58,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     * @return behaviour when creating and entering a village
     */
   private def villageBehaviour: Receive = {
-    case CreateVillageSuccess => villageActor ! EnterVillage
-    case EnterVillageSuccess => loginSucceedOnGui()
+    case CreateVillageSuccess() => villageActor ! EnterVillage()
+    case EnterVillageSuccess() => loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
   }
 
