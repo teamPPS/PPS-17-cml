@@ -1,7 +1,6 @@
 package cml.database
 
 import cml.database.utils.Configuration.DbConfig
-import cml.database.utils.Configuration.DocumentNotFoundException.DocumentNotFoundException
 import org.mongodb.scala._
 import org.mongodb.scala.ObservableImplicits
 
@@ -45,7 +44,7 @@ trait DatabaseClient{
     * Find a requested document
     * @param document what we want to find
     * @param ec implicit for ExecutionContext
-    * @return a future
+    * @return a future document, can be empty if document not found
     */
   def find(document: Document)(implicit ec: ExecutionContext):  Future[Document]
 

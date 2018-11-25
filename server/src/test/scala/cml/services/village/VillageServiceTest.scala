@@ -1,12 +1,19 @@
 package cml.services.village
 
 import cml.database.DatabaseClient
-import org.mongodb.scala.{Document, FindObservable}
+import org.mongodb.scala.Document
 import org.scalatest.{AsyncFunSuite, BeforeAndAfter}
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.{ExecutionContext, Future}
 
 class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
+
+  val UserField = "username"
+  val FoodField = "food"
+  val GoldField = "gold"
+  val BuildingsField = "buildings"
+  val BuildingType = "buildingType"
 
   var databaseClient: DatabaseClient = _
   var villageService: VillageService = _
@@ -16,7 +23,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
     villageService = VillageService(databaseClient)
   }
 
-  test("testEnterVillage") {
+  test("test enter village with existent username") {
     villageService
       .enterVillage("user1")
       .map(result => assert(result.contains("Farm")))
@@ -28,7 +35,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
       .map(result => assert(result, true))
   }
 
-  test("testCreateVillage") {
+  test("test village creation") {
     villageService
       .createVillage("antonio")
       .map { document => assert(document.contains("antonio"))}
@@ -41,31 +48,42 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   class MockDatabaseClient extends DatabaseClient {
 
-    val villageList: List[Document] = List(
+
+    var villagesList: ListBuffer[Document] = ListBuffer(
       Document(
-        "username" -> "user1",
-        "food" -> 200,
-        "gold" -> 200,
-        "buildings" -> Document(
+        UserField -> "user1",
+        FoodField -> 200,
+        GoldField -> 200,
+        BuildingsField -> Document(
           "1" -> Document(
-            "buildingsType" -> "Farm"
+            BuildingType -> "Farm"
           ),
           "2" -> Document(
-            "buildingsType" -> "Cave"
+            BuildingType -> "Cave"
           )
         )
       )
     )
 
-    def getVillageList: List[Document] = villageList
+    def getVillageList: ListBuffer[Document] = villagesList
 
-    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = Future { document.toJson() }(executionContext)
+    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = Future {
+      villagesList += document
+      document.toJson()
+    }(executionContext)
 
-    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {  }(executionContext)
+    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {
+      villagesList = villagesList filter(doc => !doc.get(UserField).equals(document.get(UserField)))
+    }(executionContext)
 
-    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {  }(executionContext)
+    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {
 
-    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = ???
+    }(executionContext)
+
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] =
+      Future {
+        villagesList.filter(doc => doc.get(UserField).equals(document.get(UserField))).head
+      }(executionContext)
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = ???
 

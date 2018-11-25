@@ -2,6 +2,7 @@ package cml.services.village
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
+import org.mongodb.scala.Document
 
 import scala.concurrent._
 
@@ -49,8 +50,11 @@ object VillageService {
     VillageServiceImpl(databaseClient)
 
   case class VillageServiceImpl(villageCollection: DatabaseClient) extends VillageService {
+    var document: Document = _
 
-    override def createVillage(username: String): Future[String] = ???
+    override def createVillage(username: String): Future[String] = {
+      document = Document()
+    }
 
     override def enterVillage(username: String): Future[String] = ???
 
