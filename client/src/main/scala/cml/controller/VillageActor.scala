@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
   * Class that implements the actor which manages the village interaction with user
   * @author Monica Gondolini
   */
-class VillageActor() extends Actor{ //controller: VillageViewController
+class VillageActor() extends Actor{
 
   val villageVertx = VillageServiceVertxImpl(self)
 
@@ -25,27 +25,27 @@ class VillageActor() extends Actor{ //controller: VillageViewController
   override def receive: Receive = {
 
     case CreateVillage() => villageVertx.createVillage()
-      .onComplete{
+      .onComplete {
         case Success(httpResponse) => CreateVillageSuccess
         case Failure(exception) => VillageFailure(createFailure)
       }
 
     case EnterVillage() => villageVertx.enterVillage()
-      .onComplete{
+      .onComplete {
         case Success(httpResponse) => sender() ! EnterVillageSuccess
         case Failure(exception) => sender() ! VillageFailure(enterFailure)
       }
 
     case UpdateVillage(update) => villageVertx.updateVillage(update)
-      .onComplete{
-        case Success(httpResponse) => println(httpResponse) //modificare model
-        case Failure(exception) => println(exception)
+      .onComplete {
+        case Success(httpResponse) => println(httpResponse) //modificare model: Passo textarea(?) e model nel messaggio UpdateVillage
+        case Failure(exception) => println(exception) //visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
       }
 
     case DeleteVillage() => villageVertx.deleteVillageAndUser()
-      .onComplete{
+      .onComplete {
         case Success(httpResponse) => println(httpResponse) //cancella tutto torna alla schermata di autenticazione
-        case Failure(exception) => println(exception)
+        case Failure(exception) => println(exception) // visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
       }
   }
 }

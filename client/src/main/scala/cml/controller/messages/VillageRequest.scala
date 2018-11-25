@@ -25,7 +25,7 @@ object VillageRequest {
     * Request to update a village
     * @param update village user
     */
-  case class UpdateVillage(update: JsonObject) extends VillageRequest
+  case class UpdateVillage(update: JsonObject) extends VillageRequest //passare anche model e (facoltativo) textarea
 
   /**
     * Request to delete a village
