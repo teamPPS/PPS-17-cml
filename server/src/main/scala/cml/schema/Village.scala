@@ -1,5 +1,7 @@
 package cml.schema
 
+import org.mongodb.scala.Document
+
 /**
   * Object with fields constants
   *
@@ -10,7 +12,6 @@ object Village {
   val FOOD = "food"
   val GOLD = "gold"
   val BUILDINGS = "buildings"
-  val BUILDING_ID = "buildings_id"
   val BUILDING_TYPE = "building_type"
   val BUILDING_LEVEL = "building_level"
   val HABITAT = "habitat"
@@ -20,4 +21,7 @@ object Village {
   val CREATURE_ID = "creature_id"
   val CREATURE_NAME = "creature_name"
   val CREATURE_LEVEL = "creature_level"
+
 }
+
+

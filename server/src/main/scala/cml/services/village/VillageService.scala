@@ -3,6 +3,8 @@ package cml.services.village
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
 import org.mongodb.scala.Document
+import cml.schema.Village._
+import cml.schema.User._
 
 import scala.concurrent._
 
@@ -52,8 +54,31 @@ object VillageService {
   case class VillageServiceImpl(villageCollection: DatabaseClient) extends VillageService {
     var document: Document = _
 
-    override def createVillage(username: String): Future[String] = {
-      document = Document()
+    override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(
+        VILLAGE_NAME -> username+"'s village",
+        USERNAME -> username,
+        FOOD -> 100,
+        GOLD -> 100,
+        BUILDINGS -> Document(
+          "building_id" -> Document(
+            BUILDING_TYPE -> "Farm",
+            BUILDING_LEVEL -> 1
+          )
+        ),
+        HABITAT -> Document(
+          "habitat_id" -> Document(
+            HABITAT_LEVEL -> 1,
+            NATURAL_ELEMENT -> "Fire",
+            CREATURES -> Document(
+              CREATURE_NAME -> "Drago Jhonny",
+              CREATURE_LEVEL -> 1,
+            )
+          )
+        )
+      )
+      //TODO inserimento
+      Future { "dummy" }
     }
 
     override def enterVillage(username: String): Future[String] = ???
