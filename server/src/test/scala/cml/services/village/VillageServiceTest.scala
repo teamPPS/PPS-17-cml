@@ -65,7 +65,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {  }(executionContext)
 
-    override def find(document: Document)(implicit ec: ExecutionContext): Future[FindObservable[Document]] = ???
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = ???
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = ???
 

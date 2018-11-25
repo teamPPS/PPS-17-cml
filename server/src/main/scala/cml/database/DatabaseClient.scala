@@ -47,7 +47,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def find(document: Document)(implicit ec: ExecutionContext):  Future[FindObservable[Document]]
+  def find(document: Document)(implicit ec: ExecutionContext):  Future[Document]
 
   /**
     * Allow to insert multiple documents in the database
@@ -103,17 +103,8 @@ object DatabaseClient {
       future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def find(document: Document)(implicit ec: ExecutionContext): Future[FindObservable[Document]] = {
-      val promise: Promise[FindObservable[Document]] = Promise()
-      collection.countDocuments(document).subscribe(new Observer[Long] {
-        override def onNext(result: Long): Unit = result match {
-          case 0 => onError(new Throwable(DocumentNotFoundException))
-          case _ => promise.success(collection.find(document))
-        }
-        override def onError(error: Throwable): Unit = promise.failure(error)
-        override def onComplete(): Unit = println("Find request completed")
-      })
-      promise.future
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
+      collection.find(document).first().toFuture()
     }
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {

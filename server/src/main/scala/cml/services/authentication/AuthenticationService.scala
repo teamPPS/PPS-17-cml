@@ -33,7 +33,7 @@ trait AuthenticationService {
     * @return a future completes successfully, otherwise it fails.
     */
 
-  def login (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
+  def login (username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   /**
     * Allow user to logout from the system.
@@ -84,14 +84,10 @@ object AuthenticationService {
         }
     }
 
-    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] =  {
+    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] =  {
       document = Document(USERNAME->username, PASSWORD->password)
       println(document)
-      collection.find(document).map(_ => "Find Completed")
-        .recoverWith{case e: Throwable =>
-          println(e)
-          Future.failed(e)
-        }
+      collection.find(document).map(doc => doc.size()>0)
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
