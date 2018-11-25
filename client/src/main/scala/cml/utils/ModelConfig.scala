@@ -25,7 +25,7 @@ object ModelConfig {
   object Elements {
     val WATER: String = "water"
     val FIRE: String = "fire"
-    val HEARTH: String = "hearth"
+    val EARTH: String = "earth"
     val AIR: String = "air"
   }
 }
