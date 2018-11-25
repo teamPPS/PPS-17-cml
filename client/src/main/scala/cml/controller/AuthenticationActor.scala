@@ -25,7 +25,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   val authenticationVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
   final val villageActor = context.actorSelection("VillageActor")
-//    actorOf(Props(new VillageActor()), "VillageActor")
+//    context.actorOf(Props(new VillageActor()), "VillageActor")
 
   var token: String = _
 
