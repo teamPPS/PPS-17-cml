@@ -24,7 +24,8 @@ import scala.util.{Failure, Success}
 class AuthenticationActor(controller: AuthenticationViewController) extends Actor {
 
   val authenticationVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
-  final val villageActor: ActorRef = context.actorOf(Props(new VillageActor()), "VillageActor")
+  final val villageActor = context.actorSelection("VillageActor")
+//    actorOf(Props(new VillageActor()), "VillageActor")
 
   var token: String = _
 
