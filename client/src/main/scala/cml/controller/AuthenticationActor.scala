@@ -47,7 +47,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
-          villageActor ! EnterVillage()
+          loginSucceedOnGui()
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)
@@ -59,7 +59,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     */
   private def villageBehaviour: Receive = {
     case CreateVillageSuccess() => villageActor ! EnterVillage()
-    case EnterVillageSuccess() => loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
   }
 

@@ -19,7 +19,7 @@ object VillageRequest {
   /**
     * Resuest to enter a village
     */
-  case class EnterVillage() extends VillageRequest
+  case class EnterVillage() extends VillageRequest //passare model e VillageView controller
 
   /**
     * Request to update a village

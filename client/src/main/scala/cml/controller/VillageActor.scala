@@ -40,7 +40,7 @@ class VillageActor() extends Actor{
         case Success(httpResponse) =>
           httpResponse match {
             case "Not a valid request" => senderActor ! VillageFailure(enterFailure)
-            case _ => senderActor ! EnterVillageSuccess()
+            case _ => ??? //popolare model + metodo inizializzazione
           }
         case Failure(exception) => senderActor ! VillageFailure(enterFailure)
       }
