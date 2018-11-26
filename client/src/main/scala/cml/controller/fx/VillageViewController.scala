@@ -28,7 +28,9 @@ class VillageViewController {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
     logoutMenuItem setOnAction (_ => ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene))
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
-    
+  }
+
+  def setGridAndHandlers(): Unit = {
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
@@ -41,5 +43,4 @@ class VillageViewController {
 
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, areaPane, upgradePane)
   }
-
 }
