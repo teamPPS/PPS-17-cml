@@ -1,5 +1,6 @@
 package cml.controller.messages
 
+import cml.controller.fx.VillageViewController
 import io.vertx.lang.scala.json.JsonObject
 
 /**
@@ -19,7 +20,7 @@ object VillageRequest {
   /**
     * Resuest to enter a village
     */
-  case class EnterVillage() extends VillageRequest //passare model e VillageView controller
+  case class EnterVillage(controller: VillageViewController) extends VillageRequest //passare model e VillageView controller
 
   /**
     * Request to update a village

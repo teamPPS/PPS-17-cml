@@ -33,9 +33,11 @@ class VillageViewController {
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     //mando msg a villaggio passando il modello e il controller
-    villageActor ! EnterVillage() //model
+    villageActor ! EnterVillage(this)
 
-    /*questa roba va in un metodo che chiamo dall'attore*/
+  }
+
+  def setGridAndHandlers(): Unit ={
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap

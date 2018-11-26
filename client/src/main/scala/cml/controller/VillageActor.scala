@@ -34,13 +34,13 @@ class VillageActor() extends Actor{
         case Failure(exception) => senderActor ! VillageFailure(createFailure)
       }
 
-    case EnterVillage() =>
+    case EnterVillage(controller) =>
       val senderActor: ActorRef = sender
       villageVertx.enterVillage().onComplete {
         case Success(httpResponse) =>
           httpResponse match {
             case "Not a valid request" => senderActor ! VillageFailure(enterFailure)
-            case _ => ??? //popolare model + metodo inizializzazione
+            case _ => controller.setGridAndHandlers() //popolare model + metodo inizializzazione
           }
         case Failure(exception) => senderActor ! VillageFailure(enterFailure)
       }

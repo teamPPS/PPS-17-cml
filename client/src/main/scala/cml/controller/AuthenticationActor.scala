@@ -58,7 +58,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     * @return behaviour when creating and entering a village
     */
   private def villageBehaviour: Receive = {
-    case CreateVillageSuccess() => villageActor ! EnterVillage()
+    case CreateVillageSuccess() => loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
   }
 
