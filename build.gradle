@@ -17,7 +17,9 @@ subprojects {
     apply plugin: 'scalaStyle'
     apply plugin: "org.scoverage"
     apply plugin: 'com.github.johnrengelman.shadow'
-
+    
+    version = '1.8'
+    
     dependencies {
         if(project.name != 'server') implementation project(':server')
 
@@ -63,9 +65,7 @@ subprojects {
         baseName = 'PPS-17-cml'
         classifier = project.name
         version = '1.0'
-        // mergeServiceFiles {
-        //    path = 'META-INF/custom'
-        //  }
+        mergeServiceFiles('reference.conf')
         destinationDir = file("${rootDir}/distributions") 
     }
 }
