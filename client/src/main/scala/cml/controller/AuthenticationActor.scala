@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
   */
 class AuthenticationActor(controller: AuthenticationViewController) extends Actor {
 
-  val authenticationVertx = AuthenticationServiceVertxImpl(controller.authenticationActor)
+  val authenticationVertx = AuthenticationServiceVertxImpl()
   val villageActor: ActorRef = context.system.actorOf(Props(new VillageActor()), "VillageActor")
 
   var token: String = _
@@ -38,7 +38,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, registerSuccess, registerFailure)
-          villageActor ! CreateVillage() //Facoltativo: nuova on receive che riceve il messaggio di VillgaeCreated -> Display messaggio
+          villageActor ! CreateVillage()
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)
@@ -47,7 +47,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
-          villageActor ! EnterVillage() //nuova on receive che riceve il messaggio di EnterSuccess -> cambio view
+          villageActor ! EnterVillage()
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)

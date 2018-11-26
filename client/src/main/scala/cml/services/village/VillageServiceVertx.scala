@@ -53,13 +53,12 @@ object VillageServiceVertx{
   val successfulUpdateResponse: Int = HttpResponseStatus.OK.code
 //  val successfulDeleteResponse: Int = HttpResponseStatus.OK.code
 
-  def apply(actor: ActorRef): VillageServiceVertx = VillageServiceVertxImpl(actor)
+  def apply(): VillageServiceVertx = VillageServiceVertxImpl()
 
   /**
     * This class implements the Village Vertx Client
-    * @param actor
     */
-  case class VillageServiceVertxImpl(actor: ActorRef) extends VillageServiceVertx{
+  case class VillageServiceVertxImpl() extends VillageServiceVertx{
 
     override def createVillage(): Future[String] = {
       println(s"sending create village request") //debug
