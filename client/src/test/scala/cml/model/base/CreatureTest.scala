@@ -2,7 +2,7 @@ package cml.model.base
 
 import cml.model.creatures.{Dragon, Golem}
 import org.scalatest.FunSuite
-import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
+import cml.utils.ModelConfig.Creature._
 
 /**
   * Some tests for multiple creatures
@@ -11,9 +11,9 @@ import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
 
 class CreatureTest extends FunSuite {
 
-  val dragon : Dragon = Dragon("Smaug", INITIAL_LEVEL)
+  val dragon : Dragon = Dragon(DRAGON_NAME, INITIAL_LEVEL)
   val dragon2 : Dragon = Dragon("Saphira", 9)
-  val golem : Golem = Golem("Astaroth", INITIAL_LEVEL)
+  val golem : Golem = Golem(GOLEM_NAME, INITIAL_LEVEL)
 
   test("Dragon level up test"){
     dragon levelUp()
@@ -21,7 +21,7 @@ class CreatureTest extends FunSuite {
   }
 
   test("Dragon set attack test"){
-    dragon2 setLevel()
+    dragon2.currentLevel_
     dragon2 levelUp()
     dragon2 setAttack()
     assert(dragon2.attackValue.equals(15))

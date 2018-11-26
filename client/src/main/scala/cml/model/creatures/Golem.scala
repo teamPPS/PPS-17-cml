@@ -1,7 +1,7 @@
 package cml.model.creatures
 
 import cml.model.base.Creature
-import cml.utils.ModelConfig
+import cml.utils.ModelConfig.Elements.EARTH
 
 /**
   * This class models a golem
@@ -12,9 +12,12 @@ import cml.utils.ModelConfig
 
 case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
 
-  val element : String = ModelConfig.Elements.EARTH
+  val _element : String = EARTH
 
-  override def levelUp(): Unit = currentLevel += 1
+  override def levelUp(): Unit = {
+    currentLevel += 1
+    setAttack()
+  }
 
   /**
     * Golem earns 15 more damage instead of 10
@@ -28,5 +31,10 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
     }
   }
 
-  override def setLevel(): Unit =  currentLevel = creatureLevel
+  override def element: String = _element
+
+  override def currentLevel_ : Unit = {
+    currentLevel = creatureLevel
+    setAttack()
+  }
 }

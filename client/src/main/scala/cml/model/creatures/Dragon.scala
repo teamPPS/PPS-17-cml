@@ -1,7 +1,7 @@
 package cml.model.creatures
 
 import cml.model.base.Creature
-import cml.utils.ModelConfig
+import cml.utils.ModelConfig.Elements.FIRE
 
 /**
   * This class models a dragon
@@ -12,13 +12,16 @@ import cml.utils.ModelConfig
 
 case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
 
-  val element : String = ModelConfig.Elements.FIRE
+  val _element : String = FIRE
 
   /**
     * This method increases creature level by 1
     */
 
-  override def levelUp(): Unit = currentLevel += 1
+  override def levelUp(): Unit = {
+    currentLevel += 1
+    setAttack()
+  }
 
   /**
     * This method behaves differently based on the creature level
@@ -36,5 +39,10 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
     * This method allows to set the dragon level(we retrieve the creature from the server)
     */
 
-  override def setLevel(): Unit = currentLevel = creatureLevel
+  override def element: String = _element
+
+  override def currentLevel_ : Unit = {
+    currentLevel = creatureLevel
+    setAttack()
+  }
 }

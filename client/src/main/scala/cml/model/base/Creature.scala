@@ -1,6 +1,6 @@
 package cml.model.base
 
-import cml.utils.ModelConfig
+import cml.utils.ModelConfig.Creature._
 
 /**
   * This trait defines a base creature
@@ -9,13 +9,13 @@ import cml.utils.ModelConfig
 
 trait Creature {
 
-  val initialLevel = ModelConfig.Creature.INITIAL_LEVEL
-  var currentLevel = ModelConfig.Creature.INITIAL_LEVEL
-  val initialHp = ModelConfig.Creature.HEALTH_POINT
-  var attackValue = ModelConfig.Creature.ATTACK_VALUE
+  var currentLevel = INITIAL_LEVEL
+  val initialHp = HEALTH_POINT
+  var attackValue = ATTACK_VALUE
   def levelUp(): Unit
   def setAttack(): Unit
-  def setLevel(): Unit
+  def element : String
+  def currentLevel_ : Unit
 }
 
 
