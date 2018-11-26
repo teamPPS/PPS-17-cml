@@ -34,7 +34,6 @@ class VillageViewController {
 
     //mando msg a villaggio passando il modello e il controller
     villageActor ! EnterVillage(this)
-
   }
 
   def setGridAndHandlers(): Unit ={

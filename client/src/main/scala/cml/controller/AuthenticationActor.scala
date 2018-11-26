@@ -47,7 +47,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       .onComplete {
         case Success(httpResponse) =>
           checkResponse(httpResponse, loginSuccess, loginFailure)
-          loginSucceedOnGui()
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)
@@ -58,7 +57,10 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     * @return behaviour when creating and entering a village
     */
   private def villageBehaviour: Receive = {
-    case CreateVillageSuccess() => loginSucceedOnGui()
+    case CreateVillageSuccess() =>{
+      println("villlage create success")
+      loginSucceedOnGui()
+    }
     case VillageFailure(m) => displayMsg(m)
   }
 
@@ -85,7 +87,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case _ =>
       successAuthenticationCase(str)
       displayMsg(successMessage)
-//      loginSucceedOnGui() //questo si fa quando viene ricevuta la risposta di entrata al villaggio
+      loginSucceedOnGui() //questo si fa quando viene ricevuta la risposta di entrata al villaggio
       println("Success this is server response with the token: " + str)
   }
 
