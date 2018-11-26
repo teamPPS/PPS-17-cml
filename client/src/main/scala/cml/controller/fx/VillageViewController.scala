@@ -2,6 +2,7 @@ package cml.controller.fx
 
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
+import javafx.animation.AnimationTimer
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
@@ -27,7 +28,7 @@ class VillageViewController {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
     logoutMenuItem setOnAction (_ => ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene))
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
-
+    
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap

@@ -1,6 +1,5 @@
 package cml
 
-import cml.view.ViewSwitchConfig
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
@@ -13,13 +12,6 @@ class ClientMain extends Application{
     val rootParent: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path))
 
     val scene : Scene = new Scene(rootParent)
-
-    ViewSwitchConfig.scenes = Map(
-      AuthenticationWindow.path -> rootParent,
-      VillageWindow.path -> FXMLLoader.load(getClass.getClassLoader.getResource(VillageWindow.path)),
-      BattleWindow.path -> FXMLLoader.load(getClass.getClassLoader.getResource(BattleWindow.path)),
-      ArenaWindow.path -> FXMLLoader.load(getClass.getClassLoader.getResource(ArenaWindow.path))
-    )
 
     primaryStage.setTitle(AuthenticationWindow.title)
     primaryStage.setScene(scene)
