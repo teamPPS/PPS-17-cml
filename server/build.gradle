@@ -4,8 +4,9 @@ mainClassName = 'cml.ServerMain'
 
 dependencies {
     implementation 'com.pauldijou:jwt-core_2.12:0.16.0'
-
     implementation 'org.mongodb:mongodb-driver-sync:3.8.2'
     implementation group: 'org.mongodb.scala', name: 'mongo-scala-driver_2.12', version: '2.4.2'
     implementation group: 'org.mongodb', name: 'mongodb-driver-async', version: '3.8.2'
+    // https://mvnrepository.com/artifact/com.jason-goodwin/authentikat-jwt
+    //implementation group: 'com.jason-goodwin', name: 'authentikat-jwt_2.10', version: '0.4.5'
 }
