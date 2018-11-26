@@ -88,6 +88,10 @@ object AuthenticationService {
       document = Document(USERNAME->username, PASSWORD->password)
       println(document)
       collection.find(document).map(doc => doc.size()>0)
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {

@@ -2,9 +2,9 @@ package cml.services.village
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import org.mongodb.scala.Document
-import cml.schema.Village._
 import cml.schema.User._
+import cml.schema.Village._
+import org.mongodb.scala.Document
 
 import scala.concurrent._
 
@@ -21,14 +21,14 @@ sealed trait VillageService {
     * @param username using to create a specific village for this user
     * @return a future string representing the new village in JSON
     */
-  def createVillage(username: String): Future[String]
+  def createVillage(username: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Get a future string with user's village in JSON
     * @param username using to find personal village
     * @return a future string representing the village in jSON
     */
-  def enterVillage(username: String): Future[String]
+  def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
     * Update a user's village with updated information
@@ -36,14 +36,14 @@ sealed trait VillageService {
     * @param update a json describing what to update
     * @return successful or failed update
     */
-  def updateVillage(username: String, update: String): Future[Boolean]
+  def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   /**
     * Delete user's village and account
     * @param username target village to delete
     * @return delete successful
     */
-  def deleteVillageAndUser(username: String): Future[Boolean]
+  def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean]
 }
 
 object VillageService {
@@ -56,7 +56,7 @@ object VillageService {
 
     override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
       document = Document(
-        VILLAGE_NAME -> username+"'s village",
+        VILLAGE_NAME -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
         USERNAME -> username,
         FOOD -> 100,
         GOLD -> 100,
@@ -77,14 +77,34 @@ object VillageService {
           )
         )
       )
-      //TODO inserimento
-      Future { "dummy" }
+      villageCollection.insert(document).map(_ => "Completed")
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
     }
 
-    override def enterVillage(username: String): Future[String] = ???
+    override def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(USERNAME -> username)
+      villageCollection.find(document)
+        .map(doc => if(doc.isEmpty) "Village not found" else doc.toJson())
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    override def updateVillage(username: String, update: String): Future[Boolean] = ???
+    override def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      val queryDocument = Document(USERNAME -> username)
+      document = Document(update)
+      villageCollection.update(queryDocument, document)
+        .map(modifiedDocument => modifiedDocument>0)
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    override def deleteVillageAndUser(username: String): Future[Boolean] = ???
+    override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = ???
 }
 }

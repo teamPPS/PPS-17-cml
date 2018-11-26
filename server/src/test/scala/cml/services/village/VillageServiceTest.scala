@@ -25,38 +25,38 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   test("test enter village with existent username") {
     villageService
-      .enterVillage("user1")
-      .map(result => assert(result.contains("Farm")))
+      .enterVillage("CMLuser")
+      .map(result => assert(result.contains("farm")))
   }
 
-  test("testUpdateVillage") {
+  test("test update Village") {
     villageService
-      .updateVillage("user1", "")
+      .updateVillage("CMLuser", """{"GoldField":"300", "BuildingsField": {"1": "Test"}}""")
       .map(result => assert(result, true))
   }
 
   test("test village creation") {
     villageService
       .createVillage("antonio")
-      .map { document => assert(document.contains("antonio"))}
+      .map { document => assert(document.contains("Completed"))}
   }
 
-  test("testDeleteVillageAndUser") {
-    villageService
-      .deleteVillageAndUser("user1").map(result => assert(result, true))
-  }
+//  test("testDeleteVillageAndUser") {
+//    villageService
+//      .deleteVillageAndUser("user1").map(result => assert(result, true))
+//  }
 
   class MockDatabaseClient extends DatabaseClient {
 
 
     var villagesList: ListBuffer[Document] = ListBuffer(
       Document(
-        UserField -> "user1",
+        UserField -> "CMLuser",
         FoodField -> 200,
         GoldField -> 200,
         BuildingsField -> Document(
           "1" -> Document(
-            BuildingType -> "Farm"
+            BuildingType -> "farm"
           ),
           "2" -> Document(
             BuildingType -> "Cave"
@@ -69,15 +69,19 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
     override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = Future {
       villagesList += document
-      document.toJson()
+      "Insertion Completed"
     }(executionContext)
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {
       villagesList = villagesList filter(doc => !doc.get(UserField).equals(document.get(UserField)))
     }(executionContext)
 
-    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {
-
+    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = Future {
+      println(update)
+      println(update.toJson())
+      if(villagesList.filter(doc => document.get(UserField).equals(doc.get(UserField))).head.nonEmpty)
+        1L
+      else 0
     }(executionContext)
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] =

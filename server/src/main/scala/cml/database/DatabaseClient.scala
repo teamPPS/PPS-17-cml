@@ -38,7 +38,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
+  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
     * Find a requested document
@@ -97,9 +97,9 @@ object DatabaseClient {
       future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
       val future = collection.updateOne(document,update).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_.getModifiedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
