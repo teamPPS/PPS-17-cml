@@ -60,20 +60,19 @@ trait AuthenticationServiceVertx {
 /**
   * Companion object
   */
-object AuthenticationServiceVertx {
+object AuthenticationServiceVertx{
 
   val vertx: Vertx = Vertx.vertx()
   var client: WebClient = WebClient.create(vertx)
   val successfulRegisterResponse: Int = HttpResponseStatus.CREATED.code
   val successfulLoginResponse: Int = HttpResponseStatus.OK.code
 
-  def apply(actor: ActorRef): AuthenticationServiceVertx = AuthenticationServiceVertxImpl(actor)
+  def apply(): AuthenticationServiceVertx = AuthenticationServiceVertxImpl()
 
   /**
     * This class implements the Vertx Client
-    * @param actor the actor i want to send messages to
     */
-  case class AuthenticationServiceVertxImpl(actor: ActorRef) extends AuthenticationServiceVertx {
+  case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
 
     override def register(username: String, password: String): Future[String] = {
       println(s"sending registration request from username:$username with password:$password")

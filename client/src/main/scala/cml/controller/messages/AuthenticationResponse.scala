@@ -2,7 +2,7 @@ package cml.controller.messages
 
 /**
   * Authentication response messages
-  * @author Monica Gondolini,Filippo Portolani
+  * @author Monica Gondolini
   */
 
 // PER IL MOMENTO NON LI USIAMO, LASCIO PERCHè POTREMMO SEMPRE USARLI.
@@ -15,28 +15,26 @@ object AuthenticationResponse {
 
   /**
     * Response for user registration succeeded
-    * @param succ success message
     * @param token is the token for user request
     */
   case class RegisterSuccess(token: String) extends RegisterResponse
 
   /**
     * Response for user registration failed
-    * @param err failure message
+    * @param error failure message
     */
-  case class RegisterFailure(err: String) extends RegisterResponse
+  case class RegisterFailure(error: String) extends RegisterResponse
 
   /**
     * Response for a user login succeeded
-    * @param succ success message
     * @param token is the token for user request
     */
   case class LoginSuccess(token: String) extends LoginResponse
 
   /**
     * Response for a user login failure
-    * @param err failure message
+    * @param error failure message
     */
-  case class LoginFailure(err: String) extends LoginResponse
+  case class LoginFailure(error: String) extends LoginResponse
 
 }
