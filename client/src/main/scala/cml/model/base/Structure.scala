@@ -1,7 +1,8 @@
 package cml.model.base
 
+import cml.model.static_model.{StaticBuilding, StaticHabitat}
 import cml.utils.ModelConfig.Resource.INIT_VALUE
-import cml.utils.ModelConfig.Building.TYPE_FARM
+
 /**
   * This trait defines common operations over structures
   * @author Monica Gondolini
@@ -19,7 +20,7 @@ trait Structure{
   * @param buildingPosition coordinates of the building in the village
   * @param buildingLevel level of the building
   */
-case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends Structure {
+case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends StaticBuilding(buildingType, buildingLevel) with Structure {
 
 //  def resource(buildingType: String):Resource = buildingType match{
 //    case TYPE_FARM => {
@@ -28,6 +29,7 @@ case class Building(buildingType: String, buildingPosition: Position, var buildi
 //  }
   //aggiungere controllo per tipo building
   val food = Food(INIT_VALUE)
+
   override def levelUp(): Unit = buildingLevel += 1
 }
 
@@ -47,7 +49,7 @@ object Habitat {
     * @param habitatLevel    level of the habitat
     * @param creatures       list of creatures living in this habitat
     */
-  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[Creature]) extends Structure { //Al posto di String ci andrà tipo Creature
+  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[Creature]) extends StaticHabitat(element, habitatLevel) with Structure {
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
   }
@@ -59,7 +61,7 @@ object Habitat {
     * @param habitatLevel    level of the habitat
     * @param creature        single creature living in this habitat
     */
-  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends Structure {
+  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends StaticHabitat(element, habitatLevel) with Structure {
     val money = Money(INIT_VALUE)
     override def levelUp(): Unit = habitatLevel += 1
   }

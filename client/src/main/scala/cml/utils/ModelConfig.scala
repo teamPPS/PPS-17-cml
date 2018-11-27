@@ -3,17 +3,21 @@ package cml.utils
 object ModelConfig {
 
   object Creature {
+    val DRAGON_NAME: String = "Smaug"
+    val GOLEM_NAME: String = "Astaroth"
     val INITIAL_LEVEL: Int = 1
     val HEALTH_POINT: Int = 100
+    val ATTACK_VALUE: Int = 5
   }
 
   object Building {
-    val LEVEL_INIT: Int = 1
+    val B_INIT_LEVEL: Int = 1
     val TYPE_FARM: String = "farm"
+    val TYPE_CAVE: String = "cave"
   }
 
   object Habitat{
-    val LEVEL_INIT: Int = 1
+    val H_INIT_LEVEL: Int = 1
   }
 
   object Resource {
@@ -24,7 +28,7 @@ object ModelConfig {
   object Elements {
     val WATER: String = "water"
     val FIRE: String = "fire"
-    val HEARTH: String = "hearth"
+    val EARTH: String = "earth"
     val AIR: String = "air"
   }
 }
