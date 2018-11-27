@@ -1,11 +1,10 @@
 package cml.database
 
 import cml.database.utils.Configuration.DbConfig
-import cml.database.utils.Configuration.DocumentNotFoundException.DocumentNotFoundException
 import org.mongodb.scala._
 import org.mongodb.scala.ObservableImplicits
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ExecutionContext, Future}
 
 
 /**
@@ -30,7 +29,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit]
+  def delete(document: Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
     * Update a document with a given query
@@ -39,15 +38,15 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
+  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
     * Find a requested document
     * @param document what we want to find
     * @param ec implicit for ExecutionContext
-    * @return a future
+    * @return a future document, can be empty if document not found
     */
-  def find(document: Document)(implicit ec: ExecutionContext):  Future[FindObservable[Document]]
+  def find(document: Document)(implicit ec: ExecutionContext):  Future[Document]
 
   /**
     * Allow to insert multiple documents in the database
@@ -93,27 +92,18 @@ object DatabaseClient {
       future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
       val future = collection.deleteOne(document).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_.getDeletedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
-      val future = collection.updateOne(document,update).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+      val future = collection.updateOne(document,Document("$set"-> update)).toFuture()
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def find(document: Document)(implicit ec: ExecutionContext): Future[FindObservable[Document]] = {
-      val promise: Promise[FindObservable[Document]] = Promise()
-      collection.countDocuments(document).subscribe(new Observer[Long] {
-        override def onNext(result: Long): Unit = result match {
-          case 0 => onError(new Throwable(DocumentNotFoundException))
-          case _ => promise.success(collection.find(document))
-        }
-        override def onError(error: Throwable): Unit = promise.failure(error)
-        override def onComplete(): Unit = println("Find request completed")
-      })
-      promise.future
+    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
+      collection.find(document).first().toFuture()
     }
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {

@@ -51,8 +51,10 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       (username, password) <- TokenAuthentication.checkBase64Authentication(headerAuthorization)
     ) yield {
       authenticationService.login(username, password).onComplete {
-        case Success(_) =>
-          JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(OK,_))
+        case Success(x) =>
+          if(x) JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(OK,_)) else {
+            sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
+          }
         case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
       }
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))

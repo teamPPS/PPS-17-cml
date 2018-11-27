@@ -3,11 +3,11 @@ package cml.controller.fx
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
-import cml.view.{BaseGridInitializer, ViewSwitch}
+import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
 import javafx.scene.control._
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.{GridPane, Pane}
 
 class VillageViewController {
 
@@ -16,8 +16,11 @@ class VillageViewController {
   @FXML var foodLabel: Label = _
   @FXML var settingsMenuItem: MenuItem = _
   @FXML var logoutMenuItem: MenuItem = _
-  @FXML var aboutSelection: TextArea = _
+  @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
+  @FXML var levelUPButton: Button = _
+  @FXML var upgradePane: Pane = _
+  @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
   var villageMap: GridPane = _
@@ -37,20 +40,25 @@ class VillageViewController {
     villageActor ! EnterVillage(this)
   }
 
-  def setGridAndHandlers(): Unit ={
+
+  def setGridAndHandlers(): Unit = {
+
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
 
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, areaPane, upgradePane)
+
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, areaPane, upgradePane)
   }
-
+  
   def logoutSystem(): Unit = {
     authenticationActor ! Logout()
     System.exit(0)
     println("Bye!")
   }
-
+  
 }
