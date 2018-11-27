@@ -42,13 +42,6 @@ trait AuthenticationServiceVertx {
     */
   def logout(token: String) : Future[Unit]
 
-/*  /**
-    * Requests the deletion of a user from the system
-    * @param token token with match request
-    * @return future if delete completes successfully, otherwise it fails.
-    */
-  def delete(token: String): Future[Unit]*/
-
   /**
     * Check username and then valid a token
     * @param header to check
@@ -98,26 +91,19 @@ object AuthenticationServiceVertx{
 
     override def logout(token: String): Future[Unit] = {
       println(s"sending logout request with token: $token")
-      client.delete(AuthenticationServicePort, ServiceHost, DeleteApi)
+      client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
         .sendFuture
         .map(_ => ())
     }
 
-    /*override def delete(token: String): Future[Unit] = {
-      client.delete(AuthenticationServicePort, ServiceHost, LogoutApi) // add token?
-        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
-        .sendFuture
-        .map(_ => ())
-    }*/
-
     override def validationToken(header: String): Future[Unit] = {
-      client.get(AuthenticationServicePort, ServiceHost, ValidationTokenApi)
+      client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
         .sendFuture
         .map(response => response.statusCode match {
-          case `successfulLoginResponse` => response.bodyAsString().getOrElse("")
-          case _ => "Not a valid handler"
+          case `successfulLoginResponse` => Future.successful(successfulLoginResponse)
+          case _ => Future.failed(new Exception)
         })
     }
   }

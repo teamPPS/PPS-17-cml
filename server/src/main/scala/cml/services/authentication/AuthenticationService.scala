@@ -44,15 +44,6 @@ trait AuthenticationService {
   def logout (username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
-    * To delete user from database
-    *
-    * @param username username to delete
-    * @param ec is implicit fot execution context
-    * @return a future if the delete user successful
-    */
-  def delete (username: String)(implicit ec: ExecutionContext): Future[Unit]
-
-  /**
     * Check username and then valid a token
     * @param username to check
     * @param ec is implicit fot execution context
@@ -95,15 +86,6 @@ object AuthenticationService {
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
-      collection.find(document).map(_ => {})
-        .recoverWith{case e: Throwable =>
-          println(e)
-          Future.failed(e)
-        }
-    }
-
-    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
       document = Document(USERNAME->username)
       collection.delete(document).map(_ => {})
         .recoverWith{case e: Throwable =>

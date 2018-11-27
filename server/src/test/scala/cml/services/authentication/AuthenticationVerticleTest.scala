@@ -83,12 +83,12 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
   }
 
-  test("Logout test") {
+  /*test("Logout test") {
     println("Response bad request because handler is empty")
     client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
-
+*/
     //Stessa storia find non giusta? DA RIGUARDARE
    /* println("Response ok because token success delete")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
@@ -117,7 +117,6 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), tokenTest(invalidToken))
       .sendFuture
       .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
-  }
 
   test("Validation token test") {
     println("Response bad request because handler is empty")

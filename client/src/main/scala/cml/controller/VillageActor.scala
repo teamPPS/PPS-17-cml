@@ -1,11 +1,10 @@
 package cml.controller
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.{Actor, ActorRef, ActorSelection}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
-import cml.controller.messages.VillageRequest.{CreateVillage, DeleteVillage, EnterVillage, UpdateVillage}
-import cml.controller.messages.VillageResponse.{CreateVillageSuccess, EnterVillageSuccess, VillageFailure}
+import cml.controller.messages.VillageRequest._
+import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
 import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
 import scala.util.{Failure, Success}
@@ -18,6 +17,8 @@ import scala.util.{Failure, Success}
 class VillageActor() extends Actor{
 
   val villageVertx = VillageServiceVertxImpl()
+  val authenticationActor: ActorSelection = context.actorSelection("/user/AuthenticationActor")
+
   /**
     * @return village behaviour
     */
@@ -28,21 +29,20 @@ class VillageActor() extends Actor{
       villageVertx.createVillage().onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => senderActor ! VillageFailure(createFailure)
+            case "Not a valid request" => println("Failure create village")
             case _ => senderActor ! CreateVillageSuccess()
           }
         case Failure(exception) => senderActor ! VillageFailure(createFailure)
       }
 
     case EnterVillage(controller) =>
-      val senderActor: ActorRef = sender
       villageVertx.enterVillage().onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => senderActor ! VillageFailure(enterFailure)
+            case "Not a valid request" => println("Failure entering in village")
             case _ => controller.setGridAndHandlers() //popolare model + metodo inizializzazione
           }
-        case Failure(exception) => senderActor ! VillageFailure(enterFailure)
+        case Failure(exception) => authenticationActor ! VillageFailure(enterFailure)
       }
 
     case UpdateVillage(update) => villageVertx.updateVillage(update)

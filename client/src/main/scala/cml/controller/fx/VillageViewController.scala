@@ -1,9 +1,8 @@
 package cml.controller.fx
 
-import akka.actor.{ActorRef, Props}
-import cml.controller.VillageActor
+import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
-import cml.controller.messages.VillageRequest.EnterVillage
+import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
 import cml.view.{BaseGridInitializer, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
@@ -24,12 +23,14 @@ class VillageViewController {
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
-  val villageActor: ActorRef = system actorOf(Props(new VillageActor()), "VillageActor") //da mettere in handler dopo il merge
+  val villageActor: ActorSelection = system actorSelection "/user/VillageActor" //da mettere in handler dopo il merge
+  val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
   //per ogni cambiamento del model manda un messaggio di update villageActor ! UpdateVillage(json)
 
   def initialize(): Unit = {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
-    logoutMenuItem setOnAction (_ => ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene))
+    //logoutMenuItem setOnAction (_ => ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene))
+    logoutMenuItem setOnAction (_ => logoutSystem() )
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     //mando msg a villaggio passando il modello e il controller
@@ -44,6 +45,12 @@ class VillageViewController {
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
+  }
+
+  def logoutSystem(): Unit = {
+    authenticationActor ! Logout()
+    System.exit(0)
+    println("Bye!")
   }
 
 }

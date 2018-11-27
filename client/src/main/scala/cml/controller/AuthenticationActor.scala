@@ -3,8 +3,9 @@ package cml.controller
 import akka.actor.{Actor, ActorRef, Props}
 import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
 import cml.controller.fx.AuthenticationViewController
-import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
+import cml.controller.messages.VillageRequest
 import cml.controller.messages.VillageRequest.{CreateVillage, EnterVillage}
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, EnterVillageSuccess, VillageFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
@@ -57,10 +58,9 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     * @return behaviour when creating and entering a village
     */
   private def villageBehaviour: Receive = {
-    case CreateVillageSuccess() =>{
-      println("villlage create success")
+    case CreateVillageSuccess() =>
+      println("Village create success")
       loginSucceedOnGui()
-    }
     case VillageFailure(m) => displayMsg(m)
   }
 

@@ -22,8 +22,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   override def initializeRouter(router: Router): Unit = {
     router post RegisterApi handler register
     router put LoginApi handler login
-    router delete LogoutApi handler logout
-    router delete DeleteApi handler delete
+    router delete  LogoutApi handler logout
     router get ValidationTokenApi handler validationToken
   }
 
@@ -66,21 +65,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      authenticationService.delete(username).onComplete {
-        case Success(_) => sendResponse(OK, username)
-        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-      }
-    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
-  }
-
-  private def delete: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive delete request") // delete all
-    (for (
-      headerAuthorization <- getRequestAndHeader;
-      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-      username <- JWTAuthentication.decodeUsernameToken(token)
-    ) yield {
-      authenticationService.delete(username).onComplete {
+      authenticationService.logout(username).onComplete {
         case Success(_) => sendResponse(OK, username)
         case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
       }
