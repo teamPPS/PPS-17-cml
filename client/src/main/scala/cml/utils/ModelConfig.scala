@@ -11,12 +11,13 @@ object ModelConfig {
   }
 
   object Building {
-    val LEVEL_INIT: Int = 1
+    val B_INIT_LEVEL: Int = 1
     val TYPE_FARM: String = "farm"
+    val TYPE_CAVE: String = "cave"
   }
 
   object Habitat{
-    val LEVEL_INIT: Int = 1
+    val H_INIT_LEVEL: Int = 1
   }
 
   object Resource {

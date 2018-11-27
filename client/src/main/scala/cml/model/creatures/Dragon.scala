@@ -20,7 +20,6 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
 
   override def levelUp(): Unit = {
     currentLevel += 1
-    setAttack()
   }
 
   /**
@@ -43,6 +42,5 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
 
   override def currentLevel_ : Unit = {
     currentLevel = creatureLevel
-    setAttack()
   }
 }

@@ -2,7 +2,7 @@ package cml.model.base
 
 import java.util.{Timer, TimerTask}
 import cml.model.creatures.Dragon
-import cml.utils.ModelConfig.Building.{LEVEL_INIT, TYPE_FARM}
+import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Resource.INIT_VALUE
 import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
@@ -15,14 +15,14 @@ class ResourceProductionTest extends FunSuite{
 
   test("Resource production during time test") {
     val creatures: List[Creature] = List(Dragon("drago", 1))
-    val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
-    val habitat = Habitat(AIR,Position(100,100), LEVEL_INIT, creatures)
+    val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
+    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL, creatures)
 
     val timer = new Timer()
     val task = new TimerTask {
       def run(): Unit = {
-        building.food.inc(LEVEL_INIT)
-        habitat.money.inc(LEVEL_INIT)
+        building.food.inc(B_INIT_LEVEL)
+        habitat.money.inc(B_INIT_LEVEL)
         println("food " +  building.food.amount +" money " + habitat.money.amount)
       }
     }
@@ -34,8 +34,8 @@ class ResourceProductionTest extends FunSuite{
 
   test("Resource retrieve test"){
     val creatures: List[Creature] = List(Dragon("drago", 1))
-    val building: Building = Building(TYPE_FARM, Position(10,10), LEVEL_INIT)
-    val habitat = Habitat(AIR,Position(100,100), LEVEL_INIT, creatures)
+    val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
+    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL, creatures)
 
     for(i <- 1 to 10 ){
       building.food.inc(building.buildingLevel)

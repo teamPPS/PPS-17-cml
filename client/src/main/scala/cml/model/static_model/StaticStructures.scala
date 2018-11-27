@@ -1,12 +1,32 @@
 package cml.model.static_model
 
-import cml.model.base.Habitat.SingleHabitat
-import cml.model.base.{Position, Structure}
+import cml.model.base.{Building, Structure}
+import cml.utils.ModelConfig.Building._
 import cml.utils.ModelConfig.Elements._
 import cml.utils.ModelConfig.Habitat._
 
-object StaticStructures {
+/**
+  * This object defines some static structures
+  * @author Filippo Portolani,Monica Gondolini
+  */
 
-  val structuresList : List[Structure] = List()
+sealed trait StaticStructures
 
-}
+//class StaticBuilding(bType: String, bLevel: Int) extends StaticStructures
+
+//class StaticHabitat(elem: String, hLevel: Int) extends StaticStructures
+
+/*object StaticStructures{
+
+  val staticHabitats : List[Structure] = List(
+    new StaticHabitat(AIR, H_INIT_LEVEL),
+    new StaticHabitat(FIRE, H_INIT_LEVEL),
+    new StaticHabitat(WATER, H_INIT_LEVEL),
+    new StaticHabitat(EARTH, H_INIT_LEVEL),
+  )
+
+  val staticBuildings : List[StaticBuilding] = List(
+    new StaticBuilding(TYPE_FARM, B_INIT_LEVEL),
+    new StaticBuilding(TYPE_CAVE, B_INIT_LEVEL)
+  )
+} */

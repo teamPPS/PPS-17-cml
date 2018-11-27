@@ -4,6 +4,11 @@ import cml.model.base.Creature
 import cml.model.creatures.{Dragon, Golem}
 import cml.utils.ModelConfig.Creature.{DRAGON_NAME, GOLEM_NAME, INITIAL_LEVEL}
 
+/**
+  * This object defines some static creatures
+  * @author Filippo Portolani,Monica Gondolini
+  */
+
 object StaticCreatures {
 
   val creaturesList : List[Creature] = List(
