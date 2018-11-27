@@ -5,7 +5,6 @@ import cml.database.utils.Configuration.DbConfig
 import cml.schema.User._
 import cml.schema.Village._
 import org.mongodb.scala.Document
-import org.mongodb.scala.model.Updates._
 import play.api.libs.json.Json
 
 import scala.concurrent._
@@ -74,7 +73,7 @@ object VillageService {
             NATURAL_ELEMENT -> "Fire",
             CREATURES -> Document(
               CREATURE_NAME -> "Drago Jhonny",
-              CREATURE_LEVEL -> 1,
+              CREATURE_LEVEL -> 1
             )
           )
         )
