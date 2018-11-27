@@ -1,22 +1,23 @@
 package cml.services.village
 
-import cml.core.RouterVerticle
+import cml.core.utils.JWTAuthentication
+import cml.core.{RouterVerticle, RoutingOperation, TokenAuthentication}
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
+import cml.services.village.utils.VillageUrl._
+import cml.services.authentication.utils.AuthenticationUrl._
+import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+import play.api.libs.json.Json
+
+import scala.util.{Failure, Success}
 
 /**
   * This class implement VillagesVerticle
   *
   * @author ecavina
   */
-class VillageVerticle extends RouterVerticle {
-
-  private val GENERAL_PATH = "/api/villages"
-  private val CREATE_VILLAGE = "/villages"
-  private val ENTER_VILLAGE = "/village/" //id?
-  private val EXIT_VILLAGE = "/village/" //id
-  //TODO village interactions
-  //TODO check token before interactions
+case class VillageVerticle() extends RouterVerticle with RoutingOperation {
 
   private var villageService: VillageService = _
 
@@ -27,34 +28,89 @@ class VillageVerticle extends RouterVerticle {
     */
 
   override def initializeRouter(router: Router): Unit = {
-    router post GENERAL_PATH + CREATE_VILLAGE  handler create
-    router put ENTER_VILLAGE handler enter
-    router put EXIT_VILLAGE handler exit
+    router get VillagesAPI handler enter
+    router post VillagesAPI handler create
+    router put VillagesAPI handler update
+    router delete VillagesAPI handler delete
+    router put LogoutApi handler exit
   }
 
   override def initializeService: Unit = {
-
+    villageService =  VillageService()
   }
 
-  //qui ci vanno gli handler con routing context e richiamano i metodi in villageservice
-
-  //usare le routing operation di chiara qui
   private def create: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to create village ", routingContext request())
-  }
+    println("Request to create village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+        villageService.createVillage(username).onComplete {
+          case Success(document) =>
+            getResponse.putHeader("content-type", "application/json; charset=utf-8")
+              .end(Json.parse(document).toString())
+          case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
+        }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
+}
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to enter village ", routingContext request())
+    println("Request to enter village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.enterVillage(username).onComplete {
+        case Success(document) =>
+          println(Json.parse(document).toString())
+          getResponse.putHeader("content-type", "application/json; charset=utf-8")
+          .end(Json.parse(document).toString())
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
+  }
+
+  private def update: Handler[RoutingContext] = implicit routingContext => {
+    println("Request to update village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      body <- getRequestAndBody;// TODO add check if body present
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.updateVillage(username, body).onComplete {
+        case Success(value) => if (value) {
+          sendResponse(HttpResponseStatus.ACCEPTED, "Update done")
+        } else {
+          sendResponse(BAD_REQUEST, "Error while update")
+        }
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
+  }
+
+  private def delete: Handler[RoutingContext] = implicit routingContext => {
+    println("Request to enter village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.deleteVillageAndUser(username).onComplete {
+        case Success(value) => if (value) {
+          sendResponse(HttpResponseStatus.ACCEPTED, "Deleted")
+        } else {
+          sendResponse(BAD_REQUEST, "Error while deleting")
+        }
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def exit: Handler[RoutingContext] = implicit routingContext => {
     println("Request to exit village ", routingContext request())
   }
 
-  def checkUserAuthorizationToken(): Boolean = true // dummy
-  /**
-    * Initializes the services
-    *
-    * @return
-    */
 }
