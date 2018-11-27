@@ -20,7 +20,8 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   before {
     databaseClient = new MockDatabaseClient
-    villageService = VillageService(databaseClient)
+    villageService = VillageService(databaseClient) // test with mocked db
+//    villageService = VillageService() // test with original db
   }
 
   test("test enter village with existent username") {
@@ -29,9 +30,9 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
       .map(result => assert(result.contains("farm")))
   }
 
-  test("test update Village") {
+  test("test update village") {
     villageService
-      .updateVillage("CMLuser", """{"GoldField":"300", "BuildingsField": {"1": "Test"}}""")
+      .updateVillage("CMLuser", """{"gold":"300", "buildings": {"1": "Test"}}""")//"""{"GoldField":"300", "BuildingsField": {"1": "Test"}}""")
       .map(result => assert(result, true))
   }
 
@@ -41,10 +42,10 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
       .map { document => assert(document.contains("Completed"))}
   }
 
-//  test("testDeleteVillageAndUser") {
-//    villageService
-//      .deleteVillageAndUser("user1").map(result => assert(result, true))
-//  }
+  test("testDeleteVillageAndUser") {
+    villageService
+      .deleteVillageAndUser("CMLuser").map(result => assert(result, true))
+  }
 
   class MockDatabaseClient extends DatabaseClient {
 
@@ -72,8 +73,10 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
       "Insertion Completed"
     }(executionContext)
 
-    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = Future {
-      villagesList = villagesList filter(doc => !doc.get(UserField).equals(document.get(UserField)))
+    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = Future {
+      villagesList = villagesList filter(doc => doc.get(UserField).equals(document.get(UserField))) // return deleted elements (filtered by original list)
+      println(villagesList.length)
+      villagesList.length.toLong
     }(executionContext)
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = Future {

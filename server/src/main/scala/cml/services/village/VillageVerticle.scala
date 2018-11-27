@@ -7,7 +7,7 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 import cml.services.village.utils.VillageUrl._
 import cml.services.authentication.utils.AuthenticationUrl._
 import io.netty.handler.codec.http.HttpResponseStatus
-import io.vertx.core.json.Json
+import play.api.libs.json.Json
 
 import scala.util.{Failure, Success}
 
@@ -49,9 +49,9 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
         villageService.createVillage(username).onComplete {
-          case Success(document) => getResponse
-            .putHeader("content-type", "application/json; charset=utf-8")
-              .end(Json.encode(document))
+          case Success(document) =>
+            getResponse.putHeader("content-type", "application/json; charset=utf-8")
+              .end(Json.parse(document).toString())
           case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
         }
     }
@@ -59,6 +59,19 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
     println("Request to enter village ", routingContext request())
+    for(
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.enterVillage(username).onComplete {
+        case Success(document) =>
+          println(Json.parse(document).toString())
+          getResponse.putHeader("content-type", "application/json; charset=utf-8")
+          .end(Json.parse(document).toString())
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
+      }
+    }
   }
 
   private def update: Handler[RoutingContext] = implicit routingContext => {

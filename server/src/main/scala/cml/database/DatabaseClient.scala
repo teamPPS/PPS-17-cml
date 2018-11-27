@@ -4,7 +4,7 @@ import cml.database.utils.Configuration.DbConfig
 import org.mongodb.scala._
 import org.mongodb.scala.ObservableImplicits
 
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ExecutionContext, Future}
 
 
 /**
@@ -29,7 +29,7 @@ trait DatabaseClient{
     * @param ec implicit for ExecutionContext
     * @return a future
     */
-  def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit]
+  def delete(document: Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
     * Update a document with a given query
@@ -92,14 +92,14 @@ object DatabaseClient {
       future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
-    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
       val future = collection.deleteOne(document).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_.getDeletedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
-      val future = collection.updateOne(document,update).toFuture()
-      future map(_.getModifiedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      val future = collection.updateOne(document,Document("$set"-> update)).toFuture()
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
     }
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {

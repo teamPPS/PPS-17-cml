@@ -5,6 +5,8 @@ import cml.database.utils.Configuration.DbConfig
 import cml.schema.User._
 import cml.schema.Village._
 import org.mongodb.scala.Document
+import org.mongodb.scala.model.Updates._
+import play.api.libs.json.Json
 
 import scala.concurrent._
 
@@ -96,8 +98,7 @@ object VillageService {
 
     override def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
       val queryDocument = Document(USERNAME -> username)
-      document = Document(update)
-      villageCollection.update(queryDocument, document)
+      villageCollection.update(queryDocument, Document(Json.parse(update).toString()))
         .map(modifiedDocument => modifiedDocument>0)
         .recoverWith{case e: Throwable =>
           println(e)
@@ -105,6 +106,14 @@ object VillageService {
         }
     }
 
-    override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = ???
-}
+    override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      document = Document(USERNAME -> username)
+      villageCollection.delete(document)
+        .map(deletedDocument => deletedDocument>0)
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
+  }
 }
