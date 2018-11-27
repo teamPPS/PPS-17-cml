@@ -7,6 +7,7 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 import cml.services.village.utils.VillageUrl._
 import cml.services.authentication.utils.AuthenticationUrl._
 import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 import play.api.libs.json.Json
 
 import scala.util.{Failure, Success}
@@ -17,9 +18,6 @@ import scala.util.{Failure, Success}
   * @author ecavina
   */
 case class VillageVerticle() extends RouterVerticle with RoutingOperation {
-
-  //TODO village interactions
-  //TODO check token before interactions
 
   private var villageService: VillageService = _
 
@@ -42,8 +40,8 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def create: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to create village ", routingContext request())
-    for(
+    println("Request to create village")
+    (for(
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
@@ -54,12 +52,12 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
               .end(Json.parse(document).toString())
           case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
         }
-    }
-  }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
+}
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to enter village ", routingContext request())
-    for(
+    println("Request to enter village")
+    (for(
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
@@ -69,17 +67,46 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
           println(Json.parse(document).toString())
           getResponse.putHeader("content-type", "application/json; charset=utf-8")
           .end(Json.parse(document).toString())
-        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
       }
-    }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def update: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to enter village ", routingContext request())
+    println("Request to update village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      body <- getRequestAndBody;// TODO add check if body present
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.updateVillage(username, body).onComplete {
+        case Success(value) => if (value) {
+          sendResponse(HttpResponseStatus.ACCEPTED, "Update done")
+        } else {
+          sendResponse(BAD_REQUEST, "Error while update")
+        }
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def delete: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to enter village ", routingContext request())
+    println("Request to enter village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.deleteVillageAndUser(username).onComplete {
+        case Success(value) => if (value) {
+          sendResponse(HttpResponseStatus.ACCEPTED, "Deleted")
+        } else {
+          sendResponse(BAD_REQUEST, "Error while deleting")
+        }
+        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
   private def exit: Handler[RoutingContext] = implicit routingContext => {

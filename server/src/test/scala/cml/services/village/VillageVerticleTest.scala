@@ -1,43 +1,24 @@
 package cml.services.village
 
+import io.vertx.scala.core.Vertx
+import io.vertx.scala.ext.web.client.WebClient
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
 
 class VillageVerticleTest extends FunSuite with BeforeAndAfterEach {
 
-  override def beforeEach() {
+  private var vertx: Vertx = _
+  private var client: WebClient = _
 
+  override def beforeEach() {
+    vertx = Vertx.vertx()
+    client = WebClient.create(vertx)
   }
 
   override def afterEach() {
-
+    client.close()
+    vertx.close()
   }
 
-  test("testGetRequestAndHeader") {
 
-  }
-
-  test("testSendResponse") {
-
-  }
-
-  test("testProductPrefix") {
-
-  }
-
-  test("testInitializeRouter") {
-
-  }
-
-  test("testGetResponse") {
-
-  }
-
-  test("testProductIterator") {
-
-  }
-
-  test("testInitializeService") {
-
-  }
 
 }

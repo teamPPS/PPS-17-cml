@@ -14,7 +14,7 @@ import scala.concurrent.Future
 trait RoutingOperation {
 
   /**
-    * Get a header request
+    * Get the header of the request
     *
     * @param routingContext is implicit routing context
     * @return A Optional with the header or None
@@ -23,6 +23,15 @@ trait RoutingOperation {
     routingContext.request().getHeader(HttpHeaderNames.AUTHORIZATION.toString())
   }
 
+  /**
+    * Get the body of the request as a String
+    * @param routingContext implicit routing context
+    * @return A Option with the body as String or None
+    */
+  def getRequestAndBody(implicit routingContext: RoutingContext): Option[String] = {
+    println(routingContext.getBodyAsString())
+    routingContext.getBodyAsString()
+  }
 
   /**
     * Get a response
