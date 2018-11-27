@@ -5,8 +5,6 @@ package cml.controller.messages
   * @author Monica Gondolini
   */
 
-// PER IL MOMENTO NON LI USIAMO, LASCIO PERCHè POTREMMO SEMPRE USARLI.
-
 object AuthenticationResponse {
 
   sealed trait AuthenticationResponse

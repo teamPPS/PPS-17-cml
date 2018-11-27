@@ -21,7 +21,6 @@ subprojects {
     version = '1.8'
     
     dependencies {
-        if(project.name != 'server') implementation project(':server')
 
         implementation 'org.scala-lang:scala-library:2.12.2'
 

@@ -26,7 +26,7 @@ class AuthenticationViewController {
   @FXML var formMsgLabel: Label = _
 
 
-  var authenticationActor: ActorRef = system actorOf(Props(new AuthenticationActor(this)), "authenticationActor")
+  var authenticationActor: ActorRef = system actorOf(Props(new AuthenticationActor(this)), "AuthenticationActor")
 
 
   def initialize(): Unit = {

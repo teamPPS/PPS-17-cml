@@ -33,4 +33,6 @@ object VillageRequest {
     */
   case class DeleteVillage() extends VillageRequest
 
+  case class Logout() extends VillageRequest
+
 }
