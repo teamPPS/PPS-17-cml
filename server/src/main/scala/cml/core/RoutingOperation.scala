@@ -3,7 +3,6 @@ package cml.core
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
 import io.vertx.scala.core.http.HttpServerResponse
 import io.vertx.scala.ext.web.RoutingContext
-
 import scala.concurrent.Future
 
 /**
@@ -44,5 +43,15 @@ trait RoutingOperation {
     val code = httpCode.code()
     getResponse.setStatusCode(code).end(message)
   }
+
+
+  //abstract def validate(input: String): Future[String]  ---> da spostare in altra classe
+
+  // da implementare in VillageVerticle per controllo user - sicuro da modificare
+  def checkAuthenticationHandler(implicit routingContext: RoutingContext): Future[String] =
+    getRequestAndHeader match {
+      case Some(authenticationHeader) => Future.successful(authenticationHeader)
+      case None => Future.failed(new Exception)
+    }
 }
 
