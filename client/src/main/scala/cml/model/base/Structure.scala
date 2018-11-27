@@ -1,7 +1,7 @@
 package cml.model.base
 
-import cml.utils.ModelConfig.Resource.INIT_VALUE
 import cml.model.static_model.{StaticBuilding, StaticHabitat}
+import cml.utils.ModelConfig.Resource.INIT_VALUE
 
 /**
   * This trait defines common operations over structures
