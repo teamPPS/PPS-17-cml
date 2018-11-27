@@ -21,7 +21,7 @@ object StaticStructures{
     new StaticHabitat(AIR, H_INIT_LEVEL),
     new StaticHabitat(FIRE, H_INIT_LEVEL),
     new StaticHabitat(WATER, H_INIT_LEVEL),
-    new StaticHabitat(EARTH, H_INIT_LEVEL),
+    new StaticHabitat(EARTH, H_INIT_LEVEL)
   )
 
   val staticBuildings : List[StaticBuilding] = List(
