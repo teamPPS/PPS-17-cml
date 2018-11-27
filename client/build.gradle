@@ -1,0 +1,9 @@
+apply plugin: 'application'
+
+mainClassName = 'cml.ClientMain'
+
+dependencies {
+    implementation project(':server')
+    implementation group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.18'
+}
+

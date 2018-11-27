@@ -3,6 +3,6 @@
 .gradle/
 build/
 .idea/
-latest-reports/
 reports/
 out/
+distributions/

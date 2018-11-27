@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cml.controller.fx.VillageViewController">
+  <children>
+    <BorderPane prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <bottom>
+        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="100.0">
+          <children>
+            <Separator prefWidth="200.0" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="900.0" spacing="10.0">
+              <children>
+                <ScrollPane fx:id="buildingsGrid" content="$null" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="SOMETIMES">
+                  <HBox.margin>
+                    <Insets left="10.0" fx:id="x1" />
+                  </HBox.margin>
+                </ScrollPane>
+                <TextArea fx:id="aboutSelection" editable="false" prefHeight="74.0" prefWidth="200.0" text="Information about current selection" wrapText="true" HBox.hgrow="ALWAYS">
+                  <HBox.margin>
+                    <Insets />
+                  </HBox.margin>
+                </TextArea>
+                <Button fx:id="battleButton" mnemonicParsing="false" prefHeight="78.0" prefWidth="192.0" text="Battle" HBox.hgrow="SOMETIMES">
+                  <HBox.margin>
+                    <Insets right="10.0" fx:id="x2" />
+                  </HBox.margin>
+                </Button>
+              </children>
+            </HBox>
+          </children>
+        </VBox>
+      </bottom>
+      <center>
+        <ScrollPane fx:id="villagePane" content="$null" prefHeight="200.0" prefWidth="200.0" />
+      </center>
+      <top>
+        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="100.0">
+          <children>
+            <HBox alignment="CENTER" maxHeight="-1.0" prefHeight="100.0" prefWidth="900.0" spacing="10.0">
+              <children>
+                <Label fx:id="playerLevelLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="PlayerLVL" HBox.hgrow="ALWAYS">
+                  <HBox.margin>
+                    <Insets left="10.0" fx:id="x3" />
+                  </HBox.margin>
+                </Label>
+                <Label fx:id="goldLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Gold" HBox.hgrow="ALWAYS" />
+                <Label fx:id="foodLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Food" HBox.hgrow="ALWAYS" />
+                <MenuButton id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="169.0" text="Menu" HBox.hgrow="ALWAYS" HBox.margin="$x3">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Settings" fx:id="settingsMenuItem" />
+                    <MenuItem mnemonicParsing="false" text="Logout" fx:id="logoutMenuItem" />
+                  </items>
+                </MenuButton>
+              </children>
+              <padding>
+                <Insets />
+              </padding>
+            </HBox>
+            <Separator prefWidth="200.0" />
+          </children>
+        </VBox>
+      </top>
+    </BorderPane>
+  </children>
+</AnchorPane>
