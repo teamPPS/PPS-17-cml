@@ -23,7 +23,6 @@ class CreatureTest extends FunSuite {
   test("Dragon set attack test"){
     dragon2.currentLevel_
     dragon2 levelUp()
-    dragon2 setAttack()
     assert(dragon2.attackValue.equals(15))
   }
 
