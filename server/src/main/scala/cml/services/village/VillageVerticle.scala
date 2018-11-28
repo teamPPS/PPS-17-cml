@@ -49,7 +49,8 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
         villageService.createVillage(username).onComplete {
           case Success(document) =>
             getResponse.putHeader("content-type", "application/json; charset=utf-8")
-              .end(Json.parse(document).toString())
+              .setStatusCode(HttpResponseStatus.CREATED.code())
+              .end(document)
           case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Can't create a new village")
         }
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
@@ -66,7 +67,8 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
         case Success(document) =>
           println(Json.parse(document).toString())
           getResponse.putHeader("content-type", "application/json; charset=utf-8")
-          .end(Json.parse(document).toString())
+            .setStatusCode(HttpResponseStatus.OK.code())
+            .end(Json.parse(document).toString())
         case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
       }
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))

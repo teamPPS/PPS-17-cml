@@ -3,12 +3,12 @@ package cml.controller
 import akka.actor.{Actor, ActorRef, Props}
 import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
 import cml.controller.fx.AuthenticationViewController
-import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
+import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
-import cml.controller.messages.VillageRequest
-import cml.controller.messages.VillageRequest.{CreateVillage, EnterVillage}
-import cml.controller.messages.VillageResponse.{CreateVillageSuccess, EnterVillageSuccess, VillageFailure}
+import cml.controller.messages.VillageRequest.{CreateVillage}
+import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
+import cml.services.authentication.TokenStorage
 import javafx.application.Platform
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -26,8 +26,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   val authenticationVertx = AuthenticationServiceVertxImpl()
   val villageActor: ActorRef = context.system.actorOf(Props(new VillageActor()), "VillageActor")
-
-  var token: String = _
 
   override def receive: Receive = authenticationBehaviour orElse villageBehaviour
 
@@ -77,8 +75,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
   def loginSucceedOnGui(): Unit = Platform.runLater(() => controller.openVillageView())
 
   def successAuthenticationCase(tokenValue: String): Unit = {
-    token = tokenValue
-    println("TOKEN: " + token)
+    println("TOKEN: " + tokenValue)
+    TokenStorage.setUserJWTToken(tokenValue)
   }
 
   def checkResponse(str: String, successMessage: String, failureMessage: String): Unit = str match { //technical debt?
