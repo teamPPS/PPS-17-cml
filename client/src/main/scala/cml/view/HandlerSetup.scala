@@ -1,5 +1,7 @@
 package cml.view
 
+import cml.model.base.Habitat.Habitat
+import cml.model.base.{Building, Position}
 import cml.model.static_model.{StaticBuilding, StaticHabitat}
 import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.AIR
@@ -106,16 +108,14 @@ object Handler {
     n setOnDragDropped ((event: DragEvent) => {
       val dragBoard: Dragboard = event getDragboard()
       val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
-
-      setTileModel(newTile.description)
-      
       n match {
         case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
         case _ => throw new ClassCastException
       }
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      // questo può anche non andarci
+
+      setTileModel(newTile.description, x, y)
       a match {
         case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
         case _ => throw new ClassCastException
@@ -125,15 +125,15 @@ object Handler {
     })
   }
 
-  private def setTileModel(tileDescription: String): Unit = {
+  private def setTileModel(tileDescription: String, x: Int, y: Int): Unit = {
     tileDescription match {
-      case "HABITAT" => new StaticHabitat(AIR, H_INIT_LEVEL)
-        println("habitat")
-      case "FARM" => new StaticBuilding(TYPE_FARM, B_INIT_LEVEL)
-        println("farm")
-      case "CAVE" => new StaticBuilding(TYPE_CAVE, B_INIT_LEVEL)
-        println("cave")
-      case "TERRAIN" => println("terrain")
+      case "HABITAT" => Habitat(AIR, Position(x,y), H_INIT_LEVEL)
+        println("habitat posizionato coordinate (" + x + " - " + y + ")") //debug
+      case "FARM" => Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
+        println("farm posizionato coordinate (" + x + " - " + y + ")") //debug
+      case "CAVE" => Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
+        println("cave posizionato coordinate (" + x + " - " + y + ")") //debug
+      case "TERRAIN" => println("terrain posizionatocoordinate (" + x + " - " + y + ")") //debug
       case _ => throw new NoSuchElementException
     }
   }

@@ -36,8 +36,8 @@ case class Building(buildingType: String, buildingPosition: Position, var buildi
 
 object Habitat {
 
-  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creatures: List[Creature]) : Habitat =
-     Habitat(element, habitatPosition, habitatLevel, creatures)
+  def apply(element: String, habitatPosition: Position, habitatLevel: Int) : Habitat =
+     Habitat(element, habitatPosition, habitatLevel)
 
   def apply(element: String, habitatPosition: Position, habitatLevel: Int, creature: Creature): SingleHabitat =
     SingleHabitat(element, habitatPosition, habitatLevel, creature)
@@ -47,9 +47,10 @@ object Habitat {
     * @param element         of the habitat
     * @param habitatPosition coordinates of the habitat in the village
     * @param habitatLevel    level of the habitat
-    * @param creatures       list of creatures living in this habitat
+//    * @param creatures       list of creatures living in this habitat
     */
-  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[Creature]) extends StaticHabitat(element, habitatLevel) with Structure {
+  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int) extends StaticHabitat(element, habitatLevel) with Structure {
+    val creatures: List[Creature] = List[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
   }

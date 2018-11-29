@@ -10,6 +10,8 @@ import javafx.scene.image.{Image, ImageView}
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
 
+import scala.collection.mutable
+
 /**
   * Initialize Game GridPanes with costume settings
   * @author ecavina
@@ -62,22 +64,7 @@ object Setup {
     grid: GridPane => {
       var pos = 0
       for(tile <- tileSet) {
-        tile.description match{
-          case "HABITAT" =>
-            new StaticHabitat(AIR, H_INIT_LEVEL)
-            println("habitat")
-            grid add(tile.imageSprite, 0, pos)
-          case "FARM" =>
-            new StaticBuilding(TYPE_FARM, B_INIT_LEVEL)
-            println("farm")
-            grid add(tile.imageSprite, 0, pos)
-          case "CAVE" =>
-            new StaticBuilding(TYPE_CAVE, B_INIT_LEVEL)
-            println("cave")
-            grid add(tile.imageSprite, 0, pos)
-          case "TERRAIN" => grid add(tile.imageSprite, 0, pos)
-          case _ => throw new NoSuchElementException
-        }
+        grid add(tile.imageSprite, 0, pos)
         pos += 1
       }
       grid
