@@ -1,7 +1,10 @@
 package cml.view
 
-import cml.view.utils.TileConfig.{tileSet,slicer,spriteSheet}
-
+import cml.model.static_model.{StaticBuilding, StaticHabitat, StaticStructures}
+import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
+import cml.utils.ModelConfig.Elements.AIR
+import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
+import cml.view.utils.TileConfig.{slicer, spriteSheet, tileSet}
 import javafx.scene.SnapshotParameters
 import javafx.scene.image.{Image, ImageView}
 import javafx.scene.input._
@@ -59,7 +62,22 @@ object Setup {
     grid: GridPane => {
       var pos = 0
       for(tile <- tileSet) {
-        grid add(tile.imageSprite, 0, pos)
+        tile.description match{
+          case "HABITAT" =>
+            new StaticHabitat(AIR, H_INIT_LEVEL)
+            println("habitat")
+            grid add(tile.imageSprite, 0, pos)
+          case "FARM" =>
+            new StaticBuilding(TYPE_FARM, B_INIT_LEVEL)
+            println("farm")
+            grid add(tile.imageSprite, 0, pos)
+          case "CAVE" =>
+            new StaticBuilding(TYPE_CAVE, B_INIT_LEVEL)
+            println("cave")
+            grid add(tile.imageSprite, 0, pos)
+          case "TERRAIN" => grid add(tile.imageSprite, 0, pos)
+          case _ => throw new NoSuchElementException
+        }
         pos += 1
       }
       grid
