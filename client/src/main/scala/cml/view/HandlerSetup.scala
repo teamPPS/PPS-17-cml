@@ -1,8 +1,7 @@
 package cml.view
 
 import cml.model.base.Habitat.Habitat
-import cml.model.base.{Building, Position, Structure, VillageMap}
-import cml.model.static_model.{StaticBuilding, StaticHabitat}
+import cml.model.base.{Building, Position, Structure}
 import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
@@ -12,6 +11,8 @@ import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.{GridPane, Pane}
 import javafx.scene.{Node, SnapshotParameters}
+
+import scala.collection.mutable
 
 /**
   * Setup handlers with costume settings
@@ -39,6 +40,8 @@ trait Handler {
 }
 
 object Handler {
+
+  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
 
   val handleVillage: Handler = {
     (elem: Node, area: Node, upgrade: Node) =>
@@ -126,17 +129,20 @@ object Handler {
   }
 
   private def setTileModel(tileDescription: String, x: Int, y: Int): Unit = {
-    val structures = List[Structure]()
     tileDescription match {
-      case "HABITAT" => structures.:+(Habitat(AIR, Position(x,y), H_INIT_LEVEL))
+      case "HABITAT" => structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
         println("habitat posizionato") //debug
-      case "FARM" => VillageMap(List(Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)))
+        println(structures)
+      case "FARM" =>  structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
         println("farm posizionato coordinate") //debug
-      case "CAVE" => VillageMap(List(Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)))
+        println(structures)
+      case "CAVE" =>  structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
         println("cave posizionato coordinate ") //debug
+        println(structures)
       case "TERRAIN" => println("terrain posizionato coordinate") //debug
       case _ => throw new NoSuchElementException
     }
+
   }
 }
 
