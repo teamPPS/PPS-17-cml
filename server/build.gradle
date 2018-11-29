@@ -4,7 +4,7 @@ mainClassName = 'cml.ServerMain'
 
 dependencies {
     implementation 'com.pauldijou:jwt-core_2.12:0.16.0'
-    compile group: 'com.typesafe.play', name: 'play-json_2.12', version: '2.6.10'
+    implementation group: 'com.typesafe.play', name: 'play-json_2.12', version: '2.6.10'
     implementation 'org.mongodb:mongodb-driver-sync:3.8.2'
     implementation group: 'org.mongodb.scala', name: 'mongo-scala-driver_2.12', version: '2.4.2'
     implementation group: 'org.mongodb', name: 'mongodb-driver-async', version: '3.8.2'
