@@ -1,7 +1,7 @@
 package cml.view
 
 import cml.model.base.Habitat.Habitat
-import cml.model.base.{Building, Position}
+import cml.model.base.{Building, Position, Structure, VillageMap}
 import cml.model.static_model.{StaticBuilding, StaticHabitat}
 import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.AIR
@@ -63,7 +63,6 @@ object Handler {
       }
       up match {
         case levelUp: Button =>
-
           levelUp.setDisable(false)
           //se è terrain il tipo non devo poter aumentare il livello
           levelUp.setOnMouseClicked(_ =>{
@@ -116,6 +115,7 @@ object Handler {
       val x = GridPane.getRowIndex(n)
 
       setTileModel(newTile.description, x, y)
+
       a match {
         case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
         case _ => throw new ClassCastException
@@ -126,18 +126,18 @@ object Handler {
   }
 
   private def setTileModel(tileDescription: String, x: Int, y: Int): Unit = {
+    val structures = List[Structure]()
     tileDescription match {
-      case "HABITAT" => Habitat(AIR, Position(x,y), H_INIT_LEVEL)
-        println("habitat posizionato coordinate (" + x + " - " + y + ")") //debug
-      case "FARM" => Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
-        println("farm posizionato coordinate (" + x + " - " + y + ")") //debug
-      case "CAVE" => Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
-        println("cave posizionato coordinate (" + x + " - " + y + ")") //debug
-      case "TERRAIN" => println("terrain posizionatocoordinate (" + x + " - " + y + ")") //debug
+      case "HABITAT" => structures.:+(Habitat(AIR, Position(x,y), H_INIT_LEVEL))
+        println("habitat posizionato") //debug
+      case "FARM" => VillageMap(List(Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)))
+        println("farm posizionato coordinate") //debug
+      case "CAVE" => VillageMap(List(Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)))
+        println("cave posizionato coordinate ") //debug
+      case "TERRAIN" => println("terrain posizionato coordinate") //debug
       case _ => throw new NoSuchElementException
     }
   }
-
 }
 
 object ConcreteHandlerSetup extends HandlerSetup {
