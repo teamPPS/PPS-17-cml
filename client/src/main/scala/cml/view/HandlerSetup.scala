@@ -1,5 +1,9 @@
 package cml.view
 
+import cml.model.static_model.{StaticBuilding, StaticHabitat}
+import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
+import cml.utils.ModelConfig.Elements.AIR
+import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
 import cml.view.utils.TileConfig._
 import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
@@ -48,7 +52,6 @@ object Handler {
   }
 
   private def addClickHandler(n: Node, a:Node, up: Node): Unit = {
-
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
@@ -58,6 +61,7 @@ object Handler {
       }
       up match {
         case levelUp: Button =>
+
           levelUp.setDisable(false)
           //se è terrain il tipo non devo poter aumentare il livello
           levelUp.setOnMouseClicked(_ =>{
@@ -102,6 +106,9 @@ object Handler {
     n setOnDragDropped ((event: DragEvent) => {
       val dragBoard: Dragboard = event getDragboard()
       val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
+
+      setTileModel(newTile.description)
+      
       n match {
         case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
         case _ => throw new ClassCastException
@@ -116,6 +123,19 @@ object Handler {
       event consume()
       // UPDATE MODEL e send al server
     })
+  }
+
+  private def setTileModel(tileDescription: String): Unit = {
+    tileDescription match {
+      case "HABITAT" => new StaticHabitat(AIR, H_INIT_LEVEL)
+        println("habitat")
+      case "FARM" => new StaticBuilding(TYPE_FARM, B_INIT_LEVEL)
+        println("farm")
+      case "CAVE" => new StaticBuilding(TYPE_CAVE, B_INIT_LEVEL)
+        println("cave")
+      case "TERRAIN" => println("terrain")
+      case _ => throw new NoSuchElementException
+    }
   }
 
 }
