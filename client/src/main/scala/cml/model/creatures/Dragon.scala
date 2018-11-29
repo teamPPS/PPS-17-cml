@@ -37,10 +37,15 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
   }
 
   /**
-    * This method allows to set the dragon level(we retrieve the creature from the server)
+    * This is a getter of the dragon element
+    * @return the element
     */
 
   override def element: String = _element
+
+  /**
+    * This method allows to set the dragon level
+    */
 
   override def currentLevel_ : Unit = {
     currentLevel = creatureLevel

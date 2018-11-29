@@ -10,7 +10,7 @@ import cml.utils.ModelConfig.Elements.WATER
   * @author Filippo Portolani
   */
 
-class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
+case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
 
   val _element : String = WATER
 
