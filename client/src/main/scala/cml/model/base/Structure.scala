@@ -1,7 +1,8 @@
 package cml.model.base
 
 import cml.model.static_model.{StaticBuilding, StaticHabitat}
-import cml.utils.ModelConfig.Resource.INIT_VALUE
+import cml.utils.ModelConfig.Resource._
+import cml.utils.ModelConfig.Building._
 
 /**
   * This trait defines common operations over structures
@@ -12,6 +13,11 @@ trait Structure{
     * Increments Structure level
     */
   def levelUp(): Unit
+
+  /**
+    * Get coordinates
+    */
+  def getPosition(): Position
 }
 
 /**
@@ -22,15 +28,20 @@ trait Structure{
   */
 case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends StaticBuilding(buildingType, buildingLevel) with Structure {
 
-//  def resource(buildingType: String):Resource = buildingType match{
-//    case TYPE_FARM => {
-//      Food(INIT_VALUE)
-//    }
-//  }
-  //aggiungere controllo per tipo building
-  val food = Food(INIT_VALUE)
+  def resource(buildingType: String):Resource = buildingType match{
+    case TYPE_FARM => Food(INIT_VALUE)
+    case TYPE_CAVE => Money(INIT_VALUE)
+    case _ => throw new NoSuchElementException
+  }
+//  //aggiungere controllo per tipo building
+//  val food = Food(INIT_VALUE)
 
   override def levelUp(): Unit = buildingLevel += 1
+
+  /**
+    * Get coordinates
+    */
+  override def getPosition(): Position = buildingPosition
 }
 
 
@@ -53,6 +64,7 @@ object Habitat {
     val creatures: List[Creature] = List[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
+    override def getPosition(): Position = habitatPosition
   }
 
   /**
@@ -65,6 +77,7 @@ object Habitat {
   case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends StaticHabitat(element, habitatLevel) with Structure {
     val money = Money(INIT_VALUE)
     override def levelUp(): Unit = habitatLevel += 1
+    override def getPosition(): Position = habitatPosition
   }
 
 }

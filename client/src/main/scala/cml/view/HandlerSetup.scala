@@ -66,6 +66,10 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
+      //scorrere villageMap ficnhè non trovo un match con le coordinate
+      for(s <- village.structures){
+        println(s)
+      }
       a match {
         case info: TextArea => info setText "Mouse clicked in coords: ("+x+","+y+")\n"
         case _ => throw new ClassCastException

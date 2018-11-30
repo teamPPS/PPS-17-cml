@@ -37,7 +37,7 @@ class VillageViewController {
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     //mando msg a villaggio passando il modello e il controller
-//    villageActor ! EnterVillage(this)
+    villageActor ! EnterVillage(this)
 
     setGridAndHandlers()
   }

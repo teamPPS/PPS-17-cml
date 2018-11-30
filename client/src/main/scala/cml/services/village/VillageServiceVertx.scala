@@ -2,7 +2,6 @@ package cml.services.village
 
 import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpResponseStatus
-import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
 import play.api.libs.json.JsValue
