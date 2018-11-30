@@ -142,7 +142,6 @@ object Handler {
       case "FARM" =>  village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
         println("farm posizionato "+village.structures) //debug
         villageActor ! UpdateVillage(new JsonObject())
-        println(village.structures)
       case "CAVE" =>  village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
         println("cave posizionato "+village.structures) //debug
         villageActor ! UpdateVillage(new JsonObject())
