@@ -134,12 +134,12 @@ object Handler {
         println("habitat posizionato") //debug
         println(structures)
       case "FARM" =>  structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
-        println("farm posizionato coordinate") //debug
+        println("farm posizionato") //debug
         println(structures)
       case "CAVE" =>  structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
-        println("cave posizionato coordinate ") //debug
+        println("cave posizionato") //debug
         println(structures)
-      case "TERRAIN" => println("terrain posizionato coordinate") //debug
+      case "TERRAIN" => println("terrain posizionato") //debug
       case _ => throw new NoSuchElementException
     }
 
