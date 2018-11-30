@@ -1,5 +1,9 @@
 package cml
 
+import akka.actor.Props
+import cml.controller.AuthenticationActor
+import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.fx.AuthenticationViewController
 import cml.utils.ViewConfig._
 import javafx.application.{Application, Platform}
 import javafx.fxml.FXMLLoader
@@ -9,9 +13,14 @@ import javafx.stage.Stage
 class ClientMain extends Application{
 
   override def start(primaryStage: Stage): Unit = {
-    val rootParent: Parent = FXMLLoader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path))
 
+    val loader = new FXMLLoader()
+    val rootParent: Parent = loader.load(getClass.getClassLoader.getResource(AuthenticationWindow.path).openStream())
     val scene : Scene = new Scene(rootParent)
+
+    system actorOf(Props(
+      new AuthenticationActor(loader.getController.asInstanceOf[AuthenticationViewController]))
+      , "AuthenticationActor")
 
     primaryStage.setTitle(AuthenticationWindow.title)
     primaryStage.setScene(scene)

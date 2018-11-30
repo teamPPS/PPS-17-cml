@@ -57,8 +57,9 @@ class VillageViewController {
   
   def logoutSystem(): Unit = {
     authenticationActor ! Logout()
-    System.exit(0)
-    println("Bye!")
+    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
+//    System.exit(0)
+//    println("Bye!")
   }
   
 }

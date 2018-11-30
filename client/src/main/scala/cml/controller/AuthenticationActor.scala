@@ -3,7 +3,7 @@ package cml.controller
 import akka.actor.{Actor, ActorRef, Props}
 import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
 import cml.controller.fx.AuthenticationViewController
-import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.controller.messages.AuthenticationRequest.{Login, Register, Logout}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.controller.messages.VillageRequest.{CreateVillage}
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
@@ -50,6 +50,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)
       }
+    case Logout() => authenticationVertx.logout(TokenStorage.getUserJWTToken)
   }
 
   /**
