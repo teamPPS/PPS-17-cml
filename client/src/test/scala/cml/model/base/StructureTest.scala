@@ -22,10 +22,16 @@ class StructureTest extends FunSuite{
 //    val creatures: List[Creature] = List(Dragon("drago", 1))
     val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
     val singleHabitat = SingleHabitat(WATER,Position(50,50), B_INIT_LEVEL, Dragon("drago2", 1))
-
     habitat levelUp()
     singleHabitat levelUp()
     assert(habitat.habitatLevel > B_INIT_LEVEL && singleHabitat.habitatLevel > B_INIT_LEVEL)
+  }
+
+  test("Get structure position test"){
+    val pos = Position(10,10)
+    val habitat = Habitat(AIR, pos, B_INIT_LEVEL)
+    val building: Building = Building(TYPE_FARM, pos, B_INIT_LEVEL)
+    assert(habitat.getPosition.equals(pos) && building.getPosition.equals(pos))
   }
 
 }
