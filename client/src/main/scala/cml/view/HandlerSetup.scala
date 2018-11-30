@@ -123,7 +123,7 @@ object Handler {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
 
-      setTileModel(newTile.description, x, y)
+      setTileModel(newTile, x, y)
 
       a match {
         case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
@@ -137,14 +137,14 @@ object Handler {
   private def setTileModel(t: Tile, x: Int, y: Int): Unit = {
     t.description match {
       case "HABITAT" => village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
-        println("habitat posizionato "+village.structures) //debug
-        villageActor ! UpdateVillage(new JsonObject())
+        println("habitat posizionato "+village.structures+"  "+t.json) //debug
+        villageActor ! UpdateVillage(t.json)
       case "FARM" =>  village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
-        println("farm posizionato "+village.structures) //debug
-        villageActor ! UpdateVillage(new JsonObject())
+        println("farm posizionato "+village.structures+"  "+t.json) //debug
+        villageActor ! UpdateVillage(t.json)
       case "CAVE" =>  village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
-        println("cave posizionato "+village.structures) //debug
-        villageActor ! UpdateVillage(new JsonObject())
+        println("cave posizionato "+village.structures+"  "+t.json) //debug
+        villageActor ! UpdateVillage(t.json)
       case "TERRAIN" => println("terrain posizionato") //debug
       case _ => throw new NoSuchElementException
     }
