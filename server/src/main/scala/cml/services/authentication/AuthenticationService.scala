@@ -33,7 +33,7 @@ trait AuthenticationService {
     * @return a future completes successfully, otherwise it fails.
     */
 
-  def login (username: String, password: String)(implicit ec: ExecutionContext): Future[String]
+  def login (username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   /**
     * Allow user to logout from the system.
@@ -42,15 +42,6 @@ trait AuthenticationService {
     * @return a future if the user logout successful
     */
   def logout (username: String)(implicit ec: ExecutionContext): Future[Unit]
-
-  /**
-    * To delete user from database
-    *
-    * @param username username to delete
-    * @param ec is implicit fot execution context
-    * @return a future if the delete user successful
-    */
-  def delete (username: String)(implicit ec: ExecutionContext): Future[Unit]
 
   /**
     * Check username and then valid a token
@@ -63,7 +54,7 @@ trait AuthenticationService {
 }
 
 /**
-  * This object allows you to create a SQLQueries
+  * This object allows you to communicate with a Mongo Database
   */
 object AuthenticationService {
 
@@ -84,10 +75,10 @@ object AuthenticationService {
         }
     }
 
-    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[String] =  {
+    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] =  {
       document = Document(USERNAME->username, PASSWORD->password)
       println(document)
-      collection.find(document).map(_ => "Find Completed")
+      collection.find(document).map(doc => doc.size()>0)
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -95,15 +86,6 @@ object AuthenticationService {
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
-      collection.find(document).map(_ => {})
-        .recoverWith{case e: Throwable =>
-          println(e)
-          Future.failed(e)
-        }
-    }
-
-    override def delete(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
       document = Document(USERNAME->username)
       collection.delete(document).map(_ => {})
         .recoverWith{case e: Throwable =>

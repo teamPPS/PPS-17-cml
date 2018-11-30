@@ -2,11 +2,12 @@ package cml.services.village
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Village}
+import cml.schema.User._
+import cml.schema.Village._
 import org.mongodb.scala.Document
+import play.api.libs.json.Json
 
-import scala.concurrent.Future
-
+import scala.concurrent._
 
 /**
   * Village service
@@ -16,52 +17,102 @@ import scala.concurrent.Future
 sealed trait VillageService {
 
   /**
-    * To execute creation of a village
-    * @param villageIdentifier
-    * @param villageName
-    * @return a scala future
+    * Insert a new Document with base resources value, username and village name
+    * and get created Document in JSON
+    * @param username using to create a specific village for this user
+    * @return a future string representing the new village in JSON
     */
-  def createVillage(villageIdentifier: String, villageName: String) : Future[String]
+  def createVillage(username: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
-    * To enter the village
-    * @param villageIdentifier
-    * @return a scala future
+    * Get a future string with user's village in JSON
+    * @param username using to find personal village
+    * @return a future string representing the village in jSON
     */
-  def enterVillage(villageIdentifier: String) : Future[Unit]
+  def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String]
 
   /**
-    * To exit the village
-    * @param villageIdentifier
-    * @return a scala future
+    * Update a user's village with updated information
+    * @param username using to find personal village
+    * @param update a json describing what to update
+    * @return successful or failed update
     */
-  def exitVillage(villageIdentifier: String) : Future[Unit]
+  def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
+
+  /**
+    * Delete user's village and account
+    * @param username target village to delete
+    * @return delete successful
+    */
+  def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean]
 }
 
 object VillageService {
 
-  val database: DatabaseClient = DatabaseClient(DbConfig.villageColl)
+  def apply(databaseClient: DatabaseClient = DatabaseClient(DbConfig.villageColl)): VillageService =
+    VillageServiceImpl(databaseClient)
 
-  def apply(): VillageService = VillageServiceImpl()
+  case class VillageServiceImpl(villageCollection: DatabaseClient) extends VillageService {
+    var document: Document = _
 
-  case class VillageServiceImpl() extends VillageService {
+    override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(
+        VILLAGE_NAME -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
+        USERNAME -> username,
+        FOOD -> 100,
+        GOLD -> 100,
+        BUILDINGS -> Document(
+          "building_id" -> Document(
+            BUILDING_TYPE -> "Farm",
+            BUILDING_LEVEL -> 1
+          )
+        ),
+        HABITAT -> Document(
+          "habitat_id" -> Document(
+            HABITAT_LEVEL -> 1,
+            NATURAL_ELEMENT -> "Fire",
+            CREATURES -> Document(
+              CREATURE_NAME -> "Drago Jhonny",
+              CREATURE_LEVEL -> 1
+            )
+          )
+        )
+      )
+      villageCollection.insert(document).map(_ => "Completed")
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    //Esempio Documento villaggio
-   /*
-    val villageDoc: Document = Document(Village.NAME -> "PPSvillage", Village.USERNAME  -> "CMLuser", Village.FOOD -> 10, Village.GOLD ->100,
-      Village.BUILDING -> Document(Building.ID -> 0, Building.TYPE -> "farm", Building.LEVEL -> 0),
-      Village.HABITAT -> Document(Habitat.ID->0, Habitat.LEVEL -> 0, Habitat.ELEMENT-> "fire",
-        Habitat.CREATURE -> Document(Creature.ID ->0, Creature.NAME -> "fireCreature", Creature.LEVEL -> 0, Creature.ELEMENT-> "fire")))
-    */
+    override def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(USERNAME -> username)
+      villageCollection.find(document)
+        .map(doc => if(doc.isEmpty) "Village not found" else doc.toJson())
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
 
-    override def createVillage(villageId: String, villageName: String): Future[String] = ???
-    //Creare Documento db.insert(doc)
-    // POST
-    override def enterVillage(villageId: String): Future[Unit] = ???
-    //db.find(doc)
-    // PUT
-    override def exitVillage(villageId: String): Future[Unit] = ???
-    //db.find(doc)
-    // PUT
+    override def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      val queryDocument = Document(USERNAME -> username)
+      villageCollection.update(queryDocument, Document(Json.parse(update).toString()))
+        .map(modifiedDocument => modifiedDocument>0)
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
+
+    override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      document = Document(USERNAME -> username)
+      villageCollection.delete(document)
+        .map(deletedDocument => deletedDocument>0)
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
   }
 }

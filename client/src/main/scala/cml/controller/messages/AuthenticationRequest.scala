@@ -2,7 +2,7 @@ package cml.controller.messages
 
 /**
   * Authentication request messages
-  * @author Monica Gondolini,Filippo Portolani
+  * @author Monica Gondolini
   */
 
 object AuthenticationRequest{
@@ -23,10 +23,5 @@ object AuthenticationRequest{
     */
   case class Login(username: String, password: String) extends AuthenticationRequest
 
-  /**
-    * Request to log the user out from the system
-    * @param token token
-    */
-  case class Logout(token: String) extends AuthenticationRequest
-
+  case class Logout() extends AuthenticationRequest
 }
