@@ -1,9 +1,17 @@
 language: scala
 jdk:
-  - oraclejdk8
-  
+- oraclejdk8
 before_install:
- - chmod +x gradlew
- 
+- chmod +x gradlew
 script:
-- './gradlew clean build -P=travis'
+- "./gradlew clean build -P=travis"
+deploy:
+  provider: releases
+  api_key:
+    secure: Xuu3hd2Um5QHp340vs/xS+ggZBAwfxMI0VVdb8sTcpognogjrWRYD8vsyyMPF43Ol1y1BMYYfjLSHVFXH+eeZmxSw/tG3MyT/s7mMNcCHYWVS2mUVJ2C3X9NK3pLLhiIIC+H8c2iFi/foo5e4rwnaGWNIWm14AdZujLM4iZcRibRuAzDe013pxUm+FxSqIiByDS+9C8eHXjRBDCpK5TlcHnIruZ8g/NmUmAmGRno6y1O71gWFqd84Pf13xDvluardg7TJ4RxsOkRH5SxMPoiU9UEU5bDFN91JW3aQ8WGhhsKtu0bKNDY3/oGmmVAOQz6+mbLeyMA9AG4Ka31HBggEnN0//nqB1SLQiMWYJp9kIC0N2HOmTuehi18mCq9FX2Nmd0lHzimBqVuTjebSb7VSTasf1OqeJzZSobk7onzLlv2umaUPDkqNLaHzyRSmdtmwt8kxuM9fGrN/pLFRBCXCY8FsJKeWbdwTdaEuXladwx+hkqsCVYPRX7qOgJEVhPgxV5B0gai60po6MCb6mlGuTgYlyMrn41LLQGZ1q6mA9R7dtsB+V+kzcu2+u2lCYlMmYYwCCv2J7d1tTmzER/2mhJW90rjz5fMZHhqSkx6SDu1yWKDvFxsehDPp2KkZ9wnFSSMqD8vK5QjZBddcJM6HPIe/NjDf71HJcFBuwpopyU=
+  skip_cleanup: true
+  file_glob: true
+  file: distributions/*
+  on:
+    repo: teamPPS/PPS-17-cml
+    tags: true
