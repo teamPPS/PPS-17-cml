@@ -66,10 +66,6 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      //scorrere villageMap ficnhè non trovo un match con le coordinate
-      for(s <- village.structures){
-        println(s)
-      }
       a match {
         case info: TextArea => info setText "Mouse clicked in coords: ("+x+","+y+")\n"
         case _ => throw new ClassCastException
@@ -79,8 +75,19 @@ object Handler {
           levelUp.setDisable(false)
           //se è terrain il tipo non devo poter aumentare il livello
           levelUp.setOnMouseClicked(_ =>{
-            //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-            println("Level up: $level \nfood-- \nmoney--")
+            //scorrere villageMap ficnhè non trovo un match con le coordinate
+            for(s <- village.structures){
+              println(s)
+              if(s.getPosition equals Position(x,y)){
+                s.levelUp()
+                s.getClass.getName match{
+                  //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
+                  case "cml.model.base.Building" => println("cibo--")
+                  case "cml.model.base.Habitat" => println("cibo-- soldi--")
+                }
+              }
+            }
+            println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello 
             levelUp.setDisable(true)
           })
         case _ => throw new ClassCastException
