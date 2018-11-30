@@ -19,8 +19,8 @@ class StructureTest extends FunSuite{
 
 
   test("Habitat level up test"){
-    val creatures: List[Creature] = List(Dragon("drago", 1))
-    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL, creatures)
+//    val creatures: List[Creature] = List(Dragon("drago", 1))
+    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
     val singleHabitat = SingleHabitat(WATER,Position(50,50), B_INIT_LEVEL, Dragon("drago2", 1))
 
     habitat levelUp()

@@ -14,9 +14,9 @@ import org.scalatest.FunSuite
 class ResourceProductionTest extends FunSuite{
 
   test("Resource production during time test") {
-    val creatures: List[Creature] = List(Dragon("drago", 1))
+//    val creatures: List[Creature] = List(Dragon("drago", 1))
     val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
-    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL, creatures)
+    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
 
     val timer = new Timer()
     val task = new TimerTask {
@@ -33,9 +33,9 @@ class ResourceProductionTest extends FunSuite{
   }
 
   test("Resource retrieve test"){
-    val creatures: List[Creature] = List(Dragon("drago", 1))
+//    val creatures: List[Creature] = List(Dragon("drago", 1))
     val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
-    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL, creatures)
+    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
 
     for(i <- 1 to 10 ){
       building.food.inc(building.buildingLevel)
