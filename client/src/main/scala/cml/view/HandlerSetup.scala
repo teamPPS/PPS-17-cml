@@ -1,7 +1,8 @@
 package cml.view
 
 import cml.model.base.Habitat.Habitat
-import cml.model.base.{Building, Position, Structure}
+import cml.model.base.{Building, Position, Structure, VillageMap}
+import cml.services.village.utils.VillageConfig.Village
 import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
@@ -42,6 +43,7 @@ trait Handler {
 object Handler {
 
   val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
+  val village = VillageMap(structures)
 
   val handleVillage: Handler = {
     (elem: Node, area: Node, upgrade: Node) =>
@@ -130,15 +132,15 @@ object Handler {
 
   private def setTileModel(tileDescription: String, x: Int, y: Int): Unit = {
     tileDescription match {
-      case "HABITAT" => structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
+      case "HABITAT" => village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
         println("habitat posizionato") //debug
-        println(structures)
-      case "FARM" =>  structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
+        println(village.structures)
+      case "FARM" =>  village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
         println("farm posizionato") //debug
-        println(structures)
-      case "CAVE" =>  structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
+        println(village.structures)
+      case "CAVE" =>  village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
         println("cave posizionato") //debug
-        println(structures)
+        println(village.structures)
       case "TERRAIN" => println("terrain posizionato") //debug
       case _ => throw new NoSuchElementException
     }
