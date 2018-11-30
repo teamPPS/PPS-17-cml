@@ -1,12 +1,15 @@
 package cml.view
 
+import akka.actor.ActorSelection
+import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base.Habitat.Habitat
 import cml.model.base.{Building, Position, Structure, VillageMap}
-import cml.services.village.utils.VillageConfig.Village
 import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
 import cml.view.utils.TileConfig._
+import io.vertx.core.json.JsonObject
 import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
 import javafx.scene.input._
@@ -42,6 +45,7 @@ trait Handler {
 
 object Handler {
 
+  val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
   val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
   val village = VillageMap(structures)
 
@@ -133,18 +137,18 @@ object Handler {
   private def setTileModel(tileDescription: String, x: Int, y: Int): Unit = {
     tileDescription match {
       case "HABITAT" => village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
-        println("habitat posizionato") //debug
-        println(village.structures)
+        println("habitat posizionato "+village.structures) //debug
+        villageActor ! UpdateVillage(new JsonObject())
       case "FARM" =>  village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
-        println("farm posizionato") //debug
+        println("farm posizionato "+village.structures) //debug
+        villageActor ! UpdateVillage(new JsonObject())
         println(village.structures)
       case "CAVE" =>  village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
-        println("cave posizionato") //debug
-        println(village.structures)
+        println("cave posizionato "+village.structures) //debug
+        villageActor ! UpdateVillage(new JsonObject())
       case "TERRAIN" => println("terrain posizionato") //debug
       case _ => throw new NoSuchElementException
     }
-
   }
 }
 
