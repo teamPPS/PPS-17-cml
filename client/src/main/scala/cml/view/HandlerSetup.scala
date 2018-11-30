@@ -134,8 +134,8 @@ object Handler {
     })
   }
 
-  private def setTileModel(tileDescription: String, x: Int, y: Int): Unit = {
-    tileDescription match {
+  private def setTileModel(t: Tile, x: Int, y: Int): Unit = {
+    t.description match {
       case "HABITAT" => village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
         println("habitat posizionato "+village.structures) //debug
         villageActor ! UpdateVillage(new JsonObject())

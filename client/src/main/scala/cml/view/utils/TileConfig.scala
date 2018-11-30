@@ -17,7 +17,7 @@ object TileConfig {
     Tile("FARM", slicer.sliceAt(2, 3), buildingJson(TYPE_FARM)),
     Tile("HABITAT", slicer.sliceAt(2, 3), habitatJson(FIRE)),
     Tile("CAVE", slicer.sliceAt(2, 3), buildingJson(TYPE_CAVE)),
-    Tile("TERRAIN", slicer.sliceAt(5, 3), buildingJson(TYPE_FARM))
+    Tile("TERRAIN", slicer.sliceAt(5, 3), buildingJson(TYPE_FARM)) //da cambiare ovviamente
   )
 
   def buildingJson(bType: String): JsValue = {
