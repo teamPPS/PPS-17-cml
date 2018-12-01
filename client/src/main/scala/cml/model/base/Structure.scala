@@ -1,6 +1,5 @@
 package cml.model.base
 
-import cml.model.static_model.{StaticBuilding, StaticHabitat}
 import cml.utils.ModelConfig.Resource._
 import cml.utils.ModelConfig.Building._
 
@@ -26,7 +25,7 @@ trait Structure{
   * @param buildingPosition coordinates of the building in the village
   * @param buildingLevel level of the building
   */
-case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends StaticBuilding(buildingType, buildingLevel) with Structure {
+case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends Structure {
 
   val resource: Resource = buildingType match {
     case TYPE_FARM => Food(INIT_VALUE)
@@ -66,7 +65,7 @@ object Habitat {
     * @param habitatLevel    level of the habitat
 //    * @param creatures       list of creatures living in this habitat
     */
-  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int) extends StaticHabitat(element, habitatLevel) with Structure {
+  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
     val creatures: List[Creature] = List[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
@@ -80,7 +79,7 @@ object Habitat {
     * @param habitatLevel    level of the habitat
     * @param creature        single creature living in this habitat
     */
-  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends StaticHabitat(element, habitatLevel) with Structure {
+  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends Structure {
     val money = Money(INIT_VALUE)
     override def levelUp(): Unit = habitatLevel += 1
     override def getPosition: Position = habitatPosition
