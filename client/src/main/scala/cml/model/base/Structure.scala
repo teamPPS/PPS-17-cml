@@ -39,6 +39,17 @@ case class Building(buildingType: String, buildingPosition: Position, var buildi
   override def getPosition: Position = buildingPosition
 }
 
+case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
+  val food = Food(INIT_VALUE)
+  override def levelUp(): Unit = farmLevel += 1
+  override def getPosition: Position = farmPosition
+}
+
+case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
+  val money = Money(INIT_VALUE)
+  override def levelUp(): Unit = caveLevel += 1
+  override def getPosition: Position = cavePosition
+}
 
 object Habitat {
 
