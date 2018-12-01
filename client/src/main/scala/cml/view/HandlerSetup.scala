@@ -80,7 +80,9 @@ object Handler {
               println(s)
               if(s.getPosition equals Position(x,y)){
                 s.levelUp()
+                println(s.getClass.getCanonicalName)
                 s.getClass.getName match{
+                    //invio update al server!!!!
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
                   case "cml.model.base.Building" => println("cibo--")
                   case "cml.model.base.Habitat" => println("cibo-- soldi--")

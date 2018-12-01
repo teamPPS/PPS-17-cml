@@ -28,19 +28,15 @@ trait Structure{
   */
 case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends StaticBuilding(buildingType, buildingLevel) with Structure {
 
-  val resource: Resource = Building.resource(buildingType)
-
-//  val food = Food(INIT_VALUE)
-  override def levelUp(): Unit = buildingLevel += 1
-  override def getPosition: Position = buildingPosition
-}
-
-object Building {
-  private def resource(buildingType:String): Resource = buildingType match {
+  val resource: Resource = buildingType match {
     case TYPE_FARM => Food(INIT_VALUE)
     case TYPE_CAVE => Money(INIT_VALUE)
     case _ => throw new NoSuchElementException
   }
+
+//  val food = Food(INIT_VALUE)
+  override def levelUp(): Unit = buildingLevel += 1
+  override def getPosition: Position = buildingPosition
 }
 
 
