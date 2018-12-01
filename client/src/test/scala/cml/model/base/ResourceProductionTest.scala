@@ -23,13 +23,13 @@ class ResourceProductionTest extends FunSuite{
       def run(): Unit = {
         building.resource.inc(B_INIT_LEVEL)
         habitat.money.inc(B_INIT_LEVEL)
-        println("food " +  building.food.amount +" money " + habitat.money.amount)
+        println("food " +  building.food.amount +" money " + habitat.money.moneyAmount)
       }
     }
     timer.schedule(task, 0, 1000L)
     Thread.sleep(10000)
 
-    assert(building.food.amount > INIT_VALUE && habitat.money.amount > INIT_VALUE)
+    assert(building.food.amount > INIT_VALUE && habitat.money.moneyAmount > INIT_VALUE)
   }
 
   test("Resource retrieve test"){
@@ -42,15 +42,15 @@ class ResourceProductionTest extends FunSuite{
       habitat.money.inc(habitat.habitatLevel)
     }
 
-    println("food: "+building.food.amount+" money: "+habitat.money.amount)
+    println("food: "+building.food.amount+" money: "+habitat.money.moneyAmount)
 
     val foodTaken = building.food.take()
     println("food taken: "+foodTaken+ " food amount now: " +building.food.amount)
 
     val moneyTaken = habitat.money.take()
-    println("money taken: "+moneyTaken+ " money amount now: " +habitat.money.amount)
+    println("money taken: "+moneyTaken+ " money amount now: " +habitat.money.moneyAmount)
 
-    assert(building.food.amount.equals(INIT_VALUE) && habitat.money.amount.equals(INIT_VALUE))
+    assert(building.food.amount.equals(INIT_VALUE) && habitat.money.moneyAmount.equals(INIT_VALUE))
   }
 
 
