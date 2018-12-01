@@ -17,6 +17,18 @@ class StructureTest extends FunSuite{
     assert(building.buildingLevel > B_INIT_LEVEL)
   }
 
+  test("Farm level up test"){
+    val farm = Farm(Position(10,10), B_INIT_LEVEL)
+    farm.levelUp()
+    assert(farm.level > B_INIT_LEVEL)
+  }
+
+  test("Cave level up test"){
+    val cave = Cave(Position(10,10), B_INIT_LEVEL)
+    cave.levelUp()
+    assert(cave.level > B_INIT_LEVEL)
+  }
+
 
   test("Habitat level up test"){
 //    val creatures: List[Creature] = List(Dragon("drago", 1))
@@ -24,7 +36,7 @@ class StructureTest extends FunSuite{
     val singleHabitat = SingleHabitat(WATER,Position(50,50), B_INIT_LEVEL, Dragon("drago2", 1))
     habitat levelUp()
     singleHabitat levelUp()
-    assert(habitat.habitatLevel > B_INIT_LEVEL && singleHabitat.habitatLevel > B_INIT_LEVEL)
+    assert(habitat.level > B_INIT_LEVEL && singleHabitat.level > B_INIT_LEVEL)
   }
 
   test("Get structure position test"){
