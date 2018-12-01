@@ -137,7 +137,7 @@ object Handler {
 
       val structure = StaticStructure(newTile,x,y)
       val json = structure.json
-
+      println(json)
       village.structures += structure.getStructure
       villageActor ! UpdateVillage(json)
 
