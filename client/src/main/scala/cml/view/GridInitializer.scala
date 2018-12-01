@@ -1,16 +1,9 @@
 package cml.view
 
-import cml.model.static_model.{StaticBuilding, StaticHabitat, StaticStructures}
-import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
-import cml.utils.ModelConfig.Elements.AIR
-import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
-import cml.view.utils.TileConfig.{slicer, spriteSheet, tileSet}
+import cml.view.utils.TileConfig.tileSet
 import javafx.scene.SnapshotParameters
-import javafx.scene.image.{Image, ImageView}
-import javafx.scene.input._
+import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
-
-import scala.collection.mutable
 
 /**
   * Initialize Game GridPanes with costume settings

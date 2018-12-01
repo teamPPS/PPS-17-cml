@@ -53,7 +53,7 @@ case class Money(var moneyAmount: Int) extends Resource {
   * @param foodAmount food amount
   */
 case class Food(var foodAmount: Int) extends Resource {
-  override def inc(level: Int): Unit ={
+  override def inc(level: Int): Unit = {
     foodAmount += (level*INC_BY_10)
   }
   override def take(): Int = {
