@@ -21,7 +21,7 @@ class ResourceProductionTest extends FunSuite{
     val timer = new Timer()
     val task = new TimerTask {
       def run(): Unit = {
-        building.food.inc(B_INIT_LEVEL)
+        building.resource.inc(B_INIT_LEVEL)
         habitat.money.inc(B_INIT_LEVEL)
         println("food " +  building.food.amount +" money " + habitat.money.amount)
       }

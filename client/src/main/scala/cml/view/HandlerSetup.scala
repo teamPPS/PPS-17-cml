@@ -87,7 +87,7 @@ object Handler {
                 }
               }
             }
-            println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello 
+            println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
             levelUp.setDisable(true)
           })
         case _ => throw new ClassCastException
@@ -147,16 +147,20 @@ object Handler {
 
   private def setTileModel(t: Tile, x: Int, y: Int): Unit = {
     t.description match {
-      case "HABITAT" => village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
+      case "HABITAT" =>
+        village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
         println("habitat posizionato "+village.structures+"  "+t.json) //debug
         villageActor ! UpdateVillage(t.json)
-      case "FARM" =>  village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
+      case "FARM" =>
+        village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
         println("farm posizionato "+village.structures+"  "+t.json) //debug
         villageActor ! UpdateVillage(t.json)
-      case "CAVE" =>  village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
+      case "CAVE" =>
+        village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
         println("cave posizionato "+village.structures+"  "+t.json) //debug
         villageActor ! UpdateVillage(t.json)
-      case "TERRAIN" => println("terrain posizionato") //debug
+      case "TERRAIN" =>
+        println("terrain posizionato") //debug
       case _ => throw new NoSuchElementException
     }
   }

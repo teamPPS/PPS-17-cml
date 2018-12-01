@@ -15,9 +15,15 @@ trait Resource{
 
   /**
     * Retrieve the resource
-    * @return the amount of resources
+    * @return the amount taken of resources
     */
   def take(): Int
+
+  /**
+    * Gets the amount of resources
+    * @return the amount of resources
+    */
+  val getAmount: Int
 }
 
 /**
@@ -33,6 +39,7 @@ case class Money(var amount: Int) extends Resource {
     amount = INIT_VALUE
     taken
   }
+  override val getAmount: Int = amount
 }
 
 /**
@@ -48,6 +55,7 @@ case class Food(var amount: Int) extends Resource {
     amount = INIT_VALUE
     taken
   }
+  override val getAmount: Int = amount
 }
 
 
