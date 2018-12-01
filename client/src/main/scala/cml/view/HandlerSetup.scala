@@ -5,6 +5,7 @@ import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base.Habitat.Habitat
 import cml.model.base._
+import cml.model.static_model.StaticStructure
 import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
@@ -76,14 +77,15 @@ object Handler {
           levelUp.setOnMouseClicked(_ =>{
             //scorrere villageMap ficnhè non trovo un match con le coordinate
             for(s <- village.structures){
-              println(s)
+              println("Struttura: "+s)
               if(s.getPosition equals Position(x,y)){
                 s.levelUp()
                 s.getClass.getName match{
                     //invio update al server!!!!
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-                  case "cml.model.base.Building" => println("cibo--")
-                  case "cml.model.base.Habitat" => println("cibo-- soldi--")
+                  case "cml.model.base.Farm" => println("cibo--")
+                  case "cml.model.base.Cave" => println("soldi--")
+                  case "cml.model.base.Habitat$Habitat" => println("cibo-- soldi--")
                 }
               }
             }
@@ -134,7 +136,9 @@ object Handler {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
 
-      setTileModel(newTile, x, y)
+      val structure = StaticStructure(newTile,x,y)
+      village.structures += structure.getStructure
+      println("village.structures "+village.structures +" json " +structure.getJson.toString())
 
       a match {
         case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
@@ -143,26 +147,6 @@ object Handler {
       event consume()
       // UPDATE MODEL e send al server
     })
-  }
-
-  private def setTileModel(t: Tile, x: Int, y: Int): Unit = {
-    t.description match {
-      case "HABITAT" =>
-        village.structures += Habitat(AIR, Position(x,y), H_INIT_LEVEL)
-        println("habitat posizionato "+village.structures+"  "+t.json) //debug
-        villageActor ! UpdateVillage(t.json)
-      case "FARM" =>
-        village.structures += Farm(Position(x,y), B_INIT_LEVEL)
-        println("farm posizionato "+village.structures+"  "+t.json) //debug
-        villageActor ! UpdateVillage(t.json)
-      case "CAVE" =>
-        village.structures += Cave(Position(x,y), B_INIT_LEVEL)
-        println("cave posizionato "+village.structures+"  "+t.json) //debug
-        villageActor ! UpdateVillage(t.json)
-      case "TERRAIN" =>
-        println("terrain posizionato") //debug
-      case _ => throw new NoSuchElementException
-    }
   }
 }
 

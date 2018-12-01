@@ -10,7 +10,7 @@ import org.scalatest.FunSuite
   * @author Monica Gondolini
   */
 class StructureTest extends FunSuite{
-  
+
   test("Farm level up test"){
     val farm = Farm(Position(10,10), B_INIT_LEVEL)
     farm.levelUp()
