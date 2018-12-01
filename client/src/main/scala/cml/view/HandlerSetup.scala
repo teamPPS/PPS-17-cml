@@ -5,7 +5,9 @@ import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
 import cml.model.static_model.StaticStructure
+import cml.utils.{BuildingJson, HabitatJson}
 import cml.utils.ModelConfig.ModelClass._
+import cml.utils.ModelConfig.Elements._
 import cml.view.utils.TileConfig._
 import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
@@ -80,11 +82,14 @@ object Handler {
                 s.getClass.getName match{
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
                   case FARM => s.resource dec 10
-//                    villageActor ! UpdateVillage(json)
+                    val json = BuildingJson(FARM, s.getLevel).json
+                    villageActor ! UpdateVillage(json)
                   case CAVE => s.resource dec 10
-//                    villageActor ! UpdateVillage(json)
+                    val json = BuildingJson(CAVE, s.getLevel).json
+                    villageActor ! UpdateVillage(json)
                   case HABITAT => s.resource dec 10
-//                    villageActor ! UpdateVillage(json)
+                    val json = HabitatJson(FIRE, s.getLevel).json
+                    villageActor ! UpdateVillage(json)
                 }
               }
             }
