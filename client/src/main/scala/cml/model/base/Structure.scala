@@ -18,6 +18,12 @@ trait Structure{
     * Get structure coordinates
     */
   def getPosition: Position
+
+  /**
+    * Get resource
+    * @return resource type
+    */
+  def resource: Resource
 }
 
 /**
@@ -29,6 +35,7 @@ case class Farm(position: Position, var level: Int) extends Structure {
   val food = Food(INIT_VALUE)
   override def levelUp(): Unit = level += 1
   override def getPosition: Position = position
+  override def resource: Resource = food
 }
 
 /**
@@ -40,6 +47,7 @@ case class Cave(position: Position, var level: Int) extends Structure {
   val money = Money(INIT_VALUE)
   override def levelUp(): Unit = level += 1
   override def getPosition: Position = position
+  override def resource: Resource = money
 }
 
 object Habitat {
@@ -62,6 +70,7 @@ object Habitat {
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = level += 1
     override def getPosition: Position = position
+    override def resource: Resource = money
   }
 
   /**
@@ -75,6 +84,7 @@ object Habitat {
     val money = Money(INIT_VALUE)
     override def levelUp(): Unit = level += 1
     override def getPosition: Position = position
+    override def resource: Resource = money
   }
 
 }
