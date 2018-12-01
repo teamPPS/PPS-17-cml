@@ -33,4 +33,10 @@ object ModelConfig {
     val EARTH: String = "earth"
     val AIR: String = "air"
   }
+
+  object ModelClass {
+    val FARM: String = "cml.model.base.Farm"
+    val CAVE: String = "cml.model.base.Cave"
+    val HABITAT: String = "cml.model.base.Habitat$Habitat"
+  }
 }

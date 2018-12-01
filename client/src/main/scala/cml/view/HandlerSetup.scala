@@ -3,12 +3,9 @@ package cml.view
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.UpdateVillage
-import cml.model.base.Habitat.Habitat
 import cml.model.base._
 import cml.model.static_model.StaticStructure
-import cml.utils.ModelConfig.Building.B_INIT_LEVEL
-import cml.utils.ModelConfig.Elements.AIR
-import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
+import cml.utils.ModelConfig.ModelClass._
 import cml.view.utils.TileConfig._
 import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
@@ -83,9 +80,9 @@ object Handler {
                 s.getClass.getName match{
                     //invio update al server!!!!
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-                  case "cml.model.base.Farm" => println("cibo--")
-                  case "cml.model.base.Cave" => println("soldi--")
-                  case "cml.model.base.Habitat$Habitat" => println("cibo-- soldi--")
+                  case FARM => println("cibo--")
+                  case CAVE => println("soldi--")
+                  case HABITAT => println("cibo-- soldi--")
                 }
               }
             }
@@ -137,15 +134,16 @@ object Handler {
       val x = GridPane.getRowIndex(n)
 
       val structure = StaticStructure(newTile,x,y)
+      val json = structure.json
+
       village.structures += structure.getStructure
-      println("village.structures "+village.structures +" json " +structure.getJson.toString())
+      villageActor ! UpdateVillage(json)
 
       a match {
         case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
         case _ => throw new ClassCastException
       }
       event consume()
-      // UPDATE MODEL e send al server
     })
   }
 }
