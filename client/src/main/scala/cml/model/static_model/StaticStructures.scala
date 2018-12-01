@@ -18,7 +18,16 @@ case class StaticStructure(t: Tile, x: Int, y: Int) extends  StaticStructures {
 
   var structure: Structure = _
     t.description match {
-    case "HABITAT" =>
+    case "FIRE_HABITAT" =>
+      structure = Habitat(FIRE, Position (x, y), H_INIT_LEVEL)
+      println ("habitat posizionato " + structure + "  " + t.json) //debug
+    case "WATER_HABITAT" =>
+      structure = Habitat(WATER, Position (x, y), H_INIT_LEVEL)
+      println ("habitat posizionato " + structure + "  " + t.json) //debug
+    case "EARTH_HABITAT" =>
+      structure = Habitat(EARTH, Position (x, y), H_INIT_LEVEL)
+      println ("habitat posizionato " + structure + "  " + t.json) //debug
+    case "AIR_HABITAT" =>
       structure = Habitat(AIR, Position (x, y), H_INIT_LEVEL)
       println ("habitat posizionato " + structure + "  " + t.json) //debug
     case "FARM" =>
