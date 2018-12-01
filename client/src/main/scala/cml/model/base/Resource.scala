@@ -20,11 +20,6 @@ trait Resource{
   def take(): Int
 
   /**
-    * Decrements the resource
-    */
-  def dec(price: Int): Unit
-
-  /**
     * The amount of resources
     */
   def amount: Int
@@ -43,7 +38,6 @@ case class Money(var moneyAmount: Int) extends Resource {
     moneyAmount = INIT_VALUE
     taken
   }
-  override def dec(price: Int): Unit = moneyAmount -= price
   override def amount: Int = moneyAmount
 
 }
@@ -61,7 +55,6 @@ case class Food(var foodAmount: Int) extends Resource {
     foodAmount = INIT_VALUE
     taken
   }
-  override def dec(price: Int): Unit = foodAmount -= price
   override def amount: Int = foodAmount
 }
 

@@ -81,13 +81,13 @@ object Handler {
                 s.levelUp()
                 s.getClass.getName match{
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-                  case FARM => s.resource dec 10
+                  case FARM => //decrementare risorse globali
                     val json = BuildingJson(FARM, s.getLevel).json
                     villageActor ! UpdateVillage(json)
-                  case CAVE => s.resource dec 10
+                  case CAVE => //decrementare risorse globali
                     val json = BuildingJson(CAVE, s.getLevel).json
                     villageActor ! UpdateVillage(json)
-                  case HABITAT => s.resource dec 10
+                  case HABITAT => //decrementare risorse globali
                     val json = HabitatJson(FIRE, s.getLevel).json
                     villageActor ! UpdateVillage(json)
                 }

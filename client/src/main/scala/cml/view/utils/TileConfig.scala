@@ -6,6 +6,9 @@ import cml.utils.{BuildingJson, HabitatJson}
 import cml.view.{ImageSlicer, Tile}
 import javafx.scene.image.Image
 
+/**
+  * @author ecavina
+  */
 
 object TileConfig {
 
@@ -21,23 +24,4 @@ object TileConfig {
     Tile("TERRAIN", slicer.sliceAt(6, 1), BuildingJson(TYPE_FARM, B_INIT_LEVEL).json) //da cambiare ovviamente
   )
 
-//  def buildingJson(bType: String): JsValue = {
-//    val json: JsValue = Json.obj(
-//      "building_id" -> Json.obj(
-//        BUILDING_TYPE -> bType,
-//        BUILDING_LEVEL -> B_INIT_LEVEL
-//      )
-//    )
-//    json
-//  }
-//
-//  def habitatJson(element: String): JsValue = {
-//    val json: JsValue = Json.obj(
-//      "habitat_id" -> Json.obj(
-//        HABITAT_LEVEL -> H_INIT_LEVEL,
-//        NATURAL_ELEMENT -> element
-//      )
-//    )
-//    json
-//  }
 }

@@ -7,34 +7,40 @@ import cml.view.Tile
 import play.api.libs.json.JsValue
 
 /**
+  * Trait to generate Static Structures
   * @author Monica Gondolini
   */
 trait StaticStructures {
+
+  /**
+    * Creates a json
+    * @return a json
+    */
   def json: JsValue
+
+  /**
+    * Get the type of structure
+    * @return structure
+    */
   def getStructure: Structure
 }
 
 case class StaticStructure(t: Tile, x: Int, y: Int) extends  StaticStructures {
 
   var structure: Structure = _
-    t.description match {
-    case "FIRE_HABITAT" =>
-      structure = Habitat(FIRE, Position (x, y), H_INIT_LEVEL)
+
+  t.description match {
+    case "FIRE_HABITAT" => structure = Habitat(FIRE, Position (x, y), H_INIT_LEVEL)
       println ("habitat posizionato " + structure + "  " + t.json) //debug
-    case "WATER_HABITAT" =>
-      structure = Habitat(WATER, Position (x, y), H_INIT_LEVEL)
+    case "WATER_HABITAT" => structure = Habitat(WATER, Position (x, y), H_INIT_LEVEL)
       println ("habitat posizionato " + structure + "  " + t.json) //debug
-    case "EARTH_HABITAT" =>
-      structure = Habitat(EARTH, Position (x, y), H_INIT_LEVEL)
+    case "EARTH_HABITAT" => structure = Habitat(EARTH, Position (x, y), H_INIT_LEVEL)
       println ("habitat posizionato " + structure + "  " + t.json) //debug
-    case "AIR_HABITAT" =>
-      structure = Habitat(AIR, Position (x, y), H_INIT_LEVEL)
+    case "AIR_HABITAT" => structure = Habitat(AIR, Position (x, y), H_INIT_LEVEL)
       println ("habitat posizionato " + structure + "  " + t.json) //debug
-    case "FARM" =>
-      structure = Farm (Position (x, y), B_INIT_LEVEL)
+    case "FARM" => structure = Farm(Position (x, y), B_INIT_LEVEL)
       println ("farm posizionato " + structure + "  " + t.json) //debug
-    case "CAVE" =>
-      structure = Cave (Position (x, y), B_INIT_LEVEL)
+    case "CAVE" => structure = Cave(Position (x, y), B_INIT_LEVEL)
       println ("cave posizionato " + structure + "  " + t.json) //debug
     case "TERRAIN" => println ("terrain posizionato") //debug
     case _ => throw new NoSuchElementException
