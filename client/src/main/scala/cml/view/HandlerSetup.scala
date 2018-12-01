@@ -4,12 +4,11 @@ import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base.Habitat.Habitat
-import cml.model.base.{Building, Position, Structure, VillageMap}
-import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_CAVE, TYPE_FARM}
+import cml.model.base._
+import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
 import cml.view.utils.TileConfig._
-import io.vertx.core.json.JsonObject
 import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
 import javafx.scene.input._
@@ -153,11 +152,11 @@ object Handler {
         println("habitat posizionato "+village.structures+"  "+t.json) //debug
         villageActor ! UpdateVillage(t.json)
       case "FARM" =>
-        village.structures += Building(TYPE_FARM, Position(x,y), B_INIT_LEVEL)
+        village.structures += Farm(Position(x,y), B_INIT_LEVEL)
         println("farm posizionato "+village.structures+"  "+t.json) //debug
         villageActor ! UpdateVillage(t.json)
       case "CAVE" =>
-        village.structures += Building(TYPE_CAVE, Position(x,y), B_INIT_LEVEL)
+        village.structures += Cave(Position(x,y), B_INIT_LEVEL)
         println("cave posizionato "+village.structures+"  "+t.json) //debug
         villageActor ! UpdateVillage(t.json)
       case "TERRAIN" =>

@@ -10,13 +10,7 @@ import org.scalatest.FunSuite
   * @author Monica Gondolini
   */
 class StructureTest extends FunSuite{
-
-  test("Building level up test"){
-    val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
-    building.levelUp()
-    assert(building.buildingLevel > B_INIT_LEVEL)
-  }
-
+  
   test("Farm level up test"){
     val farm = Farm(Position(10,10), B_INIT_LEVEL)
     farm.levelUp()
@@ -41,9 +35,11 @@ class StructureTest extends FunSuite{
 
   test("Get structure position test"){
     val pos = Position(10,10)
+    val farm = Farm(pos, B_INIT_LEVEL)
+    val cave = Cave(pos, B_INIT_LEVEL)
     val habitat = Habitat(AIR, pos, B_INIT_LEVEL)
-    val building: Building = Building(TYPE_FARM, pos, B_INIT_LEVEL)
-    assert(habitat.getPosition.equals(pos) && building.getPosition.equals(pos))
+
+    assert(habitat.getPosition.equals(pos) && cave.getPosition.equals(pos) && farm.getPosition.equals(pos))
   }
 
 }
