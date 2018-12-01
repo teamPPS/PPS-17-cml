@@ -1,11 +1,11 @@
 package cml.model.base
 
 import java.util.{Timer, TimerTask}
-import cml.model.creatures.Dragon
-import cml.utils.ModelConfig.Building.{B_INIT_LEVEL, TYPE_FARM}
+
+import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import cml.utils.ModelConfig.Elements.AIR
+import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
 import cml.utils.ModelConfig.Resource.INIT_VALUE
-import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
 import org.scalatest.FunSuite
 
 /**
@@ -14,45 +14,50 @@ import org.scalatest.FunSuite
 class ResourceProductionTest extends FunSuite{
 
   test("Resource production during time test") {
-//    val creatures: List[Creature] = List(Dragon("drago", 1))
-    val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
-    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
+    val farm: Farm = Farm(Position(10,10), B_INIT_LEVEL)
+    val cave: Cave = Cave(Position(5,5), B_INIT_LEVEL)
+    val habitat = Habitat(AIR,Position(100,100), H_INIT_LEVEL)
 
     val timer = new Timer()
     val task = new TimerTask {
       def run(): Unit = {
-        building.resource.inc(B_INIT_LEVEL)
-        habitat.money.inc(B_INIT_LEVEL)
-        println(building.resource.resourceType+" "+  building.resource.amount +" money " + habitat.money.moneyAmount)
+        farm.food.inc(farm.farmLevel)
+        cave.money.inc(cave.caveLevel)
+        habitat.money.inc(habitat.habitatLevel)
+        println("farm food "+  farm.food.foodAmount +
+          " cave money " + cave.money.amount
+          +" habitat money " + habitat.money.amount)
       }
     }
     timer.schedule(task, 0, 1000L)
     Thread.sleep(10000)
 
-    assert(building.resource.amount > INIT_VALUE && habitat.money.moneyAmount > INIT_VALUE)
+    assert(farm.food.amount > INIT_VALUE && cave.money.amount > INIT_VALUE && habitat.money.amount > INIT_VALUE)
   }
 
   test("Resource retrieve test"){
-//    val creatures: List[Creature] = List(Dragon("drago", 1))
-    val building: Building = Building(TYPE_FARM, Position(10,10), B_INIT_LEVEL)
+    val farm: Farm = Farm(Position(10,10), B_INIT_LEVEL)
+    val cave: Cave = Cave(Position(5,5), B_INIT_LEVEL)
     val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
 
-    for(i <- 1 to 10 ){
-      building.resource.inc(building.buildingLevel)
+    for(i <- 1 to 10){
+      farm.food.inc(farm.farmLevel)
+      cave.money.inc(cave.caveLevel)
       habitat.money.inc(habitat.habitatLevel)
     }
 
-    println("food: "+building.resource.amount+" money: "+habitat.money.moneyAmount)
+    println("food: "+farm.food.amount+" money: "+habitat.money.amount)
 
-    val resTaken = building.resource.take()
-    println(building.resource.resourceType +"taken: "+resTaken+ " food amount now: " +building.resource.amount)
+    val foodTaken = farm.food.take()
+    println("food taken from farm: "+foodTaken+ " food amount now: " +farm.food.amount)
 
-    val moneyTaken = habitat.money.take()
-    println("money taken: "+moneyTaken+ " money amount now: " +habitat.money.moneyAmount)
+    val caveMoneyTaken = cave.money.take()
+    println("money taken from cave : "+caveMoneyTaken+ " money amount now: " +habitat.money.amount)
 
-    assert(building.resource.amount.equals(INIT_VALUE) && habitat.money.moneyAmount.equals(INIT_VALUE))
+    val habitatMoneyTaken = habitat.money.take()
+    println("money taken from habitat: "+habitatMoneyTaken+ " money amount now: " +habitat.money.amount)
+
+    assert(farm.food.amount.equals(INIT_VALUE) && cave.money.amount.equals(INIT_VALUE) && habitat.money.amount.equals(INIT_VALUE))
   }
-
-
 
 }

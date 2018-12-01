@@ -22,12 +22,7 @@ trait Resource{
   /**
     * The amount of resources
     */
-  val amount: Int
-
-  /**
-    * The resource type
-    */
-  val resourceType: String
+  def amount: Int
 }
 
 /**
@@ -43,8 +38,7 @@ case class Money(var moneyAmount: Int) extends Resource {
     moneyAmount = INIT_VALUE
     taken
   }
-  override val amount: Int = moneyAmount
-  override val resourceType: String = MONEY
+  override def amount: Int = moneyAmount
 }
 
 /**
@@ -60,8 +54,7 @@ case class Food(var foodAmount: Int) extends Resource {
     foodAmount = INIT_VALUE
     taken
   }
-  override val amount: Int = foodAmount
-  override val resourceType: String = FOOD
+  override def amount: Int = foodAmount
 }
 
 
