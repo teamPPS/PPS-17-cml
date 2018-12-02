@@ -64,42 +64,44 @@ object Handler {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
 
-      //take() delle risorse
-
-      c.selectionInfo setText "Mouse clicked in coords: ("+x+","+y+")\n"
-      c.levelUpButton.setDisable(false)
-      //se è terrain il tipo non devo poter aumentare il livello
-      c.levelUpButton.setOnMouseClicked(_ => {
-        for (s <- village.structures) {
-          if (s.position equals Position(x, y)) {
-            s.levelUp()
-            s.getClass.getName match {
-              //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-              case FARM => //decrementare risorse globali + update
-                val json = BuildingJson(FARM, s.level).json
-                villageActor ! UpdateVillage(json)
-              case CAVE => //decrementare risorse globali + update
-                val json = BuildingJson(CAVE, s.level).json
-                villageActor ! UpdateVillage(json)
-              case HABITAT => //decrementare risorse globali cibo + denaro+ update
-                val jsonHabitat = HabitatJson(FIRE, s.level).json
-                villageActor ! UpdateVillage(jsonHabitat)
-              //creature json aumento livello creatura
-              //                    val jsonCreature = CreatureJson()
-              //                    villageActor ! UpdateVillage(jsonCreature)
-            }
-          }
+      for (s <- village.structures) {
+        if (s.position equals Position(x, y)) {
+          c.levelUpButton setDisable false
+          c.levelUpButton setOnMouseClicked (_ => structureUpgrade(s,c))
+          //take() delle risorse
+        } else {
+          c.levelUpButton setDisable true
         }
-        println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
-        c.levelUpButton.setDisable(true)
-      })
+      }
+
+      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
     })
+  }
+
+  private def structureUpgrade(s: Structure, c:VillageViewController): Unit = {
+    s.levelUp()
+    s.getClass.getName match {
+      case FARM => //decrementare risorse globali + update
+        val json = BuildingJson(FARM, s.level).json
+        villageActor ! UpdateVillage(json)
+      case CAVE => //decrementare risorse globali + update
+        val json = BuildingJson(CAVE, s.level).json
+        villageActor ! UpdateVillage(json)
+      case HABITAT => //decrementare risorse globali cibo + denaro+ update
+        val jsonHabitat = HabitatJson(FIRE, s.level).json
+        villageActor ! UpdateVillage(jsonHabitat)
+      //creature json aumento livello creatura
+      //                    val jsonCreature = CreatureJson()
+      //                    villageActor ! UpdateVillage(jsonCreature)
+    }
+    println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
+    c.levelUpButton setDisable true
   }
 
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked(_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: $$$")
-    canvas setOnDragDetected((event: MouseEvent) => {
+    canvas setOnMouseClicked (_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: $$$")
+    canvas setOnDragDetected ((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
       dragBoard setDragView image
