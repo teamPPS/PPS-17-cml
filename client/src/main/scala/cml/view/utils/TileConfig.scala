@@ -23,6 +23,6 @@ object TileConfig {
     Tile("WATER_HABITAT", slicer.sliceAt(2, 1), HabitatJson(WATER, B_INIT_LEVEL).json),
     Tile("EARTH_HABITAT", slicer.sliceAt(1, 1), HabitatJson(EARTH, B_INIT_LEVEL).json),
     Tile("FARM", slicer.sliceAt(5, 1), BuildingJson(TYPE_FARM, B_INIT_LEVEL).json),
-    Tile("CAVE", slicer.sliceAt(7, 1), BuildingJson(TYPE_CAVE, B_INIT_LEVEL).json),
+    Tile("CAVE", slicer.sliceAt(7, 1), BuildingJson(TYPE_CAVE, B_INIT_LEVEL).json)
   )
 }

@@ -8,12 +8,12 @@ import play.api.libs.json._
   * @author (edited by) Monica Gondolini
   */
 
-trait BaseTile{
+trait BaseTile {
   def description: String
   def imageSprite: Canvas
 }
 
-trait Tile extends BaseTile{
+trait Tile extends BaseTile {
   def json: JsValue
 }
 
