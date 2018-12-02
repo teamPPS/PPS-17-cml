@@ -18,9 +18,11 @@ trait JsonMaker{
   */
 case class BuildingJson(buildingType: String, buildingLevel: Int) extends JsonMaker {
   override def json: JsValue = Json.obj(
-    "building_id" -> Json.obj(
-      BUILDING_TYPE -> buildingType,
-      BUILDING_LEVEL -> buildingLevel
+    BUILDINGS -> Json.obj(
+      "building_id" -> Json.obj(
+        BUILDING_TYPE -> buildingType,
+        BUILDING_LEVEL -> buildingLevel
+      )
     )
   )
 }
@@ -32,9 +34,11 @@ case class BuildingJson(buildingType: String, buildingLevel: Int) extends JsonMa
   */
 case class HabitatJson(habitatElem: String, habitatLevel: Int) extends JsonMaker {
   override def json: JsValue = Json.obj(
-    "habitat_id" -> Json.obj(
-      HABITAT_LEVEL -> habitatLevel,
-      NATURAL_ELEMENT -> habitatElem
+    HABITAT -> Json.obj(
+      "habitat_id" -> Json.obj(
+        HABITAT_LEVEL -> habitatLevel,
+        NATURAL_ELEMENT -> habitatElem
+      )
     )
   )
 }
