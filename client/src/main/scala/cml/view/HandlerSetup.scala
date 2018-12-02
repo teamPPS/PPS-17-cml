@@ -65,6 +65,9 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
+
+      //take() delle risorse
+
       a match {
         case info: TextArea => info setText "Mouse clicked in coords: ("+x+","+y+")\n"
         case _ => throw new ClassCastException
@@ -74,21 +77,20 @@ object Handler {
           levelUp.setDisable(false)
           //se è terrain il tipo non devo poter aumentare il livello
           levelUp.setOnMouseClicked(_ =>{
-            //scorrere villageMap ficnhè non trovo un match con le coordinate
             for(s <- village.structures){
-              println("Struttura: "+s)
               if(s.getPosition equals Position(x,y)){
                 s.levelUp()
                 s.getClass.getName match{
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-                  case FARM => //decrementare risorse globali
+                  case FARM => //decrementare risorse globali + update
                     val json = BuildingJson(FARM, s.getLevel).json
                     villageActor ! UpdateVillage(json)
-                  case CAVE => //decrementare risorse globali
+                  case CAVE => //decrementare risorse globali + update
                     val json = BuildingJson(CAVE, s.getLevel).json
                     villageActor ! UpdateVillage(json)
-                  case HABITAT => //decrementare risorse globali
+                  case HABITAT => //decrementare risorse globali cibo + denaro+ update
                     val json = HabitatJson(FIRE, s.getLevel).json
+                    //creature json aumento livello creatura
                     villageActor ! UpdateVillage(json)
                 }
               }
@@ -142,9 +144,10 @@ object Handler {
 
       val structure = StaticStructure(newTile,x,y)
       val json = structure.json
-      println(json)
       village.structures += structure.getStructure
       villageActor ! UpdateVillage(json)
+
+      //Decremento denaro in base al prezzo, update modello remoto e locale
 
       a match {
         case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
