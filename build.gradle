@@ -45,6 +45,10 @@ subprojects {
         build.finalizedBy javadoc
     }
 
+    scoverage { // excluding constants file
+        excludedPackages = ["cml.services.village.utils", "cml", "cml.view.utils", "cml.controller.actor.utils",  "cml.model.static_model", "cml.utils"  ]
+    }
+
     scalaStyle {
         configLocation = "config/scalastyle/scalastyle_config.xml"
         includeTestSourceDirectory = true
