@@ -35,10 +35,11 @@
                         </Pane>
                         <Pane fx:id="upgradePane" prefHeight="97.0" prefWidth="106.0">
                            <children>
-                              <Button fx:id="levelUpButton" disable="true" layoutX="2.0" layoutY="26.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="102.0" text="Level Up" />
+                              <Button fx:id="levelUpButton" disable="true" layoutY="7.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="104.0" text="Level Up" />
+                              <Button fx:id="takeButton"  disable="true" layoutY="55.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="104.0" text="Take" />
                            </children>
                         </Pane>
-                <Button fx:id="battleButton" mnemonicParsing="false" prefHeight="78.0" prefWidth="192.0" text="Battle" HBox.hgrow="SOMETIMES">
+                <Button fx:id="battleButton" mnemonicParsing="false" prefHeight="90.0" prefWidth="190.0" text="Battle" HBox.hgrow="SOMETIMES">
                   <HBox.margin>
                     <Insets right="10.0" fx:id="x2" />
                   </HBox.margin>

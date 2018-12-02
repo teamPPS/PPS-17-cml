@@ -19,6 +19,7 @@ class VillageViewController {
   @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
   @FXML var levelUpButton: Button = _
+  @FXML var takeButton: Button = _
   @FXML var upgradePane: Pane = _
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
