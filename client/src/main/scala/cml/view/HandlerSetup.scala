@@ -8,6 +8,7 @@ import cml.model.base._
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.StaticStructure
 import cml.utils.ModelConfig.Resource._
+import cml.utils.MoneyJson
 import cml.view.utils.TileConfig._
 import javafx.scene.image.ImageView
 import javafx.scene.input._
@@ -88,8 +89,9 @@ object Handler {
   }
 
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
+    val price = 30 //prezzo iniziale deve essere globale, decrementare risorse globali
     val canvas = t.imageSprite
-    canvas setOnMouseClicked (_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: $$$")
+    canvas setOnMouseClicked (_ =>c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+price)
     canvas setOnDragDetected ((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
@@ -97,6 +99,12 @@ object Handler {
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
+
+      val json = MoneyJson(INIT_VALUE-price).json
+      //decrementare variabile globale
+      println("json drop" +json)
+      villageActor ! UpdateVillage(json)
+
       c.selectionInfo setText "Dragged element " + dragBoard.getString
       event consume()
     })
@@ -125,7 +133,6 @@ object Handler {
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
-
       event consume()
     })
   }

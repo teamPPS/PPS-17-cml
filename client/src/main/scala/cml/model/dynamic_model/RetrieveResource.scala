@@ -17,13 +17,10 @@ case class RetrieveResource(s: Structure) extends Retrieve {
 
   private var json: JsValue = _
 
-
+  s.resource.take()
   s.getClass.getName match {
-    case FARM =>
-      s.resource.take()
-      println("retrieve "+s.resource.amount) //debug
-      json = FoodJson(s.resource amount).json
-    case CAVE =>  json = MoneyJson(s.resource amount).json
+    case FARM => json = FoodJson(s.resource amount).json
+    case CAVE => json = MoneyJson(s.resource amount).json
     case HABITAT => json = MoneyJson(s.resource amount).json
   }
 
