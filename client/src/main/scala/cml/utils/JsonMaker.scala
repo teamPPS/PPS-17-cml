@@ -56,3 +56,23 @@ case class CreatureJson(creatureName: String, creatureLevel: Int) extends  JsonM
     )
   )
 }
+
+/**
+  * This class creates a new json for Food resource by given fields
+  * @param amount of food
+  */
+case class FoodJson(amount: Int) extends JsonMaker {
+  override def json: JsValue = Json.obj(
+      FOOD -> amount
+  )
+}
+
+/**
+  * This class creates a new json for Money resource by given fields
+  * @param amount of money
+  */
+case class MoneyJson(amount: Int) extends JsonMaker {
+  override def json: JsValue = Json.obj(
+    GOLD -> amount
+  )
+}

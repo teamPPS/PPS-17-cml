@@ -9,6 +9,7 @@ import cml.model.dynamic_model.StructureUpgrade
 import cml.model.static_model.StaticStructure
 import cml.utils.ModelConfig.Elements._
 import cml.utils.ModelConfig.ModelClass._
+import cml.utils.ModelConfig.Resource._
 import cml.utils.{BuildingJson, HabitatJson}
 import cml.view.utils.TileConfig._
 import javafx.scene.image.ImageView
@@ -74,7 +75,13 @@ object Handler {
             villageActor ! UpdateVillage(upgrade creatureJson)
             c.levelUpButton setDisable true
           })
-          //take() delle risorse
+          if(s.resource.amount > INIT_VALUE) {
+            c.takeButton setDisable false
+            c.takeButton setOnMouseClicked(_ =>{
+              s.resource.take()
+              villageActor ! UpdateVillage()
+            })
+          }
         }
         else {
           //TODO se clicco su una struttura poi un'altra si disabilita il bottone level up
