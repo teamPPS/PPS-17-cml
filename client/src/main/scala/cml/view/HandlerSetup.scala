@@ -45,6 +45,7 @@ object Handler {
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
   val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
   val village = VillageMap(structures)
+  val price = 30 //prezzo iniziale deve essere globale ?
 
   val handleVillage: Handler = {
     (elem: Node, control: VillageViewController) =>
@@ -63,10 +64,14 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
+//      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
 
       for (s <- village.structures) {
         if (s.position equals Position(x, y)) {
+          //fare un metodo/classe per il testo da visualizzare
+          c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+            "Level: " + s.level + "\n"+
+            "Resources: " + s.resource.amount + "\n"
           c.levelUpButton setDisable false //TODO se terrain disabilitare
           c.levelUpButton setOnMouseClicked (_ => {
             val upgrade = StructureUpgrade(s)
@@ -75,12 +80,18 @@ object Handler {
             c.levelUpButton setDisable true
           })
           s.resource.inc(s.level) //debug
+          c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+            "Level: " + s.level + "\n"+
+            "Resources: " + s.resource.amount + "\n" // debug
           if (s.resource.amount > INIT_VALUE) { //settare un current value?
             c.takeButton setDisable false
             c.takeButton setOnMouseClicked (_ => {
               val retrieve = RetrieveResource(s)
               villageActor ! UpdateVillage(retrieve resourceJson)
               c.takeButton setDisable true
+              c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+                "Level: " + s.level + "\n"+
+                "Resources: " + s.resource.amount + "\n"
             })
           }
         }
@@ -89,7 +100,6 @@ object Handler {
   }
 
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
-    val price = 30 //prezzo iniziale deve essere globale, decrementare risorse globali
     val canvas = t.imageSprite
     canvas setOnMouseClicked (_ =>c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+price)
     canvas setOnDragDetected ((event: MouseEvent) => {
@@ -99,12 +109,6 @@ object Handler {
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
-
-      val json = MoneyJson(INIT_VALUE-price).json
-      //decrementare variabile globale
-      println("json drop" +json)
-      villageActor ! UpdateVillage(json)
-
       c.selectionInfo setText "Dragged element " + dragBoard.getString
       event consume()
     })
@@ -132,6 +136,11 @@ object Handler {
       villageActor ! UpdateVillage(json)
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
+      val resourceJson = MoneyJson(INIT_VALUE-price).json
+      //decrementare variabile globale
+      println("json drop" +json)
+      villageActor ! UpdateVillage(resourceJson)
+
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
       event consume()
     })
