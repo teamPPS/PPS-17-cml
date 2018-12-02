@@ -7,10 +7,7 @@ import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.StaticStructure
-import cml.utils.ModelConfig.Elements._
-import cml.utils.ModelConfig.ModelClass._
 import cml.utils.ModelConfig.Resource._
-import cml.utils.{BuildingJson, HabitatJson}
 import cml.view.utils.TileConfig._
 import javafx.scene.image.ImageView
 import javafx.scene.input._
@@ -65,7 +62,7 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-
+      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
 
       for (s <- village.structures) {
         if (s.position equals Position(x, y)) {
@@ -77,7 +74,7 @@ object Handler {
             c.levelUpButton setDisable true
           })
           s.resource.inc(s.level) //debug
-          if (s.resource.amount > INIT_VALUE) {
+          if (s.resource.amount > INIT_VALUE) { //settare un current value?
             c.takeButton setDisable false
             c.takeButton setOnMouseClicked (_ => {
               val retrieve = RetrieveResource(s)
@@ -87,7 +84,6 @@ object Handler {
           }
         }
       }
-      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
     })
   }
 
