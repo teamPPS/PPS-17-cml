@@ -10,7 +10,6 @@ trait UpgradeCreature {
 
 case class CreatureUpgrade(creature: Creature) extends UpgradeCreature {
   creature.levelUp()
-  val js = CreatureJson("Smaug", creature.currentLevel).json
-  println(js)
-  override val creatureJson: JsValue = js
+  val json = CreatureJson("Smaug", creature.currentLevel).json
+  override val creatureJson: JsValue = json
 }

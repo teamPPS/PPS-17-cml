@@ -10,7 +10,7 @@ import play.api.libs.json.JsValue
 /**
   * @author Monica Gondolini
   */
-trait Upgrade extends UpgradeCreature{
+trait Upgrade extends UpgradeCreature {
   def structureJson: JsValue
 }
 
@@ -20,26 +20,22 @@ trait Upgrade extends UpgradeCreature{
   */
 case class StructureUpgrade(s: Structure) extends Upgrade {
   s.levelUp()
-  var json: JsValue = _
-  var cJson: JsValue = _
+  var jsonStructure: JsValue = _
+  var jsonCreature: JsValue = _
   s.getClass.getName match {
     case FARM => //decrementare risorse globali + update
-      json = BuildingJson(FARM, s.level).json
+      jsonStructure = BuildingJson(FARM, s.level).json
     case CAVE => //decrementare risorse globali + update
-      json = BuildingJson(CAVE, s.level).json
+      jsonStructure = BuildingJson(CAVE, s.level).json
     case HABITAT => //decrementare risorse globali cibo + denaro+ update
-      json = HabitatJson(FIRE, s.level).json
-    //creature json aumento livello creatura
-      cJson = CreatureUpgrade(Dragon("ciccio", 2)).creatureJson
-//                    val jsonCreature = CreatureJson()
-//                    villageActor ! UpdateVillage(jsonCreature)
+      jsonStructure = HabitatJson(FIRE, s.level).json
+      //TODO cercare creatura all'interno della struttura
+      jsonCreature = CreatureUpgrade(Dragon("Smaug", 2)).creatureJson
 }
+
   println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
 
-  override def structureJson: JsValue = {
-    println(json)
-    json
-  }
+  override def structureJson: JsValue = jsonStructure
 
-  override val creatureJson: JsValue = cJson
+  override val creatureJson: JsValue = jsonCreature
 }
