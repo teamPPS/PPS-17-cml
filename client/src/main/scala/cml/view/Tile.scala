@@ -3,11 +3,26 @@ package cml.view
 import javafx.scene.canvas.Canvas
 import play.api.libs.json._
 
-trait Tile {
+/**
+  * @author ecavina
+  * @author (edited by) Monica Gondolini
+  */
 
+trait BaseTile{
   def description: String
   def imageSprite: Canvas
+}
+
+trait Tile extends BaseTile{
   def json: JsValue
+}
+
+object BaseTile {
+
+  def apply(description: String, imageSprite: Canvas): BaseTile = BaseTileImplementation(description, imageSprite)
+
+  case class BaseTileImplementation(override val description: String, override val imageSprite: Canvas)
+    extends BaseTile
 }
 
 object Tile {

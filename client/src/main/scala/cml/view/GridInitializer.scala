@@ -1,6 +1,6 @@
 package cml.view
 
-import cml.view.utils.TileConfig.tileSet
+import cml.view.utils.TileConfig.{baseTileSet,tileSet}
 import javafx.scene.SnapshotParameters
 import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
@@ -34,7 +34,7 @@ object Setup {
   val setupVillage: Setup = {
     grid: GridPane => { // scorrere model
 
-      val baseTile = tileSet.filter(t => t.description.equals("TERRAIN")).head
+      val baseTile = baseTileSet.filter(t => t.description.equals("TERRAIN")).head
 
       loop(0, 10) foreach { // INVECE CHE GENERARE DA ZERO SCORRO IL MODEL E SETTO LE TILE CORRISPONDENTI
         case(x, y) =>
