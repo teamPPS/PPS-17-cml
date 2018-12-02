@@ -63,7 +63,7 @@ case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
   override def level: Int = caveLevel
   override def position: Position = cavePosition
   override def resource: Resource = money
-  
+
   override def addCreature(creature: Creature): Unit = {
     if(creature != null)
       throw new NoSuchElementException
