@@ -5,7 +5,7 @@ import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
 import cml.model.static_model.StaticStructure
-import cml.utils.{BuildingJson, HabitatJson}
+import cml.utils.{BuildingJson, CreatureJson, HabitatJson}
 import cml.utils.ModelConfig.ModelClass._
 import cml.utils.ModelConfig.Elements._
 import cml.view.utils.TileConfig._
@@ -89,9 +89,11 @@ object Handler {
                     val json = BuildingJson(CAVE, s.level).json
                     villageActor ! UpdateVillage(json)
                   case HABITAT => //decrementare risorse globali cibo + denaro+ update
-                    val json = HabitatJson(FIRE, s.level).json
+                    val jsonHabitat = HabitatJson(FIRE, s.level).json
+                    villageActor ! UpdateVillage(jsonHabitat)
                     //creature json aumento livello creatura
-                    villageActor ! UpdateVillage(json)
+//                    val jsonCreature = CreatureJson()
+//                    villageActor ! UpdateVillage(jsonCreature)
                 }
               }
             }
