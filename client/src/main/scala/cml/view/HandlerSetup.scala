@@ -67,9 +67,8 @@ object Handler {
       //take() delle risorse
 
       c.selectionInfo setText "Mouse clicked in coords: ("+x+","+y+")\n"
-      val btn = c.levelUpButton
-      btn.setDisable(false)
-          //se è terrain il tipo non devo poter aumentare il livello
+      c.levelUpButton.setDisable(false)
+      //se è terrain il tipo non devo poter aumentare il livello
       c.levelUpButton.setOnMouseClicked(_ => {
         for (s <- village.structures) {
           if (s.position equals Position(x, y)) {
