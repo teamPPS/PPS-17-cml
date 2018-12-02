@@ -78,18 +78,18 @@ object Handler {
           //se è terrain il tipo non devo poter aumentare il livello
           levelUp.setOnMouseClicked(_ =>{
             for(s <- village.structures){
-              if(s.getPosition equals Position(x,y)){
+              if(s.position equals Position(x,y)){
                 s.levelUp()
                 s.getClass.getName match{
                   //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
                   case FARM => //decrementare risorse globali + update
-                    val json = BuildingJson(FARM, s.getLevel).json
+                    val json = BuildingJson(FARM, s.level).json
                     villageActor ! UpdateVillage(json)
                   case CAVE => //decrementare risorse globali + update
-                    val json = BuildingJson(CAVE, s.getLevel).json
+                    val json = BuildingJson(CAVE, s.level).json
                     villageActor ! UpdateVillage(json)
                   case HABITAT => //decrementare risorse globali cibo + denaro+ update
-                    val json = HabitatJson(FIRE, s.getLevel).json
+                    val json = HabitatJson(FIRE, s.level).json
                     //creature json aumento livello creatura
                     villageActor ! UpdateVillage(json)
                 }

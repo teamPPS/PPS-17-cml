@@ -17,11 +17,11 @@ trait Structure{
   /**
     * Get structure level
     */
-  def getLevel: Int
+  def level: Int
   /**
     * Get structure coordinates
     */
-  def getPosition: Position
+  def position: Position
 
   /**
     * Get resource
@@ -32,68 +32,49 @@ trait Structure{
 
 /**
   * Implementation of building structure Farm
-  * @param position coordinates of the building in the village
-  * @param level level of the building
+  * @param farmPosition coordinates of the building in the village
+  * @param farmLevel level of the building
   */
-case class Farm(position: Position, var level: Int) extends Structure {
+case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
   val food = Food(INIT_VALUE)
-  override def levelUp(): Unit = level += 1
-  override def getLevel: Int = level
-  override def getPosition: Position = position
+  override def levelUp(): Unit = farmLevel += 1
+  override def level: Int = farmLevel
+  override def position: Position = farmPosition
   override def resource: Resource = food
 }
 
 /**
   * Implementation of building structure Cave
-  * @param position coordinates of the building in the village
-  * @param level level of the building
+  * @param cavePosition coordinates of the building in the village
+  * @param caveLevel level of the building
   */
-case class Cave(position: Position, var level: Int) extends Structure {
+case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
   val money = Money(INIT_VALUE)
-  override def levelUp(): Unit = level += 1
-  override def getLevel: Int = level
-  override def getPosition: Position = position
+  override def levelUp(): Unit = caveLevel += 1
+  override def level: Int = caveLevel
+  override def position: Position = cavePosition
   override def resource: Resource = money
 }
 
 object Habitat {
 
-  def apply(element: String, position: Position, level: Int) : Habitat =
-     Habitat(element, position, level)
-
-  def apply(hElement: String, hPosition: Position, hLevel: Int): SingleHabitat =
-    SingleHabitat(hElement, hPosition, hLevel)
+  def apply(habitatElement: String, habitatPosition: Position, habitatLevel: Int) : Habitat =
+     Habitat(habitatElement, habitatPosition, habitatLevel)
 
   /**
     * Implementation of structure habitat
-    * @param element         of the habitat
-    * @param position coordinates of the habitat in the village
-    * @param level    level of the habitat
+    * @param habitatElement         of the habitat
+    * @param habitatPosition coordinates of the habitat in the village
+    * @param habitatLevel    level of the habitat
     */
-  case class Habitat(element: String, position: Position, var level: Int) extends Structure {
+  case class Habitat(habitatElement: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
     private var creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
-    override def levelUp(): Unit = level += 1
-    override def getLevel: Int = level
-    override def getPosition: Position = position
+    override def levelUp(): Unit = habitatLevel += 1
+    override def level: Int = habitatLevel
+    override def position: Position = habitatPosition
     override def resource: Resource = money
     def addCreature(creature: Creature): Unit = creatures += creature
-  }
-
-  /**
-    * Implementation of structure habitat
-    * @param hElement         of the habitat
-    * @param hPosition coordinates of the habitat in the village
-    * @param hLevel    level of the habitat
-    */
-  case class SingleHabitat(hElement: String, hPosition: Position, var hLevel: Int) extends Structure {
-    val money = Money(INIT_VALUE)
-    private var creature: Creature = _
-    override def levelUp(): Unit = hLevel += 1
-    override def getLevel: Int = hLevel
-    override def getPosition: Position = hPosition
-    override def resource: Resource = money
-    def addCreature(c: Creature): Unit = creature = c
   }
 
 }
