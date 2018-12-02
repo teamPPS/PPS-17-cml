@@ -77,6 +77,13 @@ object Handler {
             val upgrade = StructureUpgrade(s)
             villageActor ! UpdateVillage(upgrade structureJson)
             villageActor ! UpdateVillage(upgrade creatureJson)
+
+            //Decremento denaro in base al prezzo, update modello remoto e locale
+            val resourceJson = MoneyJson(INIT_VALUE-price).json
+            //decrementare variabile globale
+            println("json drop" +resourceJson)
+            villageActor ! UpdateVillage(resourceJson)
+
             c.levelUpButton setDisable true
             c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
               "Level: " + s.level + "\n"+
@@ -141,7 +148,7 @@ object Handler {
       //Decremento denaro in base al prezzo, update modello remoto e locale
       val resourceJson = MoneyJson(INIT_VALUE-price).json
       //decrementare variabile globale
-      println("json drop" +json)
+      println("json drop" +resourceJson)
       villageActor ! UpdateVillage(resourceJson)
 
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
