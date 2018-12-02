@@ -24,9 +24,9 @@ class ResourceProductionTest extends FunSuite{
         farm.food.inc(farm.farmLevel)
         cave.money.inc(cave.caveLevel)
         habitat.money.inc(habitat.level)
-        println("farm food "+  farm.food.foodAmount +
-          " cave money " + cave.money.amount
-          +" habitat money " + habitat.money.amount)
+//        println("farm food "+  farm.food.foodAmount +
+//          " cave money " + cave.money.amount
+//          +" habitat money " + habitat.money.amount)
       }
     }
     timer.schedule(task, 0, 1000L)
