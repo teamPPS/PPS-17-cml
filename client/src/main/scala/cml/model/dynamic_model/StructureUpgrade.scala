@@ -31,8 +31,8 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
       jsonStructure = BuildingJson(CAVE, s.level).json
     case HABITAT => //decrementare risorse globali cibo + denaro+ update
       jsonStructure = HabitatJson(FIRE, s.level).json
-      //TODO cercare creatura all'interno della struttura
-      jsonCreature = CreatureUpgrade(Dragon("Smaug", 2)).creatureJson
+      s.addCreature(Dragon("Smaug", 1))
+      if(s.creatures != null) jsonCreature = CreatureUpgrade(s.creatures.head).creatureJson
   }
 
   println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello

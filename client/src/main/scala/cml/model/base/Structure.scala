@@ -28,6 +28,9 @@ trait Structure{
     * @return resource type
     */
   def resource: Resource
+
+  def addCreature(creature: Creature): Unit
+  def creatures: mutable.MutableList[Creature]
 }
 
 /**
@@ -41,6 +44,10 @@ case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
   override def level: Int = farmLevel
   override def position: Position = farmPosition
   override def resource: Resource = food
+
+  override def addCreature(creature: Creature): Unit = creature
+
+  override def creatures: mutable.MutableList[Creature] = null
 }
 
 /**
@@ -54,7 +61,12 @@ case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
   override def level: Int = caveLevel
   override def position: Position = cavePosition
   override def resource: Resource = money
+
+  override def addCreature(creature: Creature): Unit = creature
+
+  override def creatures: mutable.MutableList[Creature] = null
 }
+
 
 object Habitat {
 
@@ -74,8 +86,8 @@ object Habitat {
     override def level: Int = habitatLevel
     override def position: Position = habitatPosition
     override def resource: Resource = money
-    def addCreature(creature: Creature): Unit = creatureList += creature
-    def creatures: mutable.MutableList[Creature] = creatureList
+    override def addCreature(creature: Creature): Unit = creatureList += creature
+    override def creatures: mutable.MutableList[Creature] = creatureList
   }
 
 }
