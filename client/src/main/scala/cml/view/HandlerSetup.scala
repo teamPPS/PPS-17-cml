@@ -5,7 +5,7 @@ import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
-import cml.model.dynamic_model.StructureUpgrade
+import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.StaticStructure
 import cml.utils.ModelConfig.Elements._
 import cml.utils.ModelConfig.ModelClass._
@@ -77,9 +77,10 @@ object Handler {
           })
           if(s.resource.amount > INIT_VALUE) {
             c.takeButton setDisable false
-            c.takeButton setOnMouseClicked(_ =>{
-              s.resource.take()
-              villageActor ! UpdateVillage()
+            c.takeButton setOnMouseClicked(_ => {
+              val retrieve = RetrieveResource(s)
+              villageActor ! UpdateVillage(retrieve resourceJson)
+              c.takeButton setDisable true
             })
           }
         }

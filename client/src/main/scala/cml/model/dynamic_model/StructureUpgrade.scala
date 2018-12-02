@@ -20,8 +20,8 @@ trait Upgrade extends UpgradeCreature {
   */
 case class StructureUpgrade(s: Structure) extends Upgrade {
 
-  var jsonStructure: JsValue = _
-  var jsonCreature: JsValue = _
+  private var jsonStructure: JsValue = _
+  private var jsonCreature: JsValue = _
 
   s.levelUp()
   s.getClass.getName match {

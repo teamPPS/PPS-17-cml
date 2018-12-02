@@ -15,7 +15,7 @@ trait Retrieve {
 
 case class RetrieveResource(s: Structure) extends Retrieve {
 
-  var json: JsValue = _
+  private var json: JsValue = _
 
   s.resource.take()
   s.getClass.getName match {
