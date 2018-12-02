@@ -10,6 +10,7 @@ object BattleResponse {
 
   sealed trait BattleResponse
 
-  case class RequireChallenger() extends BattleResponse
+  case class RequireChallengerSuccess() extends BattleResponse
+  case class RequireChallengerFailure() extends BattleResponse
 
 }

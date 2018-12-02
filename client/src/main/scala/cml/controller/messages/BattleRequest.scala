@@ -12,7 +12,6 @@ object BattleRequest {
 
   /**
     * Request to challenger user
-    * @param actorRef user actorRef
     */
   case class RequireChallenger() extends BattleRequest
 
