@@ -45,8 +45,10 @@ case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
   override def position: Position = farmPosition
   override def resource: Resource = food
 
-  override def addCreature(creature: Creature): Unit = creature
-
+  override def addCreature(creature: Creature): Unit = {
+    if(creature != null)
+      throw new NoSuchElementException
+  }
   override def creatures: mutable.MutableList[Creature] = null
 }
 
@@ -61,9 +63,11 @@ case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
   override def level: Int = caveLevel
   override def position: Position = cavePosition
   override def resource: Resource = money
-
-  override def addCreature(creature: Creature): Unit = creature
-
+  
+  override def addCreature(creature: Creature): Unit = {
+    if(creature != null)
+      throw new NoSuchElementException
+  }
   override def creatures: mutable.MutableList[Creature] = null
 }
 
