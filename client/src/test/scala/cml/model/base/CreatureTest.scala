@@ -38,7 +38,7 @@ class CreatureTest extends FunSuite {
     val pos = Position(10,10)
     val habitat = Habitat(FIRE, pos, B_INIT_LEVEL)
     habitat.addCreature(dragon)
-    assert(habitat.creatures.head.equals(dragon))
+    assert(habitat.creatureList.head.equals(dragon))
   }
 
 }
