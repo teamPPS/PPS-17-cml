@@ -35,6 +35,7 @@ class BattleViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       println("Arena view -----> wait another user for battle")
+      // invia un messaggio contenente di richiesta inserimento in lista
       ViewSwitch.activate(ArenaWindow.path, exitButton.getScene)
     }
   }

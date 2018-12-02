@@ -6,5 +6,6 @@ dependencies {
     implementation project(':server')
     implementation group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.18'
     implementation group: 'com.typesafe.akka', name: 'akka-remote_2.12', version: '2.5.18'
+    //implementation group: 'com.typesafe.akka', name: 'akka-cluster_2.12', version: '2.5.18'
 }
 
