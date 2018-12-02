@@ -78,6 +78,9 @@ object Handler {
             villageActor ! UpdateVillage(upgrade structureJson)
             villageActor ! UpdateVillage(upgrade creatureJson)
             c.levelUpButton setDisable true
+            c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+              "Level: " + s.level + "\n"+
+              "Resources: " + s.resource.amount + "\n"
           })
           s.resource.inc(s.level) //debug
           c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
