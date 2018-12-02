@@ -70,10 +70,8 @@ object Handler {
           c.levelUpButton setDisable false
           c.levelUpButton setOnMouseClicked (_ => {
             val upgrade = StructureUpgrade(s)
-            val jsonStructure = upgrade.structureJson
-            villageActor ! UpdateVillage(jsonStructure)
-            val jsonCreature = upgrade.creatureJson
-            villageActor ! UpdateVillage(jsonCreature)
+            villageActor ! UpdateVillage(upgrade structureJson)
+            villageActor ! UpdateVillage(upgrade creatureJson)
             c.levelUpButton setDisable true
           })
           //take() delle risorse

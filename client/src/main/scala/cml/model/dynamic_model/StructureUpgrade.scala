@@ -19,9 +19,11 @@ trait Upgrade extends UpgradeCreature {
   * @param s structure to upgrade
   */
 case class StructureUpgrade(s: Structure) extends Upgrade {
-  s.levelUp()
+
   var jsonStructure: JsValue = _
   var jsonCreature: JsValue = _
+
+  s.levelUp()
   s.getClass.getName match {
     case FARM => //decrementare risorse globali + update
       jsonStructure = BuildingJson(FARM, s.level).json
@@ -31,11 +33,10 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
       jsonStructure = HabitatJson(FIRE, s.level).json
       //TODO cercare creatura all'interno della struttura
       jsonCreature = CreatureUpgrade(Dragon("Smaug", 2)).creatureJson
-}
+  }
 
   println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
 
   override def structureJson: JsValue = jsonStructure
-
-  override val creatureJson: JsValue = jsonCreature
+  override def creatureJson: JsValue = jsonCreature
 }
