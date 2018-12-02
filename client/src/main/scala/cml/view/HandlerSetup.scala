@@ -73,12 +73,11 @@ object Handler {
           c.levelUpButton setDisable true
         }
       }
-
       c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
     })
   }
 
-  private def structureUpgrade(s: Structure, c:VillageViewController): Unit = {
+  private def structureUpgrade(s: Structure, c: VillageViewController): Unit = {
     s.levelUp()
     s.getClass.getName match {
       case FARM => //decrementare risorse globali + update
