@@ -47,15 +47,15 @@ object Handler {
   val village = VillageMap(structures)
 
   val handleVillage: Handler = {
-    (elem: Node, controller: VillageViewController) =>
-      addClickHandler(elem, controller)
-      addDragAndDropTargetHandler(elem, controller)
+    (elem: Node, control: VillageViewController) =>
+      addClickHandler(elem, control)
+      addDragAndDropTargetHandler(elem, control)
   }
 
   val handleBuilding: Handler = {
-    (_: Node, controller: VillageViewController) =>
+    (_: Node, control: VillageViewController) =>
       for(tile <- tileSet){
-        addDragAndDropSourceHandler(tile, controller)
+        addDragAndDropSourceHandler(tile, control)
       }
   }
 
