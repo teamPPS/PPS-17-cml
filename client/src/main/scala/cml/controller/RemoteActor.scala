@@ -3,14 +3,16 @@ package cml.controller
 import java.io.File
 
 import akka.actor.{Actor, ActorSystem, Props}
+import cml.controller.messages.BattleRequest
 import com.typesafe.config.ConfigFactory
 
 class RemoteActor extends Actor{
   override def receive: Receive = {
     case msg:String =>
-      println("RemoteActor receive " + msg + "from " + sender)
+      println("RemoteActor receive " + msg + "from " + sender.hashCode())
       sender ! msg
-    case _ => println("Non ho ricevuto nulla")
+    case BattleRequest => println("RemoteActor receive by sender --> " + sender)
+    case _ => println("WARNING: RemoteActor has not receive anything")
   }
 }
 
