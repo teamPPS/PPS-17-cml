@@ -1,7 +1,7 @@
 package cml.model.base
 
 import cml.utils.ModelConfig.Building.B_INIT_LEVEL
-import cml.utils.ModelConfig.Elements.AIR
+import cml.utils.ModelConfig.Elements._
 import org.scalatest.FunSuite
 
 /**
@@ -23,7 +23,6 @@ class StructureTest extends FunSuite{
 
 
   test("Habitat level up test"){
-//    val creatures: List[Creature] = List(Dragon("drago", 1))
     val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
     habitat levelUp()
     assert(habitat.level > B_INIT_LEVEL)
@@ -37,5 +36,6 @@ class StructureTest extends FunSuite{
 
     assert(habitat.position.equals(pos) && cave.position.equals(pos) && farm.position.equals(pos))
   }
+
 
 }

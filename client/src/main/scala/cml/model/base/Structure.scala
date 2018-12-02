@@ -68,7 +68,7 @@ object Habitat {
     * @param habitatLevel    level of the habitat
     */
   case class Habitat(habitatElement: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
-    private var creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
+    var creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
     override def level: Int = habitatLevel
