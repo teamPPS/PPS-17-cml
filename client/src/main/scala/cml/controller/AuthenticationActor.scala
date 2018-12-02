@@ -36,7 +36,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case Register(username, password) => authenticationVertx.register(username, password)
       .onComplete {
         case Success(httpResponse) =>
-          checkResponse(httpResponse, registerSuccess, registerFailure)
+          checkHttpResponse(httpResponse, loginSuccess, loginFailure)
           villageActor ! CreateVillage()
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
@@ -45,7 +45,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case Login(username, password) => authenticationVertx.login(username, password)
       .onComplete {
         case Success(httpResponse) =>
-          checkResponse(httpResponse, loginSuccess, loginFailure)
+          if(checkHttpResponse(httpResponse, loginSuccess, loginFailure))
+            loginSucceedOnGui()
         case Failure(exception) =>
           LoginFailure(exception.getMessage)
           displayMsg(loginFailure)
@@ -80,14 +81,15 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     TokenStorage.setUserJWTToken(tokenValue)
   }
 
-  def checkResponse(str: String, successMessage: String, failureMessage: String): Unit = str match { //technical debt?
+  def checkHttpResponse(str: String, successMessage: String, failureMessage: String): Boolean = str match { //technical debt?
     case "Not a valid request" =>
       displayMsg(failureMessage)
+      false
     case _ =>
       successAuthenticationCase(str)
       displayMsg(successMessage)
-      loginSucceedOnGui() //questo si fa quando viene ricevuta la risposta di entrata al villaggio
       println("Success this is server response with the token: " + str)
+      true
   }
 
   /**

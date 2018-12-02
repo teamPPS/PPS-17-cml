@@ -54,12 +54,12 @@ class VillageViewController {
     buildingsGrid setContent buildingsMenu
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, areaPane, upgradePane)
   }
-  
+
   def logoutSystem(): Unit = {
-    authenticationActor ! Logout()
-    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
-//    System.exit(0)
-//    println("Bye!")
+//    authenticationActor ! Logout()
+//    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
+        System.exit(0)
+        println("Bye!")
   }
-  
+
 }
