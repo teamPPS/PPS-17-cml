@@ -2,17 +2,17 @@ package cml.view
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
 import cml.model.static_model.StaticStructure
-import cml.utils.{BuildingJson, CreatureJson, HabitatJson}
-import cml.utils.ModelConfig.ModelClass._
 import cml.utils.ModelConfig.Elements._
+import cml.utils.ModelConfig.ModelClass._
+import cml.utils.{BuildingJson, HabitatJson}
 import cml.view.utils.TileConfig._
-import javafx.scene.control.{Button, TextArea}
 import javafx.scene.image.ImageView
 import javafx.scene.input._
-import javafx.scene.layout.{GridPane, Pane}
+import javafx.scene.layout.GridPane
 import javafx.scene.{Node, SnapshotParameters}
 
 import scala.collection.mutable
@@ -26,20 +26,18 @@ trait HandlerSetup {
   /**
     * Setup handlers for the village
     * @param grid what we need to handle
-    * @param upgrade actions to perform
     */
-  def setupVillageHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit
+  def setupVillageHandlers(grid: GridPane, controller: VillageViewController): Unit
 
   /**
     * Setup handlers for buildings menu
     * @param grid what we need to handle
-    * @param upgrade actions to perform
     */
-  def setupBuildingsHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit
+  def setupBuildingsHandlers(grid: GridPane, controller: VillageViewController): Unit
 }
 
 trait Handler {
-  def handle(elem: Node, area: Node, upgrade: Node): Unit
+  def handle(elem: Node, controller: VillageViewController): Unit
 }
 
 object Handler {
@@ -49,70 +47,59 @@ object Handler {
   val village = VillageMap(structures)
 
   val handleVillage: Handler = {
-    (elem: Node, area: Node, upgrade: Node) =>
-      addClickHandler(elem, area, upgrade)
-      addDragAndDropTargetHandler(elem, area)
+    (elem: Node, controller: VillageViewController) =>
+      addClickHandler(elem, controller)
+      addDragAndDropTargetHandler(elem, controller)
   }
 
   val handleBuilding: Handler = {
-    (_: Node, area: Node, _: Node) =>
+    (_: Node, controller: VillageViewController) =>
       for(tile <- tileSet){
-        addDragAndDropSourceHandler(tile, area)
+        addDragAndDropSourceHandler(tile, controller)
       }
   }
 
-  private def addClickHandler(n: Node, a:Node, up: Node): Unit = {
+  private def addClickHandler(n: Node, c: VillageViewController): Unit = {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
 
       //take() delle risorse
 
-      a match {
-        case info: TextArea => info setText "Mouse clicked in coords: ("+x+","+y+")\n"
-        case _ => throw new ClassCastException
-      }
-      up match {
-        case levelUp: Button =>
-          levelUp.setDisable(false)
+      c.selectionInfo setText "Mouse clicked in coords: ("+x+","+y+")\n"
+      val btn = c.levelUpButton
+      btn.setDisable(false)
           //se è terrain il tipo non devo poter aumentare il livello
-          levelUp.setOnMouseClicked(_ =>{
-            for(s <- village.structures){
-              if(s.position equals Position(x,y)){
-                s.levelUp()
-                s.getClass.getName match{
-                  //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
-                  case FARM => //decrementare risorse globali + update
-                    val json = BuildingJson(FARM, s.level).json
-                    villageActor ! UpdateVillage(json)
-                  case CAVE => //decrementare risorse globali + update
-                    val json = BuildingJson(CAVE, s.level).json
-                    villageActor ! UpdateVillage(json)
-                  case HABITAT => //decrementare risorse globali cibo + denaro+ update
-                    val jsonHabitat = HabitatJson(FIRE, s.level).json
-                    villageActor ! UpdateVillage(jsonHabitat)
-                    //creature json aumento livello creatura
-//                    val jsonCreature = CreatureJson()
-//                    villageActor ! UpdateVillage(jsonCreature)
-                }
-              }
+      c.levelUpButton.setOnMouseClicked(_ => {
+        for (s <- village.structures) {
+          if (s.position equals Position(x, y)) {
+            s.levelUp()
+            s.getClass.getName match {
+              //controllo aumento di livello: se è habitat decremento risorsa cibo e denaro, se è struttura solo denaro
+              case FARM => //decrementare risorse globali + update
+                val json = BuildingJson(FARM, s.level).json
+                villageActor ! UpdateVillage(json)
+              case CAVE => //decrementare risorse globali + update
+                val json = BuildingJson(CAVE, s.level).json
+                villageActor ! UpdateVillage(json)
+              case HABITAT => //decrementare risorse globali cibo + denaro+ update
+                val jsonHabitat = HabitatJson(FIRE, s.level).json
+                villageActor ! UpdateVillage(jsonHabitat)
+              //creature json aumento livello creatura
+              //                    val jsonCreature = CreatureJson()
+              //                    villageActor ! UpdateVillage(jsonCreature)
             }
-            println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
-            levelUp.setDisable(true)
-          })
-        case _ => throw new ClassCastException
-      }
+          }
+        }
+        println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
+        c.levelUpButton.setDisable(true)
+      })
     })
   }
 
-  private def addDragAndDropSourceHandler(t: Tile, a: Node): Unit = {
+  private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked(_ => {
-      a match {
-        case info: TextArea => info setText "Element selected: "+ t.description + "\nPrice: $$$"
-        case _ => throw new ClassCastException
-      }
-    })
+    canvas setOnMouseClicked(_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: $$$")
     canvas setOnDragDetected((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
@@ -120,15 +107,12 @@ object Handler {
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
-      a match {
-        case info: TextArea => info setText "Dragged element " + dragBoard.getString
-        case _ => throw new ClassCastException
-      }
+      c.selectionInfo setText "Dragged element " + dragBoard.getString
       event consume()
     })
   }
 
-  private def addDragAndDropTargetHandler(n: Node, a: Node): Unit = {
+  private def addDragAndDropTargetHandler(n: Node, c: VillageViewController): Unit = {
     n setOnDragOver ((event: DragEvent) => {
       event acceptTransferModes TransferMode.COPY
       event consume()
@@ -150,11 +134,8 @@ object Handler {
       villageActor ! UpdateVillage(json)
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
+      c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
 
-      a match {
-        case info: TextArea => info setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
-        case _ => throw new ClassCastException
-      }
       event consume()
     })
   }
@@ -162,19 +143,12 @@ object Handler {
 
 object ConcreteHandlerSetup extends HandlerSetup {
 
-  private def setHandlers(grid: GridPane, area: Pane, upgrade: Pane, handler: Handler): Unit = {
+  private def setHandlers(grid: GridPane, controller: VillageViewController, handler: Handler): Unit = {
     val gridChildren = grid.getChildren
-    val paneChildren = upgrade.getChildren
-    val areaChildren = area.getChildren
-    gridChildren forEach(g => {
-      areaChildren forEach(a =>{
-        paneChildren forEach(up =>
-        handler.handle(g, a,  up)
-      )}
-    )})
+    gridChildren forEach(g => handler.handle(g, controller))
   }
 
-  override def setupVillageHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit = setHandlers(grid, area, upgrade, Handler.handleVillage)
+  override def setupVillageHandlers(grid: GridPane, controller: VillageViewController): Unit = setHandlers(grid, controller, Handler.handleVillage)
 
-  override def setupBuildingsHandlers(grid: GridPane, area: Pane, upgrade: Pane): Unit = setHandlers(grid, area, upgrade, Handler.handleBuilding)
+  override def setupBuildingsHandlers(grid: GridPane, controller: VillageViewController): Unit = setHandlers(grid, controller, Handler.handleBuilding)
 }

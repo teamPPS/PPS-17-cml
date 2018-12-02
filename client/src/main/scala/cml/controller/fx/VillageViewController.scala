@@ -18,7 +18,7 @@ class VillageViewController {
   @FXML var logoutMenuItem: MenuItem = _
   @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
-  @FXML var levelUPButton: Button = _
+  @FXML var levelUpButton: Button = _
   @FXML var upgradePane: Pane = _
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
@@ -49,12 +49,12 @@ class VillageViewController {
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
 
-    ConcreteHandlerSetup.setupVillageHandlers(villageMap, areaPane, upgradePane)
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)
 
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
-    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, areaPane, upgradePane)
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
   }
   
   def logoutSystem(): Unit = {
