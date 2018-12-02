@@ -69,16 +69,15 @@ object Habitat {
     * @param element         of the habitat
     * @param position coordinates of the habitat in the village
     * @param level    level of the habitat
-//    * @param creatures       list of creatures living in this habitat
     */
   case class Habitat(element: String, position: Position, var level: Int) extends Structure {
-    private var creatureList: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
+    private var creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = level += 1
     override def getLevel: Int = level
     override def getPosition: Position = position
     override def resource: Resource = money
-    def creatures(creature: Creature): Unit = creatureList += creature
+    def addCreature(creature: Creature): Unit = creatures += creature
   }
 
   /**
@@ -86,14 +85,15 @@ object Habitat {
     * @param element         of the habitat
     * @param position coordinates of the habitat in the village
     * @param level    level of the habitat
-    * @param creature        single creature living in this habitat
     */
-  case class SingleHabitat(element: String, position: Position, var level: Int, creature: Creature) extends Structure {
+  case class SingleHabitat(element: String, position: Position, var level: Int) extends Structure {
     val money = Money(INIT_VALUE)
+    private var creature: Creature = _
     override def levelUp(): Unit = level += 1
     override def getLevel: Int = level
     override def getPosition: Position = position
     override def resource: Resource = money
+    def addCreature(c: Creature): Unit = creature = c
   }
 
 }
