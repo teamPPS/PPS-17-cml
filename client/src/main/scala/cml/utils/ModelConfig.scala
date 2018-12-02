@@ -5,6 +5,8 @@ object ModelConfig {
   object Creature {
     val DRAGON_NAME: String = "Smaug"
     val GOLEM_NAME: String = "Astaroth"
+    val KRAKEN_NAME: String = "Blagrox"
+    val GRIFFIN_NAME: String = "Cerulea"
     val INITIAL_LEVEL: Int = 1
     val HEALTH_POINT: Int = 100
     val ATTACK_VALUE: Int = 5
