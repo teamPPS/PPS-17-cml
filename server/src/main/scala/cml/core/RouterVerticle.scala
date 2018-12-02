@@ -18,7 +18,7 @@ abstract class RouterVerticle extends ScalaVerticle {
   var server: HttpServer = _
 
   override def startFuture(): Future[Unit] = {
-    println("Starting AuthenticationVerticle")
+    //println("Starting Services in routing verticle")
 
     val promise = Promise[Unit]()
     val router = Router.router(vertx)
