@@ -1,19 +1,42 @@
 package cml.model.static_model
 
-import cml.model.base.Creature
-import cml.model.creatures.{Dragon, Golem}
-import cml.utils.ModelConfig.Creature.{DRAGON_NAME, GOLEM_NAME, INITIAL_LEVEL}
+import cml.model.base.{Creature, Structure}
+import cml.model.creatures.{Dragon, Golem, Griffin, Kraken}
+import cml.utils.CreatureJson
+import cml.utils.ModelConfig.Creature._
+import cml.utils.ModelConfig.Elements.{AIR, EARTH, FIRE, WATER}
+import play.api.libs.json.JsValue
 
 /**
-  * This object defines some static creatures
-  * @author Filippo Portolani,Monica Gondolini
+  * @author Monica Gondolini
   */
 
-object StaticCreatures {
+trait StaticCreature {
+  val json: JsValue
+  val getCreature: Creature
+}
 
-  val creaturesList : List[Creature] = List(
-    Dragon(DRAGON_NAME,INITIAL_LEVEL),
-    Golem(GOLEM_NAME,INITIAL_LEVEL)
-  )
+case class StaticCreatures(s: Structure) extends StaticCreature {
 
+  private var creature: Creature = _
+  private var creatureJson: JsValue = _
+
+  s.element match {
+    case FIRE =>
+      creature = Dragon(DRAGON_NAME,INITIAL_LEVEL)
+      creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL).json //passare anche il tipo drago/kraken ecc ?
+    case WATER =>
+      creature = Kraken(KRAKEN_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(KRAKEN_NAME,INITIAL_LEVEL).json
+    case EARTH =>
+      creature = Golem(GOLEM_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(GOLEM_NAME,INITIAL_LEVEL).json
+    case AIR =>
+      creature = Griffin(GRIFFIN_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(GRIFFIN_NAME,INITIAL_LEVEL).json
+    case "Not an habitat" => throw new IllegalArgumentException
+  }
+
+  override val json: JsValue = creatureJson
+  override val getCreature: Creature = creature
 }

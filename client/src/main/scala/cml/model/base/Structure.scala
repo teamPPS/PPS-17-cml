@@ -51,7 +51,6 @@ case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
       throw new NoSuchElementException
   }
   override def creatures: mutable.MutableList[Creature] = null
-
   override def element: String = "Not an habitat"
 }
 
@@ -72,7 +71,6 @@ case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
       throw new NoSuchElementException
   }
   override def creatures: mutable.MutableList[Creature] = null
-
   override def element: String = "Not an habitat"
 }
 
@@ -97,7 +95,6 @@ object Habitat {
     override def resource: Resource = money
     override def addCreature(creature: Creature): Unit = creatureList += creature
     override def creatures: mutable.MutableList[Creature] = creatureList
-
     override def element: String = habitatElement
   }
 
