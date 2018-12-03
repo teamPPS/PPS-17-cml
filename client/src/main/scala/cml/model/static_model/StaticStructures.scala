@@ -31,18 +31,11 @@ case class StaticStructure(t: Tile, x: Int, y: Int) extends  StaticStructures {
 
   t.description match {
     case "FIRE_HABITAT" => structure = Habitat(FIRE, Position (x, y), H_INIT_LEVEL)
-      println ("habitat posizionato " + structure + "  " + t.json) //debug
     case "WATER_HABITAT" => structure = Habitat(WATER, Position (x, y), H_INIT_LEVEL)
-      println ("habitat posizionato " + structure + "  " + t.json) //debug
     case "EARTH_HABITAT" => structure = Habitat(EARTH, Position (x, y), H_INIT_LEVEL)
-      println ("habitat posizionato " + structure + "  " + t.json) //debug
     case "AIR_HABITAT" => structure = Habitat(AIR, Position (x, y), H_INIT_LEVEL)
-      println ("habitat posizionato " + structure + "  " + t.json) //debug
     case "FARM" => structure = Farm(Position (x, y), B_INIT_LEVEL)
-      println ("farm posizionato " + structure + "  " + t.json) //debug
     case "CAVE" => structure = Cave(Position (x, y), B_INIT_LEVEL)
-      println ("cave posizionato " + structure + "  " + t.json) //debug
-    case "TERRAIN" => println ("terrain posizionato") //debug
     case _ => throw new NoSuchElementException
   }
 

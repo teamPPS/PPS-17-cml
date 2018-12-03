@@ -25,17 +25,12 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
 
   s.levelUp()
   s.getClass.getName match {
-    case FARM => //decrementare risorse globali + update
-      jsonStructure = BuildingJson(FARM, s.level).json
-    case CAVE => //decrementare risorse globali + update
-      jsonStructure = BuildingJson(CAVE, s.level).json
-    case HABITAT => //decrementare risorse globali cibo + denaro+ update
-      jsonStructure = HabitatJson(FIRE, s.level).json
+    case FARM => jsonStructure = BuildingJson(FARM, s.level).json
+    case CAVE => jsonStructure = BuildingJson(CAVE, s.level).json
+    case HABITAT => jsonStructure = HabitatJson(FIRE, s.level).json
       s.addCreature(Dragon("Smaug", 1))
       if(s.creatures != null) jsonCreature = CreatureUpgrade(s.creatures.head).creatureJson
   }
-
-  println("Level up: $level \nfood-- \nmoney--") //da stampare in textarea livello
 
   override def structureJson: JsValue = jsonStructure
   override def creatureJson: JsValue = jsonCreature

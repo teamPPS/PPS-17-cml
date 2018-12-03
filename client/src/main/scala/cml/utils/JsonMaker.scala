@@ -32,7 +32,7 @@ case class BuildingJson(buildingType: String, buildingLevel: Int) extends JsonMa
   * @param habitatElem natural element
   * @param habitatLevel level of the habitat
   */
-case class HabitatJson(habitatElem: String, habitatLevel: Int) extends JsonMaker {
+case class HabitatJson(habitatElem: String, habitatLevel: Int) extends JsonMaker { //passare CreatureJson
   override def json: JsValue = Json.obj(
     HABITAT -> Json.obj(
       "habitat_id" -> Json.obj(

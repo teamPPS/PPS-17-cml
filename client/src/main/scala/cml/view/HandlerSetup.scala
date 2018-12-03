@@ -72,6 +72,7 @@ object Handler {
           c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
             "Level: " + s.level + "\n"+
             "Resources: " + s.resource.amount + "\n"
+
           c.levelUpButton setDisable false //TODO se terrain disabilitare
           c.levelUpButton setOnMouseClicked (_ => {
             val upgrade = StructureUpgrade(s)
@@ -80,7 +81,6 @@ object Handler {
 
             //Decremento denaro in base al prezzo, update modello remoto e locale
             val resourceJson = MoneyJson(INIT_VALUE-price).json
-            //decrementare variabile globale
             println("json drop" +resourceJson)
             villageActor ! UpdateVillage(resourceJson)
 
@@ -147,7 +147,6 @@ object Handler {
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
       val resourceJson = MoneyJson(INIT_VALUE-price).json
-      //decrementare variabile globale
       println("json drop" +resourceJson)
       villageActor ! UpdateVillage(resourceJson)
 
