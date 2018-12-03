@@ -6,7 +6,7 @@ import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
-import cml.model.static_model.StaticStructure
+import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.Resource._
 import cml.utils.MoneyJson
 import cml.view.utils.TileConfig._
@@ -64,14 +64,13 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
-//      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
 
       for (s <- village.structures) {
         if (s.position equals Position(x, y)) {
           //fare un metodo/classe per il testo da visualizzare
           c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
             "Level: " + s.level + "\n"+
-            "Resources: " + s.resource.amount + "\na\na\na\na\na\n"
+            "Resources: " + s.resource.amount + "\n"
 
           c.levelUpButton setDisable false //TODO se terrain disabilitare
           c.levelUpButton setOnMouseClicked (_ => {
@@ -82,7 +81,6 @@ object Handler {
             //Decremento denaro in base al prezzo, update modello remoto e locale
             val resourceJson = MoneyJson(INIT_VALUE-price).json
             villageActor ! UpdateVillage(resourceJson)
-
 
             c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
               "Level: " + s.level + "\n"+
@@ -106,13 +104,19 @@ object Handler {
             })
           }
 
-          if(s.creatures != null) { //controllo non sia un building
-            println("creatura")
+          if(s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.addCreatureButton.setOnMouseClicked(_ => {
-              //controllo tipo habitat
-              //add creatura di quel tipo
+              val creature = StaticCreatures(s)
+              s.addCreature(creature getCreature)
+              println(s.creatures)
+              villageActor ! UpdateVillage(creature json)
+              c.addCreatureButton setDisable true
 
+              c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+                "Level: " + s.level + "\n"+
+                "Resources: " + s.resource.amount + "\n"+
+                "Creature: " +s.creatures.head
             })
           }
         }

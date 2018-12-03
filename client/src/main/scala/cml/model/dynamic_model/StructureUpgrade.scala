@@ -27,9 +27,12 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
   s.getClass.getName match {
     case FARM => jsonStructure = BuildingJson(FARM, s.level).json
     case CAVE => jsonStructure = BuildingJson(CAVE, s.level).json
-    case HABITAT => jsonStructure = HabitatJson(FIRE, s.level).json
-      s.addCreature(Dragon("Smaug", 1))
-      if(s.creatures != null) jsonCreature = CreatureUpgrade(s.creatures.head).creatureJson
+    case HABITAT => jsonStructure = HabitatJson(s.element, s.level).json
+      if(s.creatures != null && s.creatures.nonEmpty){
+        jsonCreature = CreatureUpgrade(s.creatures.head, s.level).creatureJson
+        println(jsonCreature)
+        println(jsonStructure)
+      }
   }
 
   override def structureJson: JsValue = jsonStructure
