@@ -2,6 +2,7 @@ package cml.controller.messages
 
 import cml.controller.fx.VillageViewController
 import io.vertx.lang.scala.json.JsonObject
+import play.api.libs.json.JsValue
 
 /**
   * Village request messages
@@ -26,7 +27,7 @@ object VillageRequest {
     * Request to update a village
     * @param update village user
     */
-  case class UpdateVillage(update: JsonObject) extends VillageRequest //passare anche model e (facoltativo) textarea
+  case class UpdateVillage(update: JsValue) extends VillageRequest //passare anche model e (facoltativo) textarea
 
   /**
     * Request to delete a village

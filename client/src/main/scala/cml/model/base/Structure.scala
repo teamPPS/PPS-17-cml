@@ -1,7 +1,8 @@
 package cml.model.base
 
-import cml.model.static_model.{StaticBuilding, StaticHabitat}
-import cml.utils.ModelConfig.Resource.INIT_VALUE
+import cml.utils.ModelConfig.Resource._
+
+import scala.collection.mutable
 
 /**
   * This trait defines common operations over structures
@@ -12,58 +13,85 @@ trait Structure{
     * Increments Structure level
     */
   def levelUp(): Unit
+
+  /**
+    * Get structure level
+    */
+  def level: Int
+  /**
+    * Get structure coordinates
+    */
+  def position: Position
+
+  /**
+    * Get resource
+    * @return resource type
+    */
+  def resource: Resource
+
+  def addCreature(creature: Creature): Unit
+  def creatures: mutable.MutableList[Creature]
 }
 
 /**
-  * Implementation of structure building
-  * @param buildingType type of the building
-  * @param buildingPosition coordinates of the building in the village
-  * @param buildingLevel level of the building
+  * Implementation of building structure Farm
+  * @param farmPosition coordinates of the building in the village
+  * @param farmLevel level of the building
   */
-case class Building(buildingType: String, buildingPosition: Position, var buildingLevel: Int) extends StaticBuilding(buildingType, buildingLevel) with Structure {
-
-//  def resource(buildingType: String):Resource = buildingType match{
-//    case TYPE_FARM => {
-//      Food(INIT_VALUE)
-//    }
-//  }
-  //aggiungere controllo per tipo building
+case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
   val food = Food(INIT_VALUE)
+  override def levelUp(): Unit = farmLevel += 1
+  override def level: Int = farmLevel
+  override def position: Position = farmPosition
+  override def resource: Resource = food
 
-  override def levelUp(): Unit = buildingLevel += 1
+  override def addCreature(creature: Creature): Unit = {
+    if(creature != null)
+      throw new NoSuchElementException
+  }
+  override def creatures: mutable.MutableList[Creature] = null
+}
+
+/**
+  * Implementation of building structure Cave
+  * @param cavePosition coordinates of the building in the village
+  * @param caveLevel level of the building
+  */
+case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
+  val money = Money(INIT_VALUE)
+  override def levelUp(): Unit = caveLevel += 1
+  override def level: Int = caveLevel
+  override def position: Position = cavePosition
+  override def resource: Resource = money
+
+  override def addCreature(creature: Creature): Unit = {
+    if(creature != null)
+      throw new NoSuchElementException
+  }
+  override def creatures: mutable.MutableList[Creature] = null
 }
 
 
 object Habitat {
 
-  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creatures: List[Creature]) : Habitat =
-     Habitat(element, habitatPosition, habitatLevel, creatures)
-
-  def apply(element: String, habitatPosition: Position, habitatLevel: Int, creature: Creature): SingleHabitat =
-    SingleHabitat(element, habitatPosition, habitatLevel, creature)
+  def apply(habitatElement: String, habitatPosition: Position, habitatLevel: Int) : Habitat =
+     Habitat(habitatElement, habitatPosition, habitatLevel)
 
   /**
     * Implementation of structure habitat
-    * @param element         of the habitat
+    * @param habitatElement         of the habitat
     * @param habitatPosition coordinates of the habitat in the village
     * @param habitatLevel    level of the habitat
-    * @param creatures       list of creatures living in this habitat
     */
-  case class Habitat(element: String, habitatPosition: Position, var habitatLevel: Int, creatures: List[Creature]) extends StaticHabitat(element, habitatLevel) with Structure {
+  case class Habitat(habitatElement: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
+    var creatureList: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
     override def levelUp(): Unit = habitatLevel += 1
-  }
-
-  /**
-    * Implementation of structure habitat
-    * @param element         of the habitat
-    * @param habitatPosition coordinates of the habitat in the village
-    * @param habitatLevel    level of the habitat
-    * @param creature        single creature living in this habitat
-    */
-  case class SingleHabitat(element: String, habitatPosition: Position, var habitatLevel: Int, creature: Creature) extends StaticHabitat(element, habitatLevel) with Structure {
-    val money = Money(INIT_VALUE)
-    override def levelUp(): Unit = habitatLevel += 1
+    override def level: Int = habitatLevel
+    override def position: Position = habitatPosition
+    override def resource: Resource = money
+    override def addCreature(creature: Creature): Unit = creatureList += creature
+    override def creatures: mutable.MutableList[Creature] = creatureList
   }
 
 }

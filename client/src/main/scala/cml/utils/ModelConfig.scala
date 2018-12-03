@@ -14,8 +14,8 @@ object ModelConfig {
 
   object Building {
     val B_INIT_LEVEL: Int = 1
-    val TYPE_FARM: String = "farm"
-    val TYPE_CAVE: String = "cave"
+    val TYPE_FARM: String = "Farm"
+    val TYPE_CAVE: String = "Cave"
   }
 
   object Habitat{
@@ -24,7 +24,9 @@ object ModelConfig {
 
   object Resource {
     val INC_BY_10: Int = 10
-    val INIT_VALUE: Int = 0
+    val INIT_VALUE: Int = 100
+    val FOOD: String = "Food"
+    val MONEY: String = "Money"
   }
 
   object Elements {
@@ -32,5 +34,11 @@ object ModelConfig {
     val FIRE: String = "fire"
     val EARTH: String = "earth"
     val AIR: String = "air"
+  }
+
+  object ModelClass {
+    val FARM: String = "cml.model.base.Farm"
+    val CAVE: String = "cml.model.base.Cave"
+    val HABITAT: String = "cml.model.base.Habitat$Habitat"
   }
 }

@@ -3,9 +3,9 @@ package cml.services.village
 import cml.core.utils.NetworkConfiguration._
 import cml.services.authentication.TokenStorage
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
-import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
+import play.api.libs.json.JsValue
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,7 +35,7 @@ trait VillageServiceVertx {
     * @param update what to update
     * @return successful or failed deletion
     */
-  def updateVillage(update: JsonObject): Future[Unit]
+  def updateVillage(update: JsValue): Future[Unit]
 
   /**
     * Delete the user's village
@@ -84,7 +84,7 @@ object VillageServiceVertx{
         })
     }
 
-    override def updateVillage(update: JsonObject): Future[Unit] = {
+    override def updateVillage(update: JsValue): Future[Unit] = {
       client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendJsonFuture(update)

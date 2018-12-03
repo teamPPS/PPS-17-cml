@@ -23,6 +23,7 @@ subprojects {
     dependencies {
 
         implementation 'org.scala-lang:scala-library:2.12.4'
+        implementation group: 'com.typesafe.play', name: 'play-json_2.12', version: '2.6.10'
 
         // Vert.x
         implementation 'io.vertx:vertx-web-scala_2.12:3.5.4'

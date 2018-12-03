@@ -1,8 +1,10 @@
 package cml.model.base
 
 import cml.model.creatures.{Dragon, Golem, Griffin, Kraken}
+import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import org.scalatest.FunSuite
 import cml.utils.ModelConfig.Creature._
+import cml.utils.ModelConfig.Elements.FIRE
 
 /**
   * Some tests for multiple creatures
@@ -42,4 +44,12 @@ class CreatureTest extends FunSuite {
     assert(griffin.currentLevel == 8)
 
   }
+
+  test("Add creature to habitat test"){
+    val pos = Position(10,10)
+    val habitat = Habitat(FIRE, pos, B_INIT_LEVEL)
+    habitat.addCreature(dragon)
+    assert(habitat.creatureList.head.equals(dragon))
+  }
+
 }

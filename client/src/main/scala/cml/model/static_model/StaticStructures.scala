@@ -1,31 +1,45 @@
 package cml.model.static_model
-
+import cml.model.base._
+import cml.utils.ModelConfig.Habitat._
 import cml.utils.ModelConfig.Building._
 import cml.utils.ModelConfig.Elements._
-import cml.utils.ModelConfig.Habitat._
+import cml.view.Tile
+import play.api.libs.json.JsValue
 
 /**
-  * This object defines some static structures
-  * @author Filippo Portolani,Monica Gondolini
+  * Trait to generate Static Structures
+  * @author Monica Gondolini
   */
+trait StaticStructures {
 
-sealed trait StaticStructures
+  /**
+    * Creates a json
+    * @return a json
+    */
+  def json: JsValue
 
-class StaticBuilding(bType: String, bLevel: Int) extends StaticStructures
+  /**
+    * Get the type of structure
+    * @return structure
+    */
+  def getStructure: Structure
+}
 
-class StaticHabitat(elem: String, hLevel: Int) extends StaticStructures
+case class StaticStructure(t: Tile, x: Int, y: Int) extends  StaticStructures {
 
-object StaticStructures{
+  var structure: Structure = _
 
-  val staticHabitats : List[StaticHabitat] = List(
-    new StaticHabitat(AIR, H_INIT_LEVEL),
-    new StaticHabitat(FIRE, H_INIT_LEVEL),
-    new StaticHabitat(WATER, H_INIT_LEVEL),
-    new StaticHabitat(EARTH, H_INIT_LEVEL)
-  )
+  t.description match {
+    case "FIRE_HABITAT" => structure = Habitat(FIRE, Position (x, y), H_INIT_LEVEL)
+    case "WATER_HABITAT" => structure = Habitat(WATER, Position (x, y), H_INIT_LEVEL)
+    case "EARTH_HABITAT" => structure = Habitat(EARTH, Position (x, y), H_INIT_LEVEL)
+    case "AIR_HABITAT" => structure = Habitat(AIR, Position (x, y), H_INIT_LEVEL)
+    case "FARM" => structure = Farm(Position (x, y), B_INIT_LEVEL)
+    case "CAVE" => structure = Cave(Position (x, y), B_INIT_LEVEL)
+    case _ => throw new NoSuchElementException
+  }
 
-  val staticBuildings : List[StaticBuilding] = List(
-    new StaticBuilding(TYPE_FARM, B_INIT_LEVEL),
-    new StaticBuilding(TYPE_CAVE, B_INIT_LEVEL)
-  )
+  override def json: JsValue = t.json
+  override def getStructure: Structure = structure
+
 }
