@@ -1,8 +1,0 @@
-*.class
-*.log
-.gradle/
-build/
-.idea/
-reports/
-out/
-distributions/
