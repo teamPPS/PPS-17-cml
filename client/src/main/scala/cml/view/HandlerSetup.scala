@@ -83,7 +83,7 @@ object Handler {
             val resourceJson = MoneyJson(INIT_VALUE-price).json
             villageActor ! UpdateVillage(resourceJson)
 
-            c.levelUpButton setDisable true
+
             c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
               "Level: " + s.level + "\n"+
               "Resources: " + s.resource.amount + "\n"
@@ -103,6 +103,16 @@ object Handler {
               c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
                 "Level: " + s.level + "\n"+
                 "Resources: " + s.resource.amount + "\n"
+            })
+          }
+
+          if(s.creatures != null) { //controllo non sia un building
+            println("creatura")
+            c.addCreatureButton setDisable false
+            c.addCreatureButton.setOnMouseClicked(_ => {
+              //controllo tipo habitat
+              //add creatura di quel tipo
+
             })
           }
         }
