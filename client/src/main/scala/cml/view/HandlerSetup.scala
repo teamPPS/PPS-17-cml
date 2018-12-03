@@ -67,23 +67,14 @@ object Handler {
 
       for (s <- village.structures) {
         if (s.position equals Position(x, y)) {
-          //fare un metodo/classe per il testo da visualizzare
-          c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-            "Level: " + s.level + "\n"+
-            "Resources: " + s.resource.amount + "\n"
-
           if(s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.addCreatureButton.setOnMouseClicked(_ => {
               val creature = StaticCreatures(s)
               s.addCreature(creature getCreature)
-              println(s.creatures)
               villageActor ! UpdateVillage(creature json)
               c.addCreatureButton setDisable true
-              c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-                "Level: " + s.level + "\n" +
-                "Resources: " + s.resource.amount + "\n" +
-                "Creature: " + s.creatures.head
+              c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
             })
           }else{
             c.levelUpButton setDisable false //TODO se terrain disabilitare
@@ -96,15 +87,11 @@ object Handler {
               val resourceJson = MoneyJson(INIT_VALUE - price).json
               villageActor ! UpdateVillage(resourceJson)
 
-              c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-                "Level: " + s.level + "\n" +
-                "Resources: " + s.resource.amount + "\n"
+              c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
             })
 
             s.resource.inc(s.level) //debug
-            c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-              "Level: " + s.level + "\n" +
-              "Resources: " + s.resource.amount + "\n" // debug
+            c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
 
             if (s.resource.amount > INIT_VALUE) { //settare un current value?
               c.takeButton setDisable false
@@ -112,16 +99,29 @@ object Handler {
                 val retrieve = RetrieveResource(s)
                 villageActor ! UpdateVillage(retrieve resourceJson)
                 c.takeButton setDisable true
-                c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-                  "Level: " + s.level + "\n" +
-                  "Resources: " + s.resource.amount + "\n"
+                c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
               })
             }
-
           }
         }
       }
     })
+  }
+
+  private def displayText(name: String, level: Int, resourceAmount: Int, creature: Creature): String = {
+    var text:String = ""
+    if(creature != null) {
+      text = "Structure" + name + "\n" +
+        "Level: " + level + "\n" +
+        "Resources: " + resourceAmount + "\n" +
+        "Creature: " + creature.name + "\n"+
+        "Creature level: " + creature.currentLevel
+    }else{
+      text = "Structure" + name + "\n" +
+        "Level: " + level + "\n" +
+        "Resources: " + resourceAmount + "\n"
+    }
+    text
   }
 
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
