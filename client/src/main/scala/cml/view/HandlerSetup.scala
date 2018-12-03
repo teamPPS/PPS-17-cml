@@ -72,38 +72,6 @@ object Handler {
             "Level: " + s.level + "\n"+
             "Resources: " + s.resource.amount + "\n"
 
-          c.levelUpButton setDisable false //TODO se terrain disabilitare
-          c.levelUpButton setOnMouseClicked (_ => {
-            val upgrade = StructureUpgrade(s)
-            villageActor ! UpdateVillage(upgrade structureJson)
-            villageActor ! UpdateVillage(upgrade creatureJson)
-
-            //Decremento denaro in base al prezzo, update modello remoto e locale
-            val resourceJson = MoneyJson(INIT_VALUE-price).json
-            villageActor ! UpdateVillage(resourceJson)
-
-            c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-              "Level: " + s.level + "\n"+
-              "Resources: " + s.resource.amount + "\n"
-          })
-
-          s.resource.inc(s.level) //debug
-          c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-            "Level: " + s.level + "\n"+
-            "Resources: " + s.resource.amount + "\n" // debug
-
-          if (s.resource.amount > INIT_VALUE) { //settare un current value?
-            c.takeButton setDisable false
-            c.takeButton setOnMouseClicked (_ => {
-              val retrieve = RetrieveResource(s)
-              villageActor ! UpdateVillage(retrieve resourceJson)
-              c.takeButton setDisable true
-              c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-                "Level: " + s.level + "\n"+
-                "Resources: " + s.resource.amount + "\n"
-            })
-          }
-
           if(s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.addCreatureButton.setOnMouseClicked(_ => {
@@ -112,12 +80,44 @@ object Handler {
               println(s.creatures)
               villageActor ! UpdateVillage(creature json)
               c.addCreatureButton setDisable true
+              c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+                "Level: " + s.level + "\n" +
+                "Resources: " + s.resource.amount + "\n" +
+                "Creature: " + s.creatures.head
+            })
+          }else{
+            c.levelUpButton setDisable false //TODO se terrain disabilitare
+            c.levelUpButton setOnMouseClicked (_ => {
+              val upgrade = StructureUpgrade(s)
+              villageActor ! UpdateVillage(upgrade structureJson)
+              villageActor ! UpdateVillage(upgrade creatureJson)
+
+              //Decremento denaro in base al prezzo, update modello remoto e locale
+              val resourceJson = MoneyJson(INIT_VALUE - price).json
+              villageActor ! UpdateVillage(resourceJson)
 
               c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
-                "Level: " + s.level + "\n"+
-                "Resources: " + s.resource.amount + "\n"+
-                "Creature: " +s.creatures.head
+                "Level: " + s.level + "\n" +
+                "Resources: " + s.resource.amount + "\n"
             })
+
+            s.resource.inc(s.level) //debug
+            c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+              "Level: " + s.level + "\n" +
+              "Resources: " + s.resource.amount + "\n" // debug
+
+            if (s.resource.amount > INIT_VALUE) { //settare un current value?
+              c.takeButton setDisable false
+              c.takeButton setOnMouseClicked (_ => {
+                val retrieve = RetrieveResource(s)
+                villageActor ! UpdateVillage(retrieve resourceJson)
+                c.takeButton setDisable true
+                c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
+                  "Level: " + s.level + "\n" +
+                  "Resources: " + s.resource.amount + "\n"
+              })
+            }
+
           }
         }
       }

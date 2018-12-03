@@ -17,11 +17,10 @@ trait UpgradeCreature {
   * Upgrade a creature level
   * @param creature creature to model
   */
-case class CreatureUpgrade(creature: Creature, level:Int) extends UpgradeCreature {
-  for(_ <- INITIAL_LEVEL until level) {
-    creature levelUp()
-    println(creature.currentLevel)
-  }
+case class CreatureUpgrade(creature: Creature) extends UpgradeCreature {
+
+  creature levelUp()
   private val json: JsValue = CreatureJson(creature name, creature.currentLevel) json
+
   override def creatureJson: JsValue = json
 }

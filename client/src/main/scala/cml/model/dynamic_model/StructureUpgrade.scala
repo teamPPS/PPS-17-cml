@@ -27,9 +27,10 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
   s.getClass.getName match {
     case FARM => jsonStructure = BuildingJson(FARM, s.level).json
     case CAVE => jsonStructure = BuildingJson(CAVE, s.level).json
-    case HABITAT => jsonStructure = HabitatJson(s.element, s.level).json
+    case HABITAT =>
       if(s.creatures != null && s.creatures.nonEmpty){
-        jsonCreature = CreatureUpgrade(s.creatures.head, s.level).creatureJson
+        jsonStructure = HabitatJson(s.element, s.level).json
+        jsonCreature = CreatureUpgrade(s.creatures.head).creatureJson
         println(jsonCreature)
         println(jsonStructure)
       }
