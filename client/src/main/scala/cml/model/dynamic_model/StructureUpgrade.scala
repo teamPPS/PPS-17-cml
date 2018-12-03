@@ -1,8 +1,6 @@
 package cml.model.dynamic_model
 
 import cml.model.base.Structure
-import cml.model.creatures.Dragon
-import cml.utils.ModelConfig.Elements.FIRE
 import cml.utils.ModelConfig.ModelClass.{CAVE, FARM, HABITAT}
 import cml.utils.{BuildingJson, HabitatJson}
 import play.api.libs.json.JsValue
@@ -31,8 +29,6 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
       if(s.creatures != null && s.creatures.nonEmpty){
         jsonStructure = HabitatJson(s.element, s.level).json
         jsonCreature = CreatureUpgrade(s.creatures.head).creatureJson
-        println(jsonCreature)
-        println(jsonStructure)
       }
   }
 

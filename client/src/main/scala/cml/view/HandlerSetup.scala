@@ -8,6 +8,7 @@ import cml.model.base._
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.Resource._
+import cml.utils.ModelConfig.ModelClass._
 import cml.utils.MoneyJson
 import cml.view.utils.TileConfig._
 import javafx.scene.image.ImageView
@@ -64,34 +65,40 @@ object Handler {
     n setOnMouseClicked(_ => {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
+      disableButtons(c)
+      c.selectionInfo setText "Coordinates (" + x + ", " + y + ")"
 
       for (s <- village.structures) {
         if (s.position equals Position(x, y)) {
-          if(s.creatures != null && s.creatures.isEmpty) {
+          if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.addCreatureButton.setOnMouseClicked(_ => {
+              c.selectionInfo setText "Structure: " + getClassName(s)
+
               val creature = StaticCreatures(s)
               s.addCreature(creature getCreature)
               villageActor ! UpdateVillage(creature json)
               c.addCreatureButton setDisable true
-              c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
+              c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
-          }else{
+          } else {
             c.levelUpButton setDisable false //TODO se terrain disabilitare
             c.levelUpButton setOnMouseClicked (_ => {
               val upgrade = StructureUpgrade(s)
               villageActor ! UpdateVillage(upgrade structureJson)
-              villageActor ! UpdateVillage(upgrade creatureJson)
-
+              upgrade creatureJson match {
+                case null => println("Not an habitat")
+                case _ => villageActor ! UpdateVillage(upgrade creatureJson)
+              }
               //Decremento denaro in base al prezzo, update modello remoto e locale
               val resourceJson = MoneyJson(INIT_VALUE - price).json
               villageActor ! UpdateVillage(resourceJson)
 
-              c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
+              c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
 
             s.resource.inc(s.level) //debug
-            c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
+            c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
 
             if (s.resource.amount > INIT_VALUE) { //settare un current value?
               c.takeButton setDisable false
@@ -99,7 +106,7 @@ object Handler {
                 val retrieve = RetrieveResource(s)
                 villageActor ! UpdateVillage(retrieve resourceJson)
                 c.takeButton setDisable true
-                c.selectionInfo setText displayText(s.getClass.getName, s.level, s.resource.amount, s.creatures.head)
+                c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
               })
             }
           }
@@ -108,25 +115,9 @@ object Handler {
     })
   }
 
-  private def displayText(name: String, level: Int, resourceAmount: Int, creature: Creature): String = {
-    var text:String = ""
-    if(creature != null) {
-      text = "Structure" + name + "\n" +
-        "Level: " + level + "\n" +
-        "Resources: " + resourceAmount + "\n" +
-        "Creature: " + creature.name + "\n"+
-        "Creature level: " + creature.currentLevel
-    }else{
-      text = "Structure" + name + "\n" +
-        "Level: " + level + "\n" +
-        "Resources: " + resourceAmount + "\n"
-    }
-    text
-  }
-
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked (_ =>c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+price)
+    canvas setOnMouseClicked (_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+price)
     canvas setOnDragDetected ((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
@@ -167,6 +158,38 @@ object Handler {
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
       event consume()
     })
+  }
+
+  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature]): String = {
+    var text:String = ""
+    if(creatures != null && creatures.nonEmpty) {
+      text = "Structure " + name + "\n" +
+        "Level: " + level + "\n" +
+        "Resources: " + resourceAmount + "\n" +
+        "Creature: " + creatures.head.name + "\n"+
+        "Creature level: " + creatures.head.currentLevel
+    }else{
+      text = "Structure " + name + "\n" +
+        "Level: " + level + "\n" +
+        "Resources: " + resourceAmount + "\n"
+    }
+    text
+  }
+
+  private def disableButtons(c: VillageViewController): Unit = {
+    c.levelUpButton setDisable true
+    c.takeButton setDisable true
+    c.addCreatureButton setDisable true
+  }
+
+  private def getClassName(s: Structure): String = {
+    var name: String = ""
+    s.getClass.getName match {
+      case FARM => name = "FARM"
+      case CAVE => name = "CAVE"
+      case HABITAT => name = "HABITAT - Element: " + s.element
+    }
+    name
   }
 }
 
