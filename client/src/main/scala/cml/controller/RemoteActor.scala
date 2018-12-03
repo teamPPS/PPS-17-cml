@@ -7,6 +7,7 @@ import cml.controller.messages.ArenaRequest.ExitRequest
 import cml.controller.messages.ArenaResponse.ExitSuccess
 import cml.controller.messages.BattleRequest.RequireChallenger
 import cml.controller.messages.BattleResponse.RequireChallengerSuccess
+import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import com.typesafe.config.ConfigFactory
 
 import scala.collection.mutable.ListBuffer
@@ -54,10 +55,10 @@ class RemoteActor extends Actor{
 object RemoteActor {
 
   def main(args: Array[String])  {
-    val configFile = getClass.getClassLoader.getResource("actor/remote_actor.conf").getFile
+    val configFile = getClass.getClassLoader.getResource(Path).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
-    val system = ActorSystem("CML", config)
-    val remoteActor = system.actorOf(Props[RemoteActor], name="RemoteActor")
+    val system = ActorSystem(Context, config)
+    val remoteActor = system.actorOf(Props[RemoteActor], name=Name)
     println("------ RemoteActor is ready")
   }
 }

@@ -3,7 +3,7 @@ package cml.controller.fx
 import akka.actor.{ActorRef, Props}
 import cml.controller.AuthenticationActor
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
-import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.view.ViewSwitch
 import cml.controller.actor.utils.InputControl._
 import cml.utils.ViewConfig._

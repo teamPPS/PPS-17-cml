@@ -2,13 +2,14 @@ package cml.controller.fx
 
 import java.io.File
 
-import akka.actor.{ActorSystem, Props}
+import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
 import cml.controller.BattleActor
 import cml.view.ViewSwitch
+import cml.utils.ViewConfig._
+import akka.actor.{ActorSystem, Props}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
-import cml.utils.ViewConfig._
 import com.typesafe.config.ConfigFactory
 
 /**
@@ -45,10 +46,10 @@ class BattleViewController {
   }
 
   private def createBattleActor(): Unit ={
-    val configFile = getClass.getClassLoader.getResource("actor/local_actor.conf").getFile
+    val configFile = getClass.getClassLoader.getResource(Path).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem("LocalContext", config)
-    val battleActor = system.actorOf(Props[BattleActor], name="BattleActor")
+    val battleActor = system.actorOf(Props[BattleActor], name=Name)
     println("------ BattleActor is ready")
   }
 

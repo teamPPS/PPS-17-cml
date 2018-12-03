@@ -1,7 +1,7 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
-import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
