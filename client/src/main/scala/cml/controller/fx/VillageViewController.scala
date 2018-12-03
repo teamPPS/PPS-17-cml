@@ -3,6 +3,7 @@ package cml.controller.fx
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
+import cml.model.base.Creature
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
@@ -20,6 +21,8 @@ class VillageViewController {
   @FXML var battleButton: Button = _
   @FXML var levelUpButton: Button = _
   @FXML var takeButton: Button = _
+  @FXML var addCreatureButton: Button = _
+  @FXML var creatureList: ListView[Creature] = _
   @FXML var upgradePane: Pane = _
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
@@ -41,6 +44,7 @@ class VillageViewController {
     println("village view init")
     villageActor ! EnterVillage(this)
 
+    setGridAndHandlers()
   }
 
 

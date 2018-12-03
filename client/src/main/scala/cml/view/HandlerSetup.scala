@@ -71,7 +71,7 @@ object Handler {
           //fare un metodo/classe per il testo da visualizzare
           c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
             "Level: " + s.level + "\n"+
-            "Resources: " + s.resource.amount + "\n"
+            "Resources: " + s.resource.amount + "\na\na\na\na\na\n"
 
           c.levelUpButton setDisable false //TODO se terrain disabilitare
           c.levelUpButton setOnMouseClicked (_ => {
@@ -81,7 +81,6 @@ object Handler {
 
             //Decremento denaro in base al prezzo, update modello remoto e locale
             val resourceJson = MoneyJson(INIT_VALUE-price).json
-            println("json drop" +resourceJson)
             villageActor ! UpdateVillage(resourceJson)
 
             c.levelUpButton setDisable true
@@ -89,10 +88,12 @@ object Handler {
               "Level: " + s.level + "\n"+
               "Resources: " + s.resource.amount + "\n"
           })
+
           s.resource.inc(s.level) //debug
           c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
             "Level: " + s.level + "\n"+
             "Resources: " + s.resource.amount + "\n" // debug
+
           if (s.resource.amount > INIT_VALUE) { //settare un current value?
             c.takeButton setDisable false
             c.takeButton setOnMouseClicked (_ => {
@@ -140,14 +141,13 @@ object Handler {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
 
-      val structure = StaticStructure(newTile,x,y)
+      val structure = StaticStructure(newTile, x, y)
       val json = structure.json
       village.structures += structure.getStructure
       villageActor ! UpdateVillage(json)
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
       val resourceJson = MoneyJson(INIT_VALUE-price).json
-      println("json drop" +resourceJson)
       villageActor ! UpdateVillage(resourceJson)
 
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
