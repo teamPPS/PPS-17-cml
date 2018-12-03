@@ -72,9 +72,8 @@ object Handler {
         if (s.position equals Position(x, y)) {
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
+            c.selectionInfo setText "Structure: " + getClassName(s)
             c.addCreatureButton.setOnMouseClicked(_ => {
-              c.selectionInfo setText "Structure: " + getClassName(s)
-
               val creature = StaticCreatures(s)
               s.addCreature(creature getCreature)
               villageActor ! UpdateVillage(creature json)
