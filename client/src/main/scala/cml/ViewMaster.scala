@@ -2,7 +2,7 @@ package cml
 
 import akka.actor.Props
 import cml.controller.AuthenticationActor
-import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.fx.AuthenticationViewController
 import cml.utils.ViewConfig._
 import javafx.application.{Application, Platform}

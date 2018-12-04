@@ -21,8 +21,11 @@ class CreatureTest extends FunSuite {
   val y = 10
 
   val dragon : Dragon = Dragon(DRAGON_NAME, INITIAL_LEVEL)
+
   val dragon2 : Dragon = Dragon("Saphira", dragonLevel)
-  val golem : Golem = Golem(GOLEM_NAME, INITIAL_LEVEL)
+  val golem1 : Golem = Golem(GOLEM_NAME, INITIAL_LEVEL)
+  val golem2 : Golem = Golem("Alduin", 10)
+
   val kraken: Kraken = Kraken(KRAKEN_NAME, INITIAL_LEVEL)
   val griffin: Griffin = Griffin(GRIFFIN_NAME, griffinLevel)
 
@@ -38,17 +41,26 @@ class CreatureTest extends FunSuite {
   }
 
   test("Golem level up test"){
-    golem levelUp()
-    assert(golem.currentLevel > INITIAL_LEVEL)
+    golem1 levelUp()
+    assert(golem1.currentLevel > INITIAL_LEVEL)
+  }
+
+  test("Golem get element test"){
+    assert(golem1.element.equals("earth"))
+  }
+
+  test("Golem set level and get current attack power test"){
+    golem2.currentLevel_
+    assert(golem2.attackPower.equals(20))
   }
 
   test("Kraken get element test"){
-    assert(kraken.element == "water")
+    assert(kraken.element.equals("water"))
   }
 
   test("Griffin set level test"){
     griffin.currentLevel_
-    assert(griffin.currentLevel == 8)
+    assert(griffin.currentLevel.equals(8))
 
   }
 

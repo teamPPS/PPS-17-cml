@@ -1,7 +1,7 @@
 package cml.view
 
 import akka.actor.ActorSelection
-import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest.UpdateVillage
 import cml.model.base._
