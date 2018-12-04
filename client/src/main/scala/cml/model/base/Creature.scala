@@ -15,6 +15,8 @@ trait Creature {
   def levelUp(): Unit
   def setAttack(): Unit
   def element : String
+  def level : Int
+  def attackPower : Int
   def currentLevel_ : Unit
 }
 

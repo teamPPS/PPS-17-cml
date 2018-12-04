@@ -36,11 +36,11 @@ case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
     }
   }
 
-  /**
-    * This method allows to set the dragon level(we retrieve the creature from the server)
-    */
-
   override def element: String = _element
+
+  override def level: Int = currentLevel
+
+  override def attackPower: Int = attackValue
 
   override def currentLevel_ : Unit = {
     currentLevel = creatureLevel

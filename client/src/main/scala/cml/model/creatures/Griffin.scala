@@ -28,7 +28,11 @@ case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
     }
   }
 
+  override def level: Int = currentLevel
+
   override def element: String = _element
+
+  override def attackPower: Int = attackValue
 
   override def currentLevel_ : Unit = {
     currentLevel = creatureLevel
