@@ -1,8 +1,9 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
-import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
+import cml.model.base.Creature
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import cml.utils.ViewConfig._
 import javafx.fxml.FXML
@@ -18,7 +19,10 @@ class VillageViewController {
   @FXML var logoutMenuItem: MenuItem = _
   @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
-  @FXML var levelUPButton: Button = _
+  @FXML var levelUpButton: Button = _
+  @FXML var takeButton: Button = _
+  @FXML var addCreatureButton: Button = _
+  @FXML var creatureList: ListView[Creature] = _
   @FXML var upgradePane: Pane = _
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
@@ -37,7 +41,9 @@ class VillageViewController {
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     //mando msg a villaggio passando il modello e il controller
+    println("village view init")
     villageActor ! EnterVillage(this)
+
   }
 
 
@@ -47,18 +53,19 @@ class VillageViewController {
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
 
-    ConcreteHandlerSetup.setupVillageHandlers(villageMap, areaPane, upgradePane)
+    ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)
 
     buildingsMenu = new GridPane
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
-    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, areaPane, upgradePane)
+    ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
   }
-  
+
   def logoutSystem(): Unit = {
-    authenticationActor ! Logout()
-    System.exit(0)
-    println("Bye!")
+//    authenticationActor ! Logout()
+//    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
+        System.exit(0)
+        println("Bye!")
   }
-  
+
 }

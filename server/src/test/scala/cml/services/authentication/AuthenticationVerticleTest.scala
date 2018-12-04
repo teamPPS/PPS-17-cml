@@ -1,7 +1,7 @@
 package cml.services.authentication
 
 /**
-  * This test class mach AuthenticationVerticle class is correct
+  * This test class matches if AuthenticationVerticle class is correct
   *
   * @author Chiara Volonnino
   */

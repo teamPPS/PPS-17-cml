@@ -1,9 +1,9 @@
 package cml.controller.fx
 
-import akka.actor.{ActorRef, Props}
+import akka.actor.{ActorRef, ActorSelection, Props}
 import cml.controller.AuthenticationActor
 import cml.controller.messages.AuthenticationRequest.{Login, Register}
-import cml.controller.actor.utils.AppActorSystem.system
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.view.ViewSwitch
 import cml.controller.actor.utils.InputControl._
 import cml.utils.ViewConfig._
@@ -24,10 +24,10 @@ class AuthenticationViewController {
   @FXML var registerButton: Button = _
   @FXML var loginButton: Button = _
   @FXML var formMsgLabel: Label = _
+  val AuthenticationActorPath = "/user/AuthenticationActor"
 
 
-  var authenticationActor: ActorRef = system actorOf(Props(new AuthenticationActor(this)), "AuthenticationActor")
-
+  val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
 
   def initialize(): Unit = {
     registerButton setOnAction(_ => requestAuthentication(register, registrationUsernameField , registrationPasswordField))

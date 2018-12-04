@@ -16,6 +16,7 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
 
   override def levelUp(): Unit = {
     currentLevel += 1
+    setAttack()
   }
 
   /**
@@ -27,12 +28,22 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
       case 10 => attackValue += 15
       case 20 => attackValue += 15
       case 30 => attackValue += 15
+      case _ => ;
     }
   }
 
   override def element: String = _element
 
+  override def level: Int = currentLevel
+
+  override def attackPower: Int = attackValue
+
   override def currentLevel_ : Unit = {
     currentLevel = creatureLevel
+    setAttack()
   }
+
+  override def name: String = creatureName
+
+  override def creatureType: String = "Golem"
 }

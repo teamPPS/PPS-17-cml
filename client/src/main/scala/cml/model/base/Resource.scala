@@ -1,6 +1,6 @@
 package cml.model.base
 
-import cml.utils.ModelConfig.Resource.{INC_BY_10, INIT_VALUE}
+import cml.utils.ModelConfig.Resource._
 
 /**
   * This trait defines common operations over resources
@@ -15,39 +15,47 @@ trait Resource{
 
   /**
     * Retrieve the resource
-    * @return the amount of resources
+    * @return the amount taken of resources
     */
   def take(): Int
+
+  /**
+    * The amount of resources
+    */
+  def amount: Int
 }
 
 /**
   * Implementation on resource money
-  * @param amount money amount
+  * @param moneyAmount money amount
   */
-case class Money(var amount: Int) extends Resource {
+case class Money(var moneyAmount: Int) extends Resource {
   override def inc(level: Int): Unit = {
-    amount += (level*INC_BY_10)
+    moneyAmount += (level*INC_BY_10)
   }
   override def take(): Int = {
-    val taken = amount
-    amount = INIT_VALUE
+    val taken = moneyAmount
+    moneyAmount = INIT_VALUE
     taken
   }
+  override def amount: Int = moneyAmount
+
 }
 
 /**
   * Implementation of resource food
-  * @param amount food amount
+  * @param foodAmount food amount
   */
-case class Food(var amount: Int) extends Resource {
-  override def inc(level: Int): Unit ={
-    amount += (level*INC_BY_10)
+case class Food(var foodAmount: Int) extends Resource {
+  override def inc(level: Int): Unit = {
+    foodAmount += (level*INC_BY_10)
   }
   override def take(): Int = {
-    val taken = amount
-    amount = INIT_VALUE
+    val taken = foodAmount
+    foodAmount = INIT_VALUE
     taken
   }
+  override def amount: Int = foodAmount
 }
 
 

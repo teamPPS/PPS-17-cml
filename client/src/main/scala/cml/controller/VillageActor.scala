@@ -5,6 +5,8 @@ import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
 import cml.controller.messages.VillageRequest._
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
 import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
+import javafx.application.Platform
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
 import scala.util.{Failure, Success}
@@ -40,7 +42,7 @@ class VillageActor() extends Actor{
         case Success(httpResponse) =>
           httpResponse match {
             case "Not a valid request" => println("Failure entering in village")
-            case _ => controller.setGridAndHandlers() //popolare model + metodo inizializzazione
+            case _ => Platform.runLater(() => controller.setGridAndHandlers())
           }
         case Failure(exception) => authenticationActor ! VillageFailure(enterFailure)
       }

@@ -2,11 +2,10 @@ package cml.core.utils
 
 import io.vertx.core.json.JsonObject
 import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
-
 import scala.util.{Failure, Success}
 
 /**
-  * This object describe basic function of standards JWT
+  * This object describes basic functions of standards JWT
   *
   * @author Chiara Volonnino
   */
