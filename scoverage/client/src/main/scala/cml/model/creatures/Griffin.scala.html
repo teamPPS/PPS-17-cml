@@ -1,0 +1,506 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\creatures\Griffin.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.creatures
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Creature
+</span>4 <span style=''>import cml.utils.ModelConfig.Elements.AIR
+</span>5 <span style=''>
+</span>6 <span style=''>/**
+</span>7 <span style=''>  * This class models a griffin
+</span>8 <span style=''>  * @param creatureName name of the griffin
+</span>9 <span style=''>  * @param creatureLevel set the griffin level
+</span>10 <span style=''>  * @author Filippo Portolani
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
+</span>14 <span style=''>
+</span>15 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>AIR</span><span style=''>
+</span>16 <span style=''>
+</span>17 <span style=''>  override def levelUp(): Unit = {
+</span>18 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel += 1</span><span style=''>
+</span>19 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>20 <span style=''>  }
+</span>21 <span style=''>
+</span>22 <span style=''>  override def setAttack(): Unit = {
+</span>23 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
+</span>24 <span style=''>      case 10 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>25 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>26 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>27 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
+</span>28 <span style=''>    }
+</span>29 <span style=''>  }
+</span>30 <span style=''>
+</span>31 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>32 <span style=''>
+</span>33 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
+</span>34 <span style=''>
+</span>35 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>36 <span style=''>
+</span>37 <span style=''>  override def currentLevel_ : Unit = {
+</span>38 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
+</span>39 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>40 <span style=''>  }
+</span>41 <span style=''>
+</span>42 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>43 <span style=''>
+</span>44 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>&quot;Griffin&quot;</span><span style=''>
+</span>45 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          374
+        </td>
+        <td>
+          387
+          -
+          390
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Elements.AIR
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Elements.AIR
+        </td>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          376
+        </td>
+        <td>
+          434
+          -
+          451
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.currentLevel_=(Griffin.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          375
+        </td>
+        <td>
+          434
+          -
+          451
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.currentLevel.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          377
+        </td>
+        <td>
+          457
+          -
+          468
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Griffin.setAttack
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          378
+        </td>
+        <td>
+          519
+          -
+          531
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #AEF1AE">
+          Griffin.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          379
+        </td>
+        <td>
+          558
+          -
+          575
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          380
+        </td>
+        <td>
+          558
+          -
+          575
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          382
+        </td>
+        <td>
+          594
+          -
+          611
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          381
+        </td>
+        <td>
+          594
+          -
+          611
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          384
+        </td>
+        <td>
+          630
+          -
+          647
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          383
+        </td>
+        <td>
+          630
+          -
+          647
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          385
+        </td>
+        <td>
+          662
+          -
+          664
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          386
+        </td>
+        <td>
+          710
+          -
+          722
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          387
+        </td>
+        <td>
+          759
+          -
+          767
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Griffin._element
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this._element
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          388
+        </td>
+        <td>
+          805
+          -
+          816
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          390
+        </td>
+        <td>
+          865
+          -
+          893
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          Griffin.this.currentLevel_=(Griffin.this.creatureLevel)
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          389
+        </td>
+        <td>
+          880
+          -
+          893
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Griffin.creatureLevel
+        </td>
+        <td style="background: #AEF1AE">
+          Griffin.this.creatureLevel
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          391
+        </td>
+        <td>
+          899
+          -
+          910
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Griffin.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          Griffin.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          392
+        </td>
+        <td>
+          949
+          -
+          961
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Griffin.creatureName
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.creatureName
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          393
+        </td>
+        <td>
+          1003
+          -
+          1012
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Griffin&quot;
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

@@ -1,0 +1,688 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\controller\fx\BattleViewController.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller.fx
+</span>2 <span style=''>
+</span>3 <span style=''>import java.io.File
+</span>4 <span style=''>
+</span>5 <span style=''>import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
+</span>6 <span style=''>import cml.controller.BattleActor
+</span>7 <span style=''>import cml.view.ViewSwitch
+</span>8 <span style=''>import cml.utils.ViewConfig._
+</span>9 <span style=''>import akka.actor.{ActorSystem, Props}
+</span>10 <span style=''>import javafx.fxml.FXML
+</span>11 <span style=''>import javafx.scene.control.Alert.AlertType
+</span>12 <span style=''>import javafx.scene.control.{Alert, Button, ButtonType}
+</span>13 <span style=''>import com.typesafe.config.ConfigFactory
+</span>14 <span style=''>
+</span>15 <span style=''>/**
+</span>16 <span style=''>  * Controller class for graphic battle view
+</span>17 <span style=''>  *
+</span>18 <span style=''>  * @author Chiara Volonnino
+</span>19 <span style=''>  */
+</span>20 <span style=''>
+</span>21 <span style=''>class BattleViewController {
+</span>22 <span style=''>
+</span>23 <span style=''>  import java.util.Locale
+</span>24 <span style=''>  </span><span style='background: #F0ADAD'>Locale.setDefault(Locale.ENGLISH)</span><span style=''>
+</span>25 <span style=''>
+</span>26 <span style=''>  @FXML var exitButton: Button = _
+</span>27 <span style=''>
+</span>28 <span style=''>  @FXML
+</span>29 <span style=''>  def exitOption(): Unit = {
+</span>30 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, exitButton.getScene)</span><span style=''>
+</span>31 <span style=''>  }
+</span>32 <span style=''>
+</span>33 <span style=''>  @FXML
+</span>34 <span style=''>  def creatureOption(): Unit = {
+</span>35 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.CONFIRMATION) {
+</span>36 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Confirmation Dialog&quot;)</span><span style=''>
+</span>37 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;Creatures List&quot;)</span><span style=''>
+</span>38 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Are you sure want to confirm?&quot;)</span><span style=''>
+</span>39 <span style=''>    }
+</span>40 <span style=''>
+</span>41 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
+</span>42 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) </span><span style='background: #F0ADAD'>{
+</span>43 <span style=''></span><span style='background: #F0ADAD'>      createBattleActor()
+</span>44 <span style=''></span><span style='background: #F0ADAD'>      ViewSwitch.activate(ArenaWindow.path, exitButton.getScene)
+</span>45 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>46 <span style=''>  }
+</span>47 <span style=''>
+</span>48 <span style=''>  private def createBattleActor(): Unit ={
+</span>49 <span style=''>    val configFile = </span><span style='background: #F0ADAD'>getClass.getClassLoader.getResource(Path).getFile</span><span style=''>
+</span>50 <span style=''>    val config = </span><span style='background: #F0ADAD'>ConfigFactory.parseFile(new File(configFile))</span><span style=''>
+</span>51 <span style=''>    val system = </span><span style='background: #F0ADAD'>ActorSystem(&quot;LocalContext&quot;, config)</span><span style=''>
+</span>52 <span style=''>    val battleActor = </span><span style='background: #F0ADAD'>system.actorOf(Props[BattleActor], name=Name)</span><span style=''>
+</span>53 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;------ BattleActor is ready&quot;)</span><span style=''>
+</span>54 <span style=''>  }
+</span>55 <span style=''>
+</span>56 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          213
+        </td>
+        <td>
+          576
+          -
+          609
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.util.Locale.setDefault
+        </td>
+        <td style="background: #F0ADAD">
+          java.util.Locale.setDefault(java.util.Locale.ENGLISH)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          212
+        </td>
+        <td>
+          594
+          -
+          608
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          java.util.Locale.ENGLISH
+        </td>
+        <td style="background: #F0ADAD">
+          java.util.Locale.ENGLISH
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          214
+        </td>
+        <td>
+          714
+          -
+          732
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ViewConfig.VillageWindow.path
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ViewConfig.VillageWindow.path
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          216
+        </td>
+        <td>
+          694
+          -
+          754
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, BattleViewController.this.exitButton.getScene())
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          215
+        </td>
+        <td>
+          734
+          -
+          753
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.exitButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          220
+        </td>
+        <td>
+          822
+          -
+          825
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.BattleViewController.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          217
+        </td>
+        <td>
+          865
+          -
+          896
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setTitle
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setTitle(&quot;Confirmation Dialog&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          218
+        </td>
+        <td>
+          904
+          -
+          935
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setHeaderText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setHeaderText(&quot;Creatures List&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          219
+        </td>
+        <td>
+          943
+          -
+          990
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setContentText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setContentText(&quot;Are you sure want to confirm?&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          221
+        </td>
+        <td>
+          1018
+          -
+          1037
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.showAndWait
+        </td>
+        <td style="background: #F0ADAD">
+          alert.showAndWait()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          229
+        </td>
+        <td>
+          1098
+          -
+          1199
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  BattleViewController.this.createBattleActor();
+  cml.view.ViewSwitch.activate(cml.utils.ViewConfig.ArenaWindow.path, BattleViewController.this.exitButton.getScene())
+}
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          223
+        </td>
+        <td>
+          1067
+          -
+          1096
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Object.==
+        </td>
+        <td style="background: #F0ADAD">
+          result.get().==(javafx.scene.control.ButtonType.OK)
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          222
+        </td>
+        <td>
+          1083
+          -
+          1096
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          javafx.scene.control.ButtonType.OK
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.scene.control.ButtonType.OK
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          231
+        </td>
+        <td>
+          1043
+          -
+          1043
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          230
+        </td>
+        <td>
+          1043
+          -
+          1043
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          224
+        </td>
+        <td>
+          1047
+          -
+          1096
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Boolean.&amp;&amp;
+        </td>
+        <td style="background: #F0ADAD">
+          result.isPresent().&amp;&amp;(result.get().==(javafx.scene.control.ButtonType.OK))
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          225
+        </td>
+        <td>
+          1107
+          -
+          1126
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.BattleViewController.createBattleActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.createBattleActor()
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          227
+        </td>
+        <td>
+          1172
+          -
+          1191
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.exitButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          226
+        </td>
+        <td>
+          1154
+          -
+          1170
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ViewConfig.ArenaWindow.path
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ViewConfig.ArenaWindow.path
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          228
+        </td>
+        <td>
+          1134
+          -
+          1192
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.ArenaWindow.path, BattleViewController.this.exitButton.getScene())
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          232
+        </td>
+        <td>
+          1273
+          -
+          1322
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.net.URL.getFile
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.getClass().getClassLoader().getResource(cml.controller.actor.utils.ActorUtils.BattleActorInfo.Path).getFile()
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          234
+        </td>
+        <td>
+          1341
+          -
+          1386
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          com.typesafe.config.ConfigFactory.parseFile
+        </td>
+        <td style="background: #F0ADAD">
+          com.typesafe.config.ConfigFactory.parseFile(new java.io.File(configFile))
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          233
+        </td>
+        <td>
+          1365
+          -
+          1385
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.io.File.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new java.io.File(configFile)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          235
+        </td>
+        <td>
+          1405
+          -
+          1440
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorSystem.apply
+        </td>
+        <td style="background: #F0ADAD">
+          akka.actor.ActorSystem.apply(&quot;LocalContext&quot;, config)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          236
+        </td>
+        <td>
+          1479
+          -
+          1497
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.Props.apply
+        </td>
+        <td style="background: #F0ADAD">
+          akka.actor.Props.apply[cml.controller.BattleActor]()((ClassTag.apply[cml.controller.BattleActor](classOf[cml.controller.BattleActor]): scala.reflect.ClassTag[cml.controller.BattleActor]))
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          238
+        </td>
+        <td>
+          1464
+          -
+          1509
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRefFactory.actorOf
+        </td>
+        <td style="background: #F0ADAD">
+          system.actorOf(akka.actor.Props.apply[cml.controller.BattleActor]()((ClassTag.apply[cml.controller.BattleActor](classOf[cml.controller.BattleActor]): scala.reflect.ClassTag[cml.controller.BattleActor])), cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          237
+        </td>
+        <td>
+          1504
+          -
+          1508
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          239
+        </td>
+        <td>
+          1515
+          -
+          1553
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;------ BattleActor is ready&quot;)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

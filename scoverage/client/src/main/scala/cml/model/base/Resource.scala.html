@@ -1,0 +1,440 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\base\Resource.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.base
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.utils.ModelConfig.Resource._
+</span>4 <span style=''>
+</span>5 <span style=''>/**
+</span>6 <span style=''>  * This trait defines common operations over resources
+</span>7 <span style=''>  * @author Monica Gondolini
+</span>8 <span style=''>  */
+</span>9 <span style=''>trait Resource{
+</span>10 <span style=''>
+</span>11 <span style=''>  /**
+</span>12 <span style=''>    * Resource increment
+</span>13 <span style=''>    */
+</span>14 <span style=''>  def inc(level: Int): Unit
+</span>15 <span style=''>
+</span>16 <span style=''>  /**
+</span>17 <span style=''>    * Retrieve the resource
+</span>18 <span style=''>    * @return the amount taken of resources
+</span>19 <span style=''>    */
+</span>20 <span style=''>  def take(): Int
+</span>21 <span style=''>
+</span>22 <span style=''>  /**
+</span>23 <span style=''>    * The amount of resources
+</span>24 <span style=''>    */
+</span>25 <span style=''>  def amount: Int
+</span>26 <span style=''>}
+</span>27 <span style=''>
+</span>28 <span style=''>/**
+</span>29 <span style=''>  * Implementation on resource money
+</span>30 <span style=''>  * @param moneyAmount money amount
+</span>31 <span style=''>  */
+</span>32 <span style=''>case class Money(var moneyAmount: Int) extends Resource {
+</span>33 <span style=''>  override def inc(level: Int): Unit = {
+</span>34 <span style=''>    </span><span style='background: #AEF1AE'>moneyAmount += (level*INC_BY_10)</span><span style=''>
+</span>35 <span style=''>  }
+</span>36 <span style=''>  override def take(): Int = {
+</span>37 <span style=''>    val taken = </span><span style='background: #AEF1AE'>moneyAmount</span><span style=''>
+</span>38 <span style=''>    </span><span style='background: #AEF1AE'>moneyAmount = INIT_VALUE</span><span style=''>
+</span>39 <span style=''>    taken
+</span>40 <span style=''>  }
+</span>41 <span style=''>  override def amount: Int = </span><span style='background: #AEF1AE'>moneyAmount</span><span style=''>
+</span>42 <span style=''>
+</span>43 <span style=''>}
+</span>44 <span style=''>
+</span>45 <span style=''>/**
+</span>46 <span style=''>  * Implementation of resource food
+</span>47 <span style=''>  * @param foodAmount food amount
+</span>48 <span style=''>  */
+</span>49 <span style=''>case class Food(var foodAmount: Int) extends Resource {
+</span>50 <span style=''>  override def inc(level: Int): Unit = {
+</span>51 <span style=''>    </span><span style='background: #AEF1AE'>foodAmount += (level*INC_BY_10)</span><span style=''>
+</span>52 <span style=''>  }
+</span>53 <span style=''>  override def take(): Int = {
+</span>54 <span style=''>    val taken = </span><span style='background: #AEF1AE'>foodAmount</span><span style=''>
+</span>55 <span style=''>    </span><span style='background: #AEF1AE'>foodAmount = INIT_VALUE</span><span style=''>
+</span>56 <span style=''>    taken
+</span>57 <span style=''>  }
+</span>58 <span style=''>  override def amount: Int = </span><span style='background: #AEF1AE'>foodAmount</span><span style=''>
+</span>59 <span style=''>}
+</span>60 <span style=''>
+</span>61 <span style=''>
+</span>62 <span style=''>
+</span>63 <span style=''>
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          280
+        </td>
+        <td>
+          629
+          -
+          661
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Money.moneyAmount_=
+        </td>
+        <td style="background: #AEF1AE">
+          Money.this.moneyAmount_=(Money.this.moneyAmount.+(level.*(cml.utils.ModelConfig.Resource.INC_BY_10)))
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          277
+        </td>
+        <td>
+          651
+          -
+          660
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INC_BY_10
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INC_BY_10
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          279
+        </td>
+        <td>
+          629
+          -
+          661
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          Money.this.moneyAmount.+(level.*(cml.utils.ModelConfig.Resource.INC_BY_10))
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          278
+        </td>
+        <td>
+          645
+          -
+          660
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.*
+        </td>
+        <td style="background: #AEF1AE">
+          level.*(cml.utils.ModelConfig.Resource.INC_BY_10)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          281
+        </td>
+        <td>
+          716
+          -
+          727
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Money.moneyAmount
+        </td>
+        <td style="background: #AEF1AE">
+          Money.this.moneyAmount
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          283
+        </td>
+        <td>
+          733
+          -
+          757
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Money.moneyAmount_=
+        </td>
+        <td style="background: #AEF1AE">
+          Money.this.moneyAmount_=(cml.utils.ModelConfig.Resource.INIT_VALUE)
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          282
+        </td>
+        <td>
+          747
+          -
+          757
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          284
+        </td>
+        <td>
+          804
+          -
+          815
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Money.moneyAmount
+        </td>
+        <td style="background: #AEF1AE">
+          Money.this.moneyAmount
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          286
+        </td>
+        <td>
+          1025
+          -
+          1040
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.*
+        </td>
+        <td style="background: #AEF1AE">
+          level.*(cml.utils.ModelConfig.Resource.INC_BY_10)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          285
+        </td>
+        <td>
+          1031
+          -
+          1040
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INC_BY_10
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INC_BY_10
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          288
+        </td>
+        <td>
+          1010
+          -
+          1041
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Food.foodAmount_=
+        </td>
+        <td style="background: #AEF1AE">
+          Food.this.foodAmount_=(Food.this.foodAmount.+(level.*(cml.utils.ModelConfig.Resource.INC_BY_10)))
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          287
+        </td>
+        <td>
+          1010
+          -
+          1041
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          Food.this.foodAmount.+(level.*(cml.utils.ModelConfig.Resource.INC_BY_10))
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          289
+        </td>
+        <td>
+          1096
+          -
+          1106
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Food.foodAmount
+        </td>
+        <td style="background: #AEF1AE">
+          Food.this.foodAmount
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          291
+        </td>
+        <td>
+          1112
+          -
+          1135
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Food.foodAmount_=
+        </td>
+        <td style="background: #AEF1AE">
+          Food.this.foodAmount_=(cml.utils.ModelConfig.Resource.INIT_VALUE)
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          290
+        </td>
+        <td>
+          1125
+          -
+          1135
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+      </tr><tr>
+        <td>
+          58
+        </td>
+        <td>
+          292
+        </td>
+        <td>
+          1182
+          -
+          1192
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Food.foodAmount
+        </td>
+        <td style="background: #AEF1AE">
+          Food.this.foodAmount
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

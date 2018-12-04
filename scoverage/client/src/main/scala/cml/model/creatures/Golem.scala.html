@@ -1,0 +1,510 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\creatures\Golem.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.creatures
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Creature
+</span>4 <span style=''>import cml.utils.ModelConfig.Elements.EARTH
+</span>5 <span style=''>
+</span>6 <span style=''>/**
+</span>7 <span style=''>  * This class models a golem
+</span>8 <span style=''>  * @param creatureName name of the golem
+</span>9 <span style=''>  * @param creatureLevel set the golem level
+</span>10 <span style=''>  * @author Filippo Portolani
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
+</span>14 <span style=''>
+</span>15 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>EARTH</span><span style=''>
+</span>16 <span style=''>
+</span>17 <span style=''>  override def levelUp(): Unit = {
+</span>18 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel += 1</span><span style=''>
+</span>19 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>20 <span style=''>  }
+</span>21 <span style=''>
+</span>22 <span style=''>  /**
+</span>23 <span style=''>    * Golem earns 15 more damage instead of 10
+</span>24 <span style=''>    */
+</span>25 <span style=''>
+</span>26 <span style=''>  override def setAttack(): Unit = {
+</span>27 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
+</span>28 <span style=''>      case 10 =&gt; </span><span style='background: #AEF1AE'>attackValue += 15</span><span style=''>
+</span>29 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 15</span><span style=''>
+</span>30 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 15</span><span style=''>
+</span>31 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
+</span>32 <span style=''>    }
+</span>33 <span style=''>  }
+</span>34 <span style=''>
+</span>35 <span style=''>  override def element: String = </span><span style='background: #AEF1AE'>_element</span><span style=''>
+</span>36 <span style=''>
+</span>37 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>38 <span style=''>
+</span>39 <span style=''>  override def attackPower: Int = </span><span style='background: #AEF1AE'>attackValue</span><span style=''>
+</span>40 <span style=''>
+</span>41 <span style=''>  override def currentLevel_ : Unit = {
+</span>42 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
+</span>43 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>44 <span style=''>  }
+</span>45 <span style=''>
+</span>46 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>47 <span style=''>
+</span>48 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>&quot;Golem&quot;</span><span style=''>
+</span>49 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          354
+        </td>
+        <td>
+          381
+          -
+          386
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Elements.EARTH
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Elements.EARTH
+        </td>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          355
+        </td>
+        <td>
+          430
+          -
+          447
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.currentLevel.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          356
+        </td>
+        <td>
+          430
+          -
+          447
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.currentLevel_=(Golem.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          357
+        </td>
+        <td>
+          453
+          -
+          464
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Golem.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          358
+        </td>
+        <td>
+          580
+          -
+          592
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          360
+        </td>
+        <td>
+          619
+          -
+          636
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          359
+        </td>
+        <td>
+          619
+          -
+          636
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.attackValue.+(15)
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          361
+        </td>
+        <td>
+          655
+          -
+          672
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue.+(15)
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          362
+        </td>
+        <td>
+          655
+          -
+          672
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          364
+        </td>
+        <td>
+          691
+          -
+          708
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          363
+        </td>
+        <td>
+          691
+          -
+          708
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue.+(15)
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          365
+        </td>
+        <td>
+          723
+          -
+          725
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          366
+        </td>
+        <td>
+          776
+          -
+          784
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Golem._element
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this._element
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          367
+        </td>
+        <td>
+          816
+          -
+          828
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          368
+        </td>
+        <td>
+          866
+          -
+          877
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          370
+        </td>
+        <td>
+          926
+          -
+          954
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.currentLevel_=(Golem.this.creatureLevel)
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          369
+        </td>
+        <td>
+          941
+          -
+          954
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Golem.creatureLevel
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.creatureLevel
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          371
+        </td>
+        <td>
+          960
+          -
+          971
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Golem.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          Golem.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          372
+        </td>
+        <td>
+          1010
+          -
+          1022
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Golem.creatureName
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.creatureName
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          373
+        </td>
+        <td>
+          1064
+          -
+          1071
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Golem&quot;
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

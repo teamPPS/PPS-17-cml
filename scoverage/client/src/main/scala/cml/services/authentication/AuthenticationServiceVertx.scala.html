@@ -1,0 +1,1195 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\services\authentication\AuthenticationServiceVertx.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.services.authentication
+</span>2 <span style=''>
+</span>3 <span style=''>import akka.actor.ActorRef
+</span>4 <span style=''>import cml.core.TokenAuthentication
+</span>5 <span style=''>import cml.services.authentication.utils.AuthenticationUrl._
+</span>6 <span style=''>import cml.core.utils.NetworkConfiguration._
+</span>7 <span style=''>import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
+</span>8 <span style=''>import io.vertx.scala.core.Vertx
+</span>9 <span style=''>import io.vertx.scala.ext.web.client.{HttpRequest, WebClient}
+</span>10 <span style=''>
+</span>11 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
+</span>12 <span style=''>import scala.concurrent.Future
+</span>13 <span style=''>
+</span>14 <span style=''>
+</span>15 <span style=''>/**
+</span>16 <span style=''>  * This trait describes the Vertx client
+</span>17 <span style=''>  * @author Monica Gondolini
+</span>18 <span style=''>  * @author (edited by) Chiara Volonnino, Filippo Portolani
+</span>19 <span style=''>  */
+</span>20 <span style=''>trait AuthenticationServiceVertx {
+</span>21 <span style=''>
+</span>22 <span style=''>  /**
+</span>23 <span style=''>    * Requests a user registration into the system
+</span>24 <span style=''>    * @param username player's username
+</span>25 <span style=''>    * @param password player's password
+</span>26 <span style=''>    * @return future if register completes successfully, otherwise it fails.
+</span>27 <span style=''>    */
+</span>28 <span style=''>  def register(username: String, password: String): Future[String]
+</span>29 <span style=''>
+</span>30 <span style=''>  /**
+</span>31 <span style=''>    * Requests the login of a specific user into the system
+</span>32 <span style=''>    * @param username player's username
+</span>33 <span style=''>    * @param password player's password
+</span>34 <span style=''>    * @return future if login completes successfully, otherwise it fails.
+</span>35 <span style=''>    */
+</span>36 <span style=''>  def login(username: String, password: String): Future[String]
+</span>37 <span style=''>
+</span>38 <span style=''>  /**
+</span>39 <span style=''>    * Requests the logout of a user from the system
+</span>40 <span style=''>    * @param token token to delete
+</span>41 <span style=''>    * @return future if logout completes successfully, otherwise it fails.
+</span>42 <span style=''>    */
+</span>43 <span style=''>  def logout(token: String) : Future[Unit]
+</span>44 <span style=''>
+</span>45 <span style=''>  /**
+</span>46 <span style=''>    * Check username and then valid a token
+</span>47 <span style=''>    * @param header to check
+</span>48 <span style=''>    * @return a future if header found
+</span>49 <span style=''>    */
+</span>50 <span style=''>  def validationToken(header: String): Future[Unit]
+</span>51 <span style=''>}
+</span>52 <span style=''>
+</span>53 <span style=''>/**
+</span>54 <span style=''>  * Companion object
+</span>55 <span style=''>  */
+</span>56 <span style=''>object AuthenticationServiceVertx{
+</span>57 <span style=''>
+</span>58 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
+</span>59 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
+</span>60 <span style=''>  val successfulRegisterResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
+</span>61 <span style=''>  val successfulLoginResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
+</span>62 <span style=''>
+</span>63 <span style=''>  def apply(): AuthenticationServiceVertx = </span><span style='background: #F0ADAD'>AuthenticationServiceVertxImpl()</span><span style=''>
+</span>64 <span style=''>
+</span>65 <span style=''>  /**
+</span>66 <span style=''>    * This class implements the Vertx Client
+</span>67 <span style=''>    */
+</span>68 <span style=''>  case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
+</span>69 <span style=''>
+</span>70 <span style=''>    override def register(username: String, password: String): Future[String] = {
+</span>71 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending registration request from username:$username with password:$password&quot;)</span><span style=''>
+</span>72 <span style=''>      </span><span style='background: #F0ADAD'>client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
+</span>73 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
+</span>74 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>75 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { // technical debt?
+</span>76 <span style=''></span><span style='background: #F0ADAD'>          case `successfulRegisterResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>77 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
+</span>78 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>79 <span style=''>    }
+</span>80 <span style=''>
+</span>81 <span style=''>    override def login(username: String, password: String): Future[String] = {
+</span>82 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending login request from username:$username with password:$password&quot;)</span><span style=''> //debug
+</span>83 <span style=''>      </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+</span>84 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
+</span>85 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>86 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { //technical debt?
+</span>87 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>88 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
+</span>89 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>90 <span style=''>    }
+</span>91 <span style=''>
+</span>92 <span style=''>    override def logout(token: String): Future[Unit] = {
+</span>93 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending logout request with token: $token&quot;)</span><span style=''>
+</span>94 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
+</span>95 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
+</span>96 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>97 <span style=''></span><span style='background: #F0ADAD'>        .map(_ =&gt; ())</span><span style=''>
+</span>98 <span style=''>    }
+</span>99 <span style=''>
+</span>100 <span style=''>    override def validationToken(header: String): Future[Unit] = {
+</span>101 <span style=''>      </span><span style='background: #F0ADAD'>client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
+</span>102 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
+</span>103 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>104 <span style=''></span><span style='background: #F0ADAD'>        .map(response =&gt; response.statusCode match {
+</span>105 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; Future.successful(successfulLoginResponse)
+</span>106 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; Future.failed(new Exception)
+</span>107 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>108 <span style=''>    }
+</span>109 <span style=''>  }
+</span>110 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          58
+        </td>
+        <td>
+          476
+        </td>
+        <td>
+          1766
+          -
+          1779
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.core.Vertx.vertx
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.core.Vertx.vertx()
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          478
+        </td>
+        <td>
+          1807
+          -
+          1830
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClient.create
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.ext.web.client.WebClient.create(AuthenticationServiceVertx.this.vertx)
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          477
+        </td>
+        <td>
+          1824
+          -
+          1829
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.AuthenticationServiceVertx.vertx
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.vertx
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          479
+        </td>
+        <td>
+          1872
+          -
+          1903
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.handler.codec.http.HttpResponseStatus.code
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpResponseStatus.CREATED.code()
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          480
+        </td>
+        <td>
+          1942
+          -
+          1968
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.handler.codec.http.HttpResponseStatus.code
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpResponseStatus.OK.code()
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          481
+        </td>
+        <td>
+          2016
+          -
+          2048
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl.apply
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.AuthenticationServiceVertxImpl.apply()
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          483
+        </td>
+        <td>
+          2288
+          -
+          2376
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(scala.StringContext.apply(&quot;sending registration request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password))
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          482
+        </td>
+        <td>
+          2296
+          -
+          2375
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #F0ADAD">
+          scala.StringContext.apply(&quot;sending registration request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password)
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          486
+        </td>
+        <td>
+          2446
+          -
+          2457
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.RegisterApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.RegisterApi
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          485
+        </td>
+        <td>
+          2423
+          -
+          2444
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          484
+        </td>
+        <td>
+          2396
+          -
+          2421
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          487
+        </td>
+        <td>
+          2479
+          -
+          2519
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          488
+        </td>
+        <td>
+          2521
+          -
+          2585
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.get
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.TokenAuthentication.base64Authentication(username, password).get
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          489
+        </td>
+        <td>
+          2627
+          -
+          2639
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          492
+        </td>
+        <td>
+          2384
+          -
+          2800
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.post(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.RegisterApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.base64Authentication(username, password).get).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case AuthenticationServiceVertx.this.successfulRegisterResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; &quot;Not a valid request&quot;
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          490
+        </td>
+        <td>
+          2715
+          -
+          2745
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          r.bodyAsString().getOrElse[String](&quot;&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          491
+        </td>
+        <td>
+          2767
+          -
+          2788
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Not a valid request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          82
+        </td>
+        <td>
+          494
+        </td>
+        <td>
+          2897
+          -
+          2978
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(scala.StringContext.apply(&quot;sending login request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password))
+        </td>
+      </tr><tr>
+        <td>
+          82
+        </td>
+        <td>
+          493
+        </td>
+        <td>
+          2905
+          -
+          2977
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #F0ADAD">
+          scala.StringContext.apply(&quot;sending login request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password)
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          496
+        </td>
+        <td>
+          3032
+          -
+          3053
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          495
+        </td>
+        <td>
+          3005
+          -
+          3030
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          497
+        </td>
+        <td>
+          3055
+          -
+          3063
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+      </tr><tr>
+        <td>
+          84
+        </td>
+        <td>
+          499
+        </td>
+        <td>
+          3127
+          -
+          3191
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.get
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.TokenAuthentication.base64Authentication(username, password).get
+        </td>
+      </tr><tr>
+        <td>
+          84
+        </td>
+        <td>
+          498
+        </td>
+        <td>
+          3085
+          -
+          3125
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          503
+        </td>
+        <td>
+          2994
+          -
+          3402
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LoginApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.base64Authentication(username, password).get).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case AuthenticationServiceVertx.this.successfulLoginResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; &quot;Not a valid request&quot;
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          500
+        </td>
+        <td>
+          3233
+          -
+          3245
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          501
+        </td>
+        <td>
+          3317
+          -
+          3347
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          r.bodyAsString().getOrElse[String](&quot;&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          502
+        </td>
+        <td>
+          3369
+          -
+          3390
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Not a valid request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          505
+        </td>
+        <td>
+          3477
+          -
+          3530
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(scala.StringContext.apply(&quot;sending logout request with token: &quot;, &quot;&quot;).s(token))
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          504
+        </td>
+        <td>
+          3485
+          -
+          3529
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #F0ADAD">
+          scala.StringContext.apply(&quot;sending logout request with token: &quot;, &quot;&quot;).s(token)
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          508
+        </td>
+        <td>
+          3602
+          -
+          3611
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.LogoutApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.LogoutApi
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          507
+        </td>
+        <td>
+          3579
+          -
+          3600
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          506
+        </td>
+        <td>
+          3552
+          -
+          3577
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          95
+        </td>
+        <td>
+          510
+        </td>
+        <td>
+          3675
+          -
+          3725
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.get
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.TokenAuthentication.authenticationToken(token).get
+        </td>
+      </tr><tr>
+        <td>
+          95
+        </td>
+        <td>
+          509
+        </td>
+        <td>
+          3633
+          -
+          3673
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          512
+        </td>
+        <td>
+          3538
+          -
+          3770
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LogoutApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.authenticationToken(token).get).sendFuture().map[Unit](((x$1: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; ()))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          511
+        </td>
+        <td>
+          3767
+          -
+          3769
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          101
+        </td>
+        <td>
+          514
+        </td>
+        <td>
+          3893
+          -
+          3914
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          101
+        </td>
+        <td>
+          513
+        </td>
+        <td>
+          3866
+          -
+          3891
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          101
+        </td>
+        <td>
+          515
+        </td>
+        <td>
+          3916
+          -
+          3934
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi
+        </td>
+      </tr><tr>
+        <td>
+          102
+        </td>
+        <td>
+          516
+        </td>
+        <td>
+          3956
+          -
+          3996
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          517
+        </td>
+        <td>
+          4053
+          -
+          4072
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          response.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          524
+        </td>
+        <td>
+          3855
+          -
+          4230
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.get(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), header).sendFuture().map[Unit](((response: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; response.statusCode() match {
+  case AuthenticationServiceVertx.this.successfulLoginResponse =&gt; {
+    scala.concurrent.Future.successful[Int](AuthenticationServiceVertx.this.successfulLoginResponse);
+    ()
+  }
+  case _ =&gt; {
+    scala.concurrent.Future.failed[Nothing](new scala.`package`.Exception());
+    ()
+  }
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          519
+        </td>
+        <td>
+          4126
+          -
+          4168
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.concurrent.Future.successful
+        </td>
+        <td style="background: #F0ADAD">
+          scala.concurrent.Future.successful[Int](AuthenticationServiceVertx.this.successfulLoginResponse)
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          518
+        </td>
+        <td>
+          4144
+          -
+          4167
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.AuthenticationServiceVertx.successfulLoginResponse
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.successfulLoginResponse
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          520
+        </td>
+        <td>
+          4143
+          -
+          4143
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          523
+        </td>
+        <td>
+          4203
+          -
+          4203
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          522
+        </td>
+        <td>
+          4190
+          -
+          4218
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.concurrent.Future.failed
+        </td>
+        <td style="background: #F0ADAD">
+          scala.concurrent.Future.failed[Nothing](new scala.`package`.Exception())
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          521
+        </td>
+        <td>
+          4204
+          -
+          4217
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Exception.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new scala.`package`.Exception()
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

@@ -1,0 +1,406 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\dynamic_model\RetrieveResource.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.dynamic_model
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Structure
+</span>4 <span style=''>import cml.utils.ModelConfig.ModelClass.{CAVE, FARM, HABITAT}
+</span>5 <span style=''>import cml.utils.{FoodJson, MoneyJson}
+</span>6 <span style=''>import play.api.libs.json.JsValue
+</span>7 <span style=''>
+</span>8 <span style=''>
+</span>9 <span style=''>/**
+</span>10 <span style=''>  * @author Monica Gondolini
+</span>11 <span style=''>  */
+</span>12 <span style=''>trait Retrieve {
+</span>13 <span style=''>  def resourceJson: JsValue
+</span>14 <span style=''>}
+</span>15 <span style=''>
+</span>16 <span style=''>case class RetrieveResource(s: Structure) extends Retrieve {
+</span>17 <span style=''>
+</span>18 <span style=''>  private var json: JsValue = _
+</span>19 <span style=''>
+</span>20 <span style=''>  </span><span style='background: #F0ADAD'>s.resource.take()</span><span style=''>
+</span>21 <span style=''>  </span><span style='background: #F0ADAD'>s.getClass.getName</span><span style=''> match {
+</span>22 <span style=''>    case FARM =&gt; </span><span style='background: #F0ADAD'>json = FoodJson(s.resource amount).json</span><span style=''>
+</span>23 <span style=''>    case CAVE =&gt; </span><span style='background: #F0ADAD'>json = MoneyJson(s.resource amount).json</span><span style=''>
+</span>24 <span style=''>    case HABITAT =&gt; </span><span style='background: #F0ADAD'>json = MoneyJson(s.resource amount).json</span><span style=''>
+</span>25 <span style=''>  }
+</span>26 <span style=''>
+</span>27 <span style=''>  </span><span style='background: #F0ADAD'>println(&quot;retrieve &quot;+s.resource.amount)</span><span style=''> //debug
+</span>28 <span style=''>  override def resourceJson: JsValue = </span><span style='background: #F0ADAD'>json</span><span style=''>
+</span>29 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          419
+        </td>
+        <td>
+          404
+          -
+          421
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Resource.take
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.s.resource.take()
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          420
+        </td>
+        <td>
+          425
+          -
+          443
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Class.getName
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.s.getClass().getName()
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          421
+        </td>
+        <td>
+          486
+          -
+          503
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Resource.amount
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.s.resource.amount
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          423
+        </td>
+        <td>
+          470
+          -
+          509
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.RetrieveResource.json_=
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.json_=(cml.utils.FoodJson.apply(RetrieveResource.this.s.resource.amount).json)
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          422
+        </td>
+        <td>
+          477
+          -
+          509
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.FoodJson.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.FoodJson.apply(RetrieveResource.this.s.resource.amount).json
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          424
+        </td>
+        <td>
+          545
+          -
+          562
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Resource.amount
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.s.resource.amount
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          426
+        </td>
+        <td>
+          528
+          -
+          568
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.RetrieveResource.json_=
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.json_=(cml.utils.MoneyJson.apply(RetrieveResource.this.s.resource.amount).json)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          425
+        </td>
+        <td>
+          535
+          -
+          568
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.MoneyJson.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.MoneyJson.apply(RetrieveResource.this.s.resource.amount).json
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          427
+        </td>
+        <td>
+          607
+          -
+          624
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Resource.amount
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.s.resource.amount
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          429
+        </td>
+        <td>
+          590
+          -
+          630
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.RetrieveResource.json_=
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.json_=(cml.utils.MoneyJson.apply(RetrieveResource.this.s.resource.amount).json)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          428
+        </td>
+        <td>
+          597
+          -
+          630
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.MoneyJson.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.MoneyJson.apply(RetrieveResource.this.s.resource.amount).json
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          433
+        </td>
+        <td>
+          641
+          -
+          679
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;retrieve &quot;.+(RetrieveResource.this.s.resource.amount))
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          430
+        </td>
+        <td>
+          649
+          -
+          660
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;retrieve &quot;
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          432
+        </td>
+        <td>
+          649
+          -
+          678
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;retrieve &quot;.+(RetrieveResource.this.s.resource.amount)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          431
+        </td>
+        <td>
+          661
+          -
+          678
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Resource.amount
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.s.resource.amount
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          434
+        </td>
+        <td>
+          728
+          -
+          732
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.dynamic_model.RetrieveResource.json
+        </td>
+        <td style="background: #F0ADAD">
+          RetrieveResource.this.json
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

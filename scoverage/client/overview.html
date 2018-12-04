@@ -1,0 +1,1854 @@
+<html>
+      <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+      <title id="title">Scoverage Code Coverage</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+      <style>
+        .meter {
+        height: 14px;
+        position: relative;
+        background: #BB2020;
+}
+
+.meter span {
+	display: block;
+	height: 100%;
+	background-color: rgb(43,194,83);
+	background-image: -webkit-gradient(
+	  linear,
+	  left bottom,
+	  left top,
+	  color-stop(0, rgb(43,194,83)),
+	  color-stop(1, rgb(84,240,84))
+	 );
+	background-image: -webkit-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	background-image: -moz-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	background-image: -ms-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	background-image: -o-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	-webkit-box-shadow:
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	-moz-box-shadow:
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	position: relative;
+	overflow: hidden;
+}
+      </style>
+    </head><body style="font-family: monospace;">
+      <div class="alert alert-info">
+        <b>
+          SCoverage
+        </b>
+        generated at
+        Tue Dec 04 22:37:24 CET 2018
+      </div>
+      <div class="overview">
+        <div class="stats">
+          <table class="table">
+      <tr>
+        <td>
+          Lines of code:
+        </td>
+        <td>
+          1549
+        </td>
+        <td>
+          Files:
+        </td>
+        <td>
+          27
+        </td>
+        <td>
+          Classes:
+        </td>
+        <td>
+          36
+        </td>
+        <td>
+          Methods:
+        </td>
+        <td>
+          147
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Lines per file:
+        </td>
+        <td>
+          57.37
+        </td>
+        <td>
+          Packages:
+        </td>
+        <td>
+          9
+        </td>
+        <td>
+          Classes per package:
+        </td>
+        <td>
+          4.00
+        </td>
+        <td>
+          Methods per class:
+        </td>
+        <td>
+          4.08
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Total statements:
+        </td>
+        <td>
+          842
+        </td>
+        <td>
+          Invoked statements:
+        </td>
+        <td>
+          71
+        </td>
+        <td>
+          Total branches:
+        </td>
+        <td>
+          30
+        </td>
+        <td>
+          Invoked branches:
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Ignored statements:
+        </td>
+        <td>
+          0
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>
+          Statement coverage:
+        </td>
+        <td>
+          8.43
+          %
+        </td>
+        <td colspan="2">
+          <div class="meter">
+            <span style="width: 8%"></span>
+          </div>
+        </td>
+        <td>
+          Branch coverage:
+        </td>
+        <td>
+          0.00
+          %
+        </td>
+        <td colspan="2">
+          <div class="meter">
+            <span style="width: 0%"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+        </div>
+        <div>
+          <table class="tablesorter table table-striped" style="font-size:13px">
+      <thead>
+        <tr>
+          <th>
+            Class
+          </th>
+          <th>
+            Source file
+          </th>
+          <th>
+            Lines
+          </th>
+          <th>
+            Methods
+          </th>
+          <th>
+            Statements
+          </th>
+          <th>
+            Invoked
+          </th>
+          <th>
+            Coverage
+          </th>
+          <th>
+          </th>
+          <th>
+            Branches
+          </th>
+          <th>
+            Invoked
+          </th>
+          <th>
+            Coverage
+          </th>
+          <th>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+      <td>
+        <a href="src/main/scala/cml/controller/AuthenticationActor.scala.html">
+          AuthenticationActor
+        </a>
+      </td>
+      <td>
+        AuthenticationActor.scala
+      </td>
+      <td>
+        102
+      </td>
+      <td>
+        9
+      </td>
+      <td>
+        55
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/BattleActor.scala.html">
+          BattleActor
+        </a>
+      </td>
+      <td>
+        BattleActor.scala
+      </td>
+      <td>
+        19
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        11
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/RemoteActor.scala.html">
+          RemoteActor
+        </a>
+      </td>
+      <td>
+        RemoteActor.scala
+      </td>
+      <td>
+        62
+      </td>
+      <td>
+        6
+      </td>
+      <td>
+        45
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/VillageActor.scala.html">
+          VillageActor
+        </a>
+      </td>
+      <td>
+        VillageActor.scala
+      </td>
+      <td>
+        59
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        28
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/fx/ArenaViewController.scala.html">
+          ArenaViewController
+        </a>
+      </td>
+      <td>
+        ArenaViewController.scala
+      </td>
+      <td>
+        47
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        21
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/fx/AuthenticationViewController.scala.html">
+          AuthenticationViewController
+        </a>
+      </td>
+      <td>
+        AuthenticationViewController.scala
+      </td>
+      <td>
+        56
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        51
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/fx/BattleViewController.scala.html">
+          BattleViewController
+        </a>
+      </td>
+      <td>
+        BattleViewController.scala
+      </td>
+      <td>
+        53
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        28
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/controller/fx/VillageViewController.scala.html">
+          VillageViewController
+        </a>
+      </td>
+      <td>
+        VillageViewController.scala
+      </td>
+      <td>
+        68
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        34
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Structure.scala.html">
+          Cave
+        </a>
+      </td>
+      <td>
+        Structure.scala
+      </td>
+      <td>
+        74
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        14
+      </td>
+      <td>
+        5
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 36%"></span>
+        </div>
+      </td>
+      <td>
+        35.71
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Creature.scala.html">
+          Creature
+        </a>
+      </td>
+      <td>
+        Creature.scala
+      </td>
+      <td>
+        14
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Structure.scala.html">
+          Farm
+        </a>
+      </td>
+      <td>
+        Structure.scala
+      </td>
+      <td>
+        54
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        14
+      </td>
+      <td>
+        5
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 36%"></span>
+        </div>
+      </td>
+      <td>
+        35.71
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Resource.scala.html">
+          Food
+        </a>
+      </td>
+      <td>
+        Resource.scala
+      </td>
+      <td>
+        58
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Structure.scala.html">
+          Habitat
+        </a>
+      </td>
+      <td>
+        Structure.scala
+      </td>
+      <td>
+        81
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Structure.scala.html">
+          Habitat.Habitat
+        </a>
+      </td>
+      <td>
+        Structure.scala
+      </td>
+      <td>
+        98
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        12
+      </td>
+      <td>
+        9
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 75%"></span>
+        </div>
+      </td>
+      <td>
+        75.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/base/Resource.scala.html">
+          Money
+        </a>
+      </td>
+      <td>
+        Resource.scala
+      </td>
+      <td>
+        41
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/creatures/Dragon.scala.html">
+          Dragon
+        </a>
+      </td>
+      <td>
+        Dragon.scala
+      </td>
+      <td>
+        71
+      </td>
+      <td>
+        9
+      </td>
+      <td>
+        20
+      </td>
+      <td>
+        11
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 55%"></span>
+        </div>
+      </td>
+      <td>
+        55.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/creatures/Golem.scala.html">
+          Golem
+        </a>
+      </td>
+      <td>
+        Golem.scala
+      </td>
+      <td>
+        48
+      </td>
+      <td>
+        9
+      </td>
+      <td>
+        20
+      </td>
+      <td>
+        13
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 65%"></span>
+        </div>
+      </td>
+      <td>
+        65.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/creatures/Griffin.scala.html">
+          Griffin
+        </a>
+      </td>
+      <td>
+        Griffin.scala
+      </td>
+      <td>
+        44
+      </td>
+      <td>
+        9
+      </td>
+      <td>
+        20
+      </td>
+      <td>
+        6
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 30%"></span>
+        </div>
+      </td>
+      <td>
+        30.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/creatures/Kraken.scala.html">
+          Kraken
+        </a>
+      </td>
+      <td>
+        Kraken.scala
+      </td>
+      <td>
+        53
+      </td>
+      <td>
+        9
+      </td>
+      <td>
+        20
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 10%"></span>
+        </div>
+      </td>
+      <td>
+        10.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 100%"></span>
+        </div>
+      </td>
+      <td>
+        100.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/dynamic_model/CreatureUpgrade.scala.html">
+          CreatureUpgrade
+        </a>
+      </td>
+      <td>
+        CreatureUpgrade.scala
+      </td>
+      <td>
+        25
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        5
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/dynamic_model/RetrieveResource.scala.html">
+          RetrieveResource
+        </a>
+      </td>
+      <td>
+        RetrieveResource.scala
+      </td>
+      <td>
+        28
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        16
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/model/dynamic_model/StructureUpgrade.scala.html">
+          StructureUpgrade
+        </a>
+      </td>
+      <td>
+        StructureUpgrade.scala
+      </td>
+      <td>
+        36
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        25
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/services/ClientVertx.scala.html">
+          ClientVertx
+        </a>
+      </td>
+      <td>
+        ClientVertx.scala
+      </td>
+      <td>
+        31
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        16
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/services/authentication/AuthenticationServiceVertx.scala.html">
+          AuthenticationServiceVertx
+        </a>
+      </td>
+      <td>
+        AuthenticationServiceVertx.scala
+      </td>
+      <td>
+        63
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        6
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/services/authentication/AuthenticationServiceVertx.scala.html">
+          AuthenticationServiceVertx.AuthenticationServiceVertxImpl
+        </a>
+      </td>
+      <td>
+        AuthenticationServiceVertx.scala
+      </td>
+      <td>
+        106
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        43
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/services/authentication/TokenStorage.scala.html">
+          TokenStorage
+        </a>
+      </td>
+      <td>
+        TokenStorage.scala
+      </td>
+      <td>
+        16
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/services/village/VillageServiceVertx.scala.html">
+          VillageServiceVertx
+        </a>
+      </td>
+      <td>
+        VillageServiceVertx.scala
+      </td>
+      <td>
+        58
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        7
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/services/village/VillageServiceVertx.scala.html">
+          VillageServiceVertx.VillageServiceVertxImpl
+        </a>
+      </td>
+      <td>
+        VillageServiceVertx.scala
+      </td>
+      <td>
+        98
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        36
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/GridInitializer.scala.html">
+          BaseGridInitializer
+        </a>
+      </td>
+      <td>
+        GridInitializer.scala
+      </td>
+      <td>
+        81
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/Tile.scala.html">
+          BaseTile
+        </a>
+      </td>
+      <td>
+        Tile.scala
+      </td>
+      <td>
+        22
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/HandlerSetup.scala.html">
+          ConcreteHandlerSetup
+        </a>
+      </td>
+      <td>
+        HandlerSetup.scala
+      </td>
+      <td>
+        204
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        7
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/HandlerSetup.scala.html">
+          Handler
+        </a>
+      </td>
+      <td>
+        HandlerSetup.scala
+      </td>
+      <td>
+        189
+      </td>
+      <td>
+        7
+      </td>
+      <td>
+        201
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/ImageSlicer.scala.html">
+          ImageSlicer
+        </a>
+      </td>
+      <td>
+        ImageSlicer.scala
+      </td>
+      <td>
+        28
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        29
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/GridInitializer.scala.html">
+          Setup
+        </a>
+      </td>
+      <td>
+        GridInitializer.scala
+      </td>
+      <td>
+        61
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        22
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/Tile.scala.html">
+          Tile
+        </a>
+      </td>
+      <td>
+        Tile.scala
+      </td>
+      <td>
+        30
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr><tr>
+      <td>
+        <a href="src/main/scala/cml/view/ViewSwitch.scala.html">
+          ViewSwitch
+        </a>
+      </td>
+      <td>
+        ViewSwitch.scala
+      </td>
+      <td>
+        14
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        0
+      </td>
+      <td>
+        <div class="meter">
+          <span style="width: 0%"></span>
+        </div>
+      </td>
+      <td>
+        0.00
+        %
+      </td>
+    </tr>
+      </tbody>
+    </table>
+        </div>
+      </div>
+    </body>
+    </html>

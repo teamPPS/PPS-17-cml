@@ -1,0 +1,764 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\view\GridInitializer.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.view
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.view.utils.TileConfig.{baseTileSet,tileSet}
+</span>4 <span style=''>import javafx.scene.SnapshotParameters
+</span>5 <span style=''>import javafx.scene.image.ImageView
+</span>6 <span style=''>import javafx.scene.layout.GridPane
+</span>7 <span style=''>
+</span>8 <span style=''>/**
+</span>9 <span style=''>  * Initialize Game GridPanes with costume settings
+</span>10 <span style=''>  * @author ecavina
+</span>11 <span style=''>  */
+</span>12 <span style=''>trait GridInitializer {
+</span>13 <span style=''>
+</span>14 <span style=''>  /**
+</span>15 <span style=''>    * Initialize a grid as a buildings menu
+</span>16 <span style=''>    * @param grid to initialize
+</span>17 <span style=''>    */
+</span>18 <span style=''>  def initializeBuildingsMenu(grid: GridPane)
+</span>19 <span style=''>
+</span>20 <span style=''>  /**
+</span>21 <span style=''>    * Initialize a grid as a village
+</span>22 <span style=''>    * @param grid to initialize
+</span>23 <span style=''>    */
+</span>24 <span style=''>  def initializeVillage(grid: GridPane)
+</span>25 <span style=''>
+</span>26 <span style=''>}
+</span>27 <span style=''>
+</span>28 <span style=''>trait Setup {
+</span>29 <span style=''>  def configure(grid: GridPane): GridPane
+</span>30 <span style=''>}
+</span>31 <span style=''>
+</span>32 <span style=''>object Setup {
+</span>33 <span style=''>
+</span>34 <span style=''>  val setupVillage: Setup = {
+</span>35 <span style=''>    grid: GridPane =&gt; { // scorrere model
+</span>36 <span style=''>
+</span>37 <span style=''>      val baseTile = </span><span style='background: #F0ADAD'>baseTileSet.filter(t =&gt; t.description.equals(&quot;TERRAIN&quot;)).head</span><span style=''>
+</span>38 <span style=''>
+</span>39 <span style=''>      </span><span style='background: #F0ADAD'>loop(0, 10) foreach { // INVECE CHE GENERARE DA ZERO SCORRO IL MODEL E SETTO LE TILE CORRISPONDENTI
+</span>40 <span style=''></span><span style='background: #F0ADAD'>        case(x, y) =&gt;
+</span>41 <span style=''></span><span style='background: #F0ADAD'>          val imageTile = new ImageView()
+</span>42 <span style=''></span><span style='background: #F0ADAD'>          imageTile.setImage(baseTile.imageSprite.snapshot(new SnapshotParameters, null))
+</span>43 <span style=''></span><span style='background: #F0ADAD'>          grid add(imageTile, x, y)
+</span>44 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>45 <span style=''>
+</span>46 <span style=''>      def loop(s: Int, e: Int) =
+</span>47 <span style=''>      </span><span style='background: #F0ADAD'>for(
+</span>48 <span style=''></span><span style='background: #F0ADAD'>        x &lt;- s until e;
+</span>49 <span style=''></span><span style='background: #F0ADAD'>        y &lt;- s until e
+</span>50 <span style=''></span><span style='background: #F0ADAD'>      ) yield (x, y)</span><span style=''>
+</span>51 <span style=''>
+</span>52 <span style=''>      grid
+</span>53 <span style=''>    }
+</span>54 <span style=''>  }
+</span>55 <span style=''>
+</span>56 <span style=''>  val setupBuildingsMenu: Setup = {
+</span>57 <span style=''>    grid: GridPane =&gt; {
+</span>58 <span style=''>      var pos = </span><span style='background: #F0ADAD'>0</span><span style=''>
+</span>59 <span style=''>      </span><span style='background: #F0ADAD'>for(tile &lt;- tileSet) {
+</span>60 <span style=''></span><span style='background: #F0ADAD'>        grid add(tile.imageSprite, 0, pos)
+</span>61 <span style=''></span><span style='background: #F0ADAD'>        pos += 1
+</span>62 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>63 <span style=''>      grid
+</span>64 <span style=''>    }
+</span>65 <span style=''>  }
+</span>66 <span style=''>}
+</span>67 <span style=''>
+</span>68 <span style=''>object BaseGridInitializer extends GridInitializer {
+</span>69 <span style=''>
+</span>70 <span style=''>  private def setupGrid(grid: GridPane, setup: Setup): Unit = {
+</span>71 <span style=''>    </span><span style='background: #F0ADAD'>grid setHgap 10</span><span style=''>
+</span>72 <span style=''>    </span><span style='background: #F0ADAD'>grid setVgap 10</span><span style=''>
+</span>73 <span style=''>    </span><span style='background: #F0ADAD'>setup.configure(grid)</span><span style=''>
+</span>74 <span style=''>  }
+</span>75 <span style=''>
+</span>76 <span style=''>  override def initializeBuildingsMenu(grid: GridPane): Unit = {
+</span>77 <span style=''>    </span><span style='background: #F0ADAD'>setupGrid(grid, Setup.setupBuildingsMenu)</span><span style=''>
+</span>78 <span style=''>  }
+</span>79 <span style=''>
+</span>80 <span style=''>  override def initializeVillage(grid: GridPane): Unit = {
+</span>81 <span style=''>    </span><span style='background: #F0ADAD'>setupGrid(grid, Setup.setupVillage)</span><span style=''>
+</span>82 <span style=''>  }
+</span>83 <span style=''>
+</span>84 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          570
+        </td>
+        <td>
+          782
+          -
+          813
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.equals
+        </td>
+        <td style="background: #F0ADAD">
+          t.description.equals(&quot;TERRAIN&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          571
+        </td>
+        <td>
+          758
+          -
+          819
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.collection.IterableLike.head
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.utils.TileConfig.baseTileSet.filter(((t: cml.view.BaseTile) =&gt; t.description.equals(&quot;TERRAIN&quot;))).head
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          573
+        </td>
+        <td>
+          837
+          -
+          839
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          10
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          572
+        </td>
+        <td>
+          834
+          -
+          835
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          580
+        </td>
+        <td>
+          829
+          -
+          1131
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.IterableLike.foreach
+        </td>
+        <td style="background: #F0ADAD">
+          loop(0, 10).foreach[Unit](((x0$1: (Int, Int)) =&gt; x0$1 match {
+  case (_1: Int, _2: Int)(Int, Int)((x @ _), (y @ _)) =&gt; {
+    val imageTile: javafx.scene.image.ImageView = new javafx.scene.image.ImageView();
+    imageTile.setImage(baseTile.imageSprite.snapshot(new javafx.scene.SnapshotParameters(), null));
+    grid.add(imageTile, x, y)
+  }
+}))
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          574
+        </td>
+        <td>
+          979
+          -
+          994
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.image.ImageView.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new javafx.scene.image.ImageView()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          577
+        </td>
+        <td>
+          1025
+          -
+          1084
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.snapshot
+        </td>
+        <td style="background: #F0ADAD">
+          baseTile.imageSprite.snapshot(new javafx.scene.SnapshotParameters(), null)
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          576
+        </td>
+        <td>
+          1079
+          -
+          1083
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          null
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          575
+        </td>
+        <td>
+          1055
+          -
+          1077
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.SnapshotParameters.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new javafx.scene.SnapshotParameters()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          578
+        </td>
+        <td>
+          1006
+          -
+          1085
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.image.ImageView.setImage
+        </td>
+        <td style="background: #F0ADAD">
+          imageTile.setImage(baseTile.imageSprite.snapshot(new javafx.scene.SnapshotParameters(), null))
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          579
+        </td>
+        <td>
+          1097
+          -
+          1122
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.layout.GridPane.add
+        </td>
+        <td style="background: #F0ADAD">
+          grid.add(imageTile, x, y)
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          585
+        </td>
+        <td>
+          1175
+          -
+          1250
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.collection.TraversableLike.flatMap
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.intWrapper(s).until(e).flatMap[(Int, Int), scala.collection.immutable.IndexedSeq[(Int, Int)]](((x: Int) =&gt; scala.Predef.intWrapper(s).until(e).map[(Int, Int), scala.collection.immutable.IndexedSeq[(Int, Int)]](((y: Int) =&gt; scala.Tuple2.apply[Int, Int](x, y)))(immutable.this.IndexedSeq.canBuildFrom[(Int, Int)])))(immutable.this.IndexedSeq.canBuildFrom[(Int, Int)])
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          584
+        </td>
+        <td>
+          1191
+          -
+          1191
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.collection.immutable.IndexedSeq.canBuildFrom
+        </td>
+        <td style="background: #F0ADAD">
+          immutable.this.IndexedSeq.canBuildFrom[(Int, Int)]
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          582
+        </td>
+        <td>
+          1216
+          -
+          1216
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.collection.immutable.IndexedSeq.canBuildFrom
+        </td>
+        <td style="background: #F0ADAD">
+          immutable.this.IndexedSeq.canBuildFrom[(Int, Int)]
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          583
+        </td>
+        <td>
+          1214
+          -
+          1250
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.collection.TraversableLike.map
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.intWrapper(s).until(e).map[(Int, Int), scala.collection.immutable.IndexedSeq[(Int, Int)]](((y: Int) =&gt; scala.Tuple2.apply[Int, Int](x, y)))(immutable.this.IndexedSeq.canBuildFrom[(Int, Int)])
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          581
+        </td>
+        <td>
+          1244
+          -
+          1250
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Tuple2.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Tuple2.apply[Int, Int](x, y)
+        </td>
+      </tr><tr>
+        <td>
+          58
+        </td>
+        <td>
+          586
+        </td>
+        <td>
+          1358
+          -
+          1359
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          591
+        </td>
+        <td>
+          1367
+          -
+          1460
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.IterableLike.foreach
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.utils.TileConfig.tileSet.foreach[Unit](((tile: cml.view.Tile) =&gt; {
+  grid.add(tile.imageSprite, 0, pos);
+  pos = pos.+(1)
+}))
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          588
+        </td>
+        <td>
+          1426
+          -
+          1427
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          587
+        </td>
+        <td>
+          1408
+          -
+          1424
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BaseTile.imageSprite
+        </td>
+        <td style="background: #F0ADAD">
+          tile.imageSprite
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          589
+        </td>
+        <td>
+          1399
+          -
+          1433
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.layout.GridPane.add
+        </td>
+        <td style="background: #F0ADAD">
+          grid.add(tile.imageSprite, 0, pos)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          590
+        </td>
+        <td>
+          1443
+          -
+          1451
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          pos.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          592
+        </td>
+        <td>
+          1616
+          -
+          1631
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.layout.GridPane.setHgap
+        </td>
+        <td style="background: #F0ADAD">
+          grid.setHgap(10.0)
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          593
+        </td>
+        <td>
+          1637
+          -
+          1652
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.layout.GridPane.setVgap
+        </td>
+        <td style="background: #F0ADAD">
+          grid.setVgap(10.0)
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          594
+        </td>
+        <td>
+          1658
+          -
+          1679
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.Setup.configure
+        </td>
+        <td style="background: #F0ADAD">
+          setup.configure(grid)
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          595
+        </td>
+        <td>
+          1673
+          -
+          1673
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          597
+        </td>
+        <td>
+          1758
+          -
+          1799
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BaseGridInitializer.setupGrid
+        </td>
+        <td style="background: #F0ADAD">
+          BaseGridInitializer.this.setupGrid(grid, Setup.setupBuildingsMenu)
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          596
+        </td>
+        <td>
+          1774
+          -
+          1798
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.Setup.setupBuildingsMenu
+        </td>
+        <td style="background: #F0ADAD">
+          Setup.setupBuildingsMenu
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          599
+        </td>
+        <td>
+          1872
+          -
+          1907
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BaseGridInitializer.setupGrid
+        </td>
+        <td style="background: #F0ADAD">
+          BaseGridInitializer.this.setupGrid(grid, Setup.setupVillage)
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          598
+        </td>
+        <td>
+          1888
+          -
+          1906
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.Setup.setupVillage
+        </td>
+        <td style="background: #F0ADAD">
+          Setup.setupVillage
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

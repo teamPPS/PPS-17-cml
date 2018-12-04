@@ -1,0 +1,709 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\controller\VillageActor.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller
+</span>2 <span style=''>
+</span>3 <span style=''>import akka.actor.{Actor, ActorRef, ActorSelection}
+</span>4 <span style=''>import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
+</span>5 <span style=''>import cml.controller.messages.VillageRequest._
+</span>6 <span style=''>import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
+</span>7 <span style=''>import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
+</span>8 <span style=''>import javafx.application.Platform
+</span>9 <span style=''>
+</span>10 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
+</span>11 <span style=''>import scala.language.implicitConversions
+</span>12 <span style=''>import scala.util.{Failure, Success}
+</span>13 <span style=''>
+</span>14 <span style=''>
+</span>15 <span style=''>/**
+</span>16 <span style=''>  * Class that implements the actor which manages the village interaction with user
+</span>17 <span style=''>  * @author Monica Gondolini
+</span>18 <span style=''>  */
+</span>19 <span style=''>class VillageActor() extends Actor{
+</span>20 <span style=''>
+</span>21 <span style=''>  val villageVertx = </span><span style='background: #F0ADAD'>VillageServiceVertxImpl()</span><span style=''>
+</span>22 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>context.actorSelection(&quot;/user/AuthenticationActor&quot;)</span><span style=''>
+</span>23 <span style=''>
+</span>24 <span style=''>  /**
+</span>25 <span style=''>    * @return village behaviour
+</span>26 <span style=''>    */
+</span>27 <span style=''>  override def receive: Receive = {
+</span>28 <span style=''>
+</span>29 <span style=''>    case CreateVillage() =&gt;
+</span>30 <span style=''>      val senderActor: ActorRef = </span><span style='background: #F0ADAD'>sender</span><span style=''>
+</span>31 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.createVillage().onComplete {
+</span>32 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>33 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>34 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure create village&quot;)
+</span>35 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; senderActor ! CreateVillageSuccess()
+</span>36 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>37 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; senderActor ! VillageFailure(createFailure)
+</span>38 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>39 <span style=''>
+</span>40 <span style=''>    case EnterVillage(controller) =&gt;
+</span>41 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.enterVillage().onComplete {
+</span>42 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>43 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>44 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure entering in village&quot;)
+</span>45 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; Platform.runLater(() =&gt; controller.setGridAndHandlers())
+</span>46 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>47 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; authenticationActor ! VillageFailure(enterFailure)
+</span>48 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>49 <span style=''>
+</span>50 <span style=''>    case UpdateVillage(update) =&gt; </span><span style='background: #F0ADAD'>villageVertx.updateVillage(update)
+</span>51 <span style=''></span><span style='background: #F0ADAD'>      .onComplete {
+</span>52 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt; println(httpResponse) //modificare model: Passo textarea(?) e model nel messaggio UpdateVillage
+</span>53 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; println(exception) //visualizza cose nella gui -&gt; altro attore con controller? Passo textarea e model nel messaggio dall'handler
+</span>54 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>55 <span style=''>
+</span>56 <span style=''>    case DeleteVillage() =&gt; </span><span style='background: #F0ADAD'>villageVertx.deleteVillageAndUser()
+</span>57 <span style=''></span><span style='background: #F0ADAD'>      .onComplete {
+</span>58 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt; println(httpResponse) //cancella tutto torna alla schermata di autenticazione
+</span>59 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; println(exception) // visualizza cose nella gui -&gt; altro attore con controller? Passo textarea e model nel messaggio dall'handler
+</span>60 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>61 <span style=''>  }
+</span>62 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          112
+        </td>
+        <td>
+          724
+          -
+          749
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.village.VillageServiceVertx.VillageServiceVertxImpl.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.village.VillageServiceVertx.VillageServiceVertxImpl.apply()
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          113
+        </td>
+        <td>
+          795
+          -
+          846
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRefFactory.actorSelection
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.context.actorSelection(&quot;/user/AuthenticationActor&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          139
+        </td>
+        <td>
+          932
+          -
+          932
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.VillageActor.$anonfun.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anonfun()
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          114
+        </td>
+        <td>
+          1000
+          -
+          1006
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.Actor.sender
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.sender()
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          123
+        </td>
+        <td>
+          1014
+          -
+          1365
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.onComplete
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.villageVertx.createVillage().onComplete[Unit](((x0$1: scala.util.Try[String]) =&gt; x0$1 match {
+  case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
+    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure create village&quot;)
+    case _ =&gt; actor.this.`package`.actorRef2Scala(senderActor).!(cml.controller.messages.VillageResponse.CreateVillageSuccess.apply())(VillageActor.this.self)
+  }
+  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; actor.this.`package`.actorRef2Scala(senderActor).!(cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.createFailure))(VillageActor.this.self)
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          115
+        </td>
+        <td>
+          1170
+          -
+          1203
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;Failure create village&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          116
+        </td>
+        <td>
+          1241
+          -
+          1263
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.VillageResponse.CreateVillageSuccess.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.VillageResponse.CreateVillageSuccess.apply()
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          118
+        </td>
+        <td>
+          1227
+          -
+          1263
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(senderActor).!(cml.controller.messages.VillageResponse.CreateVillageSuccess.apply())(VillageActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          117
+        </td>
+        <td>
+          1239
+          -
+          1239
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          119
+        </td>
+        <td>
+          1342
+          -
+          1355
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ViewMessage.ViewVillageMessage.createFailure
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ViewMessage.ViewVillageMessage.createFailure
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          122
+        </td>
+        <td>
+          1313
+          -
+          1356
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(senderActor).!(cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.createFailure))(VillageActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          121
+        </td>
+        <td>
+          1325
+          -
+          1325
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          120
+        </td>
+        <td>
+          1327
+          -
+          1356
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.VillageResponse.VillageFailure.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.createFailure)
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          132
+        </td>
+        <td>
+          1413
+          -
+          1795
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.onComplete
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.villageVertx.enterVillage().onComplete[Unit](((x0$2: scala.util.Try[String]) =&gt; x0$2 match {
+  case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
+    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure entering in village&quot;)
+    case _ =&gt; javafx.application.Platform.runLater((() =&gt; controller.setGridAndHandlers()))
+  }
+  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; actor.this.ActorSelection.toScala(VillageActor.this.authenticationActor).!(cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.enterFailure))(VillageActor.this.self)
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          124
+        </td>
+        <td>
+          1568
+          -
+          1606
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;Failure entering in village&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          125
+        </td>
+        <td>
+          1654
+          -
+          1685
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.VillageViewController.setGridAndHandlers
+        </td>
+        <td style="background: #F0ADAD">
+          controller.setGridAndHandlers()
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          126
+        </td>
+        <td>
+          1630
+          -
+          1686
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.application.Platform.runLater
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.application.Platform.runLater((() =&gt; controller.setGridAndHandlers()))
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          128
+        </td>
+        <td>
+          1773
+          -
+          1785
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ViewMessage.ViewVillageMessage.enterFailure
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ViewMessage.ViewVillageMessage.enterFailure
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          131
+        </td>
+        <td>
+          1736
+          -
+          1786
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(VillageActor.this.authenticationActor).!(cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.enterFailure))(VillageActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          127
+        </td>
+        <td>
+          1736
+          -
+          1755
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.VillageActor.authenticationActor
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.authenticationActor
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          130
+        </td>
+        <td>
+          1756
+          -
+          1756
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          129
+        </td>
+        <td>
+          1758
+          -
+          1786
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.VillageResponse.VillageFailure.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.enterFailure)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          135
+        </td>
+        <td>
+          1833
+          -
+          2197
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.onComplete
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.villageVertx.updateVillage(update).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
+  case (value: Unit)scala.util.Success[Unit]((httpResponse @ _)) =&gt; scala.Predef.println(httpResponse)
+  case (exception: Throwable)scala.util.Failure[Unit]((exception @ _)) =&gt; scala.Predef.println(exception)
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          133
+        </td>
+        <td>
+          1928
+          -
+          1949
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(httpResponse)
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          134
+        </td>
+        <td>
+          2060
+          -
+          2078
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(exception)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          138
+        </td>
+        <td>
+          2229
+          -
+          2577
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.onComplete
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.villageVertx.deleteVillageAndUser().onComplete[Unit](((x0$4: scala.util.Try[Unit]) =&gt; x0$4 match {
+  case (value: Unit)scala.util.Success[Unit]((httpResponse @ _)) =&gt; scala.Predef.println(httpResponse)
+  case (exception: Throwable)scala.util.Failure[Unit]((exception @ _)) =&gt; scala.Predef.println(exception)
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          58
+        </td>
+        <td>
+          136
+        </td>
+        <td>
+          2325
+          -
+          2346
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(httpResponse)
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          137
+        </td>
+        <td>
+          2439
+          -
+          2457
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(exception)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

@@ -1,0 +1,533 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\creatures\Dragon.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.creatures
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Creature
+</span>4 <span style=''>import cml.utils.ModelConfig.Elements.FIRE
+</span>5 <span style=''>
+</span>6 <span style=''>/**
+</span>7 <span style=''>  * This class models a dragon
+</span>8 <span style=''>  * @param creatureName name of the dragon
+</span>9 <span style=''>  * @param creatureLevel set the dragon level
+</span>10 <span style=''>  * @author Filippo Portolani
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
+</span>14 <span style=''>
+</span>15 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>FIRE</span><span style=''>
+</span>16 <span style=''>
+</span>17 <span style=''>  /**
+</span>18 <span style=''>    * This method increases creature level by 1
+</span>19 <span style=''>    */
+</span>20 <span style=''>
+</span>21 <span style=''>  override def levelUp(): Unit = {
+</span>22 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel += 1</span><span style=''>
+</span>23 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>24 <span style=''>  }
+</span>25 <span style=''>
+</span>26 <span style=''>  /**
+</span>27 <span style=''>    * This method behaves differently based on the creature level
+</span>28 <span style=''>    */
+</span>29 <span style=''>
+</span>30 <span style=''>  override def setAttack() : Unit = {
+</span>31 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
+</span>32 <span style=''>      case 10 =&gt; </span><span style='background: #AEF1AE'>attackValue += 10</span><span style=''>
+</span>33 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>34 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>35 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
+</span>36 <span style=''>    }
+</span>37 <span style=''>  }
+</span>38 <span style=''>
+</span>39 <span style=''>  /**
+</span>40 <span style=''>    * This is a getter of the dragon element
+</span>41 <span style=''>    * @return the element
+</span>42 <span style=''>    */
+</span>43 <span style=''>
+</span>44 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
+</span>45 <span style=''>
+</span>46 <span style=''>  /**
+</span>47 <span style=''>    * This is a getter of the dragon level
+</span>48 <span style=''>    * @return the current level
+</span>49 <span style=''>    */
+</span>50 <span style=''>
+</span>51 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>52 <span style=''>
+</span>53 <span style=''>  /**
+</span>54 <span style=''>    * This is a getter of the dragon attack power
+</span>55 <span style=''>    * @return the current attach value
+</span>56 <span style=''>    */
+</span>57 <span style=''>
+</span>58 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>59 <span style=''>
+</span>60 <span style=''>  /**
+</span>61 <span style=''>    * This method allows to set the dragon level
+</span>62 <span style=''>    */
+</span>63 <span style=''>
+</span>64 <span style=''>  override def currentLevel_ : Unit = {
+</span>65 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
+</span>66 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>67 <span style=''>  }
+</span>68 <span style=''>
+</span>69 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>70 <span style=''>
+</span>71 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>&quot;Dragon&quot;</span><span style=''>
+</span>72 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          334
+        </td>
+        <td>
+          383
+          -
+          387
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Elements.FIRE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Elements.FIRE
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          336
+        </td>
+        <td>
+          497
+          -
+          514
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.currentLevel_=(Dragon.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          335
+        </td>
+        <td>
+          497
+          -
+          514
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.currentLevel.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          337
+        </td>
+        <td>
+          520
+          -
+          531
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Dragon.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          338
+        </td>
+        <td>
+          667
+          -
+          679
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          340
+        </td>
+        <td>
+          706
+          -
+          723
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.attackValue_=(Dragon.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          339
+        </td>
+        <td>
+          706
+          -
+          723
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          342
+        </td>
+        <td>
+          742
+          -
+          759
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.attackValue_=(Dragon.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          341
+        </td>
+        <td>
+          742
+          -
+          759
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          343
+        </td>
+        <td>
+          778
+          -
+          795
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          344
+        </td>
+        <td>
+          778
+          -
+          795
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.attackValue_=(Dragon.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          345
+        </td>
+        <td>
+          810
+          -
+          812
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          346
+        </td>
+        <td>
+          953
+          -
+          961
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Dragon._element
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this._element
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          347
+        </td>
+        <td>
+          1087
+          -
+          1099
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          58
+        </td>
+        <td>
+          348
+        </td>
+        <td>
+          1245
+          -
+          1256
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          349
+        </td>
+        <td>
+          1387
+          -
+          1400
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Dragon.creatureLevel
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.creatureLevel
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          350
+        </td>
+        <td>
+          1372
+          -
+          1400
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.currentLevel_=(Dragon.this.creatureLevel)
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          351
+        </td>
+        <td>
+          1406
+          -
+          1417
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Dragon.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          Dragon.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          352
+        </td>
+        <td>
+          1456
+          -
+          1468
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Dragon.creatureName
+        </td>
+        <td style="background: #F0ADAD">
+          Dragon.this.creatureName
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          353
+        </td>
+        <td>
+          1510
+          -
+          1518
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Dragon&quot;
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

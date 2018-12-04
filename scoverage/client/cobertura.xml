@@ -1,0 +1,2648 @@
+<?xml version="1.0"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+<coverage 
+line-rate="0.08" lines-valid="842" lines-covered="71" branches-valid="30" branches-covered="0" branch-rate="0.00" complexity="0" version="1.0" timestamp="1543959443714">
+    <sources>
+        <source>--source</source>
+        <source>C:/Users/chiar/Desktop/PPS-17-cml/client</source>
+    </sources>
+    <packages>
+        <package name="cml.controller" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.controller.AuthenticationActor" filename="src/main/scala/cml/controller/AuthenticationActor.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller/AuthenticationActor/successAuthenticationCase" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="80" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="80" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/loginSucceedOnGui" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="77" hits="0" branch="false"/>
+                                <line number="77" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/checkHttpResponse" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="92" hits="0" branch="false"/>
+                                <line number="86" hits="0" branch="false"/>
+                                <line number="89" hits="0" branch="false"/>
+                                <line number="91" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="91" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/displayMsg" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/disableButtons" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="101" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/receive" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/authenticationBehaviour" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="43" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="46" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="43" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/AuthenticationActor/villageBehaviour" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="64" hits="0" branch="false"/>
+                                <line number="63" hits="0" branch="false"/>
+                                <line number="62" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="92" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="80" hits="0" branch="false"/>
+                        <line number="43" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="64" hits="0" branch="false"/>
+                        <line number="86" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="89" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="91" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="63" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="80" hits="0" branch="false"/>
+                        <line number="101" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="62" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="43" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="91" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.controller.BattleActor" filename="src/main/scala/cml/controller/BattleActor.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.controller/BattleActor/preStart" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="13" hits="0" branch="false"/>
+                                <line number="14" hits="0" branch="false"/>
+                                <line number="12" hits="0" branch="false"/>
+                                <line number="13" hits="0" branch="false"/>
+                                <line number="14" hits="0" branch="false"/>
+                                <line number="13" hits="0" branch="false"/>
+                                <line number="14" hits="0" branch="false"/>
+                                <line number="13" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.controller/BattleActor/receive" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="18" hits="0" branch="false"/>
+                                <line number="17" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="14" hits="0" branch="false"/>
+                        <line number="12" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="18" hits="0" branch="false"/>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="14" hits="0" branch="false"/>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="14" hits="0" branch="false"/>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="17" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.controller.RemoteActor" filename="src/main/scala/cml/controller/RemoteActor.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller/RemoteActor/addIntoBattleUserList" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.controller/RemoteActor/receive" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="32" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="32" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="25" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.controller/RemoteActor/existChallenger" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller/RemoteActor/removeIntoBattleUserList" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="44" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.controller/RemoteActor/main" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="58" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="62" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.controller/RemoteActor/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="23" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="32" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="32" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="25" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="62" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.controller.VillageActor" filename="src/main/scala/cml/controller/VillageActor.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller/VillageActor/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="22" hits="0" branch="false"/>
+                                <line number="21" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.controller/VillageActor/receive" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="53" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="44" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                                <line number="58" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                                <line number="57" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="21" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="57" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.controller.fx" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.controller.fx.AuthenticationViewController" filename="src/main/scala/cml/controller/fx/AuthenticationViewController.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller.fx/AuthenticationViewController/requestAuthentication" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="43" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="46" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="46" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="46" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/AuthenticationViewController/initialize" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/AuthenticationViewController/openVillageView" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="56" hits="0" branch="false"/>
+                                <line number="56" hits="0" branch="false"/>
+                                <line number="56" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/AuthenticationViewController/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="56" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="43" hits="0" branch="false"/>
+                        <line number="56" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="56" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.controller.fx.VillageViewController" filename="src/main/scala/cml/controller/fx/VillageViewController.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller.fx/VillageViewController/initialize" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="44" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="38" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="38" hits="0" branch="false"/>
+                                <line number="45" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/VillageViewController/logoutSystem" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="68" hits="0" branch="false"/>
+                                <line number="67" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/VillageViewController/setGridAndHandlers" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="56" hits="0" branch="false"/>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="58" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="53" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="53" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                                <line number="58" hits="0" branch="false"/>
+                                <line number="56" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/VillageViewController/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="56" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="38" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="68" hits="0" branch="false"/>
+                        <line number="56" hits="0" branch="false"/>
+                        <line number="67" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="38" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.controller.fx.ArenaViewController" filename="src/main/scala/cml/controller/fx/ArenaViewController.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller.fx/ArenaViewController/pauseOption" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="25" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/ArenaViewController/exitOption" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="36" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                                <line number="40" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/ArenaViewController/attackOption" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="47" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="36" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="25" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="40" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.controller.fx.BattleViewController" filename="src/main/scala/cml/controller/fx/BattleViewController.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.controller.fx/BattleViewController/createBattleActor" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="52" hits="0" branch="false"/>
+                                <line number="53" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/BattleViewController/exitOption" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/BattleViewController/creatureOption" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="44" hits="0" branch="false"/>
+                                <line number="44" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="36" hits="0" branch="false"/>
+                                <line number="43" hits="0" branch="false"/>
+                                <line number="44" hits="0" branch="false"/>
+                                <line number="38" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.controller.fx/BattleViewController/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="36" hits="0" branch="false"/>
+                        <line number="43" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="38" hits="0" branch="false"/>
+                        <line number="52" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.model.base" line-rate="0.65" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.model.base.Cave" filename="src/main/scala/cml/model/base/Structure.scala" line-rate="0.36" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Cave/element" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="74" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="63" hits="1" branch="false"/>
+                                <line number="63" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/addCreature" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="71" hits="0" branch="false"/>
+                                <line number="70" hits="0" branch="false"/>
+                                <line number="71" hits="0" branch="false"/>
+                                <line number="70" hits="0" branch="false"/>
+                                <line number="70" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/level" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="65" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/creatures" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="73" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/position" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="66" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/levelUp" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="64" hits="1" branch="false"/>
+                                <line number="64" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Cave/resource" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="67" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="67" hits="0" branch="false"/>
+                        <line number="63" hits="1" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="64" hits="1" branch="false"/>
+                        <line number="64" hits="1" branch="false"/>
+                        <line number="70" hits="0" branch="false"/>
+                        <line number="66" hits="1" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="70" hits="0" branch="false"/>
+                        <line number="63" hits="1" branch="false"/>
+                        <line number="74" hits="0" branch="false"/>
+                        <line number="65" hits="0" branch="false"/>
+                        <line number="70" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.base.Money" filename="src/main/scala/cml/model/base/Resource.scala" line-rate="1.00" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Money/take" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="38" hits="1" branch="false"/>
+                                <line number="38" hits="1" branch="false"/>
+                                <line number="37" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Money/amount" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="41" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Money/inc" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="34" hits="1" branch="false"/>
+                                <line number="34" hits="1" branch="false"/>
+                                <line number="34" hits="1" branch="false"/>
+                                <line number="34" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="34" hits="1" branch="false"/>
+                        <line number="38" hits="1" branch="false"/>
+                        <line number="34" hits="1" branch="false"/>
+                        <line number="34" hits="1" branch="false"/>
+                        <line number="38" hits="1" branch="false"/>
+                        <line number="37" hits="1" branch="false"/>
+                        <line number="41" hits="1" branch="false"/>
+                        <line number="34" hits="1" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.base.Farm" filename="src/main/scala/cml/model/base/Structure.scala" line-rate="0.36" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Farm/element" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="54" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/addCreature" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/position" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="46" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/creatures" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="53" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/level" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="45" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/levelUp" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="44" hits="1" branch="false"/>
+                                <line number="44" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="43" hits="1" branch="false"/>
+                                <line number="43" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Farm/resource" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="47" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="44" hits="1" branch="false"/>
+                        <line number="46" hits="1" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="43" hits="1" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="45" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="43" hits="1" branch="false"/>
+                        <line number="44" hits="1" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.base.Creature" filename="src/main/scala/cml/model/base/Creature.scala" line-rate="1.00" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Creature/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="13" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Creature/currentLevel" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="12" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Creature/attackValue" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="14" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="12" hits="1" branch="false"/>
+                        <line number="14" hits="1" branch="false"/>
+                        <line number="13" hits="1" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.base.Food" filename="src/main/scala/cml/model/base/Resource.scala" line-rate="1.00" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Food/take" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="54" hits="1" branch="false"/>
+                                <line number="55" hits="1" branch="false"/>
+                                <line number="55" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Food/inc" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="51" hits="1" branch="false"/>
+                                <line number="51" hits="1" branch="false"/>
+                                <line number="51" hits="1" branch="false"/>
+                                <line number="51" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Food/amount" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="58" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="51" hits="1" branch="false"/>
+                        <line number="54" hits="1" branch="false"/>
+                        <line number="58" hits="1" branch="false"/>
+                        <line number="51" hits="1" branch="false"/>
+                        <line number="51" hits="1" branch="false"/>
+                        <line number="55" hits="1" branch="false"/>
+                        <line number="55" hits="1" branch="false"/>
+                        <line number="51" hits="1" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.base.Habitat.Habitat" filename="src/main/scala/cml/model/base/Structure.scala" line-rate="0.75" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Habitat/addCreature" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="96" hits="1" branch="false"/>
+                                <line number="96" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/level" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="93" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/element" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="98" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="90" hits="1" branch="false"/>
+                                <line number="91" hits="1" branch="false"/>
+                                <line number="91" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/position" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="94" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/levelUp" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="92" hits="1" branch="false"/>
+                                <line number="92" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/resource" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="95" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.base/Habitat/creatures" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="97" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="96" hits="1" branch="false"/>
+                        <line number="90" hits="1" branch="false"/>
+                        <line number="92" hits="1" branch="false"/>
+                        <line number="94" hits="1" branch="false"/>
+                        <line number="93" hits="1" branch="false"/>
+                        <line number="96" hits="1" branch="false"/>
+                        <line number="98" hits="0" branch="false"/>
+                        <line number="91" hits="1" branch="false"/>
+                        <line number="97" hits="0" branch="false"/>
+                        <line number="91" hits="1" branch="false"/>
+                        <line number="92" hits="1" branch="false"/>
+                        <line number="95" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.base.Habitat" filename="src/main/scala/cml/model/base/Structure.scala" line-rate="1.00" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.base/Habitat/apply" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="81" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="81" hits="1" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.model.creatures" line-rate="0.40" branch-rate="1.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.model.creatures.Kraken" filename="src/main/scala/cml/model/creatures/Kraken.scala" line-rate="0.10" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.creatures/Kraken/name" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="51" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Kraken/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="15" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.creatures/Kraken/creatureType" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="53" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Kraken/setAttack" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="32" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="35" hits="0" branch="false"/>
+                                <line number="32" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Kraken/attackPower" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="43" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Kraken/levelUp" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="22" hits="0" branch="false"/>
+                                <line number="22" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Kraken/level" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="41" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Kraken/element" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="39" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Kraken/currentLevel_" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="46" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                                <line number="46" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="39" hits="1" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="32" hits="0" branch="false"/>
+                        <line number="15" hits="1" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="32" hits="0" branch="false"/>
+                        <line number="43" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.creatures.Golem" filename="src/main/scala/cml/model/creatures/Golem.scala" line-rate="0.65" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.creatures/Golem/element" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="35" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Golem/setAttack" signature="()V" line-rate="0.50" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="27" hits="1" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="28" hits="1" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="28" hits="1" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="31" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Golem/name" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="46" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Golem/level" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="37" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Golem/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="15" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.creatures/Golem/currentLevel_" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="42" hits="1" branch="false"/>
+                                <line number="42" hits="1" branch="false"/>
+                                <line number="43" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Golem/levelUp" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="18" hits="1" branch="false"/>
+                                <line number="19" hits="1" branch="false"/>
+                                <line number="18" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Golem/creatureType" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="48" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.creatures/Golem/attackPower" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="39" hits="1" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="18" hits="1" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="27" hits="1" branch="false"/>
+                        <line number="42" hits="1" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="42" hits="1" branch="false"/>
+                        <line number="28" hits="1" branch="false"/>
+                        <line number="15" hits="1" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="19" hits="1" branch="false"/>
+                        <line number="35" hits="1" branch="false"/>
+                        <line number="28" hits="1" branch="false"/>
+                        <line number="39" hits="1" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="43" hits="1" branch="false"/>
+                        <line number="18" hits="1" branch="false"/>
+                        <line number="31" hits="1" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.creatures.Dragon" filename="src/main/scala/cml/model/creatures/Dragon.scala" line-rate="0.55" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method name="cml.model.creatures/Dragon/setAttack" signature="()V" line-rate="0.50" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="32" hits="1" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="35" hits="1" branch="false"/>
+                                <line number="32" hits="1" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="33" hits="0" branch="false"/>
+                                <line number="34" hits="0" branch="false"/>
+                                <line number="31" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Dragon/currentLevel_" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="65" hits="1" branch="false"/>
+                                <line number="66" hits="1" branch="false"/>
+                                <line number="65" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Dragon/element" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="44" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Dragon/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="15" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.creatures/Dragon/attackPower" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="58" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Dragon/level" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="51" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Dragon/name" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="69" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Dragon/creatureType" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="71" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Dragon/levelUp" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="23" hits="1" branch="false"/>
+                                <line number="22" hits="1" branch="false"/>
+                                <line number="22" hits="1" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="65" hits="1" branch="false"/>
+                        <line number="32" hits="1" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="69" hits="0" branch="false"/>
+                        <line number="15" hits="1" branch="false"/>
+                        <line number="23" hits="1" branch="false"/>
+                        <line number="22" hits="1" branch="false"/>
+                        <line number="35" hits="1" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="32" hits="1" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="66" hits="1" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="65" hits="1" branch="false"/>
+                        <line number="34" hits="0" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="22" hits="1" branch="false"/>
+                        <line number="31" hits="1" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.creatures.Griffin" filename="src/main/scala/cml/model/creatures/Griffin.scala" line-rate="0.30" branch-rate="1.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.model.creatures/Griffin/&lt;none&gt;" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="15" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Griffin/name" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="42" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Griffin/creatureType" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="44" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.creatures/Griffin/attackPower" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="35" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Griffin/element" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="33" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.model.creatures/Griffin/level" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="31" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.model.creatures/Griffin/setAttack" signature="()V" line-rate="0.25" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="25" hits="0" branch="false"/>
+                                <line number="27" hits="1" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="23" hits="1" branch="false"/>
+                                <line number="25" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.creatures/Griffin/currentLevel_" signature="()V" line-rate="1.00" branch-rate="1.00" complexity="0">
+                            <lines>
+                                <line number="39" hits="1" branch="false"/>
+                                <line number="38" hits="1" branch="false"/>
+                                <line number="38" hits="1" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.model.creatures/Griffin/levelUp" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="18" hits="0" branch="false"/>
+                                <line number="18" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="39" hits="1" branch="false"/>
+                        <line number="25" hits="0" branch="false"/>
+                        <line number="18" hits="0" branch="false"/>
+                        <line number="27" hits="1" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="33" hits="0" branch="false"/>
+                        <line number="23" hits="1" branch="false"/>
+                        <line number="25" hits="0" branch="false"/>
+                        <line number="38" hits="1" branch="false"/>
+                        <line number="44" hits="0" branch="false"/>
+                        <line number="18" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="38" hits="1" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="15" hits="1" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.model.dynamic_model" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.model.dynamic_model.StructureUpgrade" filename="src/main/scala/cml/model/dynamic_model/StructureUpgrade.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.model.dynamic_model/StructureUpgrade/creatureJson" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="36" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.dynamic_model/StructureUpgrade/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="25" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="30" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.dynamic_model/StructureUpgrade/structureJson" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="35" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="25" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="36" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="30" hits="0" branch="false"/>
+                        <line number="35" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.dynamic_model.RetrieveResource" filename="src/main/scala/cml/model/dynamic_model/RetrieveResource.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.model.dynamic_model/RetrieveResource/resourceJson" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="28" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.dynamic_model/RetrieveResource/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="22" hits="0" branch="false"/>
+                                <line number="21" hits="0" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="22" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="24" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="22" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="21" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="24" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.model.dynamic_model.CreatureUpgrade" filename="src/main/scala/cml/model/dynamic_model/CreatureUpgrade.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.model.dynamic_model/CreatureUpgrade/creatureJson" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="25" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.model.dynamic_model/CreatureUpgrade/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="22" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="25" hits="0" branch="false"/>
+                        <line number="22" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.services" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.services.ClientVertx" filename="src/main/scala/cml/services/ClientVertx.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.services/ClientVertx/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="18" hits="0" branch="false"/>
+                                <line number="29" hits="0" branch="false"/>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="21" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                                <line number="31" hits="0" branch="false"/>
+                                <line number="23" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="18" hits="0" branch="false"/>
+                        <line number="29" hits="0" branch="false"/>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="21" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                        <line number="31" hits="0" branch="false"/>
+                        <line number="23" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.services.authentication" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.services.authentication.TokenStorage" filename="src/main/scala/cml/services/authentication/TokenStorage.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.services.authentication/TokenStorage/getUserJWTToken" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="16" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.authentication/TokenStorage/setUserJWTToken" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="14" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="14" hits="0" branch="false"/>
+                        <line number="16" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.services.authentication.AuthenticationServiceVertx" filename="src/main/scala/cml/services/authentication/AuthenticationServiceVertx.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.services.authentication/AuthenticationServiceVertx/apply" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="63" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.authentication/AuthenticationServiceVertx/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="58" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="63" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl" filename="src/main/scala/cml/services/authentication/AuthenticationServiceVertx.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.services.authentication/AuthenticationServiceVertxImpl/register" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="76" hits="0" branch="false"/>
+                                <line number="75" hits="0" branch="false"/>
+                                <line number="71" hits="0" branch="false"/>
+                                <line number="75" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="71" hits="0" branch="false"/>
+                                <line number="77" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.authentication/AuthenticationServiceVertxImpl/logout" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="93" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="95" hits="0" branch="false"/>
+                                <line number="93" hits="0" branch="false"/>
+                                <line number="97" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="95" hits="0" branch="false"/>
+                                <line number="97" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.authentication/AuthenticationServiceVertxImpl/login" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="83" hits="0" branch="false"/>
+                                <line number="84" hits="0" branch="false"/>
+                                <line number="84" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="83" hits="0" branch="false"/>
+                                <line number="86" hits="0" branch="false"/>
+                                <line number="83" hits="0" branch="false"/>
+                                <line number="86" hits="0" branch="false"/>
+                                <line number="82" hits="0" branch="false"/>
+                                <line number="82" hits="0" branch="false"/>
+                                <line number="88" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.authentication/AuthenticationServiceVertxImpl/validationToken" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="101" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="104" hits="0" branch="false"/>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="105" hits="0" branch="false"/>
+                                <line number="101" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="101" hits="0" branch="false"/>
+                                <line number="104" hits="0" branch="false"/>
+                                <line number="105" hits="0" branch="false"/>
+                                <line number="105" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="101" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="83" hits="0" branch="false"/>
+                        <line number="93" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="104" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="76" hits="0" branch="false"/>
+                        <line number="84" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="84" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="75" hits="0" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="75" hits="0" branch="false"/>
+                        <line number="105" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="95" hits="0" branch="false"/>
+                        <line number="101" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="83" hits="0" branch="false"/>
+                        <line number="93" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="97" hits="0" branch="false"/>
+                        <line number="86" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="83" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="101" hits="0" branch="false"/>
+                        <line number="104" hits="0" branch="false"/>
+                        <line number="95" hits="0" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="105" hits="0" branch="false"/>
+                        <line number="86" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="82" hits="0" branch="false"/>
+                        <line number="97" hits="0" branch="false"/>
+                        <line number="105" hits="0" branch="false"/>
+                        <line number="82" hits="0" branch="false"/>
+                        <line number="88" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.services.village" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.services.village.VillageServiceVertx" filename="src/main/scala/cml/services/village/VillageServiceVertx.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.services.village/VillageServiceVertx/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="56" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                                <line number="53" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="51" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.village/VillageServiceVertx/apply" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="58" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="56" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="51" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.services.village.VillageServiceVertx.VillageServiceVertxImpl" filename="src/main/scala/cml/services/village/VillageServiceVertx.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.services.village/VillageServiceVertxImpl/createVillage" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="70" hits="0" branch="false"/>
+                                <line number="68" hits="0" branch="false"/>
+                                <line number="66" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="67" hits="0" branch="false"/>
+                                <line number="68" hits="0" branch="false"/>
+                                <line number="71" hits="0" branch="false"/>
+                                <line number="67" hits="0" branch="false"/>
+                                <line number="66" hits="0" branch="false"/>
+                                <line number="70" hits="0" branch="false"/>
+                                <line number="67" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.village/VillageServiceVertxImpl/deleteVillageAndUser" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="98" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="95" hits="0" branch="false"/>
+                                <line number="95" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="98" hits="0" branch="false"/>
+                                <line number="95" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.village/VillageServiceVertxImpl/updateVillage" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="89" hits="0" branch="false"/>
+                                <line number="88" hits="0" branch="false"/>
+                                <line number="91" hits="0" branch="false"/>
+                                <line number="88" hits="0" branch="false"/>
+                                <line number="89" hits="0" branch="false"/>
+                                <line number="91" hits="0" branch="false"/>
+                                <line number="88" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.services.village/VillageServiceVertxImpl/enterVillage" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="78" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="77" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="78" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="77" hits="0" branch="false"/>
+                                <line number="83" hits="0" branch="false"/>
+                                <line number="82" hits="0" branch="false"/>
+                                <line number="78" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="89" hits="0" branch="false"/>
+                        <line number="98" hits="0" branch="false"/>
+                        <line number="70" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="88" hits="0" branch="false"/>
+                        <line number="68" hits="0" branch="false"/>
+                        <line number="78" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="66" hits="0" branch="false"/>
+                        <line number="91" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="95" hits="0" branch="false"/>
+                        <line number="67" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="95" hits="0" branch="false"/>
+                        <line number="88" hits="0" branch="false"/>
+                        <line number="78" hits="0" branch="false"/>
+                        <line number="68" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="98" hits="0" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="89" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="83" hits="0" branch="false"/>
+                        <line number="67" hits="0" branch="false"/>
+                        <line number="91" hits="0" branch="false"/>
+                        <line number="82" hits="0" branch="false"/>
+                        <line number="66" hits="0" branch="false"/>
+                        <line number="70" hits="0" branch="false"/>
+                        <line number="88" hits="0" branch="false"/>
+                        <line number="95" hits="0" branch="false"/>
+                        <line number="78" hits="0" branch="false"/>
+                        <line number="67" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+        <package name="cml.view" line-rate="0.00" branch-rate="0.00" complexity="0">
+            <classes>
+                <class 
+                name="cml.view.BaseTile" filename="src/main/scala/cml/view/Tile.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.view/BaseTile/apply" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="22" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="22" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.Handler" filename="src/main/scala/cml/view/HandlerSetup.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.view/Handler/disableButtons" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="180" hits="0" branch="false"/>
+                                <line number="179" hits="0" branch="false"/>
+                                <line number="181" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.view/Handler/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="46" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="54" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="53" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="47" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.view/Handler/getClassName" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="186" hits="0" branch="false"/>
+                                <line number="188" hits="0" branch="false"/>
+                                <line number="189" hits="0" branch="false"/>
+                                <line number="185" hits="0" branch="false"/>
+                                <line number="187" hits="0" branch="false"/>
+                                <line number="189" hits="0" branch="false"/>
+                                <line number="189" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.view/Handler/addDragAndDropSourceHandler" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="122" hits="0" branch="false"/>
+                                <line number="127" hits="0" branch="false"/>
+                                <line number="120" hits="0" branch="false"/>
+                                <line number="124" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                                <line number="126" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                                <line number="127" hits="0" branch="false"/>
+                                <line number="118" hits="0" branch="false"/>
+                                <line number="122" hits="0" branch="false"/>
+                                <line number="123" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                                <line number="128" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                                <line number="125" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                                <line number="125" hits="0" branch="false"/>
+                                <line number="127" hits="0" branch="false"/>
+                                <line number="121" hits="0" branch="false"/>
+                                <line number="122" hits="0" branch="false"/>
+                                <line number="127" hits="0" branch="false"/>
+                                <line number="119" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.view/Handler/addClickHandler" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="100" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="93" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="108" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="71" hits="0" branch="false"/>
+                                <line number="66" hits="0" branch="false"/>
+                                <line number="100" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="108" hits="0" branch="false"/>
+                                <line number="86" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="78" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="107" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="99" hits="0" branch="false"/>
+                                <line number="74" hits="0" branch="false"/>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="69" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="75" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="76" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="75" hits="0" branch="false"/>
+                                <line number="105" hits="0" branch="false"/>
+                                <line number="108" hits="0" branch="false"/>
+                                <line number="83" hits="0" branch="false"/>
+                                <line number="100" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="108" hits="0" branch="false"/>
+                                <line number="89" hits="0" branch="false"/>
+                                <line number="77" hits="0" branch="false"/>
+                                <line number="80" hits="0" branch="false"/>
+                                <line number="84" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="100" hits="0" branch="false"/>
+                                <line number="93" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="85" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="68" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="108" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="100" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="104" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="65" hits="0" branch="false"/>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="102" hits="0" branch="false"/>
+                                <line number="99" hits="0" branch="false"/>
+                                <line number="103" hits="0" branch="false"/>
+                                <line number="90" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="87" hits="0" branch="false"/>
+                                <line number="75" hits="0" branch="false"/>
+                                <line number="94" hits="0" branch="false"/>
+                                <line number="69" hits="0" branch="false"/>
+                                <line number="108" hits="0" branch="false"/>
+                                <line number="100" hits="0" branch="false"/>
+                                <line number="106" hits="0" branch="false"/>
+                                <line number="88" hits="0" branch="false"/>
+                                <line number="93" hits="0" branch="false"/>
+                                <line number="79" hits="0" branch="false"/>
+                                <line number="96" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="75" hits="0" branch="false"/>
+                                <line number="78" hits="0" branch="false"/>
+                                <line number="67" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.view/Handler/addDragAndDropTargetHandler" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="155" hits="0" branch="false"/>
+                                <line number="140" hits="0" branch="false"/>
+                                <line number="148" hits="0" branch="false"/>
+                                <line number="151" hits="0" branch="false"/>
+                                <line number="142" hits="0" branch="false"/>
+                                <line number="149" hits="0" branch="false"/>
+                                <line number="154" hits="0" branch="false"/>
+                                <line number="158" hits="0" branch="false"/>
+                                <line number="133" hits="0" branch="false"/>
+                                <line number="155" hits="0" branch="false"/>
+                                <line number="143" hits="0" branch="false"/>
+                                <line number="151" hits="0" branch="false"/>
+                                <line number="150" hits="0" branch="false"/>
+                                <line number="155" hits="0" branch="false"/>
+                                <line number="142" hits="0" branch="false"/>
+                                <line number="151" hits="0" branch="false"/>
+                                <line number="155" hits="0" branch="false"/>
+                                <line number="140" hits="0" branch="false"/>
+                                <line number="146" hits="0" branch="false"/>
+                                <line number="142" hits="0" branch="false"/>
+                                <line number="157" hits="0" branch="false"/>
+                                <line number="148" hits="0" branch="false"/>
+                                <line number="154" hits="0" branch="false"/>
+                                <line number="135" hits="0" branch="false"/>
+                                <line number="151" hits="0" branch="false"/>
+                                <line number="157" hits="0" branch="false"/>
+                                <line number="134" hits="0" branch="false"/>
+                                <line number="154" hits="0" branch="false"/>
+                                <line number="138" hits="0" branch="false"/>
+                                <line number="142" hits="0" branch="false"/>
+                                <line number="150" hits="0" branch="false"/>
+                                <line number="145" hits="0" branch="false"/>
+                                <line number="155" hits="0" branch="false"/>
+                                <line number="151" hits="0" branch="false"/>
+                                <line number="139" hits="0" branch="false"/>
+                                <line number="140" hits="0" branch="false"/>
+                                <line number="148" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.view/Handler/displayText" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="165" hits="0" branch="false"/>
+                                <line number="168" hits="0" branch="false"/>
+                                <line number="166" hits="0" branch="false"/>
+                                <line number="169" hits="0" branch="false"/>
+                                <line number="164" hits="0" branch="false"/>
+                                <line number="163" hits="0" branch="false"/>
+                                <line number="167" hits="0" branch="false"/>
+                                <line number="165" hits="0" branch="false"/>
+                                <line number="168" hits="0" branch="false"/>
+                                <line number="164" hits="0" branch="false"/>
+                                <line number="166" hits="0" branch="false"/>
+                                <line number="169" hits="0" branch="false"/>
+                                <line number="165" hits="0" branch="false"/>
+                                <line number="168" hits="0" branch="false"/>
+                                <line number="167" hits="0" branch="false"/>
+                                <line number="169" hits="0" branch="false"/>
+                                <line number="164" hits="0" branch="false"/>
+                                <line number="168" hits="0" branch="false"/>
+                                <line number="171" hits="0" branch="false"/>
+                                <line number="168" hits="0" branch="false"/>
+                                <line number="173" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="155" hits="0" branch="false"/>
+                        <line number="165" hits="0" branch="false"/>
+                        <line number="122" hits="0" branch="false"/>
+                        <line number="127" hits="0" branch="false"/>
+                        <line number="140" hits="0" branch="false"/>
+                        <line number="168" hits="0" branch="false"/>
+                        <line number="180" hits="0" branch="false"/>
+                        <line number="148" hits="0" branch="false"/>
+                        <line number="151" hits="0" branch="false"/>
+                        <line number="142" hits="0" branch="false"/>
+                        <line number="100" hits="0" branch="false"/>
+                        <line number="166" hits="0" branch="false"/>
+                        <line number="120" hits="0" branch="false"/>
+                        <line number="149" hits="0" branch="false"/>
+                        <line number="124" hits="0" branch="false"/>
+                        <line number="154" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="169" hits="0" branch="false"/>
+                        <line number="186" hits="0" branch="false"/>
+                        <line number="93" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="108" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="158" hits="0" branch="false"/>
+                        <line number="133" hits="0" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                        <line number="46" hits="0" branch="false"/>
+                        <line number="66" hits="0" branch="false"/>
+                        <line number="100" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="108" hits="0" branch="false"/>
+                        <line number="155" hits="0" branch="false"/>
+                        <line number="164" hits="0" branch="false"/>
+                        <line number="86" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="78" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="143" hits="0" branch="false"/>
+                        <line number="151" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="126" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="107" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="99" hits="0" branch="false"/>
+                        <line number="74" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="69" hits="0" branch="false"/>
+                        <line number="54" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="75" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="76" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="163" hits="0" branch="false"/>
+                        <line number="167" hits="0" branch="false"/>
+                        <line number="150" hits="0" branch="false"/>
+                        <line number="155" hits="0" branch="false"/>
+                        <line number="142" hits="0" branch="false"/>
+                        <line number="188" hits="0" branch="false"/>
+                        <line number="165" hits="0" branch="false"/>
+                        <line number="168" hits="0" branch="false"/>
+                        <line number="189" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="151" hits="0" branch="false"/>
+                        <line number="127" hits="0" branch="false"/>
+                        <line number="155" hits="0" branch="false"/>
+                        <line number="140" hits="0" branch="false"/>
+                        <line number="118" hits="0" branch="false"/>
+                        <line number="146" hits="0" branch="false"/>
+                        <line number="122" hits="0" branch="false"/>
+                        <line number="179" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="164" hits="0" branch="false"/>
+                        <line number="142" hits="0" branch="false"/>
+                        <line number="75" hits="0" branch="false"/>
+                        <line number="105" hits="0" branch="false"/>
+                        <line number="123" hits="0" branch="false"/>
+                        <line number="108" hits="0" branch="false"/>
+                        <line number="83" hits="0" branch="false"/>
+                        <line number="100" hits="0" branch="false"/>
+                        <line number="157" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="185" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="166" hits="0" branch="false"/>
+                        <line number="148" hits="0" branch="false"/>
+                        <line number="169" hits="0" branch="false"/>
+                        <line number="154" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="128" hits="0" branch="false"/>
+                        <line number="108" hits="0" branch="false"/>
+                        <line number="89" hits="0" branch="false"/>
+                        <line number="135" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="80" hits="0" branch="false"/>
+                        <line number="84" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="125" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="100" hits="0" branch="false"/>
+                        <line number="93" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="85" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="68" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="165" hits="0" branch="false"/>
+                        <line number="168" hits="0" branch="false"/>
+                        <line number="151" hits="0" branch="false"/>
+                        <line number="157" hits="0" branch="false"/>
+                        <line number="181" hits="0" branch="false"/>
+                        <line number="53" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="125" hits="0" branch="false"/>
+                        <line number="187" hits="0" branch="false"/>
+                        <line number="134" hits="0" branch="false"/>
+                        <line number="167" hits="0" branch="false"/>
+                        <line number="169" hits="0" branch="false"/>
+                        <line number="154" hits="0" branch="false"/>
+                        <line number="138" hits="0" branch="false"/>
+                        <line number="142" hits="0" branch="false"/>
+                        <line number="150" hits="0" branch="false"/>
+                        <line number="108" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="164" hits="0" branch="false"/>
+                        <line number="145" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="127" hits="0" branch="false"/>
+                        <line number="100" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="155" hits="0" branch="false"/>
+                        <line number="121" hits="0" branch="false"/>
+                        <line number="189" hits="0" branch="false"/>
+                        <line number="104" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="65" hits="0" branch="false"/>
+                        <line number="168" hits="0" branch="false"/>
+                        <line number="151" hits="0" branch="false"/>
+                        <line number="171" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="139" hits="0" branch="false"/>
+                        <line number="102" hits="0" branch="false"/>
+                        <line number="99" hits="0" branch="false"/>
+                        <line number="103" hits="0" branch="false"/>
+                        <line number="90" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="87" hits="0" branch="false"/>
+                        <line number="122" hits="0" branch="false"/>
+                        <line number="127" hits="0" branch="false"/>
+                        <line number="75" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="119" hits="0" branch="false"/>
+                        <line number="94" hits="0" branch="false"/>
+                        <line number="140" hits="0" branch="false"/>
+                        <line number="148" hits="0" branch="false"/>
+                        <line number="69" hits="0" branch="false"/>
+                        <line number="108" hits="0" branch="false"/>
+                        <line number="100" hits="0" branch="false"/>
+                        <line number="106" hits="0" branch="false"/>
+                        <line number="88" hits="0" branch="false"/>
+                        <line number="93" hits="0" branch="false"/>
+                        <line number="79" hits="0" branch="false"/>
+                        <line number="96" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="75" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="78" hits="0" branch="false"/>
+                        <line number="47" hits="0" branch="false"/>
+                        <line number="67" hits="0" branch="false"/>
+                        <line number="189" hits="0" branch="false"/>
+                        <line number="168" hits="0" branch="false"/>
+                        <line number="173" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.BaseGridInitializer" filename="src/main/scala/cml/view/GridInitializer.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.view/BaseGridInitializer/initializeBuildingsMenu" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="77" hits="0" branch="false"/>
+                                <line number="77" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.view/BaseGridInitializer/initializeVillage" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="81" hits="0" branch="false"/>
+                                <line number="81" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.view/BaseGridInitializer/setupGrid" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="72" hits="0" branch="false"/>
+                                <line number="73" hits="0" branch="false"/>
+                                <line number="71" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="72" hits="0" branch="false"/>
+                        <line number="77" hits="0" branch="false"/>
+                        <line number="73" hits="0" branch="false"/>
+                        <line number="81" hits="0" branch="false"/>
+                        <line number="71" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.Tile" filename="src/main/scala/cml/view/Tile.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.view/Tile/apply" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="30" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="30" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.ViewSwitch" filename="src/main/scala/cml/view/ViewSwitch.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.view/ViewSwitch/activate" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="13" hits="0" branch="false"/>
+                                <line number="14" hits="0" branch="false"/>
+                                <line number="13" hits="0" branch="false"/>
+                                <line number="13" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="14" hits="0" branch="false"/>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="13" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.Setup" filename="src/main/scala/cml/view/GridInitializer.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.view/Setup/loop" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                                <line number="50" hits="0" branch="false"/>
+                                <line number="48" hits="0" branch="false"/>
+                                <line number="49" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method name="cml.view/Setup/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="43" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="59" hits="0" branch="false"/>
+                                <line number="61" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="42" hits="0" branch="false"/>
+                                <line number="58" hits="0" branch="false"/>
+                                <line number="60" hits="0" branch="false"/>
+                                <line number="37" hits="0" branch="false"/>
+                                <line number="39" hits="0" branch="false"/>
+                                <line number="41" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="43" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                        <line number="59" hits="0" branch="false"/>
+                        <line number="61" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="50" hits="0" branch="false"/>
+                        <line number="48" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="42" hits="0" branch="false"/>
+                        <line number="58" hits="0" branch="false"/>
+                        <line number="60" hits="0" branch="false"/>
+                        <line number="37" hits="0" branch="false"/>
+                        <line number="39" hits="0" branch="false"/>
+                        <line number="41" hits="0" branch="false"/>
+                        <line number="49" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.ImageSlicer" filename="src/main/scala/cml/view/ImageSlicer.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method name="cml.view/ImageSlicer/sliceAt" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="16" hits="0" branch="false"/>
+                                <line number="12" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="12" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="13" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="16" hits="0" branch="false"/>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="15" hits="0" branch="false"/>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="18" hits="0" branch="false"/>
+                                <line number="18" hits="0" branch="false"/>
+                                <line number="12" hits="0" branch="false"/>
+                                <line number="19" hits="0" branch="false"/>
+                                <line number="20" hits="0" branch="false"/>
+                                <line number="15" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                        <method 
+                        name="cml.view/ImageSlicer/coordinatesOfSliceAt" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="28" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                                <line number="26" hits="0" branch="false"/>
+                                <line number="27" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method name="cml.view/ImageSlicer/&lt;none&gt;" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="9" hits="0" branch="false"/>
+                                <line number="8" hits="0" branch="false"/>
+                                <line number="9" hits="0" branch="false"/>
+                                <line number="8" hits="0" branch="false"/>
+                            </lines>
+                        </method>
+                    </methods>
+                    <lines>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="9" hits="0" branch="false"/>
+                        <line number="16" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="12" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="12" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="13" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="8" hits="0" branch="false"/>
+                        <line number="28" hits="0" branch="false"/>
+                        <line number="16" hits="0" branch="false"/>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="15" hits="0" branch="false"/>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="18" hits="0" branch="false"/>
+                        <line number="18" hits="0" branch="false"/>
+                        <line number="9" hits="0" branch="false"/>
+                        <line number="12" hits="0" branch="false"/>
+                        <line number="19" hits="0" branch="false"/>
+                        <line number="26" hits="0" branch="false"/>
+                        <line number="8" hits="0" branch="false"/>
+                        <line number="20" hits="0" branch="false"/>
+                        <line number="27" hits="0" branch="false"/>
+                        <line number="15" hits="0" branch="false"/>
+                    </lines>
+</class>
+                <class 
+                name="cml.view.ConcreteHandlerSetup" filename="src/main/scala/cml/view/HandlerSetup.scala" line-rate="0.00" branch-rate="0.00" complexity="0">
+                    <methods>
+                        <method 
+                        name="cml.view/ConcreteHandlerSetup/setupBuildingsHandlers" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="204" hits="0" branch="false"/>
+                                <line number="204" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.view/ConcreteHandlerSetup/setHandlers" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="198" hits="0" branch="false"/>
+                                <line number="199" hits="0" branch="false"/>
+                                <line number="199" hits="0" branch="false"/>
+                            </lines>
+</method>
+                        <method 
+                        name="cml.view/ConcreteHandlerSetup/setupVillageHandlers" signature="()V" line-rate="0.00" branch-rate="0.00" complexity="0">
+                            <lines>
+                                <line number="202" hits="0" branch="false"/>
+                                <line number="202" hits="0" branch="false"/>
+                            </lines>
+</method>
+                    </methods>
+                    <lines>
+                        <line number="198" hits="0" branch="false"/>
+                        <line number="202" hits="0" branch="false"/>
+                        <line number="199" hits="0" branch="false"/>
+                        <line number="204" hits="0" branch="false"/>
+                        <line number="199" hits="0" branch="false"/>
+                        <line number="202" hits="0" branch="false"/>
+                        <line number="204" hits="0" branch="false"/>
+                    </lines>
+</class>
+            </classes>
+        </package>
+    </packages>
+</coverage>

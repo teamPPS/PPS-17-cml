@@ -1,0 +1,809 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\core\RouterVerticle.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.core
+</span>2 <span style=''>
+</span>3 <span style=''>import io.vertx.lang.scala.ScalaVerticle
+</span>4 <span style=''>import io.vertx.scala.core.http.HttpServer
+</span>5 <span style=''>import io.vertx.scala.ext.web.Router
+</span>6 <span style=''>import scala.concurrent.{Future, Promise}
+</span>7 <span style=''>import scala.util.{Failure, Success}
+</span>8 <span style=''>import cml.core.utils.NetworkConfiguration._
+</span>9 <span style=''>
+</span>10 <span style=''>/**
+</span>11 <span style=''>  * This is abstract class implements RouterVerticle. In this way, each micro-services allowed to follow its path
+</span>12 <span style=''>  *
+</span>13 <span style=''>  * @author Chiara Volonnino
+</span>14 <span style=''>  */
+</span>15 <span style=''>
+</span>16 <span style=''>abstract class RouterVerticle extends ScalaVerticle {
+</span>17 <span style=''>
+</span>18 <span style=''>  var server: HttpServer = _
+</span>19 <span style=''>
+</span>20 <span style=''>  override def startFuture(): Future[Unit] = {
+</span>21 <span style=''>    //println(&quot;Starting Services in routing verticle&quot;)
+</span>22 <span style=''>
+</span>23 <span style=''>    val promise = </span><span style='background: #AEF1AE'>Promise[Unit]()</span><span style=''>
+</span>24 <span style=''>    val router = </span><span style='background: #AEF1AE'>Router.router(vertx)</span><span style=''>
+</span>25 <span style=''>    </span><span style='background: #AEF1AE'>initializeRouter(router)</span><span style=''>
+</span>26 <span style=''>    </span><span style='background: #AEF1AE'>initializeService</span><span style=''>
+</span>27 <span style=''>    </span><span style='background: #AEF1AE'>vertx.createHttpServer()
+</span>28 <span style=''></span><span style='background: #AEF1AE'>      .requestHandler(router.accept)
+</span>29 <span style=''></span><span style='background: #AEF1AE'>      .listenFuture(AuthenticationServicePort, ServiceHost)
+</span>30 <span style=''></span><span style='background: #AEF1AE'>      .onComplete({
+</span>31 <span style=''></span><span style='background: #AEF1AE'>        case Success(startedServer) =&gt;
+</span>32 <span style=''></span><span style='background: #AEF1AE'>          println(s&quot;Server successfully started on port: $AuthenticationServicePort&quot;)
+</span>33 <span style=''></span><span style='background: #AEF1AE'>          server = startedServer
+</span>34 <span style=''></span><span style='background: #AEF1AE'>          promise.success(())
+</span>35 <span style=''></span><span style='background: #AEF1AE'>        case Failure(ex) =&gt;
+</span>36 <span style=''></span><span style='background: #AEF1AE'>          </span><span style='background: #F0ADAD'>println(s&quot;Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}&quot;)</span><span style='background: #AEF1AE'>
+</span>37 <span style=''></span><span style='background: #AEF1AE'>          </span><span style='background: #F0ADAD'>promise.failure(ex)</span><span style='background: #AEF1AE'>
+</span>38 <span style=''></span><span style='background: #AEF1AE'>      })</span><span style=''>
+</span>39 <span style=''>    </span><span style='background: #AEF1AE'>promise.future</span><span style=''>
+</span>40 <span style=''>  }
+</span>41 <span style=''>
+</span>42 <span style=''>  override def stopFuture(): Future[Unit] = {
+</span>43 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Stopping&quot;)</span><span style=''>
+</span>44 <span style=''>    </span><span style='background: #F0ADAD'>for {
+</span>45 <span style=''></span><span style='background: #F0ADAD'>      _ &lt;- server.closeFuture()
+</span>46 <span style=''></span><span style='background: #F0ADAD'>      _ &lt;- vertx.undeployFuture(this.deploymentID)
+</span>47 <span style=''></span><span style='background: #F0ADAD'>    } yield ()</span><span style=''>
+</span>48 <span style=''>  }
+</span>49 <span style=''>  /**
+</span>50 <span style=''>    * Initialize router
+</span>51 <span style=''>    *
+</span>52 <span style=''>    * @param router is router to initialize
+</span>53 <span style=''>    */
+</span>54 <span style=''>  def initializeRouter(router: Router): Unit
+</span>55 <span style=''>
+</span>56 <span style=''>  /**
+</span>57 <span style=''>    * Initializes the services
+</span>58 <span style=''>    *
+</span>59 <span style=''>    * @return
+</span>60 <span style=''>    */
+</span>61 <span style=''>  def initializeService: Unit
+</span>62 <span style=''>
+</span>63 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          13
+        </td>
+        <td>
+          649
+          -
+          664
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.concurrent.Promise.apply
+        </td>
+        <td style="background: #AEF1AE">
+          scala.concurrent.Promise.apply[Unit]()
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          14
+        </td>
+        <td>
+          697
+          -
+          702
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.vertx
+        </td>
+        <td style="background: #AEF1AE">
+          RouterVerticle.this.vertx
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          15
+        </td>
+        <td>
+          683
+          -
+          703
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.Router.router
+        </td>
+        <td style="background: #AEF1AE">
+          io.vertx.scala.ext.web.Router.router(RouterVerticle.this.vertx)
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          16
+        </td>
+        <td>
+          709
+          -
+          733
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.core.RouterVerticle.initializeRouter
+        </td>
+        <td style="background: #AEF1AE">
+          RouterVerticle.this.initializeRouter(router)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          17
+        </td>
+        <td>
+          739
+          -
+          756
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.RouterVerticle.initializeService
+        </td>
+        <td style="background: #AEF1AE">
+          RouterVerticle.this.initializeService
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          810
+          -
+          823
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.Router.accept
+        </td>
+        <td style="background: #AEF1AE">
+          router.accept(request)
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          20
+        </td>
+        <td>
+          873
+          -
+          884
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHost
+        </td>
+        <td style="background: #AEF1AE">
+          cml.core.utils.NetworkConfiguration.ServiceHost
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          19
+        </td>
+        <td>
+          846
+          -
+          871
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #AEF1AE">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          37
+        </td>
+        <td>
+          762
+          -
+          1270
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.onComplete
+        </td>
+        <td style="background: #AEF1AE">
+          RouterVerticle.this.vertx.createHttpServer().requestHandler({
+  ((request: io.vertx.scala.core.http.HttpServerRequest) =&gt; router.accept(request))
+}).listenFuture(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHost).onComplete[scala.concurrent.Promise[Unit]](((x0$1: scala.util.Try[io.vertx.scala.core.http.HttpServer]) =&gt; x0$1 match {
+  case (value: io.vertx.scala.core.http.HttpServer)scala.util.Success[io.vertx.scala.core.http.HttpServer]((startedServer @ _)) =&gt; {
+    scala.Predef.println(scala.StringContext.apply(&quot;Server successfully started on port: &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort));
+    RouterVerticle.this.server_=(startedServer);
+    promise.success(())
+  }
+  case (exception: Throwable)scala.util.Failure[io.vertx.scala.core.http.HttpServer]((ex @ _)) =&gt; {
+    scala.Predef.println(scala.StringContext.apply(&quot;Server failed to start on port: &quot;, &quot;, b/c &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, ex.getCause()));
+    promise.failure(ex)
+  }
+}))(RouterVerticle.this.executionContext)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          36
+        </td>
+        <td>
+          904
+          -
+          904
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #AEF1AE">
+          RouterVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          23
+        </td>
+        <td>
+          1006
+          -
+          1031
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #AEF1AE">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          22
+        </td>
+        <td>
+          1031
+          -
+          1032
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          25
+        </td>
+        <td>
+          958
+          -
+          1033
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Predef.println(scala.StringContext.apply(&quot;Server successfully started on port: &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort))
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          21
+        </td>
+        <td>
+          968
+          -
+          1006
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;Server successfully started on port: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          24
+        </td>
+        <td>
+          966
+          -
+          1032
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #AEF1AE">
+          scala.StringContext.apply(&quot;Server successfully started on port: &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort)
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          26
+        </td>
+        <td>
+          1045
+          -
+          1067
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.core.RouterVerticle.server_=
+        </td>
+        <td style="background: #AEF1AE">
+          RouterVerticle.this.server_=(startedServer)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          27
+        </td>
+        <td>
+          1079
+          -
+          1098
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.concurrent.Promise.success
+        </td>
+        <td style="background: #AEF1AE">
+          promise.success(())
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          32
+        </td>
+        <td>
+          1215
+          -
+          1226
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Throwable.getCause
+        </td>
+        <td style="background: #F0ADAD">
+          ex.getCause()
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          29
+        </td>
+        <td>
+          1207
+          -
+          1214
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;, b/c &quot;
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          31
+        </td>
+        <td>
+          1182
+          -
+          1207
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          34
+        </td>
+        <td>
+          1139
+          -
+          1229
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(scala.StringContext.apply(&quot;Server failed to start on port: &quot;, &quot;, b/c &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, ex.getCause()))
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          28
+        </td>
+        <td>
+          1149
+          -
+          1182
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Server failed to start on port: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          30
+        </td>
+        <td>
+          1227
+          -
+          1228
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          33
+        </td>
+        <td>
+          1147
+          -
+          1228
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #F0ADAD">
+          scala.StringContext.apply(&quot;Server failed to start on port: &quot;, &quot;, b/c &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, ex.getCause())
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          35
+        </td>
+        <td>
+          1241
+          -
+          1260
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.concurrent.Promise.failure
+        </td>
+        <td style="background: #F0ADAD">
+          promise.failure(ex)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          38
+        </td>
+        <td>
+          1276
+          -
+          1290
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.concurrent.Promise.future
+        </td>
+        <td style="background: #AEF1AE">
+          promise.future
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          39
+        </td>
+        <td>
+          1350
+          -
+          1369
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;Stopping&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          44
+        </td>
+        <td>
+          1390
+          -
+          1390
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          RouterVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          45
+        </td>
+        <td>
+          1375
+          -
+          1481
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.flatMap
+        </td>
+        <td style="background: #F0ADAD">
+          RouterVerticle.this.server.closeFuture().flatMap[Unit](((_: Unit) =&gt; RouterVerticle.this.vertx.undeployFuture(this.deploymentID).map[Unit](((_: Unit) =&gt; ()))(RouterVerticle.this.executionContext)))(RouterVerticle.this.executionContext)
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          40
+        </td>
+        <td>
+          1447
+          -
+          1464
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.deploymentID
+        </td>
+        <td style="background: #F0ADAD">
+          this.deploymentID
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          43
+        </td>
+        <td>
+          1421
+          -
+          1481
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          RouterVerticle.this.vertx.undeployFuture(this.deploymentID).map[Unit](((_: Unit) =&gt; ()))(RouterVerticle.this.executionContext)
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          42
+        </td>
+        <td>
+          1423
+          -
+          1423
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          RouterVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          41
+        </td>
+        <td>
+          1479
+          -
+          1481
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

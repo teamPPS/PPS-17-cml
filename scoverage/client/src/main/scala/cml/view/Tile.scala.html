@@ -1,0 +1,118 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\view\Tile.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.view
+</span>2 <span style=''>
+</span>3 <span style=''>import javafx.scene.canvas.Canvas
+</span>4 <span style=''>import play.api.libs.json._
+</span>5 <span style=''>
+</span>6 <span style=''>/**
+</span>7 <span style=''>  * @author ecavina
+</span>8 <span style=''>  * @author (edited by) Monica Gondolini
+</span>9 <span style=''>  */
+</span>10 <span style=''>
+</span>11 <span style=''>trait BaseTile {
+</span>12 <span style=''>  def description: String
+</span>13 <span style=''>  def imageSprite: Canvas
+</span>14 <span style=''>}
+</span>15 <span style=''>
+</span>16 <span style=''>trait Tile extends BaseTile {
+</span>17 <span style=''>  def json: JsValue
+</span>18 <span style=''>}
+</span>19 <span style=''>
+</span>20 <span style=''>object BaseTile {
+</span>21 <span style=''>
+</span>22 <span style=''>  def apply(description: String, imageSprite: Canvas): BaseTile = </span><span style='background: #F0ADAD'>BaseTileImplementation(description, imageSprite)</span><span style=''>
+</span>23 <span style=''>
+</span>24 <span style=''>  case class BaseTileImplementation(override val description: String, override val imageSprite: Canvas)
+</span>25 <span style=''>    extends BaseTile
+</span>26 <span style=''>}
+</span>27 <span style=''>
+</span>28 <span style=''>object Tile {
+</span>29 <span style=''>
+</span>30 <span style=''>  def apply(description: String, imageSprite: Canvas, json: JsValue): Tile = </span><span style='background: #F0ADAD'>TileImplementation(description, imageSprite, json)</span><span style=''>
+</span>31 <span style=''>  
+</span>32 <span style=''>  case class TileImplementation(override val description: String, override val imageSprite: Canvas, override val json: JsValue)
+</span>33 <span style=''>    extends Tile 
+</span>34 <span style=''>}
+</span>35 <span style=''>
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          837
+        </td>
+        <td>
+          383
+          -
+          431
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BaseTile.BaseTileImplementation.apply
+        </td>
+        <td style="background: #F0ADAD">
+          BaseTile.this.BaseTileImplementation.apply(description, imageSprite)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          838
+        </td>
+        <td>
+          661
+          -
+          711
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.Tile.TileImplementation.apply
+        </td>
+        <td style="background: #F0ADAD">
+          Tile.this.TileImplementation.apply(description, imageSprite, json)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

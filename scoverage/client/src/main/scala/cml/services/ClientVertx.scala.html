@@ -1,0 +1,410 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\services\ClientVertx.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.services
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.services.authentication.utils.AuthenticationUrl
+</span>4 <span style=''>import cml.core.utils.NetworkConfiguration._
+</span>5 <span style=''>import io.vertx.lang.scala.ScalaVerticle
+</span>6 <span style=''>import io.vertx.scala.core.Vertx
+</span>7 <span style=''>import io.vertx.scala.ext.web.client.{WebClient, WebClientOptions}
+</span>8 <span style=''>
+</span>9 <span style=''>/**
+</span>10 <span style=''>  * General web client fot utils micro-services request
+</span>11 <span style=''>  *
+</span>12 <span style=''>  * @author Chiara Volonnino
+</span>13 <span style=''>  */
+</span>14 <span style=''>
+</span>15 <span style=''>abstract class ClientVertx extends ScalaVerticle {
+</span>16 <span style=''>
+</span>17 <span style=''>
+</span>18 <span style=''>  val authenticationOpt: WebClientOptions = </span><span style='background: #F0ADAD'>WebClientOptions()</span><span style=''>
+</span>19 <span style=''>  </span><span style='background: #F0ADAD'>authenticationOpt setDefaultPort AuthenticationServicePort</span><span style=''>
+</span>20 <span style=''>  </span><span style='background: #F0ADAD'>authenticationOpt setDefaultHost ServiceHostForRequest</span><span style=''>
+</span>21 <span style=''>  </span><span style='background: #F0ADAD'>authenticationOpt setKeepAlive false</span><span style=''>
+</span>22 <span style=''>
+</span>23 <span style=''>  var authenticationClient: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(Vertx.vertx(), authenticationOpt)</span><span style=''>
+</span>24 <span style=''>
+</span>25 <span style=''>
+</span>26 <span style=''>  var villageOpt: WebClientOptions = </span><span style='background: #F0ADAD'>WebClientOptions()</span><span style=''>
+</span>27 <span style=''>  </span><span style='background: #F0ADAD'>villageOpt setDefaultPort 8000</span><span style=''>
+</span>28 <span style=''>  </span><span style='background: #F0ADAD'>villageOpt setDefaultHost &quot;127.0.0.1&quot;</span><span style=''>
+</span>29 <span style=''>  </span><span style='background: #F0ADAD'>villageOpt setKeepAlive false</span><span style=''>
+</span>30 <span style=''>
+</span>31 <span style=''>  var villageClient: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx, villageOpt)</span><span style=''>
+</span>32 <span style=''>  // webClientOption per istanziare 2 opzioni - 1 per ogni servizio
+</span>33 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          460
+        </td>
+        <td>
+          481
+          -
+          499
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.apply
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.ext.web.client.WebClientOptions.apply()
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          462
+        </td>
+        <td>
+          503
+          -
+          561
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.setDefaultPort
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.authenticationOpt.setDefaultPort(cml.core.utils.NetworkConfiguration.AuthenticationServicePort)
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          461
+        </td>
+        <td>
+          536
+          -
+          561
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          463
+        </td>
+        <td>
+          598
+          -
+          619
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          464
+        </td>
+        <td>
+          565
+          -
+          619
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.setDefaultHost
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.authenticationOpt.setDefaultHost(cml.core.utils.NetworkConfiguration.ServiceHostForRequest)
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          465
+        </td>
+        <td>
+          623
+          -
+          659
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.setKeepAlive
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.authenticationOpt.setKeepAlive(false)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          468
+        </td>
+        <td>
+          703
+          -
+          753
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClient.create
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.ext.web.client.WebClient.create(io.vertx.scala.core.Vertx.vertx(), ClientVertx.this.authenticationOpt)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          467
+        </td>
+        <td>
+          735
+          -
+          752
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.ClientVertx.authenticationOpt
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.authenticationOpt
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          466
+        </td>
+        <td>
+          720
+          -
+          733
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.core.Vertx.vertx
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.core.Vertx.vertx()
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          469
+        </td>
+        <td>
+          796
+          -
+          814
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.apply
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.ext.web.client.WebClientOptions.apply()
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          470
+        </td>
+        <td>
+          818
+          -
+          848
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.setDefaultPort
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.villageOpt.setDefaultPort(8000)
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          471
+        </td>
+        <td>
+          852
+          -
+          889
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.setDefaultHost
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.villageOpt.setDefaultHost(&quot;127.0.0.1&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          472
+        </td>
+        <td>
+          893
+          -
+          922
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClientOptions.setKeepAlive
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.villageOpt.setKeepAlive(false)
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          474
+        </td>
+        <td>
+          983
+          -
+          993
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.ClientVertx.villageOpt
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.villageOpt
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          473
+        </td>
+        <td>
+          976
+          -
+          981
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.vertx
+        </td>
+        <td style="background: #F0ADAD">
+          ClientVertx.this.vertx
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          475
+        </td>
+        <td>
+          959
+          -
+          994
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClient.create
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.ext.web.client.WebClient.create(ClientVertx.this.vertx, ClientVertx.this.villageOpt)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

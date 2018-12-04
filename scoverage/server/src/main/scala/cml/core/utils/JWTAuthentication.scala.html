@@ -1,0 +1,976 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\core\utils\JWTAuthentication.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.core.utils
+</span>2 <span style=''>
+</span>3 <span style=''>import io.vertx.core.json.JsonObject
+</span>4 <span style=''>import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
+</span>5 <span style=''>import scala.util.{Failure, Success}
+</span>6 <span style=''>
+</span>7 <span style=''>/**
+</span>8 <span style=''>  * This object describes basic functions of standards JWT
+</span>9 <span style=''>  *
+</span>10 <span style=''>  * @author Chiara Volonnino
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>object JWTAuthentication {
+</span>14 <span style=''>
+</span>15 <span style=''>  val Username: String = </span><span style='background: #AEF1AE'>&quot;username&quot;</span><span style=''>
+</span>16 <span style=''>  private val secretKey = </span><span style='background: #AEF1AE'>&quot;secretKey&quot;</span><span style=''>
+</span>17 <span style=''>  private val withAlgorithm = </span><span style='background: #AEF1AE'>JwtAlgorithm.HS256</span><span style=''>
+</span>18 <span style=''>
+</span>19 <span style=''>  /**
+</span>20 <span style=''>    * Create a token from a claim
+</span>21 <span style=''>    *
+</span>22 <span style=''>    * @param claim is the text use to create a token
+</span>23 <span style=''>    * @return token for the request
+</span>24 <span style=''>    */
+</span>25 <span style=''>  def encodeToken(claim: JwtClaim): Option[String] = claim match {
+</span>26 <span style=''>    case null =&gt; </span><span style='background: #F0ADAD'>None</span><span style=''>
+</span>27 <span style=''>    case _ =&gt; </span><span style='background: #AEF1AE'>Some(Jwt.encode(claim, secretKey, withAlgorithm))</span><span style=''>
+</span>28 <span style=''>  }
+</span>29 <span style=''>
+</span>30 <span style=''>  /**
+</span>31 <span style=''>    * Decode existent token
+</span>32 <span style=''>    *
+</span>33 <span style=''>    * @param token is the token to decode
+</span>34 <span style=''>    * @return the content of token decoded
+</span>35 <span style=''>    */
+</span>36 <span style=''>  def decodeToken(token: String): Option[JwtClaim] = {
+</span>37 <span style=''>    </span><span style='background: #F0ADAD'>Jwt.decodeRawAll(token, secretKey, Seq(withAlgorithm))</span><span style=''> match {
+</span>38 <span style=''>      case Success((_, b, _)) =&gt;
+</span>39 <span style=''>        </span><span style='background: #F0ADAD'>Some(JwtClaim(b))</span><span style=''>
+</span>40 <span style=''>      case Failure(_) =&gt; </span><span style='background: #F0ADAD'>None</span><span style=''>
+</span>41 <span style=''>    }
+</span>42 <span style=''>  }
+</span>43 <span style=''>
+</span>44 <span style=''>  /**
+</span>45 <span style=''>    * Validate a token
+</span>46 <span style=''>    *
+</span>47 <span style=''>    * @param token token to validate
+</span>48 <span style=''>    * @return true if token is valid, false in opposite case
+</span>49 <span style=''>    */
+</span>50 <span style=''>  def validateToken(token: String): Boolean = {
+</span>51 <span style=''>    </span><span style='background: #F0ADAD'>Jwt.isValid(token, secretKey, Seq(withAlgorithm))</span><span style=''>
+</span>52 <span style=''>  }
+</span>53 <span style=''>
+</span>54 <span style=''>  /**
+</span>55 <span style=''>    * Create a token by username
+</span>56 <span style=''>    *
+</span>57 <span style=''>    * @param username username to encode
+</span>58 <span style=''>    * @return encode token
+</span>59 <span style=''>    */
+</span>60 <span style=''>  def encodeUsernameToken(username: String): Option[String] = username match {
+</span>61 <span style=''>    case null =&gt; </span><span style='background: #F0ADAD'>None</span><span style=''>
+</span>62 <span style=''>    case _ =&gt; </span><span style='background: #AEF1AE'>encodeToken(JwtClaim(new JsonObject().put(Username, username).encode()))</span><span style=''>
+</span>63 <span style=''>  }
+</span>64 <span style=''>
+</span>65 <span style=''>  /**
+</span>66 <span style=''>    * Decode username token
+</span>67 <span style=''>    *
+</span>68 <span style=''>    * @param token token to decode
+</span>69 <span style=''>    * @return username
+</span>70 <span style=''>    */
+</span>71 <span style=''>  def decodeUsernameToken(token: String): Option[String] = {
+</span>72 <span style=''>    </span><span style='background: #F0ADAD'>decodeToken(token).map(decoded =&gt; new JsonObject(decoded.content).getString(Username))</span><span style=''>
+</span>73 <span style=''>  }
+</span>74 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          85
+        </td>
+        <td>
+          313
+          -
+          323
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;username&quot;
+        </td>
+      </tr><tr>
+        <td>
+          16
+        </td>
+        <td>
+          86
+        </td>
+        <td>
+          351
+          -
+          362
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;secretKey&quot;
+        </td>
+      </tr><tr>
+        <td>
+          17
+        </td>
+        <td>
+          87
+        </td>
+        <td>
+          394
+          -
+          412
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtAlgorithm.HS256
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtAlgorithm.HS256
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          88
+        </td>
+        <td>
+          649
+          -
+          653
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          92
+        </td>
+        <td>
+          669
+          -
+          718
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Some.apply
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Some.apply[String](pdi.jwt.Jwt.encode(claim, JWTAuthentication.this.secretKey, JWTAuthentication.this.withAlgorithm))
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          89
+        </td>
+        <td>
+          692
+          -
+          701
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.secretKey
+        </td>
+        <td style="background: #AEF1AE">
+          JWTAuthentication.this.secretKey
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          91
+        </td>
+        <td>
+          674
+          -
+          717
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          pdi.jwt.JwtCore.encode
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.Jwt.encode(claim, JWTAuthentication.this.secretKey, JWTAuthentication.this.withAlgorithm)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          90
+        </td>
+        <td>
+          703
+          -
+          716
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.withAlgorithm
+        </td>
+        <td style="background: #AEF1AE">
+          JWTAuthentication.this.withAlgorithm
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          95
+        </td>
+        <td>
+          960
+          -
+          978
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.generic.GenericCompanion.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.collection.Seq.apply[pdi.jwt.JwtAlgorithm.HS256.type](JWTAuthentication.this.withAlgorithm)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          94
+        </td>
+        <td>
+          964
+          -
+          977
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.withAlgorithm
+        </td>
+        <td style="background: #F0ADAD">
+          JWTAuthentication.this.withAlgorithm
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          96
+        </td>
+        <td>
+          925
+          -
+          979
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          pdi.jwt.JwtCore.decodeRawAll
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.Jwt.decodeRawAll(token, JWTAuthentication.this.secretKey, scala.collection.Seq.apply[pdi.jwt.JwtAlgorithm.HS256.type](JWTAuthentication.this.withAlgorithm))
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          93
+        </td>
+        <td>
+          949
+          -
+          958
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.secretKey
+        </td>
+        <td style="background: #F0ADAD">
+          JWTAuthentication.this.secretKey
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          101
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$6
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$6
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          104
+        </td>
+        <td>
+          1036
+          -
+          1047
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply(b, pdi.jwt.JwtClaim.apply$default$2, pdi.jwt.JwtClaim.apply$default$3, pdi.jwt.JwtClaim.apply$default$4, pdi.jwt.JwtClaim.apply$default$5, pdi.jwt.JwtClaim.apply$default$6, pdi.jwt.JwtClaim.apply$default$7, pdi.jwt.JwtClaim.apply$default$8)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          98
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$3
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$3
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          100
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$5
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$5
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          103
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$8
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$8
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          97
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$2
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          105
+        </td>
+        <td>
+          1031
+          -
+          1048
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Some.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Some.apply[pdi.jwt.JwtClaim](pdi.jwt.JwtClaim.apply(b, pdi.jwt.JwtClaim.apply$default$2, pdi.jwt.JwtClaim.apply$default$3, pdi.jwt.JwtClaim.apply$default$4, pdi.jwt.JwtClaim.apply$default$5, pdi.jwt.JwtClaim.apply$default$6, pdi.jwt.JwtClaim.apply$default$7, pdi.jwt.JwtClaim.apply$default$8))
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          99
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$4
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$4
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          102
+        </td>
+        <td>
+          1036
+          -
+          1036
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$7
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.JwtClaim.apply$default$7
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          106
+        </td>
+        <td>
+          1075
+          -
+          1079
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          110
+        </td>
+        <td>
+          1294
+          -
+          1343
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          pdi.jwt.JwtCore.isValid
+        </td>
+        <td style="background: #F0ADAD">
+          pdi.jwt.Jwt.isValid(token, JWTAuthentication.this.secretKey, scala.collection.Seq.apply[pdi.jwt.JwtAlgorithm.HS256.type](JWTAuthentication.this.withAlgorithm))
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          107
+        </td>
+        <td>
+          1313
+          -
+          1322
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.secretKey
+        </td>
+        <td style="background: #F0ADAD">
+          JWTAuthentication.this.secretKey
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          109
+        </td>
+        <td>
+          1324
+          -
+          1342
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.generic.GenericCompanion.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.collection.Seq.apply[pdi.jwt.JwtAlgorithm.HS256.type](JWTAuthentication.this.withAlgorithm)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          108
+        </td>
+        <td>
+          1328
+          -
+          1341
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.withAlgorithm
+        </td>
+        <td style="background: #F0ADAD">
+          JWTAuthentication.this.withAlgorithm
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          111
+        </td>
+        <td>
+          1575
+          -
+          1579
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          119
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$8
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$8
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          113
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$2
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$2
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          116
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$5
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$5
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          115
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$4
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$4
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          118
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$7
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$7
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          121
+        </td>
+        <td>
+          1595
+          -
+          1667
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.encodeToken
+        </td>
+        <td style="background: #AEF1AE">
+          JWTAuthentication.this.encodeToken(pdi.jwt.JwtClaim.apply(new io.vertx.core.json.JsonObject().put(JWTAuthentication.this.Username, username).encode(), pdi.jwt.JwtClaim.apply$default$2, pdi.jwt.JwtClaim.apply$default$3, pdi.jwt.JwtClaim.apply$default$4, pdi.jwt.JwtClaim.apply$default$5, pdi.jwt.JwtClaim.apply$default$6, pdi.jwt.JwtClaim.apply$default$7, pdi.jwt.JwtClaim.apply$default$8))
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          112
+        </td>
+        <td>
+          1616
+          -
+          1665
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.json.JsonObject.encode
+        </td>
+        <td style="background: #AEF1AE">
+          new io.vertx.core.json.JsonObject().put(JWTAuthentication.this.Username, username).encode()
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          120
+        </td>
+        <td>
+          1607
+          -
+          1666
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply(new io.vertx.core.json.JsonObject().put(JWTAuthentication.this.Username, username).encode(), pdi.jwt.JwtClaim.apply$default$2, pdi.jwt.JwtClaim.apply$default$3, pdi.jwt.JwtClaim.apply$default$4, pdi.jwt.JwtClaim.apply$default$5, pdi.jwt.JwtClaim.apply$default$6, pdi.jwt.JwtClaim.apply$default$7, pdi.jwt.JwtClaim.apply$default$8)
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          114
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$3
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$3
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          117
+        </td>
+        <td>
+          1607
+          -
+          1607
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.apply$default$6
+        </td>
+        <td style="background: #AEF1AE">
+          pdi.jwt.JwtClaim.apply$default$6
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          122
+        </td>
+        <td>
+          1902
+          -
+          1917
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          pdi.jwt.JwtClaim.content
+        </td>
+        <td style="background: #F0ADAD">
+          decoded.content
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          125
+        </td>
+        <td>
+          1853
+          -
+          1939
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.map
+        </td>
+        <td style="background: #F0ADAD">
+          JWTAuthentication.this.decodeToken(token).map[String](((decoded: pdi.jwt.JwtClaim) =&gt; new io.vertx.core.json.JsonObject(decoded.content).getString(JWTAuthentication.this.Username)))
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          124
+        </td>
+        <td>
+          1887
+          -
+          1938
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.json.JsonObject.getString
+        </td>
+        <td style="background: #F0ADAD">
+          new io.vertx.core.json.JsonObject(decoded.content).getString(JWTAuthentication.this.Username)
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          123
+        </td>
+        <td>
+          1929
+          -
+          1937
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.JWTAuthentication.Username
+        </td>
+        <td style="background: #F0ADAD">
+          JWTAuthentication.this.Username
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

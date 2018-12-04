@@ -1,0 +1,515 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\creatures\Kraken.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.creatures
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Creature
+</span>4 <span style=''>import cml.utils.ModelConfig.Elements.WATER
+</span>5 <span style=''>
+</span>6 <span style=''>/**
+</span>7 <span style=''>  * This class models a kraken
+</span>8 <span style=''>  * @param creatureName name of the kraken
+</span>9 <span style=''>  * @param creatureLevel set the kraken level
+</span>10 <span style=''>  * @author Filippo Portolani
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
+</span>14 <span style=''>
+</span>15 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>WATER</span><span style=''>
+</span>16 <span style=''>
+</span>17 <span style=''>  /**
+</span>18 <span style=''>    * This method increases creature level by 1
+</span>19 <span style=''>    */
+</span>20 <span style=''>
+</span>21 <span style=''>  override def levelUp(): Unit = {
+</span>22 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel += 1</span><span style=''>
+</span>23 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>24 <span style=''>  }
+</span>25 <span style=''>
+</span>26 <span style=''>  /**
+</span>27 <span style=''>    * This method behaves differently based on the creature level
+</span>28 <span style=''>    */
+</span>29 <span style=''>
+</span>30 <span style=''>  override def setAttack() : Unit = {
+</span>31 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel</span><span style=''> match {
+</span>32 <span style=''>      case 10 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>33 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>34 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>35 <span style=''>      case _ </span><span style='background: #F0ADAD'>=&gt;</span><span style=''> ;
+</span>36 <span style=''>    }
+</span>37 <span style=''>  }
+</span>38 <span style=''>
+</span>39 <span style=''>  override def element: String = </span><span style='background: #AEF1AE'>_element</span><span style=''>
+</span>40 <span style=''>
+</span>41 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>42 <span style=''>
+</span>43 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>44 <span style=''>
+</span>45 <span style=''>  override def currentLevel_ : Unit = {
+</span>46 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel = creatureLevel</span><span style=''>
+</span>47 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>48 <span style=''>  }
+</span>49 <span style=''>
+</span>50 <span style=''>
+</span>51 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>52 <span style=''>
+</span>53 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>&quot;Kraken&quot;</span><span style=''>
+</span>54 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          394
+        </td>
+        <td>
+          385
+          -
+          390
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Elements.WATER
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Elements.WATER
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          396
+        </td>
+        <td>
+          500
+          -
+          517
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.currentLevel_=(Kraken.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          395
+        </td>
+        <td>
+          500
+          -
+          517
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.currentLevel.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          397
+        </td>
+        <td>
+          523
+          -
+          534
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Kraken.setAttack
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          398
+        </td>
+        <td>
+          670
+          -
+          682
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          400
+        </td>
+        <td>
+          709
+          -
+          726
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue_=(Kraken.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          399
+        </td>
+        <td>
+          709
+          -
+          726
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          402
+        </td>
+        <td>
+          745
+          -
+          762
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue_=(Kraken.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          401
+        </td>
+        <td>
+          745
+          -
+          762
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          403
+        </td>
+        <td>
+          781
+          -
+          798
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          404
+        </td>
+        <td>
+          781
+          -
+          798
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue_=(Kraken.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          405
+        </td>
+        <td>
+          813
+          -
+          815
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          406
+        </td>
+        <td>
+          866
+          -
+          874
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Kraken._element
+        </td>
+        <td style="background: #AEF1AE">
+          Kraken.this._element
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          407
+        </td>
+        <td>
+          906
+          -
+          918
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          408
+        </td>
+        <td>
+          956
+          -
+          967
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          409
+        </td>
+        <td>
+          1031
+          -
+          1044
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Kraken.creatureLevel
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.creatureLevel
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          410
+        </td>
+        <td>
+          1016
+          -
+          1044
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.currentLevel_=(Kraken.this.creatureLevel)
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          411
+        </td>
+        <td>
+          1050
+          -
+          1061
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.Kraken.setAttack
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          412
+        </td>
+        <td>
+          1102
+          -
+          1114
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.Kraken.creatureName
+        </td>
+        <td style="background: #F0ADAD">
+          Kraken.this.creatureName
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          413
+        </td>
+        <td>
+          1156
+          -
+          1164
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Kraken&quot;
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

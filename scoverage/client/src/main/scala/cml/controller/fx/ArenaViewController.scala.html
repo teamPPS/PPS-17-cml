@@ -1,0 +1,531 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\controller\fx\ArenaViewController.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller.fx
+</span>2 <span style=''>
+</span>3 <span style=''>
+</span>4 <span style=''>import cml.controller.messages.ArenaRequest.ExitRequest
+</span>5 <span style=''>import cml.utils.ViewConfig._
+</span>6 <span style=''>import cml.view.ViewSwitch
+</span>7 <span style=''>import javafx.fxml.FXML
+</span>8 <span style=''>import javafx.scene.control.Alert.AlertType
+</span>9 <span style=''>import javafx.scene.control.{Alert, Button, ButtonType}
+</span>10 <span style=''>
+</span>11 <span style=''>/**
+</span>12 <span style=''>  * Controller class for graphic arena view
+</span>13 <span style=''>  *
+</span>14 <span style=''>  * @author Chiara Volonnino
+</span>15 <span style=''>  */
+</span>16 <span style=''>
+</span>17 <span style=''>class ArenaViewController {
+</span>18 <span style=''>
+</span>19 <span style=''>  @FXML var exitButton: Button = _
+</span>20 <span style=''>
+</span>21 <span style=''>  @FXML
+</span>22 <span style=''>  def pauseOption(): Unit = {
+</span>23 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.INFORMATION) {
+</span>24 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Information Dialog&quot;)</span><span style=''>
+</span>25 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;PAUSE&quot;)</span><span style=''>
+</span>26 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Resume?&quot;)</span><span style=''>
+</span>27 <span style=''>    }
+</span>28 <span style=''>    </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
+</span>29 <span style=''>  }
+</span>30 <span style=''>
+</span>31 <span style=''>  @FXML
+</span>32 <span style=''>  def exitOption(): Unit = {
+</span>33 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.CONFIRMATION) {
+</span>34 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Confirmation Dialog&quot;)</span><span style=''>
+</span>35 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;Exit&quot;)</span><span style=''>
+</span>36 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Are you sure to exit?&quot;)</span><span style=''>
+</span>37 <span style=''>    }
+</span>38 <span style=''>
+</span>39 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
+</span>40 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) {
+</span>41 <span style=''>      </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, exitButton.getScene)</span><span style=''>
+</span>42 <span style=''>    }
+</span>43 <span style=''>  }
+</span>44 <span style=''>
+</span>45 <span style=''>  @FXML
+</span>46 <span style=''>  def attackOption(): Unit = {
+</span>47 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Attack&quot;)</span><span style=''>
+</span>48 <span style=''>  }
+</span>49 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          143
+        </td>
+        <td>
+          494
+          -
+          497
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          140
+        </td>
+        <td>
+          536
+          -
+          566
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setTitle
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setTitle(&quot;Information Dialog&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          141
+        </td>
+        <td>
+          574
+          -
+          596
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setHeaderText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setHeaderText(&quot;PAUSE&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          142
+        </td>
+        <td>
+          604
+          -
+          629
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setContentText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setContentText(&quot;Resume?&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          145
+        </td>
+        <td>
+          659
+          -
+          659
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          144
+        </td>
+        <td>
+          642
+          -
+          661
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.showAndWait
+        </td>
+        <td style="background: #F0ADAD">
+          alert.showAndWait()
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          149
+        </td>
+        <td>
+          725
+          -
+          728
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          146
+        </td>
+        <td>
+          768
+          -
+          799
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setTitle
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setTitle(&quot;Confirmation Dialog&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          147
+        </td>
+        <td>
+          807
+          -
+          828
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setHeaderText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setHeaderText(&quot;Exit&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          148
+        </td>
+        <td>
+          836
+          -
+          875
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setContentText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setContentText(&quot;Are you sure to exit?&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          150
+        </td>
+        <td>
+          903
+          -
+          922
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.showAndWait
+        </td>
+        <td style="background: #F0ADAD">
+          alert.showAndWait()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          158
+        </td>
+        <td>
+          928
+          -
+          928
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          151
+        </td>
+        <td>
+          968
+          -
+          981
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          javafx.scene.control.ButtonType.OK
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.scene.control.ButtonType.OK
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          159
+        </td>
+        <td>
+          928
+          -
+          928
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          153
+        </td>
+        <td>
+          932
+          -
+          981
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Boolean.&amp;&amp;
+        </td>
+        <td style="background: #F0ADAD">
+          result.isPresent().&amp;&amp;(result.get().==(javafx.scene.control.ButtonType.OK))
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          152
+        </td>
+        <td>
+          952
+          -
+          981
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Object.==
+        </td>
+        <td style="background: #F0ADAD">
+          result.get().==(javafx.scene.control.ButtonType.OK)
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          155
+        </td>
+        <td>
+          1032
+          -
+          1051
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.exitButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          154
+        </td>
+        <td>
+          1012
+          -
+          1030
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ViewConfig.VillageWindow.path
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ViewConfig.VillageWindow.path
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          157
+        </td>
+        <td>
+          992
+          -
+          1052
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, ArenaViewController.this.exitButton.getScene())
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          156
+        </td>
+        <td>
+          992
+          -
+          1052
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, ArenaViewController.this.exitButton.getScene())
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          160
+        </td>
+        <td>
+          1113
+          -
+          1130
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;Attack&quot;)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

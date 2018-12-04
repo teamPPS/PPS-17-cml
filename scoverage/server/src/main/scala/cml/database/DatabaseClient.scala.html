@@ -1,0 +1,702 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\database\DatabaseClient.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.database
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.database.utils.Configuration.DbConfig
+</span>4 <span style=''>import org.mongodb.scala._
+</span>5 <span style=''>import org.mongodb.scala.ObservableImplicits
+</span>6 <span style=''>
+</span>7 <span style=''>import scala.concurrent.{ExecutionContext, Future}
+</span>8 <span style=''>
+</span>9 <span style=''>
+</span>10 <span style=''>/**
+</span>11 <span style=''>  * Connector to the MongoDB database
+</span>12 <span style=''>  *
+</span>13 <span style=''>  * @author Filippo Portolani, Monica Gondolini
+</span>14 <span style=''>  */
+</span>15 <span style=''>
+</span>16 <span style=''>trait DatabaseClient{
+</span>17 <span style=''>
+</span>18 <span style=''>  /**
+</span>19 <span style=''>    * Inserts a new document in the Collection
+</span>20 <span style=''>    * @param document to be inserted
+</span>21 <span style=''>    * @param ec implicit for ExecutionContext
+</span>22 <span style=''>    * @return a future
+</span>23 <span style=''>    */
+</span>24 <span style=''>  def insert(document: Document)(implicit ec: ExecutionContext): Future[String]
+</span>25 <span style=''>
+</span>26 <span style=''>  /**
+</span>27 <span style=''>    * Delete a specific document from the database
+</span>28 <span style=''>    * @param document select the document we want to delete
+</span>29 <span style=''>    * @param ec implicit for ExecutionContext
+</span>30 <span style=''>    * @return a future
+</span>31 <span style=''>    */
+</span>32 <span style=''>  def delete(document: Document)(implicit ec: ExecutionContext): Future[Long]
+</span>33 <span style=''>
+</span>34 <span style=''>  /**
+</span>35 <span style=''>    * Update a document with a given query
+</span>36 <span style=''>    * @param document choose the document
+</span>37 <span style=''>    * @param update the change we want to make on the document
+</span>38 <span style=''>    * @param ec implicit for ExecutionContext
+</span>39 <span style=''>    * @return a future
+</span>40 <span style=''>    */
+</span>41 <span style=''>  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
+</span>42 <span style=''>
+</span>43 <span style=''>  /**
+</span>44 <span style=''>    * Find a requested document
+</span>45 <span style=''>    * @param document what we want to find
+</span>46 <span style=''>    * @param ec implicit for ExecutionContext
+</span>47 <span style=''>    * @return a future document, can be empty if document not found
+</span>48 <span style=''>    */
+</span>49 <span style=''>  def find(document: Document)(implicit ec: ExecutionContext):  Future[Document]
+</span>50 <span style=''>
+</span>51 <span style=''>  /**
+</span>52 <span style=''>    * Allow to insert multiple documents in the database
+</span>53 <span style=''>    * @param documents to insert
+</span>54 <span style=''>    * @param ec implicit for ExecutionContext
+</span>55 <span style=''>    * @return a future
+</span>56 <span style=''>    */
+</span>57 <span style=''>
+</span>58 <span style=''>  def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String]
+</span>59 <span style=''>
+</span>60 <span style=''>  /**
+</span>61 <span style=''>    * Delete multiple documents
+</span>62 <span style=''>    * @param documents to delete
+</span>63 <span style=''>    * @param ec implicit for ExecutionContext
+</span>64 <span style=''>    * @return a future
+</span>65 <span style=''>    */
+</span>66 <span style=''>  def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit]
+</span>67 <span style=''>
+</span>68 <span style=''>  /**
+</span>69 <span style=''>    * Update multiple documents
+</span>70 <span style=''>    * @param query choose the document
+</span>71 <span style=''>    * @param update the change we want to make on the document
+</span>72 <span style=''>    * @param ec implicit for ExecutionContext
+</span>73 <span style=''>    * @return a future
+</span>74 <span style=''>    */
+</span>75 <span style=''>  def multipleUpdate(query:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
+</span>76 <span style=''>}
+</span>77 <span style=''>
+</span>78 <span style=''>/**
+</span>79 <span style=''>  * Companion Object
+</span>80 <span style=''>  */
+</span>81 <span style=''>object DatabaseClient {
+</span>82 <span style=''>  val mongoClient: MongoClient = </span><span style='background: #AEF1AE'>MongoClient(DbConfig.uri)</span><span style=''>
+</span>83 <span style=''>  val database: MongoDatabase = </span><span style='background: #AEF1AE'>mongoClient getDatabase DbConfig.dbName</span><span style=''>
+</span>84 <span style=''>
+</span>85 <span style=''>  def apply(coll: String): DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClientImpl(coll: String)</span><span style=''>
+</span>86 <span style=''>
+</span>87 <span style=''>  case class DatabaseClientImpl(coll: String) extends DatabaseClient with ObservableImplicits {
+</span>88 <span style=''>    val collection: MongoCollection[Document] = </span><span style='background: #AEF1AE'>database getCollection coll</span><span style=''>
+</span>89 <span style=''>
+</span>90 <span style=''>    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
+</span>91 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.insertOne(document).toFuture()</span><span style=''>
+</span>92 <span style=''>      </span><span style='background: #AEF1AE'>future map(_ =&gt; &quot;Insertion Completed&quot;) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
+</span>93 <span style=''>    }
+</span>94 <span style=''>
+</span>95 <span style=''>    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
+</span>96 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.deleteOne(document).toFuture()</span><span style=''>
+</span>97 <span style=''>      </span><span style='background: #F0ADAD'>future map(_.getDeletedCount) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
+</span>98 <span style=''>    }
+</span>99 <span style=''>
+</span>100 <span style=''>    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+</span>101 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.updateOne(document,Document(&quot;$set&quot;-&gt; update)).toFuture()</span><span style=''>
+</span>102 <span style=''>      </span><span style='background: #F0ADAD'>future map(_.getMatchedCount) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
+</span>103 <span style=''>    }
+</span>104 <span style=''>
+</span>105 <span style=''>    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
+</span>106 <span style=''>      </span><span style='background: #F0ADAD'>collection.find(document).first().toFuture()</span><span style=''>
+</span>107 <span style=''>    }
+</span>108 <span style=''>
+</span>109 <span style=''>    override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
+</span>110 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.insertMany(documents).toFuture()</span><span style=''>
+</span>111 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; &quot;InsertionCompleted&quot;) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
+</span>112 <span style=''>    }
+</span>113 <span style=''>
+</span>114 <span style=''>    override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
+</span>115 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.deleteMany(documents).toFuture()</span><span style=''>
+</span>116 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; {}) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
+</span>117 <span style=''>    }
+</span>118 <span style=''>
+</span>119 <span style=''>    override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+</span>120 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.updateMany(document,update).toFuture()</span><span style=''>
+</span>121 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; {}) recoverWith{case e: Throwable =&gt; Future.failed(e)}</span><span style=''>
+</span>122 <span style=''>    }
+</span>123 <span style=''>  }
+</span>124 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          82
+        </td>
+        <td>
+          131
+        </td>
+        <td>
+          2439
+          -
+          2464
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.MongoClient.apply
+        </td>
+        <td style="background: #AEF1AE">
+          org.mongodb.scala.MongoClient.apply(cml.database.utils.Configuration.DbConfig.uri)
+        </td>
+      </tr><tr>
+        <td>
+          82
+        </td>
+        <td>
+          130
+        </td>
+        <td>
+          2451
+          -
+          2463
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.database.utils.Configuration.DbConfig.uri
+        </td>
+        <td style="background: #AEF1AE">
+          cml.database.utils.Configuration.DbConfig.uri
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          133
+        </td>
+        <td>
+          2498
+          -
+          2537
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.MongoClient.getDatabase
+        </td>
+        <td style="background: #AEF1AE">
+          DatabaseClient.this.mongoClient.getDatabase(cml.database.utils.Configuration.DbConfig.dbName)
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          132
+        </td>
+        <td>
+          2522
+          -
+          2537
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.database.utils.Configuration.DbConfig.dbName
+        </td>
+        <td style="background: #AEF1AE">
+          cml.database.utils.Configuration.DbConfig.dbName
+        </td>
+      </tr><tr>
+        <td>
+          85
+        </td>
+        <td>
+          134
+        </td>
+        <td>
+          2585
+          -
+          2617
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.database.DatabaseClient.DatabaseClientImpl.apply
+        </td>
+        <td style="background: #AEF1AE">
+          DatabaseClient.this.DatabaseClientImpl.apply((coll: String))
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          137
+        </td>
+        <td>
+          2766
+          -
+          2793
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.MongoDatabase.getCollection
+        </td>
+        <td style="background: #AEF1AE">
+          DatabaseClient.this.database.getCollection[org.mongodb.scala.Document](DatabaseClientImpl.this.coll)(DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document], (ClassTag.apply[org.mongodb.scala.Document](classOf[org.mongodb.scala.bson.collection.immutable.Document]): scala.reflect.ClassTag[org.mongodb.scala.Document]))
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          136
+        </td>
+        <td>
+          2775
+          -
+          2775
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultHelper.DefaultsTo.default
+        </td>
+        <td style="background: #AEF1AE">
+          DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document]
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          135
+        </td>
+        <td>
+          2789
+          -
+          2793
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.database.DatabaseClient.DatabaseClientImpl.coll
+        </td>
+        <td style="background: #AEF1AE">
+          DatabaseClientImpl.this.coll
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          138
+        </td>
+        <td>
+          2912
+          -
+          2953
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #AEF1AE">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.Completed](DatabaseClientImpl.this.collection.insertOne(document)).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          139
+        </td>
+        <td>
+          2961
+          -
+          3059
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.recoverWith
+        </td>
+        <td style="background: #AEF1AE">
+          future.map[String](((x$1: org.mongodb.scala.Completed) =&gt; &quot;Insertion Completed&quot;))(ec).recoverWith[String](({
+  @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[String]] with Serializable {
+    def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[String]&gt; = {
+      $anonfun.super.&lt;init&gt;();
+      ()
+    };
+    final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[String]](x1: A1, default: A1 =&gt; B1): B1 = ((x1.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; scala.concurrent.Future.failed[Nothing](e.getCause())
+      case (defaultCase$ @ _) =&gt; default.apply(x1)
+    };
+    final def isDefinedAt(x1: Throwable): Boolean = ((x1.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; true
+      case (defaultCase$ @ _) =&gt; false
+    }
+  };
+  new $anonfun()
+}: PartialFunction[Throwable,scala.concurrent.Future[String]]))(ec)
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          140
+        </td>
+        <td>
+          3183
+          -
+          3224
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #F0ADAD">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.result.DeleteResult](DatabaseClientImpl.this.collection.deleteOne(document)).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          141
+        </td>
+        <td>
+          3232
+          -
+          3321
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.recoverWith
+        </td>
+        <td style="background: #F0ADAD">
+          future.map[Long](((x$2: org.mongodb.scala.result.DeleteResult) =&gt; x$2.getDeletedCount()))(ec).recoverWith[Long](({
+  @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Long]] with Serializable {
+    def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Long]&gt; = {
+      $anonfun.super.&lt;init&gt;();
+      ()
+    };
+    final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Long]](x2: A1, default: A1 =&gt; B1): B1 = ((x2.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; scala.concurrent.Future.failed[Nothing](e.getCause())
+      case (defaultCase$ @ _) =&gt; default.apply(x2)
+    };
+    final def isDefinedAt(x2: Throwable): Boolean = ((x2.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; true
+      case (defaultCase$ @ _) =&gt; false
+    }
+  };
+  new $anonfun()
+}: PartialFunction[Throwable,scala.concurrent.Future[Long]]))(ec)
+        </td>
+      </tr><tr>
+        <td>
+          101
+        </td>
+        <td>
+          142
+        </td>
+        <td>
+          3463
+          -
+          3530
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #F0ADAD">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.result.UpdateResult](DatabaseClientImpl.this.collection.updateOne(document, org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[org.mongodb.scala.Document](scala.Predef.ArrowAssoc[String](&quot;$set&quot;).-&gt;[org.mongodb.scala.Document](update))(bson.this.BsonTransformer.TransformImmutableDocument)))).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          102
+        </td>
+        <td>
+          143
+        </td>
+        <td>
+          3538
+          -
+          3627
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.recoverWith
+        </td>
+        <td style="background: #F0ADAD">
+          future.map[Long](((x$3: org.mongodb.scala.result.UpdateResult) =&gt; x$3.getMatchedCount()))(ec).recoverWith[Long](({
+  @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Long]] with Serializable {
+    def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Long]&gt; = {
+      $anonfun.super.&lt;init&gt;();
+      ()
+    };
+    final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Long]](x3: A1, default: A1 =&gt; B1): B1 = ((x3.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; scala.concurrent.Future.failed[Nothing](e.getCause())
+      case (defaultCase$ @ _) =&gt; default.apply(x3)
+    };
+    final def isDefinedAt(x3: Throwable): Boolean = ((x3.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; true
+      case (defaultCase$ @ _) =&gt; false
+    }
+  };
+  new $anonfun()
+}: PartialFunction[Throwable,scala.concurrent.Future[Long]]))(ec)
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          144
+        </td>
+        <td>
+          3740
+          -
+          3784
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #F0ADAD">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.Document](DatabaseClientImpl.this.collection.find[org.mongodb.scala.Document](document)(DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document], (ClassTag.apply[org.mongodb.scala.Document](classOf[org.mongodb.scala.bson.collection.immutable.Document]): scala.reflect.ClassTag[org.mongodb.scala.Document])).first()).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          145
+        </td>
+        <td>
+          3926
+          -
+          3969
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #F0ADAD">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.Completed](DatabaseClientImpl.this.collection.insertMany(scala.Predef.wrapRefArray[org.mongodb.scala.Document](documents))).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          111
+        </td>
+        <td>
+          146
+        </td>
+        <td>
+          3977
+          -
+          4074
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.recoverWith
+        </td>
+        <td style="background: #F0ADAD">
+          future.map[String](((x$4: org.mongodb.scala.Completed) =&gt; &quot;InsertionCompleted&quot;))(ec).recoverWith[String](({
+  @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[String]] with Serializable {
+    def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[String]&gt; = {
+      $anonfun.super.&lt;init&gt;();
+      ()
+    };
+    final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[String]](x4: A1, default: A1 =&gt; B1): B1 = ((x4.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; scala.concurrent.Future.failed[Nothing](e.getCause())
+      case (defaultCase$ @ _) =&gt; default.apply(x4)
+    };
+    final def isDefinedAt(x4: Throwable): Boolean = ((x4.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; true
+      case (defaultCase$ @ _) =&gt; false
+    }
+  };
+  new $anonfun()
+}: PartialFunction[Throwable,scala.concurrent.Future[String]]))(ec)
+        </td>
+      </tr><tr>
+        <td>
+          115
+        </td>
+        <td>
+          147
+        </td>
+        <td>
+          4206
+          -
+          4249
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #F0ADAD">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.result.DeleteResult](DatabaseClientImpl.this.collection.deleteMany(documents)).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          116
+        </td>
+        <td>
+          148
+        </td>
+        <td>
+          4257
+          -
+          4336
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.recoverWith
+        </td>
+        <td style="background: #F0ADAD">
+          future.map[Unit](((x$5: org.mongodb.scala.result.DeleteResult) =&gt; ()))(ec).recoverWith[Unit](({
+  @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Unit]] with Serializable {
+    def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Unit]&gt; = {
+      $anonfun.super.&lt;init&gt;();
+      ()
+    };
+    final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Unit]](x5: A1, default: A1 =&gt; B1): B1 = ((x5.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; scala.concurrent.Future.failed[Nothing](e.getCause())
+      case (defaultCase$ @ _) =&gt; default.apply(x5)
+    };
+    final def isDefinedAt(x5: Throwable): Boolean = ((x5.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; true
+      case (defaultCase$ @ _) =&gt; false
+    }
+  };
+  new $anonfun()
+}: PartialFunction[Throwable,scala.concurrent.Future[Unit]]))(ec)
+        </td>
+      </tr><tr>
+        <td>
+          120
+        </td>
+        <td>
+          149
+        </td>
+        <td>
+          4486
+          -
+          4535
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
+        </td>
+        <td style="background: #F0ADAD">
+          DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.result.UpdateResult](DatabaseClientImpl.this.collection.updateMany(document, update)).toFuture()
+        </td>
+      </tr><tr>
+        <td>
+          121
+        </td>
+        <td>
+          150
+        </td>
+        <td>
+          4543
+          -
+          4613
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.recoverWith
+        </td>
+        <td style="background: #F0ADAD">
+          future.map[Unit](((x$6: org.mongodb.scala.result.UpdateResult) =&gt; ()))(ec).recoverWith[Unit](({
+  @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Unit]] with Serializable {
+    def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Unit]&gt; = {
+      $anonfun.super.&lt;init&gt;();
+      ()
+    };
+    final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Unit]](x6: A1, default: A1 =&gt; B1): B1 = ((x6.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; scala.concurrent.Future.failed[Nothing](e)
+      case (defaultCase$ @ _) =&gt; default.apply(x6)
+    };
+    final def isDefinedAt(x6: Throwable): Boolean = ((x6.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
+      case (e @ (_: Throwable)) =&gt; true
+      case (defaultCase$ @ _) =&gt; false
+    }
+  };
+  new $anonfun()
+}: PartialFunction[Throwable,scala.concurrent.Future[Unit]]))(ec)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>
