@@ -13,11 +13,18 @@ import cml.utils.ModelConfig.Elements.FIRE
 
 class CreatureTest extends FunSuite {
 
+  val dragonLevel = 9
+  val griffinLevel = 8
+  val attackDragon = 15
+
+  val x = 10
+  val y = 10
+
   val dragon : Dragon = Dragon(DRAGON_NAME, INITIAL_LEVEL)
-  val dragon2 : Dragon = Dragon("Saphira", 9)
+  val dragon2 : Dragon = Dragon("Saphira", dragonLevel)
   val golem : Golem = Golem(GOLEM_NAME, INITIAL_LEVEL)
   val kraken: Kraken = Kraken(KRAKEN_NAME, INITIAL_LEVEL)
-  val griffin: Griffin = Griffin(GRIFFIN_NAME, 8)
+  val griffin: Griffin = Griffin(GRIFFIN_NAME, griffinLevel)
 
   test("Dragon level up test"){
     dragon levelUp()
@@ -27,7 +34,7 @@ class CreatureTest extends FunSuite {
   test("Dragon set attack test"){
     dragon2.currentLevel_
     dragon2 levelUp()
-    assert(dragon2.attackValue.equals(15))
+    assert(dragon2.attackValue.equals(attackDragon))
   }
 
   test("Golem level up test"){
@@ -46,7 +53,7 @@ class CreatureTest extends FunSuite {
   }
 
   test("Add creature to habitat test"){
-    val pos = Position(10,10)
+    val pos = Position(x, y)
     val habitat = Habitat(FIRE, pos, B_INIT_LEVEL)
     habitat.addCreature(dragon)
     assert(habitat.creatureList.head.equals(dragon))
