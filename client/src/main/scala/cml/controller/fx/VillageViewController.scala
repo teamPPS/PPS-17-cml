@@ -8,6 +8,7 @@ import cml.utils.ViewConfig._
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
+import play.api.libs.json.JsValue
 
 class VillageViewController {
 
@@ -44,12 +45,13 @@ class VillageViewController {
   }
 
 
-  def setGridAndHandlers(): Unit = {
+  def setGridAndHandlers(jsonUserVillage: String): Unit = {
+
+    var jsonVillage: Option[JsValue] = Option.empty
 
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
-
     ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)
 
     buildingsMenu = new GridPane
