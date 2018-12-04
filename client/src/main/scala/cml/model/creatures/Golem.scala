@@ -40,4 +40,6 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
   }
 
   override def name: String = creatureName
+
+  override def creatureType: String = "Golem"
 }

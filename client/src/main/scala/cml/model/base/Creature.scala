@@ -18,6 +18,7 @@ trait Creature {
   def element: String
   def currentLevel_ : Unit
   def name: String
+  def creatureType: String
 }
 
 

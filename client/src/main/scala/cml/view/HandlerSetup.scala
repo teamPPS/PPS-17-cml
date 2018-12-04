@@ -165,7 +165,7 @@ object Handler {
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +
         "Resources: " + resourceAmount + "\n" +
-        "Creature: " + creatures.head.name + "\n"+
+        "Creature: " + creatures.head.name + "\nType: "+ creatures.head.creatureType +"\n"+
         "Creature level: " + creatures.head.currentLevel
     }else{
       text = "Structure " + name + "\n" +

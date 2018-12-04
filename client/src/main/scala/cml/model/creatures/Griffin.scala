@@ -36,4 +36,6 @@ case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
   }
 
   override def name: String = creatureName
+
+  override def creatureType: String = "Griffin"
 }
