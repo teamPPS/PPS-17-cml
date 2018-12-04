@@ -8,6 +8,7 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
+import io.vertx.scala.ext.web.handler.BodyHandler
 
 /**
   * This class implements AuthenticationVerticle
@@ -20,6 +21,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   private var authenticationService: AuthenticationService = _
 
   override def initializeRouter(router: Router): Unit = {
+    router.route.handler(BodyHandler.create())
     router post RegisterApi handler register
     router put LoginApi handler login
     router delete  LogoutApi handler logout

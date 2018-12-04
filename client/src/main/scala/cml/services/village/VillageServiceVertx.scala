@@ -35,7 +35,7 @@ trait VillageServiceVertx {
     * @param update what to update
     * @return successful or failed deletion
     */
-  def updateVillage(update: JsValue): Future[Unit]
+  def updateVillage(update: JsValue): Future[String]
 
   /**
     * Delete the user's village
@@ -69,7 +69,7 @@ object VillageServiceVertx{
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulCreationResponse` => r.bodyAsString().getOrElse("")
-          case _ => "Not a valid request"
+          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
         })
     }
 
@@ -80,15 +80,18 @@ object VillageServiceVertx{
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulResponse` => r.bodyAsString().getOrElse("")
-          case _ => "Not a valid request"
+          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
         })
     }
 
-    override def updateVillage(update: JsValue): Future[Unit] = {
+    override def updateVillage(update: JsValue): Future[String] = {
       client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendJsonFuture(update)
-        .map(_ => ())
+        .map(r => r.statusCode() match {
+          case `successfulResponse` => r.bodyAsString().getOrElse("")
+          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+        })
     }
 
     override def deleteVillageAndUser(): Future[Unit] = {

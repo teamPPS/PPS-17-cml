@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorRef, ActorSelection}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
 import cml.controller.messages.VillageRequest._
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
+import cml.services.authentication.TokenStorage
 import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
 import javafx.application.Platform
 
@@ -47,10 +48,14 @@ class VillageActor() extends Actor{
         case Failure(exception) => authenticationActor ! VillageFailure(enterFailure)
       }
 
-    case UpdateVillage(update) => villageVertx.updateVillage(update)
-      .onComplete {
-        case Success(httpResponse) => println(httpResponse) //modificare model: Passo textarea(?) e model nel messaggio UpdateVillage
-        case Failure(exception) => println(exception) //visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
+    case UpdateVillage(update) =>
+      villageVertx.updateVillage(update).onComplete {
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => println("Failure to update village") //visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
+            case _ => println("Update Done") //modificare model: Passo textarea(?) e model nel messaggio UpdateVillage
+          }
+        case Failure(exception) => println(exception)
       }
 
     case DeleteVillage() => villageVertx.deleteVillageAndUser()

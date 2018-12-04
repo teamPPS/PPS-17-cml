@@ -8,6 +8,7 @@ import cml.services.village.utils.VillageUrl._
 import cml.services.authentication.utils.AuthenticationUrl._
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+import io.vertx.scala.ext.web.handler.BodyHandler
 import play.api.libs.json.Json
 
 import scala.util.{Failure, Success}
@@ -28,6 +29,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     */
 
   override def initializeRouter(router: Router): Unit = {
+    router.route.handler(BodyHandler.create())
     router get VillagesAPI handler enter
     router post VillagesAPI handler create
     router put VillagesAPI handler update
@@ -78,7 +80,8 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     println("Request to update village")
     (for(
       headerAuthorization <- getRequestAndHeader;
-      body <- getRequestAndBody;// TODO add check if body present
+      body <- getRequestAndBody;
+      if !body.isEmpty;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
@@ -88,7 +91,9 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
         } else {
           sendResponse(BAD_REQUEST, "Error while update")
         }
-        case Failure(_) => sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+        case Failure(_) => {
+          sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+        }
       }
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
