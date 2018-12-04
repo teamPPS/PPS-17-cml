@@ -43,8 +43,7 @@ trait Handler {
 object Handler {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
-  val village = VillageMap(structures)
+  val village: VillageMap = VillageMap.instance().get
   val price = 30 //prezzo iniziale deve essere globale ?
 
   val handleVillage: Handler = {
@@ -66,7 +65,7 @@ object Handler {
       val x = GridPane.getRowIndex(n)
 //      c.selectionInfo setText "Mouse clicked in coords: (" + x + "," + y + ")\n"
 
-      for (s <- village.structures) {
+      for (s <- village.villageStructure) {
         if (s.position equals Position(x, y)) {
           //fare un metodo/classe per il testo da visualizzare
           c.selectionInfo setText "Selected structure" + s.getClass.getName + "\n" +
@@ -142,7 +141,7 @@ object Handler {
 
       val structure = StaticStructure(newTile,x,y)
       val json = structure.json
-      village.structures += structure.getStructure
+      village.villageStructure += structure.getStructure
       villageActor ! UpdateVillage(json)
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
