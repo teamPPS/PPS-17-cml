@@ -1,10 +1,16 @@
 package cml.controller.fx
 
+import java.io.File
+
+import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
+import cml.controller.BattleActor
 import cml.view.ViewSwitch
+import cml.utils.ViewConfig._
+import akka.actor.{ActorSystem, Props}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
-import cml.utils.ViewConfig._
+import com.typesafe.config.ConfigFactory
 
 /**
   * Controller class for graphic battle view
@@ -34,9 +40,17 @@ class BattleViewController {
 
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
-      println("Arena view -----> wait another user for battle")
+      createBattleActor()
       ViewSwitch.activate(ArenaWindow.path, exitButton.getScene)
     }
+  }
+
+  private def createBattleActor(): Unit ={
+    val configFile = getClass.getClassLoader.getResource(Path).getFile
+    val config = ConfigFactory.parseFile(new File(configFile))
+    val system = ActorSystem("LocalContext", config)
+    val battleActor = system.actorOf(Props[BattleActor], name=Name)
+    println("------ BattleActor is ready")
   }
 
 }
