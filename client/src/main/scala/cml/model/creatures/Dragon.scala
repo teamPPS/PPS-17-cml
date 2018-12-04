@@ -51,4 +51,8 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
     currentLevel = creatureLevel
     setAttack()
   }
+
+  override def name: String = creatureName
+
+  override def creatureType: String = "Dragon"
 }

@@ -47,4 +47,8 @@ case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
     setAttack()
   }
 
+
+  override def name: String = creatureName
+
+  override def creatureType: String = "Kraken"
 }

@@ -13,10 +13,17 @@ import org.scalatest.FunSuite
   */
 class ResourceProductionTest extends FunSuite{
 
+  val x1 = 10
+  val y1 = 10
+  val x2 = 5
+  val y2 = 5
+  val x3 = 100
+  val y3 = 100
+
   test("Resource production during time test") {
-    val farm: Farm = Farm(Position(10,10), B_INIT_LEVEL)
-    val cave: Cave = Cave(Position(5,5), B_INIT_LEVEL)
-    val habitat = Habitat(AIR,Position(100,100), H_INIT_LEVEL)
+    val farm: Farm = Farm(Position(x1, y1), B_INIT_LEVEL)
+    val cave: Cave = Cave(Position(x2, y2), B_INIT_LEVEL)
+    val habitat = Habitat(AIR,Position(x3, y3), H_INIT_LEVEL)
 
     val timer = new Timer()
     val task = new TimerTask {
@@ -29,16 +36,19 @@ class ResourceProductionTest extends FunSuite{
 //          +" habitat money " + habitat.money.amount)
       }
     }
-    timer.schedule(task, 0, 1000L)
-    Thread.sleep(10000)
+    val delay = 0
+    val period = 1000L
+    val millis = 10000
+    timer.schedule(task, delay, period)
+    Thread.sleep(millis)
 
     assert(farm.food.amount > INIT_VALUE && cave.money.amount > INIT_VALUE && habitat.money.amount > INIT_VALUE)
   }
 
   test("Resource retrieve test"){
-    val farm: Farm = Farm(Position(10,10), B_INIT_LEVEL)
-    val cave: Cave = Cave(Position(5,5), B_INIT_LEVEL)
-    val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
+    val farm: Farm = Farm(Position(x1, y1), B_INIT_LEVEL)
+    val cave: Cave = Cave(Position(x2, y2), B_INIT_LEVEL)
+    val habitat = Habitat(AIR,Position(x3, y3), B_INIT_LEVEL)
 
     for(i <- 1 to 10){
       farm.food.inc(farm.farmLevel)
