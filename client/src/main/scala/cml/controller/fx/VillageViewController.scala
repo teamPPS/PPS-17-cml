@@ -22,7 +22,6 @@ class VillageViewController {
   @FXML var levelUpButton: Button = _
   @FXML var takeButton: Button = _
   @FXML var addCreatureButton: Button = _
-  @FXML var creatureList: ListView[Creature] = _
   @FXML var upgradePane: Pane = _
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
