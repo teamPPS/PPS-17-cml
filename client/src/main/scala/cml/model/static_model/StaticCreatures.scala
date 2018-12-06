@@ -26,8 +26,8 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
       creature = Dragon(DRAGON_NAME,INITIAL_LEVEL)
       creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL).json //passare anche il tipo drago/kraken ecc ?
     case WATER =>
-      creature = WaterDemon(KRAKEN_NAME, INITIAL_LEVEL)
-      creatureJson = CreatureJson(KRAKEN_NAME,INITIAL_LEVEL).json
+      creature = WaterDemon(WATERDEMON_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(WATERDEMON_NAME,INITIAL_LEVEL).json
     case EARTH =>
       creature = Golem(GOLEM_NAME, INITIAL_LEVEL)
       creatureJson = CreatureJson(GOLEM_NAME,INITIAL_LEVEL).json

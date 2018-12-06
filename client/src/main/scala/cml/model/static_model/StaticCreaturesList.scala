@@ -15,7 +15,7 @@ object StaticCreaturesList {
     Dragon(DRAGON_NAME,INITIAL_LEVEL),
     Golem(GOLEM_NAME,INITIAL_LEVEL),
     Griffin(GRIFFIN_NAME, INITIAL_LEVEL),
-    WaterDemon(KRAKEN_NAME,INITIAL_LEVEL)
+    WaterDemon(WATERDEMON_NAME,INITIAL_LEVEL)
   )
 
 }

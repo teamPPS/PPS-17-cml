@@ -26,7 +26,7 @@ class CreatureTest extends FunSuite {
   val golem1 : Golem = Golem(GOLEM_NAME, INITIAL_LEVEL)
   val golem2 : Golem = Golem("Alduin", 10)
 
-  val kraken: WaterDemon = WaterDemon(KRAKEN_NAME, INITIAL_LEVEL)
+  val kraken: WaterDemon = WaterDemon(WATERDEMON_NAME, INITIAL_LEVEL)
   val griffin: Griffin = Griffin(GRIFFIN_NAME, griffinLevel)
 
   test("Dragon level up test"){
