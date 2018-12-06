@@ -6,15 +6,16 @@ import akka.actor.{ActorSystem, Props}
 import cml.controller.BattleActor
 import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
 import cml.model.base.{Creature, VillageMap}
+import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
+import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
 import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
-import cml.view.utils.TileConfig.getClass
 import com.typesafe.config.ConfigFactory
 import javafx.collections.{FXCollections, ObservableList}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ListView, _}
-import javafx.scene.image.{Image, ImageView}
+import javafx.scene.image.ImageView
 import javafx.scene.layout.Pane
 
 import scala.collection.mutable
@@ -41,25 +42,25 @@ class BattleViewController {
   @FXML var playButton: Button = _
 
   val village: VillageMap = VillageMap.village
-  var villageCreatures: mutable.MutableList[Creature] = _
-  var obs: ObservableList[Creature] = FXCollections.observableArrayList()
+  var creatures: mutable.MutableList[Creature] = _
+  var obsCreatures: ObservableList[Creature] = FXCollections.observableArrayList()
   var selectedCreature: Option[Creature] = Creature.selectedCreature
 
   def initialize(): Unit = {
 
     for (s <- village.structures) {
       if (s.creatures != null && s.creatures.nonEmpty) {
-        villageCreatures = s.creatures
-        obs add villageCreatures.head
+        creatures = s.creatures
+        obsCreatures add creatures.head
       }
     }
 
-    creatureList.setItems(obs)
+    creatureList.setItems(obsCreatures)
     creatureList.setCellFactory(_ => new ListCell[Creature]() {
       override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
         super.updateItem(creature, empty)
         if (empty || creature == null || creature.creatureType == null) setText(null)
-        else setText(creature.creatureType + " " + creature.name)
+        else setText(creature.name + ", " + creature.creatureType)
       }
     })
 
@@ -67,14 +68,9 @@ class BattleViewController {
       selectedCreature = Some(creatureList.getSelectionModel.getSelectedItem)
       Creature.setSelectedCreature(selectedCreature)
 
-      //TODO SETTARE IMAGEVIEW
-      selectedCreature.get.creatureType match {
-        case 
-      }
-      creatureImage setImage new Image(getClass.getClassLoader.getResource("image/dragon.png").toString, false)
-      selectedCreature match{
+      selectedCreature match {
         case None => throw new NoSuchElementException
-        case _ =>
+        case _ => setCreatureImage(selectedCreature.get)
           creatureArea setText displayText(selectedCreature.get.name, selectedCreature.get.creatureType,
             selectedCreature.get.currentLevel,selectedCreature.get.attackValue)
           playButton setDisable false
@@ -119,6 +115,15 @@ class BattleViewController {
       "\nAttack Value: " + attackValue
 
     text
+  }
+
+  private def setCreatureImage(selection: Creature): Unit = {
+    selection.creatureType match {
+      case DRAGON => creatureImage setImage dragonImage
+      case GOLEM => creatureImage setImage golemImage
+      case GRIFFIN => creatureImage setImage griffinImage
+      case WATERDEMON => creatureImage setImage waterdemonImage
+    }
   }
 
 }
