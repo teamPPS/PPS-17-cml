@@ -38,18 +38,16 @@ class BattleViewController {
   @FXML var playButton: Button = _
 
   val village: VillageMap = VillageMap.village
-  var creatures: mutable.MutableList[Creature] = _
+  var villageCreatures: mutable.MutableList[Creature] = _
   var obs: ObservableList[Creature] = FXCollections.observableArrayList()
-  var selectedCreature: Creature = _
+  var selectedCreature: Option[Creature] = Creature.selectedCreature
 
   def initialize(): Unit = {
-
-    playButton setDisable true
-    println("battle view")
+    println(selectedCreature)
     for (s <- village.structures) {
       if (s.creatures != null && s.creatures.nonEmpty) {
-        creatures = s.creatures
-        obs add creatures.head
+        villageCreatures = s.creatures
+        obs add villageCreatures.head
       }
     }
     creatureList.setItems(obs)
@@ -62,12 +60,13 @@ class BattleViewController {
     })
 
     creatureList.setOnMouseClicked(_ => {
-      selectedCreature = creatureList.getSelectionModel.getSelectedItem
+      selectedCreature = Some(creatureList.getSelectionModel.getSelectedItem)
+      println(selectedCreature)
       //TODO SETTARE IMAGEVIEW
       //creatureImage setImage
 
-      creatureArea setText "Name: " + selectedCreature.name + "\nType: "+selectedCreature.creatureType +"\n"+
-        "Creature level: " + selectedCreature.currentLevel +"\nAttack Value: " + selectedCreature.attackValue
+      creatureArea setText "Name: " + selectedCreature.get.name + "\nType: "+selectedCreature.get.creatureType +"\n"+
+        "Creature level: " + selectedCreature.get.currentLevel +"\nAttack Value: " + selectedCreature.get.attackValue
 
       playButton setDisable false
 
@@ -76,6 +75,10 @@ class BattleViewController {
 
   @FXML
   def exitOption(): Unit = {
+    selectedCreature = None
+    for(c <- villageCreatures) obs.removeAll(c)
+    println(villageCreatures +""+ obs)
+    creatureList.setItems(obs)
     ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
   }
 
@@ -83,7 +86,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText("Selected Creature: " + selectedCreature)
+      setHeaderText("Selected Creature: " + selectedCreature.get)
       setContentText("Are you sure want to confirm?")
     }
 

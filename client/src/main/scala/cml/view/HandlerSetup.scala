@@ -81,7 +81,7 @@ object Handler {
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
           } else {
-            c.levelUpButton setDisable false //TODO se terrain disabilitare
+            c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => {
               val upgrade = StructureUpgrade(s)
               villageActor ! UpdateVillage(upgrade structureJson)

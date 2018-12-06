@@ -23,6 +23,10 @@ trait Creature {
   def creatureType: String
 }
 
+object Creature{
+  var selectedCreature: Option[Creature] = None
+}
+
 
 
 
