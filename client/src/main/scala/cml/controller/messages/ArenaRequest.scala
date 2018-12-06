@@ -10,5 +10,7 @@ object ArenaRequest {
 
   sealed trait ArenaRequest
 
+  case class HelloChallenger(msg: String) extends ArenaRequest
+
 
 }

@@ -1,5 +1,7 @@
 package cml.controller.messages
 
+import javafx.scene.Scene
+
 /**
   * Battle request messages
   *
@@ -9,6 +11,13 @@ package cml.controller.messages
 object BattleRequest {
 
   sealed trait BattleRequest
+
+  /**
+    * Request to switch in arena view
+    *
+    * @param scene scene
+    */
+  case class SceneInfo(scene: Scene) extends BattleRequest
 
   /**
     * Request to add user into a list for require enter in battle arena
@@ -24,5 +33,7 @@ object BattleRequest {
     * Request exit into list of wait challenger
     */
   case class ExitRequest() extends BattleRequest
+
+  case class SwitchInArenaRequest() extends BattleRequest
 
 }

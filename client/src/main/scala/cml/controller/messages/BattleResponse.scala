@@ -13,6 +13,7 @@ object BattleResponse {
 
   sealed trait BattleResponse
 
+
   /**
     * Success response to add user into a list for require enter in battle arena
     */
@@ -23,7 +24,6 @@ object BattleResponse {
   /**
     * Success response for require challenger
     *
-    * @param exist response true if exist challenger
     * @param user user list for battle
     */
   case class ExistChallengerSuccess(user: ListBuffer[ActorRef]) extends BattleResponse

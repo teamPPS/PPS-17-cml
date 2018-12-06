@@ -7,6 +7,7 @@ import cml.controller.BattleActor
 import cml.view.ViewSwitch
 import cml.utils.ViewConfig._
 import akka.actor.{ActorRef, ActorSystem, Props}
+import cml.controller.messages.BattleRequest.SceneInfo
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
@@ -43,8 +44,10 @@ class BattleViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       createBattleActor()
-      ViewSwitch.activate(ArenaWindow.path, exitButton.getScene)
+      println("context --- > " + exitButton.getScene )
+      battleActor ! SceneInfo(exitButton.getScene)
     }
+    //TODO: add progress indicator
   }
 
   private def createBattleActor(): Unit ={

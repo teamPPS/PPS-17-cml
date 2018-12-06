@@ -1,12 +1,13 @@
 package cml.controller
 
-import java.io.File
-
-import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
+import cml.controller.messages.BattleRequest._
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, ExitSuccess, RequireEnterInArenaSuccess}
-import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
-import akka.actor.{Actor, ActorRef, ActorSelection, ActorSystem, Props}
-import com.typesafe.config.ConfigFactory
+import akka.actor.{Actor, ActorRef, ActorSelection}
+import cml.controller.messages.BattleRequest
+import cml.utils.ViewConfig.ArenaWindow
+import cml.view.ViewSwitch
+import javafx.application.Platform
+import javafx.scene.Scene
 
 import scala.collection.mutable.ListBuffer
 
@@ -20,6 +21,8 @@ class BattleActor extends Actor {
 
   var remoteActor: ActorSelection = _
   var challenger: ActorRef = _
+  var challengerActor: ActorSelection = _
+  var sceneContext: Scene = _
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
@@ -32,14 +35,16 @@ class BattleActor extends Actor {
   }
 
   override def receive: Receive = {
-    case RequireEnterInArenaSuccess() =>
-      println("Your request is success delivery")
-      remoteActor ! ExistChallenger()
+    case SceneInfo(scene) => sceneContext = scene
+    case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
     case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
       println("user in list - " + user)
       myChallenge(user)
-
+      self ! BattleRequest.SwitchInArenaRequest()
+      /*challengerActor = context.actorSelection(challenger.toString())
+      challenger ! HelloChallenger("Hello my challenger im " + self)*/
+    case SwitchInArenaRequest() => Platform.runLater(() => switchInArena())
   }
 
   private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
@@ -51,9 +56,12 @@ class BattleActor extends Actor {
     })
   }
 
+  private def switchInArena(): Unit ={
+    ViewSwitch.activate(ArenaWindow.path, sceneContext)
+  }
 }
 
-object BattleActor {
+/*object BattleActor {
 // TODO: delete this main (already exist in battleController)
   def main(args: Array[String])  {
     val configFile = getClass.getClassLoader.getResource(Path).getFile
@@ -62,5 +70,5 @@ object BattleActor {
     val battleActor = system.actorOf(Props[BattleActor], name=Name)
     println("------ battleActor is ready")
   }
-}
+}*/
 

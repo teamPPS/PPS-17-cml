@@ -44,12 +44,12 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-    /*println("Response create because handler is corrected create")
+    println("Response create because handler is corrected create")
     client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
       .sendFuture
       .map(response =>
-        assert(response.statusCode().toString equals CREATED.code().toString))*/
+        assert(response.statusCode().toString equals CREATED.code().toString))
 
     println("Response bad request because handler is invalid")
     client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
