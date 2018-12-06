@@ -35,7 +35,7 @@ class BattleViewController {
   @FXML var creatureImage: ImageView = _
   @FXML var creatureSelectionPane: Pane = _
   @FXML var creatureArea: TextArea = _
-  @FXML var creatureButton: Button = _
+  @FXML var playButton: Button = _
 
   val village: VillageMap = VillageMap.village
   var creatures: mutable.MutableList[Creature] = _
