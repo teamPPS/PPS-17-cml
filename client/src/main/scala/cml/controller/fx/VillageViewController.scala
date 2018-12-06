@@ -52,15 +52,15 @@ class VillageViewController {
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
     var json: JsValue = Json.parse(jsonUserVillage) //TODO tutto dentro a JsonMaker o  comunque utils?
-    val gold = (json \ Village.GOLD).get.toString().toInt
-    val food = (json \ Village.FOOD).get.toString().toInt
-    val villageName = (json \ Village.VILLAGE_NAME).get.toString()
+    val gold = (json \ Village.GOLD_FIELD).get.toString().toInt
+    val food = (json \ Village.FOOD_FIELD).get.toString().toInt
+    val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
 
     val buildings = (json \\ "building").map(_.as[JsObject])
     VillageMap.initVillage(mutable.MutableList[Structure](), gold, food, villageName)
     for(
       building <- buildings;
-      buildType <- building \\ "building_type";
+      buildType <- building \\ Village.BUILDING_TYPE_FIELD;
       specificStructure = buildType.as[String] match {
         case "CAVE" => building.as[Cave]
         case "FARM" => building.as[Farm]
@@ -69,7 +69,7 @@ class VillageViewController {
     println(VillageMap.instance().get.villageStructure)
 
     val habitats = (json \\ "habitat").map(_.as[JsObject])
-    
+
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap

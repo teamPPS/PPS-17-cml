@@ -36,8 +36,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case Register(username, password) => authenticationVertx.register(username, password)
       .onComplete {
         case Success(httpResponse) =>
-          checkHttpResponse(httpResponse, loginSuccess, loginFailure)
-          villageActor ! CreateVillage()
+          if(checkHttpResponse(httpResponse, loginSuccess, loginFailure))
+            villageActor ! CreateVillage()
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
           displayMsg(registerFailure)

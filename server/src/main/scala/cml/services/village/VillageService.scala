@@ -56,26 +56,25 @@ object VillageService {
     var document: Document = _
 
     override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+
+      val initialBuilding = Document(
+        SINGLE_BUILDING_FIELD -> Document(
+          BUILDING_TYPE_FIELD -> "CAVE",
+          BUILDING_LEVEL_FIELD -> 1,
+          BUILDING_POSITION_FIELD -> Document(
+            "x" -> 1,
+            "y" -> 1
+          )
+        )
+      )
+
       document = Document(
-        VILLAGE_NAME -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
+        VILLAGE_NAME_FIELD -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
         USERNAME -> username,
-        FOOD -> 100,
-        GOLD -> 100,
-        BUILDINGS -> Document(
-          "building_id" -> Document(
-            BUILDING_TYPE -> "Farm",
-            BUILDING_LEVEL -> 1
-          )
-        ),
-        HABITAT -> Document(
-          "habitat_id" -> Document(
-            HABITAT_LEVEL -> 1,
-            NATURAL_ELEMENT -> "Fire",
-            CREATURES -> Document(
-              CREATURE_NAME -> "Drago Jhonny",
-              CREATURE_LEVEL -> 1
-            )
-          )
+        FOOD_FIELD -> 0,
+        GOLD_FIELD -> 0,
+        MULTIPLE_BUILDINGS_FIELD -> initialBuilding,
+        MULTIPLE_HABITAT_FIELD -> Document(
         )
       )
       villageCollection.insert(document).map(_ => "Completed")
