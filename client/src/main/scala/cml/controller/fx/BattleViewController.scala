@@ -7,11 +7,13 @@ import cml.controller.BattleActor
 import cml.view.ViewSwitch
 import cml.utils.ViewConfig._
 import akka.actor.{ActorSystem, Props}
-import cml.model.base.VillageMap
+import cml.model.base.{Creature, VillageMap}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
 import com.typesafe.config.ConfigFactory
+
+import scala.collection.mutable
 
 /**
   * Controller class for graphic battle view
@@ -27,12 +29,14 @@ class BattleViewController {
   @FXML var exitButton: Button = _
 
   val village: VillageMap = VillageMap.village
+  var creatures: mutable.MutableList[Creature] = _
 
   def initialize(): Unit = {
     println("battle view")
     println(village.structures)
     for(s <- village.structures){
       if(s.creatures != null && s.creatures.nonEmpty){
+       creatures = s.creatures
         println(s.creatures)
       }
     }
@@ -47,7 +51,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText("Creatures List")
+      setHeaderText(creatures.toString())
       setContentText("Are you sure want to confirm?")
     }
 
