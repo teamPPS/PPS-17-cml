@@ -27,7 +27,7 @@
                         <Pane fx:id="creatureSelectionPane" layoutX="462.0" layoutY="14.0" prefHeight="495.0" prefWidth="401.0">
                            <children>
                       <Button fx:id="playButton" disable="true" layoutX="120.0" layoutY="410.0" mnemonicParsing="false" onAction="#creatureOption" prefHeight="71.0" prefWidth="161.0" text="Play" />
-                              <ListView fx:id="creatureList" layoutX="24.0" layoutY="16.0" prefHeight="370.0" prefWidth="345.0" />
+                               <ListView fx:id="creatureList" layoutX="24.0" layoutY="16.0" prefHeight="370.0" prefWidth="345.0" />
                            </children></Pane>
               </children>
             </AnchorPane>

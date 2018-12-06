@@ -78,6 +78,7 @@ object Handler {
               s.addCreature(creature getCreature)
               villageActor ! UpdateVillage(creature json)
               c.addCreatureButton setDisable true
+              c.battleButton setDisable false
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
           } else {
