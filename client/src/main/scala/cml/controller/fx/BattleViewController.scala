@@ -7,6 +7,7 @@ import cml.controller.BattleActor
 import cml.view.ViewSwitch
 import cml.utils.ViewConfig._
 import akka.actor.{ActorSystem, Props}
+import cml.model.base.VillageMap
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
@@ -25,9 +26,11 @@ class BattleViewController {
 
   @FXML var exitButton: Button = _
 
+  val village = VillageMap.village
 
   def initialize(): Unit = {
-
+    println("battle view")
+    println(village.structures)
   }
 
   @FXML

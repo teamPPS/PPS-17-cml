@@ -44,8 +44,8 @@ trait Handler {
 object Handler {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
-  val village = VillageMap(structures)
+//  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
+  val village: VillageMap = VillageMap.village
   val price = 30 //prezzo iniziale deve essere globale ?
 
   val handleVillage: Handler = {

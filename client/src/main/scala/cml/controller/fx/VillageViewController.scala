@@ -42,6 +42,8 @@ class VillageViewController {
     println("village view init")
     villageActor ! EnterVillage(this)
 
+    setGridAndHandlers()
+
   }
 
 
