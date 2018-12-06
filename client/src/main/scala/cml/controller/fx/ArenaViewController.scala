@@ -1,7 +1,5 @@
 package cml.controller.fx
 
-
-import cml.controller.messages.ArenaRequest.ExitRequest
 import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
 import javafx.fxml.FXML

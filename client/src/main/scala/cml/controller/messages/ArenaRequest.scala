@@ -10,6 +10,5 @@ object ArenaRequest {
 
   sealed trait ArenaRequest
 
-  case class ExitRequest() extends ArenaRequest
 
 }

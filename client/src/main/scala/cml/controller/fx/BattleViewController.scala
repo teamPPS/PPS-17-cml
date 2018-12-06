@@ -6,7 +6,7 @@ import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
 import cml.controller.BattleActor
 import cml.view.ViewSwitch
 import cml.utils.ViewConfig._
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType}
@@ -19,6 +19,8 @@ import com.typesafe.config.ConfigFactory
   */
 
 class BattleViewController {
+
+  var battleActor: ActorRef = _
 
   import java.util.Locale
   Locale.setDefault(Locale.ENGLISH)
@@ -49,7 +51,7 @@ class BattleViewController {
     val configFile = getClass.getClassLoader.getResource(Path).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem("LocalContext", config)
-    val battleActor = system.actorOf(Props[BattleActor], name=Name)
+    battleActor = system.actorOf(Props[BattleActor], name=Name)
     println("------ BattleActor is ready")
   }
 

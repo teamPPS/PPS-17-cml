@@ -4,5 +4,4 @@ object ArenaResponse {
 
   sealed trait ArenaResponse
 
-  case class ExitSuccess() extends ArenaResponse
 }
