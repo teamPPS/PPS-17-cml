@@ -2,13 +2,17 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
-import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
-import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
+import cml.controller.messages.VillageRequest.EnterVillage
+import cml.model.base._
+import cml.schema.Village
 import cml.utils.ViewConfig._
+import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
-import play.api.libs.json.JsValue
+import play.api.libs.json._
+
+import scala.collection.mutable
 
 class VillageViewController {
 
@@ -47,8 +51,25 @@ class VillageViewController {
 
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
-    var jsonVillage: Option[JsValue] = Option.empty
+    var json: JsValue = Json.parse(jsonUserVillage) //TODO tutto dentro a JsonMaker o  comunque utils?
+    val gold = (json \ Village.GOLD).get.toString().toInt
+    val food = (json \ Village.FOOD).get.toString().toInt
+    val villageName = (json \ Village.VILLAGE_NAME).get.toString()
 
+    val buildings = (json \\ "building").map(_.as[JsObject])
+    VillageMap.initVillage(mutable.MutableList[Structure](), gold, food, villageName)
+    for(
+      building <- buildings;
+      buildType <- building \\ "building_type";
+      specificStructure = buildType.as[String] match {
+        case "CAVE" => building.as[Cave]
+        case "FARM" => building.as[Farm]
+      }
+    ) yield VillageMap.instance().get.villageStructure += specificStructure
+    println(VillageMap.instance().get.villageStructure)
+
+    val habitats = (json \\ "habitat").map(_.as[JsObject])
+    
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
@@ -61,7 +82,7 @@ class VillageViewController {
   }
 
   def logoutSystem(): Unit = {
-//    authenticationActor ! Logout()
+//    authenticationActor ! Logout() //TODO non funziona niente dopo queste operazioni di logout perché l'authentication actor ha il riferimento al vecchio controller fx
 //    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
         System.exit(0)
         println("Bye!")

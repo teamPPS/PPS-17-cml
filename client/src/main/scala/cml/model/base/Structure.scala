@@ -1,12 +1,13 @@
 package cml.model.base
 
 import cml.utils.ModelConfig.Resource._
+import play.api.libs.json.Json
 
 import scala.collection.mutable
 
 /**
   * This trait defines common operations over structures
-  * @author Monica Gondolini
+  * @author Monica Gondolini, ecavina
   */
 trait Structure{
   /**
@@ -38,11 +39,11 @@ trait Structure{
   * @param farmPosition coordinates of the building in the village
   * @param farmLevel level of the building
   */
-case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
+case class Farm(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
   val food = Food(INIT_VALUE)
-  override def levelUp(): Unit = farmLevel += 1
-  override def level: Int = farmLevel
-  override def position: Position = farmPosition
+  override def levelUp(): Unit = building_level += 1
+  override def level: Int = building_level
+  override def position: Position = building_pos
   override def resource: Resource = food
 
   override def addCreature(creature: Creature): Unit = {
@@ -51,17 +52,20 @@ case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
   }
   override def creatures: mutable.MutableList[Creature] = null
 }
+object Farm {
+  implicit val farmReader = Json.format[Farm]
+}
 
 /**
   * Implementation of building structure Cave
   * @param cavePosition coordinates of the building in the village
   * @param caveLevel level of the building
   */
-case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
+case class Cave(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
   val money = Money(INIT_VALUE)
-  override def levelUp(): Unit = caveLevel += 1
-  override def level: Int = caveLevel
-  override def position: Position = cavePosition
+  override def levelUp(): Unit = building_level += 1
+  override def level: Int = building_level
+  override def position: Position = building_pos
   override def resource: Resource = money
 
   override def addCreature(creature: Creature): Unit = {
@@ -71,6 +75,9 @@ case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
   override def creatures: mutable.MutableList[Creature] = null
 }
 
+object Cave {
+  implicit val caveReader = Json.format[Cave]
+}
 
 object Habitat {
 
