@@ -40,22 +40,34 @@ class BattleViewController {
   val village: VillageMap = VillageMap.village
   var creatures: mutable.MutableList[Creature] = _
   var obs: ObservableList[Creature] = FXCollections.observableArrayList()
+  var selectedCreature: Creature = _
 
   def initialize(): Unit = {
     println("battle view")
-    for(s <- village.structures){
-      if(s.creatures != null && s.creatures.nonEmpty){
-       creatures = s.creatures
+    for (s <- village.structures) {
+      if (s.creatures != null && s.creatures.nonEmpty) {
+        creatures = s.creatures
         obs add creatures.head
       }
     }
     creatureList.setItems(obs)
-    creatureList.setCellFactory(_ => new ListCell[Creature](){
-        override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
-          super.updateItem(creature, empty)
-          if (empty || creature == null || creature.creatureType == null) setText(null)
-          else setText(creature.creatureType + " "+ creature.name)
+    creatureList.setCellFactory(_ => new ListCell[Creature]() {
+      override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
+        super.updateItem(creature, empty)
+        if (empty || creature == null || creature.creatureType == null) setText(null)
+        else setText(creature.creatureType + " " + creature.name)
       }
+    })
+
+    creatureList.setOnMouseClicked(_ => {
+      selectedCreature = creatureList.getSelectionModel.getSelectedItem
+      println(selectedCreature)
+
+      //TODO SETTARE IMAGEVIEW
+      //creatureImage setImage
+      
+      creatureArea setText "Name: " + selectedCreature.name + "\nType: "+selectedCreature.creatureType +"\n"+
+        "Creature level: " + selectedCreature.currentLevel +"\nAttack Value: " + selectedCreature.attackValue
     })
   }
 
@@ -68,7 +80,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText(creatures.toString())
+      setHeaderText("Selected Creature")
       setContentText("Are you sure want to confirm?")
     }
 
