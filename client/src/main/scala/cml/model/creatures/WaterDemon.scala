@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.WATER
+import cml.utils.ModelConfig.Creature.WATERDEMON
 
 /**
   * This class models a kraken
@@ -50,5 +51,5 @@ case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature
 
   override def name: String = creatureName
 
-  override def creatureType: String = "WaterDemon"
+  override def creatureType: String = WATERDEMON
 }

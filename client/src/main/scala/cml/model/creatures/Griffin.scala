@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.AIR
+import cml.utils.ModelConfig.Creature.GRIFFIN
 
 /**
   * This class models a griffin
@@ -41,5 +42,5 @@ case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
 
   override def name: String = creatureName
 
-  override def creatureType: String = "Griffin"
+  override def creatureType: String = GRIFFIN
 }
