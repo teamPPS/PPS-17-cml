@@ -65,9 +65,11 @@ class BattleViewController {
 
       //TODO SETTARE IMAGEVIEW
       //creatureImage setImage
-      
+
       creatureArea setText "Name: " + selectedCreature.name + "\nType: "+selectedCreature.creatureType +"\n"+
         "Creature level: " + selectedCreature.currentLevel +"\nAttack Value: " + selectedCreature.attackValue
+
+
     })
   }
 
