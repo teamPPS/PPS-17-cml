@@ -21,7 +21,7 @@
               <children>
                         <Pane fx:id="creatureViewPane" layoutX="26.0" layoutY="14.0" prefHeight="488.0" prefWidth="391.0" style="-fx-background-color: white;">
                            <children>
-                              <ImageView fx:id="creatureImage" fitHeight="196.0" fitWidth="205.0" layoutX="93.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: h;" />
+                              <ImageView fx:id="creatureImage" fitHeight="196.0" fitWidth="205.0" layoutX="93.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" />
                               <TextArea fx:id="creatureArea" editable="false" layoutX="10.0" layoutY="263.0" prefHeight="200.0" prefWidth="365.0" />
                            </children></Pane>
                         <Pane fx:id="creatureSelectionPane" layoutX="462.0" layoutY="14.0" prefHeight="495.0" prefWidth="401.0">

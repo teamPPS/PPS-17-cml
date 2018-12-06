@@ -43,6 +43,8 @@ class BattleViewController {
   var selectedCreature: Creature = _
 
   def initialize(): Unit = {
+
+    playButton setDisable true
     println("battle view")
     for (s <- village.structures) {
       if (s.creatures != null && s.creatures.nonEmpty) {
@@ -61,14 +63,13 @@ class BattleViewController {
 
     creatureList.setOnMouseClicked(_ => {
       selectedCreature = creatureList.getSelectionModel.getSelectedItem
-      println(selectedCreature)
-
       //TODO SETTARE IMAGEVIEW
       //creatureImage setImage
 
       creatureArea setText "Name: " + selectedCreature.name + "\nType: "+selectedCreature.creatureType +"\n"+
         "Creature level: " + selectedCreature.currentLevel +"\nAttack Value: " + selectedCreature.attackValue
 
+      playButton setDisable false
 
     })
   }
@@ -82,7 +83,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText("Selected Creature")
+      setHeaderText("Selected Creature: " + selectedCreature)
       setContentText("Are you sure want to confirm?")
     }
 
