@@ -3,6 +3,7 @@ package cml.controller
 import cml.controller.messages.BattleRequest._
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, ExitSuccess, RequireEnterInArenaSuccess}
 import akka.actor.{Actor, ActorRef, ActorSelection}
+import cml.controller.messages.ArenaRequest.StopRequest
 import cml.controller.messages.BattleRequest
 import cml.utils.ViewConfig.ArenaWindow
 import cml.view.ViewSwitch
@@ -31,7 +32,8 @@ class BattleActor extends Actor {
   }
 
   override def postStop(): Unit = {
-
+    //TODO: remenber actorSystem.shutdown? is correct even so (also sin stop clause )
+    println("Actor is stopped")
   }
 
   override def receive: Receive = {
@@ -45,6 +47,8 @@ class BattleActor extends Actor {
       /*challengerActor = context.actorSelection(challenger.toString())
       challenger ! HelloChallenger("Hello my challenger im " + self)*/
     case SwitchInArenaRequest() => Platform.runLater(() => switchInArena())
+    case StopRequest() =>
+      context.stop(self)
   }
 
   private def myChallenge(user: ListBuffer[ActorRef]): Unit = {

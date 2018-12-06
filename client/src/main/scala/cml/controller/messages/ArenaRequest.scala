@@ -12,5 +12,10 @@ object ArenaRequest {
 
   case class HelloChallenger(msg: String) extends ArenaRequest
 
+  /**
+    * Request for stopping Actor
+    */
+  case class StopRequest() extends ArenaRequest
+
 
 }
