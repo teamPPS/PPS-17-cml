@@ -9,9 +9,9 @@ import cml.utils.ModelConfig.Creature._
 
 trait Creature {
 
-  var currentLevel = INITIAL_LEVEL
-  val initialHp = HEALTH_POINT
-  var attackValue = ATTACK_VALUE
+  var currentLevel: Int = INITIAL_LEVEL
+  val initialHp: Int = HEALTH_POINT
+  var attackValue: Int = ATTACK_VALUE
 
   def levelUp(): Unit
   def setAttack(): Unit
@@ -25,6 +25,7 @@ trait Creature {
 
 object Creature{
   var selectedCreature: Option[Creature] = None
+  def setSelectedCreature(creature: Option[Creature]): Unit = selectedCreature = creature
 }
 
 

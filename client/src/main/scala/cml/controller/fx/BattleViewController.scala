@@ -12,16 +12,20 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import com.typesafe.config.ConfigFactory
+import javafx.application.Platform
 import javafx.collections.{FXCollections, ObservableList}
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Pane
 
 import scala.collection.mutable
 
+
+
 /**
   * Controller class for graphic battle view
   *
   * @author Chiara Volonnino
+  * @author (edited by) Monica Gondolini
   */
 
 class BattleViewController {
@@ -43,13 +47,15 @@ class BattleViewController {
   var selectedCreature: Option[Creature] = Creature.selectedCreature
 
   def initialize(): Unit = {
-    println(selectedCreature)
+
+    println("c"+villageCreatures+"---OBS"+obs)
     for (s <- village.structures) {
       if (s.creatures != null && s.creatures.nonEmpty) {
         villageCreatures = s.creatures
         obs add villageCreatures.head
       }
     }
+
     creatureList.setItems(obs)
     creatureList.setCellFactory(_ => new ListCell[Creature]() {
       override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
@@ -59,26 +65,41 @@ class BattleViewController {
       }
     })
 
+    //TODO risolvere eccezione on click se la listview è vuota
     creatureList.setOnMouseClicked(_ => {
       selectedCreature = Some(creatureList.getSelectionModel.getSelectedItem)
-      println(selectedCreature)
+      Creature.setSelectedCreature(selectedCreature)
+
       //TODO SETTARE IMAGEVIEW
       //creatureImage setImage
-
-      creatureArea setText "Name: " + selectedCreature.get.name + "\nType: "+selectedCreature.get.creatureType +"\n"+
-        "Creature level: " + selectedCreature.get.currentLevel +"\nAttack Value: " + selectedCreature.get.attackValue
-
-      playButton setDisable false
-
+      selectedCreature match{
+        case None => throw new NoSuchElementException
+        case _ => creatureArea setText displayText(selectedCreature.get.name, selectedCreature.get.creatureType,
+            selectedCreature.get.currentLevel,selectedCreature.get.attackValue)
+          playButton setDisable false
+      }
     })
   }
 
   @FXML
   def exitOption(): Unit = {
     selectedCreature = None
-    for(c <- villageCreatures) obs.removeAll(c)
-    println(villageCreatures +""+ obs)
+    Creature.setSelectedCreature(selectedCreature)
+
+    //TODO rimuovere oggetti dalla listview
+    creatureList.getItems.removeAll(obs)
+
+    for(c <- villageCreatures) obs.remove(c)
+    println(obs)
+
     creatureList.setItems(obs)
+    creatureList.setCellFactory(_ => new ListCell[Creature]() {
+      override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
+        super.updateItem(creature, empty)
+        if (empty || creature == null || creature.creatureType == null) setText(null)
+        else setText("ERRORE")
+      }
+    })
     ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
   }
 
@@ -86,7 +107,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText("Selected Creature: " + selectedCreature.get)
+      setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level)
       setContentText("Are you sure want to confirm?")
     }
 
@@ -103,6 +124,15 @@ class BattleViewController {
     val system = ActorSystem("LocalContext", config)
     val battleActor = system.actorOf(Props[BattleActor], name=Name)
     println("------ BattleActor is ready")
+  }
+
+  private def displayText(name: String, creatureType: String, level: Int, attackValue: Int): String = {
+    val text = "Name: " + selectedCreature.get.name +
+      "\nType: "+selectedCreature.get.creatureType +"\n"+
+      "Creature level: " + selectedCreature.get.currentLevel +
+      "\nAttack Value: " + selectedCreature.get.attackValue
+
+    text
   }
 
 }

@@ -1,7 +1,6 @@
 package cml.controller.fx
 
-
-import cml.controller.messages.ArenaRequest.ExitRequest
+import cml.model.base.Creature
 import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
 import javafx.fxml.FXML
@@ -17,6 +16,12 @@ import javafx.scene.control.{Alert, Button, ButtonType}
 class ArenaViewController {
 
   @FXML var exitButton: Button = _
+
+  val selectedCreature: Option[Creature] = Creature.selectedCreature
+
+  def initialize(): Unit = {
+    println("arena creature" + selectedCreature.get.name + "level " + selectedCreature.get.level)
+  }
 
   @FXML
   def pauseOption(): Unit = {
@@ -38,6 +43,7 @@ class ArenaViewController {
 
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
+      Creature.setSelectedCreature(None)
       ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
     }
   }
@@ -46,4 +52,6 @@ class ArenaViewController {
   def attackOption(): Unit = {
     println("Attack")
   }
+
+
 }
