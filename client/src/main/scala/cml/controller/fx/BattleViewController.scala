@@ -25,6 +25,11 @@ class BattleViewController {
 
   @FXML var exitButton: Button = _
 
+
+  def initialize(): Unit = {
+
+  }
+
   @FXML
   def exitOption(): Unit = {
     ViewSwitch.activate(VillageWindow.path, exitButton.getScene)

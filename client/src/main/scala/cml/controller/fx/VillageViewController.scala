@@ -2,10 +2,9 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
-import cml.model.base.Creature
-import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
+import cml.controller.messages.VillageRequest.EnterVillage
 import cml.utils.ViewConfig._
+import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
