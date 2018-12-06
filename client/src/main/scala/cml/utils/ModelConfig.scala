@@ -48,6 +48,15 @@ object ModelConfig {
     val HABITAT: String = "cml.model.base.Habitat$Habitat"
   }
 
+  object StructureType{
+    val FARM: String = "FARM"
+    val CAVE: String = "CAVE"
+    val FIRE_HABITAT: String = "FIRE_HABITAT"
+    val WATER_HABITAT: String = "WATER_HABITAT"
+    val EARTH_HABITAT: String = "EARTH_HABITAT"
+    val AIR_HABITAT: String = "AIR_HABITAT"
+  }
+
   object CreatureImage {
     val dragonImage: Image = new Image(getClass.getClassLoader.getResource("image/dragon.png").toString, false)
     val golemImage: Image = new Image(getClass.getClassLoader.getResource("image/golem.png").toString, false)
