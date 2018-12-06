@@ -68,8 +68,8 @@ object Setup {
 object BaseGridInitializer extends GridInitializer {
 
   private def setupGrid(grid: GridPane, setup: Setup): Unit = {
-    grid setHgap 0
-    grid setVgap 0
+    grid setHgap 10
+    grid setVgap 10
     setup.configure(grid)
   }
 

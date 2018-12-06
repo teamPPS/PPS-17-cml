@@ -26,11 +26,16 @@ class BattleViewController {
 
   @FXML var exitButton: Button = _
 
-  val village = VillageMap.village
+  val village: VillageMap = VillageMap.village
 
   def initialize(): Unit = {
     println("battle view")
     println(village.structures)
+    for(s <- village.structures){
+      if(s.creatures != null && s.creatures.nonEmpty){
+        println(s.creatures)
+      }
+    }
   }
 
   @FXML
