@@ -8,12 +8,13 @@ import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
 import cml.model.base.{Creature, VillageMap}
 import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
+import cml.view.utils.TileConfig.getClass
 import com.typesafe.config.ConfigFactory
 import javafx.collections.{FXCollections, ObservableList}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ListView, _}
-import javafx.scene.image.ImageView
+import javafx.scene.image.{Image, ImageView}
 import javafx.scene.layout.Pane
 
 import scala.collection.mutable
@@ -62,13 +63,15 @@ class BattleViewController {
       }
     })
 
-    //TODO risolvere eccezione on click se la listview è vuota
     creatureList.setOnMouseClicked(_ => {
       selectedCreature = Some(creatureList.getSelectionModel.getSelectedItem)
       Creature.setSelectedCreature(selectedCreature)
 
       //TODO SETTARE IMAGEVIEW
-      //creatureImage setImage
+      selectedCreature.get.creatureType match {
+        case 
+      }
+      creatureImage setImage new Image(getClass.getClassLoader.getResource("image/dragon.png").toString, false)
       selectedCreature match{
         case None => throw new NoSuchElementException
         case _ =>
