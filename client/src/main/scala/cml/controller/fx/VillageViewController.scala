@@ -28,9 +28,8 @@ class VillageViewController {
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
-  val villageActor: ActorSelection = system actorSelection "/user/VillageActor" //da mettere in handler dopo il merge
+  val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
   val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
-  //per ogni cambiamento del model manda un messaggio di update villageActor ! UpdateVillage(json)
 
   def initialize(): Unit = {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
@@ -38,11 +37,8 @@ class VillageViewController {
     logoutMenuItem setOnAction (_ => logoutSystem() )
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
-    //mando msg a villaggio passando il modello e il controller
     println("village view init")
     villageActor ! EnterVillage(this)
-
-    setGridAndHandlers()
 
   }
 
