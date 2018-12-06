@@ -1,7 +1,5 @@
 package cml.controller.messages
 
-import java.io.Serializable
-
 /**
   * Battle request messages
   *

@@ -5,8 +5,10 @@ import java.io.File
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, ExitSuccess, RequireEnterInArenaSuccess}
 import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
-import akka.actor.{Actor, ActorSelection, ActorSystem, Props}
+import akka.actor.{Actor, ActorRef, ActorSelection, ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * This class implements battle actor and managements user battle
@@ -17,6 +19,7 @@ import com.typesafe.config.ConfigFactory
 class BattleActor extends Actor {
 
   var remoteActor: ActorSelection = _
+  var challenger: ActorRef = _
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
@@ -32,10 +35,20 @@ class BattleActor extends Actor {
     case RequireEnterInArenaSuccess() =>
       println("Your request is success delivery")
       remoteActor ! ExistChallenger()
-    case ExistChallengerSuccess(exist, user) =>
-      if (exist) remoteActor ! ExitRequest()
-      println("response . " + exist + "user in list" + user)
-    case ExitSuccess() => println("Exit success delivery")
+    case ExistChallengerSuccess(user) =>
+      remoteActor ! ExitRequest()
+      println("user in list - " + user)
+      myChallenge(user)
+
+  }
+
+  private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
+    user.foreach(actor => {
+      if(!actor.equals(self)) {
+        challenger = actor
+        println("Im user: " + self + " and my challenger is - " + challenger)
+      }
+    })
   }
 
 }

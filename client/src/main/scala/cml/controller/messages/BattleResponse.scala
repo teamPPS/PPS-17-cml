@@ -1,6 +1,7 @@
 package cml.controller.messages
 
-import java.io.Serializable
+import akka.actor.ActorRef
+import scala.collection.mutable.ListBuffer
 
 /**
   * Battle response message
@@ -25,7 +26,7 @@ object BattleResponse {
     * @param exist response true if exist challenger
     * @param user user list for battle
     */
-  case class ExistChallengerSuccess(exist: Boolean, user: Int) extends BattleResponse
+  case class ExistChallengerSuccess(user: ListBuffer[ActorRef]) extends BattleResponse
 
   /**
     * Success response for delete user into a list of wait challenger

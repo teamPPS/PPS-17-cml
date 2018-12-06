@@ -15,39 +15,30 @@ import scala.collection.mutable.ListBuffer
   * @author Chiara Volonnino
   */
 
-
-// potenzialmente da spostare in server
 class RemoteActor extends Actor {
 
-  var battleUserList = new ListBuffer[Int] // sarebbe figo fare una lista di user
+  //var battleUserList = new ListBuffer[Int] // sarebbe figo fare una lista di user
   var actorInList = new ListBuffer[ActorRef]
 
   override def receive: Receive = {
     case RequireEnterInArena() =>
-      addIntoBattleUserList(sender.hashCode)
-      actorInList += sender
-      println("Actor List" + actorInList )
+      addIntoBattleUserList(sender)
       sender ! RequireEnterInArenaSuccess()
     case ExistChallenger() =>
       val exist = existChallenger()
-      if (exist)
-        actorInList.foreach(actor => userList_().foreach(user => actor ! ExistChallengerSuccess(exist, user)))
+      if (exist) actorInList.foreach(actor => actor ! ExistChallengerSuccess(actorInList))
     case ExitRequest() =>
-      removeIntoBattleUserList(sender.hashCode)
-      actorInList-=sender
-      println("Actor List" + actorInList )
-      println("receive exit request by actor --> " + sender().hashCode())
-      sender ! ExitSuccess()
+      removeIntoBattleUserList(sender)
     case _ => println("WARNING: RemoteActor has not receive anything")
   }
 
-  private def addIntoBattleUserList(actorIdentity: Int){
-    battleUserList += actorIdentity
+  private def addIntoBattleUserList(actorIdentity: ActorRef){
+    actorInList += actorIdentity
     println("LIST add --> " + userList_ )
   }
 
-  private def removeIntoBattleUserList(actorIdentity: Int) {
-    battleUserList -= actorIdentity
+  private def removeIntoBattleUserList(actorIdentity: ActorRef) {
+    actorInList -= actorIdentity
     println("LIST remove --> " + userList_)
   }
 
@@ -56,8 +47,8 @@ class RemoteActor extends Actor {
     else false
   }
 
-  private def userList_(): ListBuffer[Int] ={
-    battleUserList
+  private def userList_(): ListBuffer[ActorRef] ={
+    actorInList
   }
 }
 
