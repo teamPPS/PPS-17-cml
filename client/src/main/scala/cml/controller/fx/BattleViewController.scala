@@ -47,13 +47,16 @@ class BattleViewController {
       if(s.creatures != null && s.creatures.nonEmpty){
        creatures = s.creatures
         obs add creatures.head
-        println(obs)
       }
     }
-    creatureList = new ListView[Creature](obs)
-//    creatureList.setCellFactory(_ => new ListCell[Creature](){
-//        override protected updateItem()
-//    })
+    creatureList.setItems(obs)
+    creatureList.setCellFactory(_ => new ListCell[Creature](){
+        override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
+          super.updateItem(creature, empty)
+          if (empty || creature == null || creature.creatureType == null) setText(null)
+          else setText(creature.creatureType + " "+ creature.name)
+      }
+    })
   }
 
   @FXML
