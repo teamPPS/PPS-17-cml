@@ -10,7 +10,7 @@ import cml.utils.ModelConfig.Elements.WATER
   * @author Filippo Portolani
   */
 
-case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
+case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature {
 
   val _element : String = WATER
 
@@ -50,5 +50,5 @@ case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
 
   override def name: String = creatureName
 
-  override def creatureType: String = "Kraken"
+  override def creatureType: String = "WaterDemon"
 }

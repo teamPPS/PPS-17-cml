@@ -19,7 +19,6 @@ import javafx.scene.layout.Pane
 import scala.collection.mutable
 
 
-
 /**
   * Controller class for graphic battle view
   *

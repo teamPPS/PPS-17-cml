@@ -1,7 +1,7 @@
 package cml.model.static_model
 
 import cml.model.base.Creature
-import cml.model.creatures.{Dragon, Golem, Griffin, Kraken}
+import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
 import cml.utils.ModelConfig.Creature._
 
 /**
@@ -15,7 +15,7 @@ object StaticCreaturesList {
     Dragon(DRAGON_NAME,INITIAL_LEVEL),
     Golem(GOLEM_NAME,INITIAL_LEVEL),
     Griffin(GRIFFIN_NAME, INITIAL_LEVEL),
-    Kraken(KRAKEN_NAME,INITIAL_LEVEL)
+    WaterDemon(KRAKEN_NAME,INITIAL_LEVEL)
   )
 
 }
