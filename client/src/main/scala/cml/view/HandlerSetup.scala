@@ -44,8 +44,8 @@ trait Handler {
 object Handler {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
-  val village = VillageMap(structures)
+//  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
+  val village: VillageMap = VillageMap.village
   val price = 30 //prezzo iniziale deve essere globale ?
 
   val handleVillage: Handler = {
@@ -78,10 +78,11 @@ object Handler {
               s.addCreature(creature getCreature)
               villageActor ! UpdateVillage(creature json)
               c.addCreatureButton setDisable true
+              c.battleButton setDisable false
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
           } else {
-            c.levelUpButton setDisable false //TODO se terrain disabilitare
+            c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => {
               val upgrade = StructureUpgrade(s)
               villageActor ! UpdateVillage(upgrade structureJson)

@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.EARTH
+import cml.utils.ModelConfig.Creature.GOLEM
 
 /**
   * This class models a golem
@@ -45,5 +46,5 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
 
   override def name: String = creatureName
 
-  override def creatureType: String = "Golem"
+  override def creatureType: String = GOLEM
 }

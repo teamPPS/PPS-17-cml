@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.FIRE
+import cml.utils.ModelConfig.Creature.DRAGON
 
 /**
   * This class models a dragon
@@ -68,5 +69,5 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
 
   override def name: String = creatureName
 
-  override def creatureType: String = "Dragon"
+  override def creatureType: String = DRAGON
 }

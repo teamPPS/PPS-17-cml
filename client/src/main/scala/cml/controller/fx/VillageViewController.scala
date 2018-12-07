@@ -2,10 +2,9 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-import cml.controller.messages.VillageRequest.{EnterVillage, Logout}
-import cml.model.base.Creature
-import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
+import cml.controller.messages.VillageRequest.EnterVillage
 import cml.utils.ViewConfig._
+import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
@@ -22,7 +21,6 @@ class VillageViewController {
   @FXML var levelUpButton: Button = _
   @FXML var takeButton: Button = _
   @FXML var addCreatureButton: Button = _
-  @FXML var creatureList: ListView[Creature] = _
   @FXML var upgradePane: Pane = _
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
@@ -30,9 +28,8 @@ class VillageViewController {
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
-  val villageActor: ActorSelection = system actorSelection "/user/VillageActor" //da mettere in handler dopo il merge
+  val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
   val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
-  //per ogni cambiamento del model manda un messaggio di update villageActor ! UpdateVillage(json)
 
   def initialize(): Unit = {
     settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
@@ -40,7 +37,6 @@ class VillageViewController {
     logoutMenuItem setOnAction (_ => logoutSystem() )
     battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
-    //mando msg a villaggio passando il modello e il controller
     println("village view init")
     villageActor ! EnterVillage(this)
 
