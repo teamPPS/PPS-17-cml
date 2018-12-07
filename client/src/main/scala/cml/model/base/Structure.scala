@@ -90,16 +90,18 @@ object Habitat {
     * @param habitatPosition coordinates of the habitat in the village
     * @param habitatLevel    level of the habitat
     */
-  case class Habitat(habitatElement: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
+  case class Habitat(element: String, habitat_pos: Position, var habitat_level: Int) extends Structure {
     var creatureList: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
-    override def levelUp(): Unit = habitatLevel += 1
-    override def level: Int = habitatLevel
-    override def position: Position = habitatPosition
+    override def levelUp(): Unit = habitat_level += 1
+    override def level: Int = habitat_level
+    override def position: Position = habitat_pos
     override def resource: Resource = money
     override def addCreature(creature: Creature): Unit = creatureList += creature
     override def creatures: mutable.MutableList[Creature] = creatureList
   }
+
+  implicit val habitatReader = Json.format[Habitat]
 
 }
 

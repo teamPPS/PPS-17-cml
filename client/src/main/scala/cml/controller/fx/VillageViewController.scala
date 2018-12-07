@@ -3,7 +3,9 @@ package cml.controller.fx
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.EnterVillage
+import cml.model.base.Habitat.Habitat
 import cml.model.base._
+import cml.model.creatures.{Dragon, Griffin}
 import cml.schema.Village
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
@@ -56,9 +58,9 @@ class VillageViewController {
     val food = (json \ Village.FOOD_FIELD).get.toString().toInt
     val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
 
-    val buildings = (json \\ "building").map(_.as[JsObject])
+    val buildings = (json \\ Village.SINGLE_BUILDING_FIELD).map(_.as[JsObject])
     VillageMap.initVillage(mutable.MutableList[Structure](), gold, food, villageName)
-    for(
+    for (
       building <- buildings;
       buildType <- building \\ Village.BUILDING_TYPE_FIELD;
       specificStructure = buildType.as[String] match {
@@ -66,9 +68,22 @@ class VillageViewController {
         case "FARM" => building.as[Farm]
       }
     ) yield VillageMap.instance().get.villageStructure += specificStructure
-    println(VillageMap.instance().get.villageStructure)
+    println("Buildings ricevute dal server: " + VillageMap.instance().get.villageStructure)
 
-    val habitats = (json \\ "habitat").map(_.as[JsObject])
+    val habitats = (json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])
+    for (
+      habitat <- habitats;
+      specificHabitat = habitat.as[Habitat]
+//      creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject])
+//      specificCreature = (creature \ Village.CREATURE_TYPE_FIELD).as[String] match {
+//        case "Dragon" => creature.as[Dragon]
+//      }
+    ) yield {
+//      specificHabitat.creatureList += specificCreature
+//      println(specificHabitat.creatureList)
+      VillageMap.instance().get.villageStructure += specificHabitat
+    }
+    println("Buildings e Habitat ricevuti dal server: " + VillageMap.instance().get.villageStructure)
 
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
