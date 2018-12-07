@@ -21,8 +21,8 @@ class ResourceProductionTest extends FunSuite{
     val timer = new Timer()
     val task = new TimerTask {
       def run(): Unit = {
-        farm.food.inc(farm.farmLevel)
-        cave.money.inc(cave.caveLevel)
+        farm.food.inc(farm.building_level)
+        cave.money.inc(cave.building_level)
         habitat.money.inc(habitat.level)
 //        println("farm food "+  farm.food.foodAmount +
 //          " cave money " + cave.money.amount
@@ -41,8 +41,8 @@ class ResourceProductionTest extends FunSuite{
     val habitat = Habitat(AIR,Position(100,100), B_INIT_LEVEL)
 
     for(i <- 1 to 10){
-      farm.food.inc(farm.farmLevel)
-      cave.money.inc(cave.caveLevel)
+      farm.food.inc(farm.building_level)
+      cave.money.inc(cave.building_level)
       habitat.money.inc(habitat.level)
     }
 
