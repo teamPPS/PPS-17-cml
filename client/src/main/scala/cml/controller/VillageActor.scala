@@ -43,7 +43,7 @@ class VillageActor() extends Actor{
         case Success(httpResponse) =>
           httpResponse match {
             case "Not a valid request" => println("Failure entering in village")
-            case _ => Platform.runLater(() => controller.setGridAndHandlers())
+            case _ => Platform.runLater(() => controller.setGridAndHandlers(httpResponse))
           }
         case Failure(exception) => authenticationActor ! VillageFailure(enterFailure)
       }

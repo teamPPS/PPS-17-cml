@@ -3,12 +3,13 @@ package cml.model.creatures
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.WATER
 import cml.utils.ModelConfig.Creature.WATERDEMON
+import play.api.libs.json.Json
 
 /**
-  * This class models a kraken
-  * @param creatureName name of the kraken
-  * @param creatureLevel set the kraken level
-  * @author Filippo Portolani
+  * This class models a Water Demon
+  * @param creatureName name of the Water Demon
+  * @param creatureLevel set the Water Demon level
+  * @author Filippo Portolani, (edited by) ecavina
   */
 
 case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature {
@@ -53,3 +54,8 @@ case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature
 
   override def creatureType: String = WATERDEMON
 }
+
+object WaterDemon {
+  implicit val reader = Json.format[WaterDemon]
+}
+

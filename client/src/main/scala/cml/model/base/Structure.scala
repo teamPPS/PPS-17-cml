@@ -1,12 +1,13 @@
 package cml.model.base
 
 import cml.utils.ModelConfig.Resource._
+import play.api.libs.json.Json
 
 import scala.collection.mutable
 
 /**
   * This trait defines common operations over structures
-  * @author Monica Gondolini
+  * @author Monica Gondolini, ecavina
   */
 trait Structure{
   /**
@@ -31,7 +32,7 @@ trait Structure{
 
   def addCreature(creature: Creature): Unit
   def creatures: mutable.MutableList[Creature]
-  def element: String
+  def habitatElement: String
 }
 
 /**
@@ -39,11 +40,11 @@ trait Structure{
   * @param farmPosition coordinates of the building in the village
   * @param farmLevel level of the building
   */
-case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
+case class Farm(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
   val food = Food(INIT_VALUE)
-  override def levelUp(): Unit = farmLevel += 1
-  override def level: Int = farmLevel
-  override def position: Position = farmPosition
+  override def levelUp(): Unit = building_level += 1
+  override def level: Int = building_level
+  override def position: Position = building_pos
   override def resource: Resource = food
 
   override def addCreature(creature: Creature): Unit = {
@@ -51,7 +52,10 @@ case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
       throw new NoSuchElementException
   }
   override def creatures: mutable.MutableList[Creature] = null
-  override def element: String = "Not an habitat"
+  override def habitatElement: String = "Not an habitat"
+}
+object Farm {
+  implicit val farmReader = Json.format[Farm]
 }
 
 /**
@@ -59,11 +63,11 @@ case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
   * @param cavePosition coordinates of the building in the village
   * @param caveLevel level of the building
   */
-case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
+case class Cave(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
   val money = Money(INIT_VALUE)
-  override def levelUp(): Unit = caveLevel += 1
-  override def level: Int = caveLevel
-  override def position: Position = cavePosition
+  override def levelUp(): Unit = building_level += 1
+  override def level: Int = building_level
+  override def position: Position = building_pos
   override def resource: Resource = money
 
   override def addCreature(creature: Creature): Unit = {
@@ -71,9 +75,12 @@ case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
       throw new NoSuchElementException
   }
   override def creatures: mutable.MutableList[Creature] = null
-  override def element: String = "Not an habitat"
+  override def habitatElement: String = "Not an habitat"
 }
 
+object Cave {
+  implicit val caveReader = Json.format[Cave]
+}
 
 object Habitat {
 
@@ -86,17 +93,19 @@ object Habitat {
     * @param habitatPosition coordinates of the habitat in the village
     * @param habitatLevel    level of the habitat
     */
-  case class Habitat(habitatElement: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
+  case class Habitat(element: String, habitat_pos: Position, var habitat_level: Int) extends Structure {
     var creatureList: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
     val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
-    override def levelUp(): Unit = habitatLevel += 1
-    override def level: Int = habitatLevel
-    override def position: Position = habitatPosition
+    override def levelUp(): Unit = habitat_level += 1
+    override def level: Int = habitat_level
+    override def position: Position = habitat_pos
     override def resource: Resource = money
     override def addCreature(creature: Creature): Unit = creatureList += creature
     override def creatures: mutable.MutableList[Creature] = creatureList
-    override def element: String = habitatElement
+    override def habitatElement: String = element
   }
+
+  implicit val habitatReader = Json.format[Habitat]
 
 }
 

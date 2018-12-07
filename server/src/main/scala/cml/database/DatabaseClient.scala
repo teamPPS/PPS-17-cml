@@ -89,7 +89,7 @@ object DatabaseClient {
 
     override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
       val future = collection.insertOne(document).toFuture()
-      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
@@ -99,7 +99,7 @@ object DatabaseClient {
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
       val future = collection.updateOne(document,Document("$set"-> update)).toFuture()
-      future map(_.getMatchedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
@@ -108,17 +108,17 @@ object DatabaseClient {
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
       val future = collection.insertMany(documents).toFuture()
-      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
       val future = collection.deleteMany(documents).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_ => {}) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
       val future = collection.updateMany(document,update).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
+      future map(_ => {}) recoverWith{case e: Throwable => println(e); Future.failed(e)}
     }
   }
 }

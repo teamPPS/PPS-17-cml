@@ -3,15 +3,16 @@ package cml.model.creatures
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.FIRE
 import cml.utils.ModelConfig.Creature.DRAGON
+import play.api.libs.json.Json
 
 /**
   * This class models a dragon
   * @param creatureName name of the dragon
   * @param creatureLevel set the dragon level
-  * @author Filippo Portolani
+  * @author Filippo Portolani, (edited by) ecavina
   */
 
-case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
+case class Dragon(creature_name: String, creature_level: Int) extends Creature{
 
   val _element : String = FIRE
 
@@ -63,11 +64,15 @@ case class Dragon(creatureName: String, creatureLevel: Int) extends Creature{
     */
 
   override def currentLevel_ : Unit = {
-    currentLevel = creatureLevel
+    currentLevel = creature_level
     setAttack()
   }
 
-  override def name: String = creatureName
+  override def name: String = creature_name
 
   override def creatureType: String = DRAGON
+}
+
+object Dragon {
+  implicit val reader = Json.format[Dragon]
 }

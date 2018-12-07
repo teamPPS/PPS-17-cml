@@ -21,7 +21,7 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
   private var creature: Creature = _
   private var creatureJson: JsValue = _
 
-  s.element match {
+  s.habitatElement match {
     case FIRE =>
       creature = Dragon(DRAGON_NAME,INITIAL_LEVEL)
       creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL).json //passare anche il tipo drago/kraken ecc ?

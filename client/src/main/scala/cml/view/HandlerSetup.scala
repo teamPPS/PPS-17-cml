@@ -44,8 +44,7 @@ trait Handler {
 object Handler {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-//  val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
-  val village: VillageMap = VillageMap.village
+  val village: VillageMap = VillageMap.instance().get
   val price = 30 //prezzo iniziale deve essere globale ?
 
   val handleVillage: Handler = {
@@ -68,7 +67,7 @@ object Handler {
       disableButtons(c)
       c.selectionInfo setText "Coordinates (" + x + ", " + y + ")"
 
-      for (s <- village.structures) {
+      for (s <- village.villageStructure) {
         if (s.position equals Position(x, y)) {
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
@@ -148,7 +147,7 @@ object Handler {
 
       val structure = StaticStructure(newTile, x, y)
       val json = structure.json
-      village.structures += structure.getStructure
+      village.villageStructure += structure.getStructure
       villageActor ! UpdateVillage(json)
 
       //Decremento denaro in base al prezzo, update modello remoto e locale
@@ -187,7 +186,7 @@ object Handler {
     s.getClass.getName match {
       case FARM => name = "FARM"
       case CAVE => name = "CAVE"
-      case HABITAT => name = "HABITAT - Element: " + s.element
+      case HABITAT => name = "HABITAT - Element: " + s.habitatElement
     }
     name
   }

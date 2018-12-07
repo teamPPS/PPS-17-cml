@@ -45,14 +45,14 @@ class BattleViewController {
   @FXML var creatureArea: TextArea = _
   @FXML var playButton: Button = _
 
-  val village: VillageMap = VillageMap.village
+  val village: VillageMap = VillageMap.instance().get
   var creatures: mutable.MutableList[Creature] = _
   var obsCreatures: ObservableList[Creature] = FXCollections.observableArrayList()
   var selectedCreature: Option[Creature] = Creature.selectedCreature
 
   def initialize(): Unit = {
 
-    for (s <- village.structures) {
+    for (s <- village.villageStructure) {
       if (s.creatures != null && s.creatures.nonEmpty) {
         creatures = s.creatures
         obsCreatures add creatures.head

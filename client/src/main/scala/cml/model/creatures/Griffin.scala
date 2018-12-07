@@ -3,6 +3,7 @@ package cml.model.creatures
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.AIR
 import cml.utils.ModelConfig.Creature.GRIFFIN
+import play.api.libs.json.Json
 
 /**
   * This class models a griffin
@@ -44,3 +45,8 @@ case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
 
   override def creatureType: String = GRIFFIN
 }
+
+object Griffin {
+  implicit val reader = Json.format[Griffin]
+}
+
