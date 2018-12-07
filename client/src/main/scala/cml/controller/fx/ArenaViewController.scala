@@ -1,5 +1,6 @@
 package cml.controller.fx
 
+
 import cml.model.base.Creature
 import cml.utils.ViewConfig._
 import cml.view.ViewSwitch

@@ -12,6 +12,8 @@ import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
 import com.typesafe.config.ConfigFactory
 import javafx.collections.{FXCollections, ObservableList}
+import akka.actor.{ActorRef, ActorSystem, Props}
+import cml.controller.messages.BattleRequest.SceneInfo
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ListView, _}
@@ -29,6 +31,8 @@ import scala.collection.mutable
   */
 
 class BattleViewController {
+
+  var battleActor: ActorRef = _
 
   import java.util.Locale
   Locale.setDefault(Locale.ENGLISH)
@@ -96,15 +100,17 @@ class BattleViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       createBattleActor()
-      ViewSwitch.activate(ArenaWindow.path, exitButton.getScene)
+      println("context --- > " + exitButton.getScene )
+      battleActor ! SceneInfo(exitButton.getScene)
     }
+    //TODO: add progress indicator
   }
 
   private def createBattleActor(): Unit ={
     val configFile = getClass.getClassLoader.getResource(Path).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem("LocalContext", config)
-    val battleActor = system.actorOf(Props[BattleActor], name=Name)
+    battleActor = system.actorOf(Props[BattleActor], name=Name)
     println("------ BattleActor is ready")
   }
 

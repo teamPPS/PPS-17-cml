@@ -13,13 +13,13 @@ import scala.util.{Failure, Success}
   * Launcher of all Verticle Services
   *
   * @author ecavina
+  * @author (modified by) Chiara Volonnino
   */
 
 object ServerMain extends App {
 
   var vertx = Vertx.vertx()
 
-  //vertx.deployVerticle(ScalaVerticle.nameForVerticle[AuthenticationVerticle])
   vertx.deployVerticleFuture(AuthenticationVerticle()).onComplete {
     case Success(_) =>
       println(s"Verticle authentication starting") // <3>
