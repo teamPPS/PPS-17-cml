@@ -5,7 +5,7 @@ import cml.controller.actor.utils.AppActorSystem.system
 import cml.controller.messages.VillageRequest.EnterVillage
 import cml.model.base.Habitat.Habitat
 import cml.model.base._
-import cml.model.creatures.{Dragon, Griffin}
+import cml.model.creatures.{Dragon, Golem, Griffin, Kraken}
 import cml.schema.Village
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
@@ -73,14 +73,16 @@ class VillageViewController {
     val habitats = (json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])
     for (
       habitat <- habitats;
-      specificHabitat = habitat.as[Habitat]
-//      creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject])
-//      specificCreature = (creature \ Village.CREATURE_TYPE_FIELD).as[String] match {
-//        case "Dragon" => creature.as[Dragon]
-//      }
+      specificHabitat = habitat.as[Habitat];
+      creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]);
+      creatureType <- creature \\ Village.CREATURE_TYPE_FIELD;
+      specificCreature = creatureType.as[String] match {
+        case "Dragon" => creature.as[Dragon]
+        case "Golem" => creature.as[Golem]
+        case "Griffin" => creature.as[Griffin]
+        case "Kraken" => creature.as[Kraken]
+      }
     ) yield {
-//      specificHabitat.creatureList += specificCreature
-//      println(specificHabitat.creatureList)
       VillageMap.instance().get.villageStructure += specificHabitat
     }
     println("Buildings e Habitat ricevuti dal server: " + VillageMap.instance().get.villageStructure)

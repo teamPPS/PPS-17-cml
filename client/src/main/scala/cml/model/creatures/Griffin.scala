@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.AIR
+import play.api.libs.json.Json
 
 /**
   * This class models a griffin
@@ -35,3 +36,8 @@ case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
     setAttack()
   }
 }
+
+object Griffin {
+  implicit val reader = Json.format[Griffin]
+}
+

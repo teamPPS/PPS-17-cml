@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.WATER
+import play.api.libs.json.Json
 
 /**
   * This class models a kraken
@@ -48,3 +49,8 @@ case class Kraken(creatureName: String, creatureLevel: Int) extends Creature {
   }
 
 }
+
+object Kraken {
+  implicit val reader = Json.format[Kraken]
+}
+

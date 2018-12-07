@@ -55,5 +55,5 @@ case class Dragon(creature_name: String, creature_level: Int) extends Creature{
 }
 
 object Dragon {
-  implicit val dragonReader = Json.format[Dragon]
+  implicit val reader = Json.format[Dragon]
 }

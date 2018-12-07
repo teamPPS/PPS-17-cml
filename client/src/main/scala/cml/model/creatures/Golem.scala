@@ -2,6 +2,7 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.EARTH
+import play.api.libs.json.Json
 
 /**
   * This class models a golem
@@ -39,3 +40,8 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
     setAttack()
   }
 }
+
+object Golem {
+  implicit val reader = Json.format[Golem]
+}
+
