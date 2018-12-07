@@ -17,14 +17,14 @@
       <center>
         <ScrollPane prefHeight="343.0" prefWidth="600.0">
           <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="542.0" prefWidth="899.0">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="541.0" prefWidth="898.0">
               <children>
-                        <Pane fx:id="creatureViewPane" layoutX="26.0" layoutY="14.0" prefHeight="488.0" prefWidth="391.0" style="-fx-background-color: white;">
+                        <Pane fx:id="creatureViewPane" layoutX="26.0" layoutY="28.0" prefHeight="474.0" prefWidth="391.0" style="-fx-background-color: white;">
                            <children>
                               <ImageView fx:id="creatureImage" fitHeight="196.0" fitWidth="205.0" layoutX="93.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" />
-                              <TextArea fx:id="creatureArea" editable="false" layoutX="10.0" layoutY="263.0" prefHeight="200.0" prefWidth="365.0" />
+                              <TextArea fx:id="creatureArea" editable="false" layoutX="10.0" layoutY="279.0" prefHeight="184.0" prefWidth="365.0" />
                            </children></Pane>
-                        <Pane fx:id="creatureSelectionPane" layoutX="462.0" layoutY="14.0" prefHeight="495.0" prefWidth="401.0">
+                        <Pane fx:id="creatureSelectionPane" layoutX="462.0" layoutY="14.0" prefHeight="495.0" prefWidth="353.0">
                            <children>
                       <Button fx:id="playButton" disable="true" layoutX="120.0" layoutY="410.0" mnemonicParsing="false" onAction="#creatureOption" prefHeight="71.0" prefWidth="161.0" text="Play" />
                                <ListView fx:id="creatureList" layoutX="24.0" layoutY="16.0" prefHeight="370.0" prefWidth="345.0" />
