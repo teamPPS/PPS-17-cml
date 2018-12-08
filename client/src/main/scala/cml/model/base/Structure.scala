@@ -54,6 +54,7 @@ case class Farm(building_pos: Position, var building_level: Int) extends Structu
   override def creatures: mutable.MutableList[Creature] = null
   override def habitatElement: String = "Not an habitat"
 }
+
 object Farm {
   implicit val farmReader = Json.format[Farm]
 }

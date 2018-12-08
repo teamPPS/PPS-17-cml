@@ -20,8 +20,6 @@ object ModelConfig {
 
   object Building {
     val B_INIT_LEVEL: Int = 1
-    val TYPE_FARM: String = "Farm"
-    val TYPE_CAVE: String = "Cave"
   }
 
   object Habitat{
