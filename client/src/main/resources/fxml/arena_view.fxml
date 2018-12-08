@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="cml.controller.fx.ArenaViewController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cml.controller.fx.ArenaViewController">
   <children>
     <BorderPane prefHeight="694.0" prefWidth="1064.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <bottom>
@@ -33,7 +33,7 @@
       <center>
         <Pane prefHeight="446.0" prefWidth="757.0" BorderPane.alignment="CENTER">
           <children>
-            <ImageView fx:id="exitArenaButton" fitHeight="410.4375" fitWidth="700.4800239651942" layoutX="8.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="exitArenaButton" fitHeight="410.4375" fitWidth="700.4800239651942" pickOnBounds="true" preserveRatio="true">
               <image>
                 <Image url="@../image/arena_background.png" />
               </image>
@@ -42,11 +42,16 @@
         </Pane>
       </center>
       <left>
-        <Button fx:id="attackButton" mnemonicParsing="false" onAction="#attackOption" prefHeight="40.0" prefWidth="100.0" text="Attack" BorderPane.alignment="CENTER">
-          <BorderPane.margin>
-            <Insets left="40.0" right="40.0" />
-          </BorderPane.margin>
-        </Button>
+            <Pane prefHeight="368.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="40.0" right="40.0" />
+               </BorderPane.margin>
+               <children>
+                  <Button fx:id="chargeButton" layoutY="196.0" mnemonicParsing="false" onAction="#chargeOption" prefHeight="40.0" prefWidth="100.0" text="Charge" />
+              <Button fx:id="attackButton" layoutY="144.0" mnemonicParsing="false" onAction="#attackOption" prefHeight="40.0" prefWidth="100.0" text="Attack" />
+                  <Button fx:id="protectionButton" layoutY="249.0" mnemonicParsing="false" onAction="#protectionOption" prefHeight="40.0" prefWidth="100.0" text="Protection" />
+               </children>
+            </Pane>
       </left>
       <top>
         <VBox prefHeight="99.0" prefWidth="900.0">

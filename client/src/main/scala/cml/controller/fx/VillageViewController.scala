@@ -5,7 +5,7 @@ import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.controller.messages.VillageRequest.EnterVillage
 import cml.model.base.Habitat.Habitat
 import cml.model.base._
-import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
+import cml.model.creatures.{Creatures, Golem, Griffin, WaterDemon}
 import cml.schema.Village
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
@@ -79,7 +79,7 @@ class VillageViewController {
       creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]);
       creatureType <- creature \\ Village.CREATURE_TYPE_FIELD;
       specificCreature = creatureType.as[String] match {
-        case "Dragon" => creature.as[Dragon]
+        case "Dragon" => creature.as[Creatures]
         case "Golem" => creature.as[Golem]
         case "Griffin" => creature.as[Griffin]
         case "WaterDemon" => creature.as[WaterDemon]

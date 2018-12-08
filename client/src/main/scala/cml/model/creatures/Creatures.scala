@@ -9,10 +9,11 @@ import play.api.libs.json.Json
   * This class models a dragon
   * @param creatureName name of the dragon
   * @param creatureLevel set the dragon level
+  *
   * @author Filippo Portolani, (edited by) ecavina
   */
 
-case class Dragon(creature_name: String, creature_level: Int) extends Creature{
+case class Creatures(creature_name: String, creature_level: Int) extends Creature{
 
   val _element : String = FIRE
 
@@ -28,7 +29,7 @@ case class Dragon(creature_name: String, creature_level: Int) extends Creature{
   /**
     * This method behaves differently based on the creature level
     */
-
+  //TODO: non serve
   override def setAttack() : Unit = {
     currentLevel match {
       case 10 => attackValue += 10
@@ -56,7 +57,6 @@ case class Dragon(creature_name: String, creature_level: Int) extends Creature{
     * This is a getter of the dragon attack power
     * @return the current attach value
     */
-
   override def attackPower: Int = attackValue
 
   /**
@@ -73,6 +73,6 @@ case class Dragon(creature_name: String, creature_level: Int) extends Creature{
   override def creatureType: String = DRAGON
 }
 
-object Dragon {
-  implicit val reader = Json.format[Dragon]
+object Creatures {
+  implicit val reader = Json.format[Creatures]
 }

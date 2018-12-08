@@ -1,6 +1,6 @@
 package cml.model.base
 
-import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
+import cml.model.creatures.{Creatures, Golem, Griffin, WaterDemon}
 import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import org.scalatest.FunSuite
 import cml.utils.ModelConfig.Creature._
@@ -20,9 +20,9 @@ class CreatureTest extends FunSuite {
   val x = 10
   val y = 10
 
-  val dragon : Dragon = Dragon(DRAGON_NAME, INITIAL_LEVEL)
+  val dragon : Creatures = Creatures(DRAGON_NAME, INITIAL_LEVEL)
 
-  val dragon2 : Dragon = Dragon("Saphira", dragonLevel)
+  val dragon2 : Creatures = Creatures("Saphira", dragonLevel)
   val golem1 : Golem = Golem(GOLEM_NAME, INITIAL_LEVEL)
   val golem2 : Golem = Golem("Alduin", 10)
 

@@ -1,7 +1,7 @@
 package cml.model.static_model
 
 import cml.model.base.{Creature, Structure}
-import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
+import cml.model.creatures.{Creatures, Golem, Griffin, WaterDemon}
 import cml.utils.CreatureJson
 import cml.utils.ModelConfig.Creature._
 import cml.utils.ModelConfig.Elements.{AIR, EARTH, FIRE, WATER}
@@ -23,7 +23,7 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
 
   s.habitatElement match {
     case FIRE =>
-      creature = Dragon(DRAGON_NAME,INITIAL_LEVEL)
+      creature = Creatures(DRAGON_NAME,INITIAL_LEVEL)
       creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL).json //passare anche il tipo drago/kraken ecc ?
     case WATER =>
       creature = WaterDemon(WATERDEMON_NAME, INITIAL_LEVEL)

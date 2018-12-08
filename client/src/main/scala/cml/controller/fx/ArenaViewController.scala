@@ -54,5 +54,15 @@ class ArenaViewController {
     println("Attack")
   }
 
+  @FXML
+  def chargeOption(): Unit ={
+    print("Charge")
+  }
+
+  @FXML
+  def protectionOption(): Unit = {
+    print("Protection")
+  }
+
 
 }
