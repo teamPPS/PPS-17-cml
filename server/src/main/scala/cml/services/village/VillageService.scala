@@ -5,6 +5,7 @@ import cml.database.utils.Configuration.DbConfig
 import cml.schema.User._
 import cml.schema.Village._
 import org.mongodb.scala.Document
+import org.mongodb.scala.bson.BsonArray
 import play.api.libs.json.Json
 
 import scala.concurrent._
@@ -57,7 +58,7 @@ object VillageService {
 
     override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
 
-      val initialBuilding = Document(
+      val initialBuilding  = Document(
         SINGLE_BUILDING_FIELD -> Document(
           BUILDING_TYPE_FIELD -> "CAVE",
           BUILDING_LEVEL_FIELD -> 1,
@@ -68,14 +69,15 @@ object VillageService {
         )
       )
 
+      println("initialBuilding.toString())"+initialBuilding.toString())
+
       document = Document(
         VILLAGE_NAME_FIELD -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
         USERNAME -> username,
         FOOD_FIELD -> 100,
         GOLD_FIELD -> 100,
-        MULTIPLE_BUILDINGS_FIELD -> initialBuilding,
-        MULTIPLE_HABITAT_FIELD -> Document(
-        )
+        MULTIPLE_BUILDINGS_FIELD -> List(initialBuilding),
+        MULTIPLE_HABITAT_FIELD -> List()
       )
       villageCollection.insert(document).map(_ => "Completed")
         .recoverWith{case e: Throwable =>
