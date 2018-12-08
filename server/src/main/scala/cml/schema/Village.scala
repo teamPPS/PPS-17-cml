@@ -17,7 +17,7 @@ object Village {
   val MULTIPLE_HABITAT_FIELD = "habitats"
   val SINGLE_HABITAT_FIELD = "habitat"
   val HABITAT_LEVEL_FIELD = "habitat_level"
-  val HABITAT_POSITION_FIELD = "building_pos"
+  val HABITAT_POSITION_FIELD = "habitat_pos"
   val NATURAL_ELEMENT_FIELD = "element"
   val MULTIPLE_CREATURES_FIELD = "creatures"
   val SINGLE_CREATURE_FIELD = "creature"

@@ -71,8 +71,8 @@ object VillageService {
       document = Document(
         VILLAGE_NAME_FIELD -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
         USERNAME -> username,
-        FOOD_FIELD -> 0,
-        GOLD_FIELD -> 0,
+        FOOD_FIELD -> 100,
+        GOLD_FIELD -> 100,
         MULTIPLE_BUILDINGS_FIELD -> initialBuilding,
         MULTIPLE_HABITAT_FIELD -> Document(
         )

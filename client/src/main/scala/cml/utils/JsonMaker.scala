@@ -42,7 +42,8 @@ case class HabitatJson(habitatElem: String, habitatLevel: Int, buildingPosition:
     MULTIPLE_HABITAT_FIELD -> Json.obj(
       SINGLE_HABITAT_FIELD -> Json.obj(
         HABITAT_LEVEL_FIELD -> habitatLevel,
-        NATURAL_ELEMENT_FIELD -> habitatElem
+        NATURAL_ELEMENT_FIELD -> habitatElem,
+        HABITAT_POSITION_FIELD -> buildingPosition
       )
     )
   )
