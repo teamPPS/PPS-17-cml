@@ -42,6 +42,7 @@ object Setup {
 
       def createTile(description: String, set: Set[Tile]): ImageView =  {
         val image: ImageView = new ImageView()
+
         image.setImage(
           set.filter(t => t.description.equals(description))
             .head

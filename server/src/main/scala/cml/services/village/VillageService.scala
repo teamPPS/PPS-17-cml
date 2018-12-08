@@ -77,7 +77,6 @@ object VillageService {
         FOOD_FIELD -> 100,
         GOLD_FIELD -> 100,
         MULTIPLE_BUILDINGS_FIELD -> List(initialBuilding),
-        MULTIPLE_HABITAT_FIELD -> List()
       )
       villageCollection.insert(document).map(_ => "Completed")
         .recoverWith{case e: Throwable =>

@@ -93,6 +93,8 @@ class VillageViewController {
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
+
+
     ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)
 
     buildingsMenu = new GridPane
