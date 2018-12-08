@@ -13,7 +13,6 @@ import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.language.implicitConversions
 import scala.util.{Failure, Random, Success}
 
@@ -44,7 +43,7 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-    println("Response create because handler is corrected create")
+    println("Response create because handler is correctly created")
     client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
       .sendFuture

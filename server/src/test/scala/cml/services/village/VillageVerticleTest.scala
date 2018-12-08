@@ -2,21 +2,25 @@ package cml.services.village
 
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import cml.core.utils.NetworkConfiguration._
+import cml.services.authentication.utils.AuthenticationUrl.RegisterApi
+import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
 
-class VillageVerticleTest extends FunSuite with BeforeAndAfterEach {
+/**
+  * This test checks if the VillageVerticle is correct.
+  * @author Filippo Portolani
+  */
 
-  private var vertx: Vertx = _
-  private var client: WebClient = _
+class VillageVerticleTest extends VillageVerticleRoutingTest {
 
-  override def beforeEach() {
-    vertx = Vertx.vertx()
-    client = WebClient.create(vertx)
-  }
+  private var vertx: Vertx = Vertx.vertx()
+  private var client: WebClient = WebClient.create(vertx)
 
-  override def afterEach() {
-    client.close()
-    vertx.close()
+  test("Village creation test") {
+    println("Returns a bad request because handler is empty.")
+    client.post(VillageServicePort, ServiceHostForRequest, RegisterApi)
+      .sendFuture
+      .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
   }
 
 

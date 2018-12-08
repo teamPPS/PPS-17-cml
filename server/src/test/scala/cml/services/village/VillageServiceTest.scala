@@ -3,7 +3,6 @@ package cml.services.village
 import cml.database.DatabaseClient
 import org.mongodb.scala.Document
 import org.scalatest.{AsyncFunSuite, BeforeAndAfter}
-
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{ExecutionContext, Future}
 
