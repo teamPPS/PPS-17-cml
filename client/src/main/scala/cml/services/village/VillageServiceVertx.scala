@@ -3,6 +3,7 @@ package cml.services.village
 import cml.core.utils.NetworkConfiguration._
 import cml.services.authentication.TokenStorage
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
+import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
 import play.api.libs.json.JsValue
@@ -85,9 +86,10 @@ object VillageServiceVertx{
     }
 
     override def updateVillage(update: JsValue): Future[String] = {
+      val updateJsonObj = new JsonObject(update.toString())
       client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-        .sendJsonFuture(update)
+        .sendJsonFuture(updateJsonObj)
         .map(r => r.statusCode() match {
           case `successfulResponse` => r.bodyAsString().getOrElse("")
           case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
