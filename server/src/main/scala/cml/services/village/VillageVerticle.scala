@@ -87,7 +87,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     ) yield {
       villageService.updateVillage(username, body).onComplete {
         case Success(value) => if (value) {
-          sendResponse(HttpResponseStatus.ACCEPTED, "Update done")
+          sendResponse(HttpResponseStatus.OK, "Update done")
         } else {
           sendResponse(BAD_REQUEST, "Error while update")
         }
