@@ -3,6 +3,8 @@ package cml.view
 import cml.model.base.Habitat.Habitat
 import cml.model.base.{Cave, Farm, VillageMap}
 import cml.view.utils.TileConfig.{tileSet, baseTileSet}
+import cml.utils.ModelConfig.StructureType.{FARM, CAVE, AIR_HABITAT, EARTH_HABITAT, FIRE_HABITAT, WATER_HABITAT}
+import cml.utils.ModelConfig.Elements.{EARTH, FIRE, WATER, AIR}
 import javafx.scene.SnapshotParameters
 import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
@@ -57,12 +59,12 @@ object Setup {
           .snapshot(new SnapshotParameters(), null)
       )
       val baseTile = terrainImage //TODO mettere a posto Tile.scala in modo che baseTile e Tile siano accumunabili ad un interfaccia comune
-      val farmTile = createTile("FARM", tileSet)
-      val caveTile = createTile("CAVE", tileSet)
-      val fireTile = createTile("FIRE_HABITAT", tileSet)
-      val waterTile = createTile("WATER_HABITAT", tileSet)
-      val airTile = createTile("AIR_HABITAT", tileSet)
-      val earthTile = createTile("EARTH_HABITAT", tileSet)
+      val farmTile = createTile(FARM, tileSet)
+      val caveTile = createTile(CAVE, tileSet)
+      val fireTile = createTile(FIRE_HABITAT, tileSet)
+      val waterTile = createTile(WATER_HABITAT, tileSet)
+      val airTile = createTile(AIR_HABITAT, tileSet)
+      val earthTile = createTile(EARTH_HABITAT, tileSet)
 
       loop(0, MapSide) foreach {
         case(x, y) =>
@@ -75,10 +77,10 @@ object Setup {
         case f: Farm => grid.add(farmTile, f.position.y, f.position.x)
         case c: Cave => grid.add(caveTile, c.position.y, c.position.x)
         case h: Habitat => h.element match {
-          case "fire" => grid.add(fireTile, h.position.y, h.position.x)
-          case "water" => grid.add(waterTile, h.position.y, h.position.x)
-          case "air" => grid.add(airTile, h.position.y, h.position.x)
-          case "earth" => grid.add(earthTile, h.position.y, h.position.x)
+          case FIRE => grid.add(fireTile, h.position.y, h.position.x)
+          case WATER => grid.add(waterTile, h.position.y, h.position.x)
+          case AIR => grid.add(airTile, h.position.y, h.position.x)
+          case EARTH => grid.add(earthTile, h.position.y, h.position.x)
         }
       }
 
