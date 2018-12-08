@@ -3,10 +3,11 @@ package cml.controller.fx
 
 import cml.model.base.Creature
 import cml.utils.ViewConfig._
+import cml.view.BattleRule.BattleRulesImpl
 import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, Button, ButtonType}
+import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
 
 /**
   * Controller class for graphic arena view
@@ -17,10 +18,16 @@ import javafx.scene.control.{Alert, Button, ButtonType}
 class ArenaViewController {
 
   @FXML var exitButton: Button = _
+  @FXML var userLifeBar: ProgressBar = _
+  @FXML var challengerLifeBar: ProgressBar = _
+  @FXML var attackButton: Button = _
 
+  var battleGame: BattleRulesImpl = BattleRulesImpl()
   val selectedCreature: Option[Creature] = Creature.selectedCreature
 
   def initialize(): Unit = {
+    battleGame.initialization()
+    attackButton.setDisable(true)
     println("arena creature" + selectedCreature.get.name + "level " + selectedCreature.get.level)
   }
 
@@ -51,18 +58,31 @@ class ArenaViewController {
 
   @FXML
   def attackOption(): Unit = {
-    println("Attack")
+    println("Attack -- ")
+    battleGame.attack()
+    println("attack point in attack -- " + battleGame._attackPoint)
   }
 
   @FXML
   def chargeOption(): Unit ={
-    print("Charge")
+    attackButton.setDisable(false)
+    battleGame.charge()
+    println("attack point in cherge -- " + battleGame._attackPoint)
   }
 
   @FXML
   def protectionOption(): Unit = {
-    print("Protection")
+    print("Protection -- ")
+    battleGame.charge()
   }
 
+  @FXML
+  def userLifeBarOption(): Unit = {
+    userLifeBar.setProgress(0.25)
+  }
 
+  @FXML
+  def challengerLifeBarOption(): Unit ={
+    challengerLifeBar.setProgress(0.25)
+  }
 }

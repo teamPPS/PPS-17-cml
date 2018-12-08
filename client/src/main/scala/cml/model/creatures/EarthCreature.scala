@@ -12,7 +12,7 @@ import play.api.libs.json.Json
   * @author Filippo Portolani
   */
 
-case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
+case class EarthCreature(creatureName: String, creatureLevel: Int) extends Creature {
 
   val _element : String = EARTH
 
@@ -50,7 +50,7 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
   override def creatureType: String = GOLEM
 }
 
-object Golem {
-  implicit val reader = Json.format[Golem]
+object EarthCreature {
+  implicit val reader = Json.format[EarthCreature]
 }
 

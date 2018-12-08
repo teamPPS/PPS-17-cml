@@ -79,6 +79,7 @@ object Handler {
               c.addCreatureButton setDisable true
               c.battleButton setDisable false
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+              VillageMap.setInstance(village)
             })
           } else {
             c.levelUpButton setDisable false
@@ -153,6 +154,8 @@ object Handler {
       //Decremento denaro in base al prezzo, update modello remoto e locale
       val resourceJson = MoneyJson(INIT_VALUE-price).json
       villageActor ! UpdateVillage(resourceJson)
+
+      VillageMap.setInstance(village)
 
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
       event consume()
