@@ -43,9 +43,9 @@ object ModelConfig {
   }
 
   object ModelClass {
-    val FARM: String = "cml.model.base.Farm"
-    val CAVE: String = "cml.model.base.Cave"
-    val HABITAT: String = "cml.model.base.Habitat$Habitat"
+    val FARM_CLASS: String = "cml.model.base.Farm"
+    val CAVE_CLASS: String = "cml.model.base.Cave"
+    val HABITAT_CLASS: String = "cml.model.base.Habitat$Habitat"
   }
 
   object StructureType{

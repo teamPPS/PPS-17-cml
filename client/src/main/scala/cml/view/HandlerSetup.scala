@@ -184,9 +184,9 @@ object Handler {
   private def getClassName(s: Structure): String = {
     var name: String = ""
     s.getClass.getName match {
-      case FARM => name = "FARM"
-      case CAVE => name = "CAVE"
-      case HABITAT => name = "HABITAT - Element: " + s.habitatElement
+      case FARM_CLASS => name = "FARM"
+      case CAVE_CLASS => name = "CAVE"
+      case HABITAT_CLASS => name = "HABITAT - Element: " + s.habitatElement
     }
     name
   }

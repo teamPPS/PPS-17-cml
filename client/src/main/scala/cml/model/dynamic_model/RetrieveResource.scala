@@ -1,7 +1,7 @@
 package cml.model.dynamic_model
 
 import cml.model.base.Structure
-import cml.utils.ModelConfig.ModelClass.{CAVE, FARM, HABITAT}
+import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
 import cml.utils.{FoodJson, MoneyJson}
 import play.api.libs.json.JsValue
 
@@ -19,9 +19,9 @@ case class RetrieveResource(s: Structure) extends Retrieve {
 
   s.resource.take()
   s.getClass.getName match {
-    case FARM => json = FoodJson(s.resource amount).json
-    case CAVE => json = MoneyJson(s.resource amount).json
-    case HABITAT => json = MoneyJson(s.resource amount).json
+    case FARM_CLASS => json = FoodJson(s.resource amount).json
+    case CAVE_CLASS => json = MoneyJson(s.resource amount).json
+    case HABITAT_CLASS => json = MoneyJson(s.resource amount).json
   }
 
   println("retrieve "+s.resource.amount) //debug
