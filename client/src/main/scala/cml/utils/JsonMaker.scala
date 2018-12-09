@@ -37,13 +37,16 @@ case class BuildingJson(buildingType: String, buildingLevel: Int, buildingPositi
   * @param habitatElem natural element
   * @param habitatLevel level of the habitat
   */
-case class HabitatJson(habitatElem: String, habitatLevel: Int, buildingPosition: Position) extends JsonMaker { //passare CreatureJson
+case class HabitatJson(habitatElem: String, habitatLevel: Int, habitatPosition: Position) extends JsonMaker { //passare CreatureJson
   override def json: JsValue = Json.obj(
     MULTIPLE_HABITAT_FIELD -> Json.obj(
       SINGLE_HABITAT_FIELD -> Json.obj(
         HABITAT_LEVEL_FIELD -> habitatLevel,
         NATURAL_ELEMENT_FIELD -> habitatElem,
-        HABITAT_POSITION_FIELD -> buildingPosition
+        HABITAT_POSITION_FIELD -> Json.obj(
+          "x" -> habitatPosition.x,
+          "y" -> habitatPosition.y
+        )
       )
     )
   )
@@ -85,3 +88,28 @@ case class MoneyJson(amount: Int) extends JsonMaker {
     GOLD_FIELD -> amount
   )
 }
+
+case class PositionJson(structType: String, x: Int, y: Int) extends JsonMaker {
+
+  private var structJson: JsValue = _
+  structType match{
+    case "BUILDING" => structJson = Json.obj(
+      BUILDING_POSITION_FIELD -> Json.obj(
+        "x" -> x,
+        "y" -> y
+      )
+    )
+    case "HABITAT" => structJson = Json.obj(
+      HABITAT_POSITION_FIELD -> Json.obj(
+      "x" -> x,
+      "y" -> y
+     )
+    )
+  }
+  override def json: JsValue = structJson
+}
+
+
+
+
+
