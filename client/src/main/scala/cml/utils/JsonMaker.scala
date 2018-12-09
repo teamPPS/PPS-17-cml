@@ -19,7 +19,7 @@ trait JsonMaker{
   */
 case class BuildingJson(buildingType: String, buildingLevel: Int, buildingPosition: Position) extends JsonMaker {
   override def json: JsValue = Json.obj(
-    MULTIPLE_BUILDINGS_FIELD -> Json.obj(
+    buildingPosition.toString -> Json.obj(
       SINGLE_BUILDING_FIELD -> Json.obj(
         BUILDING_TYPE_FIELD -> buildingType,
         BUILDING_LEVEL_FIELD -> buildingLevel,
@@ -39,7 +39,7 @@ case class BuildingJson(buildingType: String, buildingLevel: Int, buildingPositi
   */
 case class HabitatJson(habitatElem: String, habitatLevel: Int, habitatPosition: Position) extends JsonMaker { //passare CreatureJson
   override def json: JsValue = Json.obj(
-    MULTIPLE_HABITAT_FIELD -> Json.obj(
+    habitatPosition.toString -> Json.obj(
       SINGLE_HABITAT_FIELD -> Json.obj(
         HABITAT_LEVEL_FIELD -> habitatLevel,
         NATURAL_ELEMENT_FIELD -> habitatElem,

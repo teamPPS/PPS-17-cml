@@ -101,7 +101,7 @@ object DatabaseClient {
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
-      val future = collection.updateOne(document,Document("$push"-> update)).toFuture() //TODO set
+      val future = collection.updateOne(document,Document("$addToSet"-> update)).toFuture() //TODO set
       future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
