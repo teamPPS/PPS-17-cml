@@ -34,6 +34,7 @@ class VillageViewController {
   @FXML var areaPane: Pane = _
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
+  @FXML var menuButton: MenuButton = _
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
@@ -49,6 +50,7 @@ class VillageViewController {
     villageActor ! EnterVillage(this)
   }
 
+
   @FXML def goToBattle(): Unit = ViewSwitch.activate(BattleWindow.path, battleButton.getScene)
 
   @FXML def logout(): Unit =  logoutSystem()
@@ -63,10 +65,9 @@ class VillageViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       println("invio msg delete" )
-      villageActor ! DeleteVillage()
+      villageActor ! DeleteVillage(this)
     }
   }
-
 
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
@@ -130,6 +131,8 @@ class VillageViewController {
     buildingsGrid setContent buildingsMenu
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
   }
+
+  def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, menuButton.getScene)
 
   def logoutSystem(): Unit = {
 //    authenticationActor ! Logout() //TODO non funziona niente dopo queste operazioni di logout perché l'authentication actor ha il riferimento al vecchio controller fx

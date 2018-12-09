@@ -39,7 +39,7 @@ object VillageRequest {
   /**
     * Request to delete a village
     */
-  case class DeleteVillage() extends VillageRequest
+  case class DeleteVillage(controller: VillageViewController) extends VillageRequest
 
   /**
     * Request to logout from the village

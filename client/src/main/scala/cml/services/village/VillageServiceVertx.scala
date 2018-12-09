@@ -21,31 +21,35 @@ trait VillageServiceVertx {
 
   /**
     * Create a user village
-    * @return successful or failed deletion
+    * @return successful or failed creation
     */
   def createVillage(): Future[String]
 
   /**
     * Enter the user's village
-    * @return successful or failed deletion
+    * @return successful or failed enter
     */
   def enterVillage(): Future[String]
 
   /**
     * Update the user's village
     * @param update what to update
-    * @return successful or failed deletion
+    * @return successful or failed update
     */
   def updateVillage(update: JsValue): Future[String]
 
-//TODO doc
+  /**
+    * Update existing items in the user's village
+    * @param update values to update
+    * @return successful or failed update
+    */
   def setUpdateVillage(update: JsValue): Future[String]
 
   /**
     * Delete the user's village
     * @return successful or failed deletion
     */
-  def deleteVillageAndUser(): Future[Unit]
+  def deleteVillageAndUser(): Future[String]
 
 }
 
@@ -110,11 +114,14 @@ object VillageServiceVertx{
         })
     }
 
-    override def deleteVillageAndUser(): Future[Unit] = {
+    override def deleteVillageAndUser(): Future[String] = {
       client.delete(AuthenticationServicePort, ServiceHostForRequest, API_Url)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture
-        .map(_ => ())
+        .map(r => r.statusCode match {
+          case `successfulResponse` => r.bodyAsString().getOrElse("")
+          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+        })
     }
   }
 }

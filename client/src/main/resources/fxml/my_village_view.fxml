@@ -65,7 +65,7 @@
                 </Label>
                 <Label fx:id="goldLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Gold" HBox.hgrow="ALWAYS" />
                 <Label fx:id="foodLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Food" HBox.hgrow="ALWAYS" />
-                <MenuButton id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="169.0" text="Menu" HBox.hgrow="ALWAYS">
+                <MenuButton id="menuButton" fx:id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="169.0" text="Menu" HBox.hgrow="ALWAYS">
                   <items>
                     <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" onAction="#deleteAccount" text="Delete Account" />
                     <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" onAction="#logout" text="Logout" />
