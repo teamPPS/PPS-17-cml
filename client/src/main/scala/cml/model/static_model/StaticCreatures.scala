@@ -13,7 +13,6 @@ import play.api.libs.json.JsValue
 
 trait StaticCreature {
   def json: JsValue
-  def getCreature: Creature
 }
 
 case class StaticCreatures(s: Structure) extends StaticCreature {
@@ -37,6 +36,7 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
     case "Not an habitat" => throw new IllegalArgumentException
   }
 
+  s.addCreature(creature)
+
   override def json: JsValue = creatureJson
-  override def getCreature: Creature = creature
 }

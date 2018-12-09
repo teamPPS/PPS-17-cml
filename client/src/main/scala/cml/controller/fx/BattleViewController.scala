@@ -53,7 +53,6 @@ class BattleViewController {
   def initialize(): Unit = {
 
     for (s <- village.villageStructure) {
-      println("battleview"+s.creatures)
       if (s.creatures != null && s.creatures.nonEmpty) {
         creatures = s.creatures
         obsCreatures add creatures.head
@@ -77,7 +76,7 @@ class BattleViewController {
         case None => throw new NoSuchElementException
         case _ => setCreatureImage(selectedCreature.get)
           creatureArea setText displayText(selectedCreature.get.name, selectedCreature.get.creatureType,
-            selectedCreature.get.currentLevel,selectedCreature.get.attackValue)
+            selectedCreature.get.level, selectedCreature.get.attackValue)
           playButton setDisable false
       }
     })

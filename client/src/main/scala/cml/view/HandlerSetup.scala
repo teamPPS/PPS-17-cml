@@ -76,10 +76,8 @@ object Handler {
             c.selectionInfo setText "Structure: " + getClassName(s)
             c.addCreatureButton.setOnMouseClicked(_ => {
               val creature = StaticCreatures(s)
-              s.addCreature(creature getCreature)
-
-              println("dopo"+s.creatures)
               villageActor ! SetUpdateVillage(creature json)
+              VillageMap.setInstance(village)
               c.addCreatureButton setDisable true
               c.battleButton setDisable false
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
