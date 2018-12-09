@@ -59,7 +59,6 @@ class VillageActor() extends Actor{
       }
 
     case SetUpdateVillage(update) =>
-      println("actor set update village msg")
       villageVertx.setUpdateVillage(update).onComplete {
         case Success(httpResponse) =>
           httpResponse match {

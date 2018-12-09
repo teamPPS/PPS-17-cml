@@ -108,8 +108,23 @@ object VillageService {
     }
 
     override def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-      println("set update")
-      val queryDocument = Document(USERNAME -> username)
+
+      val userDoc = Document(USERNAME -> username)
+      val queryDocument = Document(
+        USERNAME -> username,
+        MULTIPLE_BUILDINGS_FIELD -> Document(
+          SINGLE_BUILDING_FIELD -> Document(
+            BUILDING_TYPE_FIELD -> "CAVE",
+            BUILDING_LEVEL_FIELD -> 1,
+            BUILDING_POSITION_FIELD -> Document(
+              "x" -> 1,
+              "y" -> 1
+            )
+          )
+        )
+    )
+      println(queryDocument)
+
       villageCollection.setUpdate(queryDocument, Document(Json.parse(update).toString()))
         .map(modifiedDocument => modifiedDocument>0)
         .recoverWith{case e: Throwable =>

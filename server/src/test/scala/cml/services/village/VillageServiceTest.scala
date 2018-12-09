@@ -97,5 +97,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
     override def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
 
     override def multipleUpdate(query: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+
+    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = ???
   }
 }

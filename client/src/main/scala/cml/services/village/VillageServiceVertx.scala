@@ -100,7 +100,6 @@ object VillageServiceVertx{
     }
 
     override def setUpdateVillage(update: JsValue): Future[String] = {
-      println("vertx village set update")
       val updateJsonObj = new JsonObject(update.toString())
       client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url+"/set_update")//TODO
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
