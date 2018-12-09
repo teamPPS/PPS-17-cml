@@ -7,6 +7,7 @@ import cml.model.base.Habitat.Habitat
 import cml.model.base._
 import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
 import cml.schema.Village
+import cml.utils.ModelConfig
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
@@ -66,28 +67,37 @@ class VillageViewController {
       building <- buildings;
       buildType <- building \\ Village.BUILDING_TYPE_FIELD;
       specificStructure = buildType.as[String] match {
-        case "CAVE" => building.as[Cave]
-        case "FARM" => building.as[Farm]
+        case ModelConfig.StructureType.CAVE => building.as[Cave]
+        case ModelConfig.StructureType.FARM => building.as[Farm]
       }
     ) yield VillageMap.instance().get.villageStructure += specificStructure
     println("Buildings ricevute dal server: " + VillageMap.instance().get.villageStructure)
 
     val habitats = (json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])
+    //TODO unire questi for comprehnsion ???
     for (
       habitat <- habitats;
       specificHabitat = habitat.as[Habitat];
       creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]);
       creatureType <- creature \\ Village.CREATURE_TYPE_FIELD;
       specificCreature = creatureType.as[String] match {
-        case "Dragon" => creature.as[Dragon]
-        case "Golem" => creature.as[Golem]
-        case "Griffin" => creature.as[Griffin]
-        case "WaterDemon" => creature.as[WaterDemon]
+        case ModelConfig.Creature.DRAGON => creature.as[Dragon]
+        case ModelConfig.Creature.GOLEM => creature.as[Golem]
+        case ModelConfig.Creature.GRIFFIN => creature.as[Griffin]
+        case ModelConfig.Creature.WATERDEMON => creature.as[WaterDemon]
       }
     ) yield {
       specificHabitat.creatureList += specificCreature
       VillageMap.instance().get.villageStructure += specificHabitat
     }
+    for (
+      habitat <- habitats;
+      if (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]).isEmpty;
+      specificHabitat = habitat.as[Habitat]
+    ) yield {
+      VillageMap.instance().get.villageStructure += specificHabitat
+    }
+
     println("Buildings e Habitat ricevuti dal server: " + VillageMap.instance().get.villageStructure)
 
     villageMap = new GridPane
