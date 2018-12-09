@@ -54,12 +54,13 @@ case class HabitatJson(habitatElem: String, habitatLevel: Int, buildingPosition:
   * @param creatureName type of creature
   * @param creatureLevel level of the creature
   */
-case class CreatureJson(creatureName: String, creatureLevel: Int) extends  JsonMaker {
+case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: String) extends  JsonMaker {
   override def json: JsValue = Json.obj(
     MULTIPLE_CREATURES_FIELD -> Json.obj(
       SINGLE_CREATURE_FIELD -> Json.obj(
         CREATURE_NAME_FIELD -> creatureName,
-        CREATURE_LEVEL_FIELD -> creatureLevel
+        CREATURE_LEVEL_FIELD -> creatureLevel,
+        CREATURE_TYPE_FIELD -> creatureType
       )
     )
   )
