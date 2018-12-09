@@ -21,13 +21,16 @@ object VillageRequest {
   /**
     * Resuest to enter a village
     */
-  case class EnterVillage(controller: VillageViewController) extends VillageRequest //passare model e VillageView controller
+  case class EnterVillage(controller: VillageViewController) extends VillageRequest
 
   /**
     * Request to update a village
     * @param update village user
     */
-  case class UpdateVillage(update: JsValue) extends VillageRequest //passare anche model e (facoltativo) textarea
+  case class UpdateVillage(update: JsValue) extends VillageRequest
+
+
+  case class SetUpdateVillage(update: JsValue) extends VillageRequest
 
   /**
     * Request to delete a village

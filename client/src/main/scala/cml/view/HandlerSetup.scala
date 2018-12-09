@@ -3,7 +3,7 @@ package cml.view
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.fx.VillageViewController
-import cml.controller.messages.VillageRequest.UpdateVillage
+import cml.controller.messages.VillageRequest.{SetUpdateVillage, UpdateVillage}
 import cml.model.base._
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
@@ -84,14 +84,14 @@ object Handler {
             c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => {
               val upgrade = StructureUpgrade(s)
-              villageActor ! UpdateVillage(upgrade structureJson)
+              villageActor ! SetUpdateVillage(upgrade structureJson)
               upgrade creatureJson match {
                 case null => println("Not an habitat")
-                case _ => villageActor ! UpdateVillage(upgrade creatureJson)
+                case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
               }
               //Decremento denaro in base al prezzo, update modello remoto e locale
-              val resourceJson = MoneyJson(INIT_VALUE - price).json
-              villageActor ! UpdateVillage(resourceJson)
+//              val resourceJson = MoneyJson(INIT_VALUE - price).json
+//              villageActor ! SetUpdateVillage(resourceJson)
 
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
@@ -103,7 +103,7 @@ object Handler {
               c.takeButton setDisable false
               c.takeButton setOnMouseClicked (_ => {
                 val retrieve = RetrieveResource(s)
-                villageActor ! UpdateVillage(retrieve resourceJson)
+                villageActor ! SetUpdateVillage(retrieve resourceJson)
                 c.takeButton setDisable true
                 c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
               })
@@ -149,10 +149,10 @@ object Handler {
       val json = structure.json
       village.villageStructure += structure.getStructure
       villageActor ! UpdateVillage(json)
-
-      //Decremento denaro in base al prezzo, update modello remoto e locale
-      val resourceJson = MoneyJson(INIT_VALUE-price).json
-      villageActor ! UpdateVillage(resourceJson)
+//
+//      //Decremento denaro in base al prezzo, update modello remoto e locale
+//      val resourceJson = MoneyJson(INIT_VALUE-price).json
+//      villageActor ! SetUpdateVillage(resourceJson)
 
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
       event consume()

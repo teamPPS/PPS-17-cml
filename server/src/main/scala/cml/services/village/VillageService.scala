@@ -5,7 +5,6 @@ import cml.database.utils.Configuration.DbConfig
 import cml.schema.User._
 import cml.schema.Village._
 import org.mongodb.scala.Document
-import org.mongodb.scala.bson.BsonArray
 import play.api.libs.json.Json
 
 import scala.concurrent._
@@ -39,6 +38,9 @@ sealed trait VillageService {
     * @return successful or failed update
     */
   def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
+
+//TODO doc
+  def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   /**
     * Delete user's village and account
@@ -98,6 +100,17 @@ object VillageService {
     override def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
       val queryDocument = Document(USERNAME -> username)
       villageCollection.update(queryDocument, Document(Json.parse(update).toString()))
+        .map(modifiedDocument => modifiedDocument>0)
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
+
+    override def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      println("set update")
+      val queryDocument = Document(USERNAME -> username)
+      villageCollection.setUpdate(queryDocument, Document(Json.parse(update).toString()))
         .map(modifiedDocument => modifiedDocument>0)
         .recoverWith{case e: Throwable =>
           println(e)

@@ -40,6 +40,9 @@ trait DatabaseClient{
     */
   def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
+//TODO doc
+  def setUpdate(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
+
   /**
     * Find a requested document
     * @param document what we want to find
@@ -98,7 +101,13 @@ object DatabaseClient {
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
-      val future = collection.updateOne(document,Document("$push"-> update)).toFuture()
+      val future = collection.updateOne(document,Document("$push"-> update)).toFuture() //TODO set
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
+    }
+
+    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+      println("db set update")
+      val future = collection.updateOne(document,Document("$set"-> update)).toFuture()
       future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 

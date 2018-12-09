@@ -24,6 +24,5 @@ case class RetrieveResource(s: Structure) extends Retrieve {
     case HABITAT_CLASS => json = MoneyJson(s.resource amount).json
   }
 
-  println("retrieve "+s.resource.amount) //debug
   override def resourceJson: JsValue = json
 }

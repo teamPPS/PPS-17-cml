@@ -52,16 +52,27 @@ class VillageActor() extends Actor{
       villageVertx.updateVillage(update).onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => println("Failure to update village") //visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
-            case _ => println("Update Done") //modificare model: Passo textarea(?) e model nel messaggio UpdateVillage
+            case "Not a valid request" => println("Failure to update village")
+            case _ => println("Update Done")
+          }
+        case Failure(exception) => println(exception)
+      }
+
+    case SetUpdateVillage(update) =>
+      println("actor set update village msg")
+      villageVertx.setUpdateVillage(update).onComplete {
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => println("Failure to set update village")
+            case _ => println("Update Set Done")
           }
         case Failure(exception) => println(exception)
       }
 
     case DeleteVillage() => villageVertx.deleteVillageAndUser()
       .onComplete {
-        case Success(httpResponse) => println(httpResponse) //cancella tutto torna alla schermata di autenticazione
-        case Failure(exception) => println(exception) // visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
+        case Success(httpResponse) => println(httpResponse)
+        case Failure(exception) => println(exception)
       }
   }
 }

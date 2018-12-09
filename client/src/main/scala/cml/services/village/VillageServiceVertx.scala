@@ -38,6 +38,9 @@ trait VillageServiceVertx {
     */
   def updateVillage(update: JsValue): Future[String]
 
+//TODO doc
+  def setUpdateVillage(update: JsValue): Future[String]
+
   /**
     * Delete the user's village
     * @return successful or failed deletion
@@ -88,6 +91,18 @@ object VillageServiceVertx{
     override def updateVillage(update: JsValue): Future[String] = {
       val updateJsonObj = new JsonObject(update.toString())
       client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url)
+        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+        .sendJsonFuture(updateJsonObj)
+        .map(r => r.statusCode() match {
+          case `successfulResponse` => r.bodyAsString().getOrElse("")
+          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+        })
+    }
+
+    override def setUpdateVillage(update: JsValue): Future[String] = {
+      println("vertx village set update")
+      val updateJsonObj = new JsonObject(update.toString())
+      client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url+"/set_update")//TODO
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendJsonFuture(updateJsonObj)
         .map(r => r.statusCode() match {
