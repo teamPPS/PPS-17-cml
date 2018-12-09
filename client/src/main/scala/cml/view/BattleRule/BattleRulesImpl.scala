@@ -1,30 +1,70 @@
 package cml.view.BattleRule
 
-case class BattleRulesImpl() {
+/**
+  * This trait define basic battle rules
+  *
+  * @author Chiara Volonnino
+  */
+
+trait BattleRule {
+
+  /**
+    * Game initialization
+    */
+  def initialization()
+
+  /**
+    * Define attack method
+    */
+  def attack()
+
+  /**
+    * Define charge method
+    */
+  def charge()
+
+  /**
+    * Define protection method
+    */
+  def protection()
+
+
+
+}
+
+/**
+  * This class implements BattleRule
+  */
+
+case class BattleRulesImpl() extends BattleRule {
 
   private var creatureLife: Int = _
   private var attackPoint: Int = _
   private var isProtect: Boolean = _
   private var isAttack: Boolean = _
+  private var isCharge: Boolean = _
 
   def initialization(): Unit = {
     creatureLife = 100
     attackPoint = 0
     isProtect = false
     isAttack = false
+    isCharge = false
   }
 
-  def attack(): Unit = {
-    if(isPossibleAttack) decrementAttackPoint()
+  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint()
+
+  override def charge(): Unit = {
+    incrementAttackPoint()
+    isCharge = true
   }
 
-  def charge(): Unit = incrementAttackPoint()
-
-  def protection(): Unit = isProtect = true
+  override def protection(): Unit = isProtect = true
 
   def gameEngine(powerAttackValue: Int): Int = {
     var powerAttack = 0
     if(isProtect) powerAttack = 0
+    if(isCharge) powerAttack = 0
     else powerAttack = powerAttackValue
     creatureLife -= powerAttack
     creatureLife
@@ -37,8 +77,6 @@ case class BattleRulesImpl() {
 
   private def incrementAttackPoint(): Unit = attackPoint += 1
 
-  def _attackPoint: Int = attackPoint
-
   private def isPossibleAttack: Boolean = {
     if(_attackPoint > 0) isAttack = true
     else isAttack = false
@@ -46,6 +84,8 @@ case class BattleRulesImpl() {
     isAttack
   }
 
+  def _attackPoint: Int = attackPoint
   def isProtect_(): Unit = isProtect = false
   def _isProtection(): Boolean = isProtect
+  def isCharge_(): Unit = isCharge = false
 }

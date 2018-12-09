@@ -1,6 +1,6 @@
 package cml.controller.fx
 
-
+import cml.controller.messages.ArenaRequest.StopRequest
 import cml.model.base.Creature
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
@@ -24,11 +24,12 @@ class ArenaViewController {
 
   var battleGame: BattleRulesImpl = BattleRulesImpl()
   val selectedCreature: Option[Creature] = Creature.selectedCreature
-
+  
   def initialize(): Unit = {
     battleGame.initialization()
     attackButton.setDisable(true)
-    println("arena creature" + selectedCreature.get.name + "level " + selectedCreature.get.level)
+    println("arena creature: " + selectedCreature.get.name + " level " + selectedCreature.get.level + " " +
+      " Attack value " +selectedCreature.get.attackValue)
   }
 
   @FXML
@@ -52,6 +53,7 @@ class ArenaViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       Creature.setSelectedCreature(None)
+      // todo: send stop message
       ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
     }
   }
@@ -61,6 +63,9 @@ class ArenaViewController {
     battleGame.attack()
     if(battleGame._attackPoint equals 0)  attackButton.setDisable(true)
     println("attack point in attack -- " + battleGame._attackPoint)
+    val meno = game()
+    println("Attack value " + meno)
+    //todo:send message
   }
 
   @FXML
@@ -68,13 +73,18 @@ class ArenaViewController {
     attackButton.setDisable(false)
     battleGame.charge()
     println("attack point in cherge -- " + battleGame._attackPoint)
+    val meno = game()
+    println("Attack value " + meno)
+    battleGame.isCharge_()
   }
 
   @FXML
   def protectionOption(): Unit = {
     battleGame.protection()
     println("protection on: " + battleGame._isProtection())
-    //todo: da rivedere questa logica
+    val meno = game()
+    println("Attack value " + meno)
+    //todo: send messegge
     battleGame.isProtect_()
     println("protection on: " + battleGame._isProtection())
   }
@@ -87,5 +97,11 @@ class ArenaViewController {
   @FXML
   def challengerLifeBarOption(): Unit ={
     challengerLifeBar.setProgress(0.25)
+  }
+
+  private def attackValue_(): Int = selectedCreature.get.attackValue
+
+  private def game(): Int = {
+    battleGame.gameEngine(attackValue_())
   }
 }

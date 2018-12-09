@@ -56,7 +56,7 @@ class RemoteActor extends Actor {
 object RemoteActor {
 // TODO: shift this main in server side (server main) if its possible add another service-like (its't really service)
   def main(args: Array[String])  {
-    val configFile = getClass.getClassLoader.getResource(Path).getFile
+    val configFile = getClass.getClassLoader.getResource(Configuration).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem(Context, config)
     val remoteActor = system.actorOf(Props[RemoteActor], name=Name)

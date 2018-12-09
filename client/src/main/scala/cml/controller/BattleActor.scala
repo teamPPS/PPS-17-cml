@@ -1,7 +1,7 @@
 package cml.controller
 
 import cml.controller.messages.BattleRequest._
-import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, ExitSuccess, RequireEnterInArenaSuccess}
+import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import akka.actor.{Actor, ActorRef, ActorSelection}
 import cml.controller.messages.ArenaRequest.StopRequest
 import cml.controller.messages.BattleRequest
@@ -32,47 +32,36 @@ class BattleActor extends Actor {
   }
 
   override def postStop(): Unit = {
-    //TODO: remenber actorSystem.shutdown? is correct even so (also sin stop clause )
+    //TODO: remember actorSystem.shutdown? is correct even so (also sin stop clause )
     println("Actor is stopped")
   }
 
   override def receive: Receive = {
     case SceneInfo(scene) => sceneContext = scene
-    case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
+    case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger() //TODO: add progress indicator
     case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
       println("user in list - " + user)
       myChallenge(user)
       self ! BattleRequest.SwitchInArenaRequest()
-      /*challengerActor = context.actorSelection(challenger.toString())
-      challenger ! HelloChallenger("Hello my challenger im " + self)*/
     case SwitchInArenaRequest() => Platform.runLater(() => switchInArena())
-    case StopRequest() =>
-      context.stop(self)
+    case StopRequest() => context.stop(self)
   }
 
   private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
-    user.foreach(actor => {
-      if(!actor.equals(self)) {
-        challenger = actor
-        println("Im user: " + self + " and my challenger is - " + challenger)
-      }
-    })
+    user.foreach(actor => if(!actor.equals(self)) challenger = actor)
+    println("Im user: " + self + " and my challenger is - " + challenger)
+    challenge_()
+  }
+
+  private def challenge_(): Unit ={
+    challengerActor = context.actorSelection(challenger.path)
+    //println("actor challeng: " + challengerActor + " ref chal " + challenger)
+    //challenger ! HelloChallenger("Hello my challenger im " + self)
   }
 
   private def switchInArena(): Unit ={
     ViewSwitch.activate(ArenaWindow.path, sceneContext)
   }
 }
-
-/*object BattleActor {
-// TODO: delete this main (already exist in battleController)
-  def main(args: Array[String])  {
-    val configFile = getClass.getClassLoader.getResource(Path).getFile
-    val config = ConfigFactory.parseFile(new File(configFile))
-    val system = ActorSystem(Context, config)
-    val battleActor = system.actorOf(Props[BattleActor], name=Name)
-    println("------ battleActor is ready")
-  }
-}*/
 

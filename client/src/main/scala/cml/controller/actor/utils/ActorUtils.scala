@@ -9,13 +9,14 @@ object ActorUtils {
   }
 
   object RemoteActorInfo{
-    val Path = "actor/remote_actor.conf"
+    val Configuration = "actor/remote_actor.conf"
     val Context = "CML"
     val Name = "RemoteActor"
+    val Path = "akka.tcp://CML@127.0.0.1:5150/user/RemoteActor"
   }
 
   object BattleActorInfo{
-    val Path = "actor/local_actor.conf"
+    val Configuration = "actor/local_actor.conf"
     val Context = "LocalContext"
     val Name = "BattleActor"
   }
