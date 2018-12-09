@@ -130,7 +130,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     ) yield {
       villageService.deleteVillageAndUser(username).onComplete {
         case Success(value) => if (value) {
-          sendResponse(HttpResponseStatus.ACCEPTED, "Deleted")
+          sendResponse(HttpResponseStatus.OK, "Deleted")
         } else {
           sendResponse(BAD_REQUEST, "Error while deleting")
         }

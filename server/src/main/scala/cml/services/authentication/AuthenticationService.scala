@@ -51,6 +51,13 @@ trait AuthenticationService {
     */
   def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit]
 
+  /**
+    * Delete user
+    * @param ec is implicit fot execution context
+    * @return a future if username found
+    */
+  def delete(username: String)(implicit ec: ExecutionContext): Future[String]
+
 }
 
 /**
@@ -58,7 +65,7 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  val collection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
+  val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
 
@@ -68,7 +75,7 @@ object AuthenticationService {
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
       document = Document(USERNAME->username, PASSWORD->password)
       println(document)
-      collection.insert(document).map(_ => "Insertion Completed")
+      userCollection.insert(document).map(_ => "Insertion Completed")
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -78,7 +85,7 @@ object AuthenticationService {
     override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] =  {
       document = Document(USERNAME->username, PASSWORD->password)
       println(document)
-      collection.find(document).map(doc => doc.size()>0)
+      userCollection.find(document).map(doc => doc.size()>0)
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -87,7 +94,7 @@ object AuthenticationService {
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
       document = Document(USERNAME->username)
-      collection.delete(document).map(_ => {})
+      userCollection.delete(document).map(_ => {})
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
@@ -96,7 +103,16 @@ object AuthenticationService {
 
     override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
       document = Document(USERNAME->username)
-      collection.find(document).map(_ => {})
+      userCollection.find(document).map(_ => {})
+        .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+    }
+
+    override def delete(username: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(USERNAME->username)
+      userCollection.delete(document).map(_ => "Deletion Completed")
         .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)

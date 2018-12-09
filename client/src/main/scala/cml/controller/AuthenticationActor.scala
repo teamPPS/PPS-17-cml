@@ -3,10 +3,10 @@ package cml.controller
 import akka.actor.{Actor, ActorRef, Props}
 import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
 import cml.controller.fx.AuthenticationViewController
-import cml.controller.messages.AuthenticationRequest.{Login, Register, Logout}
+import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
-import cml.controller.messages.VillageRequest.{CreateVillage}
-import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
+import cml.controller.messages.VillageRequest.CreateVillage
+import cml.controller.messages.VillageResponse.{CreateVillageSuccess, DeleteVillageSuccess, VillageFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import cml.services.authentication.TokenStorage
 import javafx.application.Platform
@@ -52,6 +52,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
           displayMsg(loginFailure)
       }
     case Logout() => authenticationVertx.logout(TokenStorage.getUserJWTToken)
+
   }
 
   /**
@@ -62,6 +63,17 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       println("Village create success")
       loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
+    case DeleteVillageSuccess() =>
+      println("delete village success - deleting user...")
+      authenticationVertx.delete().onComplete{
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" =>
+              println("Failure to delete user")
+            case _ => println("Deletion Done")
+          }
+        case Failure(exception) => println(exception)
+      }
   }
 
   /**

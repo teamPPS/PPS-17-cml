@@ -20,4 +20,8 @@ object VillageResponse {
     */
   case class VillageFailure(m: String) extends VillageResponse
 
+  /**
+    * Response for failed deletion
+    */
+  case class DeleteVillageSuccess() extends VillageResponse
 }

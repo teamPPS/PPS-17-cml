@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorRef, ActorSelection}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
 import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest._
-import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
+import cml.controller.messages.VillageResponse.{CreateVillageSuccess, DeleteVillageSuccess, VillageFailure}
 import cml.services.authentication.TokenStorage
 import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
 import cml.utils.ViewConfig.AuthenticationWindow
@@ -77,8 +77,11 @@ class VillageActor() extends Actor{
           httpResponse match {
             case "Not a valid request" =>
               println("Failure to delete village")
+
+            case _ =>
+              authenticationActor ! DeleteVillageSuccess()
               deleteSucceedOnGui(controller)
-            case _ => println("Deletion Done")
+              println("Deletion Done")
           }
         case Failure(exception) => println(exception)
       }

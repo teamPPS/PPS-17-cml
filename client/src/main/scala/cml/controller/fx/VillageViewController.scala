@@ -11,6 +11,7 @@ import cml.utils.ModelConfig
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
+import javafx.scene.Node
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
@@ -35,6 +36,7 @@ class VillageViewController {
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
   @FXML var menuButton: MenuButton = _
+  @FXML var deleteButton: Button = _
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
@@ -132,7 +134,7 @@ class VillageViewController {
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
   }
 
-  def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, menuButton.getScene)
+  def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteButton.getScene)
 
   def logoutSystem(): Unit = {
 //    authenticationActor ! Logout() //TODO non funziona niente dopo queste operazioni di logout perché l'authentication actor ha il riferimento al vecchio controller fx
