@@ -22,7 +22,6 @@ case class FireCreature(creature_name: String, creature_level: Int) extends Crea
     setAttack()
   }
 
-  //TODO: non serve
   override def setAttack() : Unit = {
     currentLevel match {
       case 10 => attackValue += 10

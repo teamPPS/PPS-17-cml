@@ -58,8 +58,8 @@ class ArenaViewController {
 
   @FXML
   def attackOption(): Unit = {
-    println("Attack -- ")
     battleGame.attack()
+    if(battleGame._attackPoint equals 0)  attackButton.setDisable(true)
     println("attack point in attack -- " + battleGame._attackPoint)
   }
 
@@ -72,8 +72,11 @@ class ArenaViewController {
 
   @FXML
   def protectionOption(): Unit = {
-    print("Protection -- ")
-    battleGame.charge()
+    battleGame.protection()
+    println("protection on: " + battleGame._isProtection())
+    //todo: da rivedere questa logica
+    battleGame.isProtect_()
+    println("protection on: " + battleGame._isProtection())
   }
 
   @FXML

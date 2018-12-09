@@ -100,7 +100,6 @@ class BattleViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       createBattleActor()
-      println("context --- > " + exitButton.getScene )
       battleActor ! SceneInfo(exitButton.getScene)
     }
     //TODO: add progress indicator

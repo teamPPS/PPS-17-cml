@@ -17,5 +17,10 @@ object ArenaRequest {
     */
   case class StopRequest() extends ArenaRequest
 
+  /**
+    * Request for attack the challenger
+    */
+  case class AttackRequest(attackPower: Int) extends ArenaRequest
+
 
 }

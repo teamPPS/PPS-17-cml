@@ -22,7 +22,12 @@ case class BattleRulesImpl() {
 
   def protection(): Unit = isProtect = true
 
-  def gameEngine(): Unit = {
+  def gameEngine(powerAttackValue: Int): Int = {
+    var powerAttack = 0
+    if(isProtect) powerAttack = 0
+    else powerAttack = powerAttackValue
+    creatureLife -= powerAttack
+    creatureLife
   }
 
   private def decrementAttackPoint(): Unit = {
@@ -40,4 +45,7 @@ case class BattleRulesImpl() {
     println("IS possibile attaccare? -- " + isAttack)
     isAttack
   }
+
+  def isProtect_(): Unit = isProtect = false
+  def _isProtection(): Boolean = isProtect
 }
