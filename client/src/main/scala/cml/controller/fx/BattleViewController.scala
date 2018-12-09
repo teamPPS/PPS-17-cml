@@ -90,7 +90,7 @@ class BattleViewController {
   }
 
   @FXML
-  def creatureOption(): Unit = {
+  def startGame(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
       setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level)

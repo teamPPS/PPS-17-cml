@@ -11,6 +11,7 @@ import cml.utils.ModelConfig
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
+import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
 import play.api.libs.json._
@@ -22,7 +23,7 @@ class VillageViewController {
   @FXML var playerLevelLabel: Label = _
   @FXML var goldLabel: Label = _
   @FXML var foodLabel: Label = _
-  @FXML var settingsMenuItem: MenuItem = _
+  @FXML var deleteMenuItem: MenuItem = _
   @FXML var logoutMenuItem: MenuItem = _
   @FXML var selectionInfo: TextArea = _
   @FXML var battleButton: Button = _
@@ -40,19 +41,36 @@ class VillageViewController {
   val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
 
   def initialize(): Unit = {
-    settingsMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
-    logoutMenuItem setOnAction (_ => logoutSystem() )
-    battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
+//    deleteMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
+//    logoutMenuItem setOnAction (_ => logoutSystem() )
+//    battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
 
     println("village view init")
     villageActor ! EnterVillage(this)
+  }
 
+  @FXML def goToBattle(): Unit = ViewSwitch.activate(BattleWindow.path, battleButton.getScene)
+
+  @FXML def logout(): Unit =  logoutSystem()
+
+  @FXML def deleteAccount(): Unit = {
+    val alert = new Alert(AlertType.CONFIRMATION) {
+      setTitle("Confirmation Dialog")
+      setHeaderText("Delete Account")
+      setContentText("Are you sure want to confirm?")
+    }
+
+    val result = alert.showAndWait()
+    if (result.isPresent && result.get() == ButtonType.OK) {
+      println("invio msg delete" )
+//      villageActor ! Delete()
+    }
   }
 
 
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
-    var json: JsValue = Json.parse(jsonUserVillage) //TODO tutto dentro a JsonMaker o  comunque utils?
+    val json: JsValue = Json.parse(jsonUserVillage) //TODO tutto dentro a JsonMaker o  comunque utils?
     val gold = (json \ Village.GOLD_FIELD).get.toString()
     val food = (json \ Village.FOOD_FIELD).get.toString()
     val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
