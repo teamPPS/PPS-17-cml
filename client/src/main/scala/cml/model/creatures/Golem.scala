@@ -37,7 +37,8 @@ case class Golem(creature_name: String, creature_level: Int) extends Creature {
   override def element: String = _element
 
   override def level: Int = {
-    currentLevel = creature_level
+    if(currentLevel < creature_level)
+      currentLevel = creature_level
     currentLevel
   }
 

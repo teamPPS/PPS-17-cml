@@ -51,7 +51,8 @@ case class Dragon(creature_name: String, creature_level: Int) extends Creature{
     */
 
   override def level: Int = {
-    currentLevel = creature_level
+    if(currentLevel < creature_level)
+      currentLevel = creature_level
     currentLevel
   }
 

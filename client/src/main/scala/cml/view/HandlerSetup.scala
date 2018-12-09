@@ -69,12 +69,16 @@ object Handler {
 
       for (s <- village.villageStructure) {
         if (s.position equals Position(x, y)) {
+
+          println(s.creatures)
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.selectionInfo setText "Structure: " + getClassName(s)
             c.addCreatureButton.setOnMouseClicked(_ => {
               val creature = StaticCreatures(s)
               s.addCreature(creature getCreature)
+
+              println("dopo"+s.creatures)
               villageActor ! SetUpdateVillage(creature json)
               c.addCreatureButton setDisable true
               c.battleButton setDisable false
@@ -165,7 +169,7 @@ object Handler {
         "Level: " + level + "\n" +
         "Resources: " + resourceAmount + "\n" +
         "Creature: " + creatures.head.name + "\nType: "+ creatures.head.creatureType +"\n"+
-        "Creature level: " + creatures.head.currentLevel
+        "Creature level: " + creatures.head.level
     }else{
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +

@@ -53,6 +53,7 @@ class BattleViewController {
   def initialize(): Unit = {
 
     for (s <- village.villageStructure) {
+      println("battleview"+s.creatures)
       if (s.creatures != null && s.creatures.nonEmpty) {
         creatures = s.creatures
         obsCreatures add creatures.head
@@ -93,7 +94,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.currentLevel)
+      setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level)
       setContentText("Are you sure want to confirm?")
     }
 

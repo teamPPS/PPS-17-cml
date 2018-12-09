@@ -41,7 +41,8 @@ case class WaterDemon(creature_name: String, creature_level: Int) extends Creatu
   override def element: String = _element
 
   override def level: Int = {
-    currentLevel = creature_level
+    if(currentLevel < creature_level)
+      currentLevel = creature_level
     currentLevel
   }
 
@@ -51,7 +52,6 @@ case class WaterDemon(creature_name: String, creature_level: Int) extends Creatu
     currentLevel = creature_level
     setAttack()
   }
-
 
   override def name: String = creature_name
 
