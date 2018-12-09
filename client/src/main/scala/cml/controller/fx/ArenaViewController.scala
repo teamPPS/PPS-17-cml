@@ -1,6 +1,8 @@
 package cml.controller.fx
 
-import cml.controller.messages.ArenaRequest.StopRequest
+import akka.actor.ActorSelection
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.messages.ArenaRequest.AttackRequest
 import cml.model.base.Creature
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
@@ -24,7 +26,9 @@ class ArenaViewController {
 
   var battleGame: BattleRulesImpl = BattleRulesImpl()
   val selectedCreature: Option[Creature] = Creature.selectedCreature
-  
+
+  val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
+
   def initialize(): Unit = {
     battleGame.initialization()
     attackButton.setDisable(true)
@@ -62,31 +66,25 @@ class ArenaViewController {
   def attackOption(): Unit = {
     battleGame.attack()
     if(battleGame._attackPoint equals 0)  attackButton.setDisable(true)
-    println("attack point in attack -- " + battleGame._attackPoint)
     val meno = game()
-    println("Attack value " + meno)
-    //todo:send message
+    arenaActor ! AttackRequest(meno)
   }
 
   @FXML
   def chargeOption(): Unit ={
     attackButton.setDisable(false)
     battleGame.charge()
-    println("attack point in cherge -- " + battleGame._attackPoint)
     val meno = game()
-    println("Attack value " + meno)
+    arenaActor ! AttackRequest(meno)
     battleGame.isCharge_()
   }
 
   @FXML
   def protectionOption(): Unit = {
     battleGame.protection()
-    println("protection on: " + battleGame._isProtection())
     val meno = game()
-    println("Attack value " + meno)
-    //todo: send messegge
+    arenaActor ! AttackRequest(meno)
     battleGame.isProtect_()
-    println("protection on: " + battleGame._isProtection())
   }
 
   @FXML
@@ -99,9 +97,9 @@ class ArenaViewController {
     challengerLifeBar.setProgress(0.25)
   }
 
-  private def attackValue_(): Int = selectedCreature.get.attackValue
+  private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
 
   private def game(): Int = {
-    battleGame.gameEngine(attackValue_())
+    battleGame.gameEngine(creatureAttackValue_())
   }
 }

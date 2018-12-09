@@ -28,6 +28,12 @@ trait BattleRule {
     */
   def protection()
 
+  /**
+    * Define battle engine
+    * @param powerAttackValue is power attack in base of method implemented
+    * @return actual creature life
+    */
+  def gameEngine(powerAttackValue: Int): Int
 
 
 }
@@ -52,7 +58,7 @@ case class BattleRulesImpl() extends BattleRule {
     isCharge = false
   }
 
-  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint()
+  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint(); println("AttackPoint --> " + attackPoint)
 
   override def charge(): Unit = {
     incrementAttackPoint()
@@ -61,10 +67,10 @@ case class BattleRulesImpl() extends BattleRule {
 
   override def protection(): Unit = isProtect = true
 
-  def gameEngine(powerAttackValue: Int): Int = {
+  override def gameEngine(powerAttackValue: Int): Int = {
     var powerAttack = 0
     if(isProtect) powerAttack = 0
-    if(isCharge) powerAttack = 0
+    else if(isCharge) powerAttack = 0
     else powerAttack = powerAttackValue
     creatureLife -= powerAttack
     creatureLife
@@ -80,7 +86,6 @@ case class BattleRulesImpl() extends BattleRule {
   private def isPossibleAttack: Boolean = {
     if(_attackPoint > 0) isAttack = true
     else isAttack = false
-    println("IS possibile attaccare? -- " + isAttack)
     isAttack
   }
 

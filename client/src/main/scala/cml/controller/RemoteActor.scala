@@ -1,10 +1,9 @@
 package cml.controller
 
 import java.io.File
-
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
-import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, ExitSuccess, RequireEnterInArenaSuccess}
+import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import com.typesafe.config.ConfigFactory
 
@@ -15,7 +14,7 @@ import scala.collection.mutable.ListBuffer
   * @author Chiara Volonnino
   */
 
-class RemoteActor extends Actor {
+class RemoteActor extends Actor with ActorLogging {
 
   //var battleUserList = new ListBuffer[Int] // sarebbe figo fare una lista di user
   var actorInList = new ListBuffer[ActorRef]
@@ -29,19 +28,20 @@ class RemoteActor extends Actor {
       if (exist) actorInList.foreach(actor => actor ! ExistChallengerSuccess(actorInList))
     case ExitRequest() =>
       removeIntoBattleUserList(sender)
-    case _ => println("WARNING: RemoteActor has not receive anything")
+    case _ => log.info("WARNING: RemoteActor has not receive anything")
   }
 
   private def addIntoBattleUserList(actorIdentity: ActorRef){
     actorInList += actorIdentity
-    println("LIST add --> " + userList_ )
+    log.info("LIST add --> " + userList_ )
   }
 
   private def removeIntoBattleUserList(actorIdentity: ActorRef) {
     actorInList -= actorIdentity
-    println("LIST remove --> " + userList_)
+    log.info("LIST remove --> " + userList_)
   }
 
+  //todo: technical debit
   private def existChallenger(): Boolean = {
     if (userList_().length.equals(2)) true
     else false
