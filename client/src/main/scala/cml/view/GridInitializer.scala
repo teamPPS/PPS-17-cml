@@ -60,12 +60,6 @@ object Setup {
           .snapshot(new SnapshotParameters(), null)
       )
       val baseTile = terrainImage //TODO mettere a posto Tile.scala in modo che baseTile e Tile siano accumunabili ad un interfaccia comune
-      val farmTile = createTile(FARM, tileSet)
-      val caveTile = createTile(CAVE, tileSet)
-      val fireTile = createTile(FIRE_HABITAT, tileSet)
-      val waterTile = createTile(WATER_HABITAT, tileSet)
-      val airTile = createTile(AIR_HABITAT, tileSet)
-      val earthTile = createTile(EARTH_HABITAT, tileSet)
 
       loop(0, MapSide) foreach {
         case(x, y) =>
@@ -75,13 +69,13 @@ object Setup {
       }
 
       VillageMap.instance().get.villageStructure.foreach {
-        case f: Farm => grid.add(farmTile, f.position.y, f.position.x)
-        case c: Cave => grid.add(caveTile, c.position.y, c.position.x)
+        case f: Farm => grid.add(createTile(FARM, tileSet), f.position.y, f.position.x)
+        case c: Cave => grid.add(createTile(CAVE, tileSet), c.position.y, c.position.x)
         case h: Habitat => h.element match {
-          case FIRE => grid.add(fireTile, h.position.y, h.position.x)
-          case WATER => grid.add(waterTile, h.position.y, h.position.x)
-          case AIR => grid.add(airTile, h.position.y, h.position.x)
-          case EARTH => grid.add(earthTile, h.position.y, h.position.x)
+          case FIRE => grid.add(createTile(FIRE_HABITAT, tileSet), h.position.y, h.position.x)
+          case WATER => grid.add(createTile(WATER_HABITAT, tileSet), h.position.y, h.position.x)
+          case AIR => grid.add(createTile(AIR_HABITAT, tileSet), h.position.y, h.position.x)
+          case EARTH => grid.add(createTile(EARTH_HABITAT, tileSet), h.position.y, h.position.x)
         }
       }
 
