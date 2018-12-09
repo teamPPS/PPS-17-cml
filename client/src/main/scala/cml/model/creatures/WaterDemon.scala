@@ -12,7 +12,7 @@ import play.api.libs.json.Json
   * @author Filippo Portolani, (edited by) ecavina
   */
 
-case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature {
+case class WaterDemon(creature_name: String, creature_level: Int) extends Creature {
 
   val _element : String = WATER
 
@@ -45,12 +45,12 @@ case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature
   override def attackPower: Int = attackValue
 
   override def currentLevel_ : Unit = {
-    currentLevel = creatureLevel
+    currentLevel = creature_level
     setAttack()
   }
 
 
-  override def name: String = creatureName
+  override def name: String = creature_name
 
   override def creatureType: String = WATERDEMON
 }

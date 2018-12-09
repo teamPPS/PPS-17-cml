@@ -75,7 +75,7 @@ object Handler {
             c.addCreatureButton.setOnMouseClicked(_ => {
               val creature = StaticCreatures(s)
               s.addCreature(creature getCreature)
-              villageActor ! UpdateVillage(creature json)
+              villageActor ! SetUpdateVillage(creature json)
               c.addCreatureButton setDisable true
               c.battleButton setDisable false
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
@@ -84,9 +84,8 @@ object Handler {
             c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => {
               val upgrade = StructureUpgrade(s)
-              villageActor ! SetUpdateVillage(upgrade structureJson)
               upgrade creatureJson match {
-                case null => println("Not an habitat")
+                case null => villageActor ! SetUpdateVillage(upgrade structureJson)
                 case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
               }
               //Decremento denaro in base al prezzo, update modello remoto e locale

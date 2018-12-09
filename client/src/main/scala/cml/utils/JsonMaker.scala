@@ -1,6 +1,6 @@
 package cml.utils
 
-import cml.model.base.Position
+import cml.model.base.{Position, Structure}
 import cml.schema.Village._
 import play.api.libs.json.{JsValue, Json}
 
@@ -57,13 +57,23 @@ case class HabitatJson(habitatElem: String, habitatLevel: Int, habitatPosition: 
   * @param creatureName type of creature
   * @param creatureLevel level of the creature
   */
-case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: String) extends  JsonMaker {
+case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: String, s: Structure) extends  JsonMaker {
   override def json: JsValue = Json.obj(
-    MULTIPLE_CREATURES_FIELD -> Json.obj(
-      SINGLE_CREATURE_FIELD -> Json.obj(
-        CREATURE_NAME_FIELD -> creatureName,
-        CREATURE_LEVEL_FIELD -> creatureLevel,
-        CREATURE_TYPE_FIELD -> creatureType
+    s.position.toString -> Json.obj(
+      SINGLE_HABITAT_FIELD -> Json.obj(
+        HABITAT_LEVEL_FIELD -> s.level,
+        NATURAL_ELEMENT_FIELD -> s.habitatElement,
+        HABITAT_POSITION_FIELD -> Json.obj(
+          "x" -> s.position.x,
+          "y" -> s.position.y
+        ),
+        MULTIPLE_CREATURES_FIELD -> Json.obj(
+          SINGLE_CREATURE_FIELD -> Json.obj(
+            CREATURE_NAME_FIELD -> creatureName,
+            CREATURE_LEVEL_FIELD -> creatureLevel,
+            CREATURE_TYPE_FIELD -> creatureType
+          )
+        )
       )
     )
   )

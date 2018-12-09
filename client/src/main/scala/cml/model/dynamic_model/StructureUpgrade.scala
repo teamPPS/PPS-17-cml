@@ -36,7 +36,7 @@ case class StructureUpgrade(s: Structure) extends Upgrade {
       if(s.creatures != null && s.creatures.nonEmpty){
         jsonStructure = HabitatJson(s.habitatElement, s.level, s.position).json
         jsonPosition = PositionJson("HABITAT", s.position.x, s.position.y).json
-        jsonCreature = CreatureUpgrade(s.creatures.head).creatureJson
+        jsonCreature = CreatureUpgrade(s.creatures.head, s).creatureJson
       }
   }
 
