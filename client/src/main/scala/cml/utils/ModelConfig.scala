@@ -5,7 +5,7 @@ import javafx.scene.image.Image
 object ModelConfig {
 
   object Creature {
-    val WATERDEMON: String = "Water Demon"
+    val WATERDEMON: String = "WaterDemon"
     val DRAGON: String = "Dragon"
     val GRIFFIN: String = "Griffin"
     val GOLEM: String = "Golem"
