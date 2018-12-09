@@ -50,7 +50,10 @@ case class Dragon(creature_name: String, creature_level: Int) extends Creature{
     * @return the current level
     */
 
-  override def level: Int = currentLevel
+  override def level: Int = {
+    currentLevel = creature_level
+    currentLevel
+  }
 
   /**
     * This is a getter of the dragon attack power

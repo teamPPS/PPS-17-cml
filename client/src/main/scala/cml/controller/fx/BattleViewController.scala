@@ -93,7 +93,7 @@ class BattleViewController {
   def creatureOption(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
-      setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level)
+      setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.currentLevel)
       setContentText("Are you sure want to confirm?")
     }
 

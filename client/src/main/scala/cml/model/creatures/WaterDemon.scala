@@ -40,7 +40,10 @@ case class WaterDemon(creature_name: String, creature_level: Int) extends Creatu
 
   override def element: String = _element
 
-  override def level: Int = currentLevel
+  override def level: Int = {
+    currentLevel = creature_level
+    currentLevel
+  }
 
   override def attackPower: Int = attackValue
 
