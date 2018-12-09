@@ -25,10 +25,14 @@ object VillageRequest {
 
   /**
     * Request to update a village
-    * @param update village user
+    * @param update user village
     */
   case class UpdateVillage(update: JsValue) extends VillageRequest
 
+  /**
+    * Request to update something already existing in the village
+    * @param update value to update
+    */
 
   case class SetUpdateVillage(update: JsValue) extends VillageRequest
 
@@ -37,6 +41,9 @@ object VillageRequest {
     */
   case class DeleteVillage() extends VillageRequest
 
+  /**
+    * Request to logout from the village
+    */
   case class Logout() extends VillageRequest
 
 }

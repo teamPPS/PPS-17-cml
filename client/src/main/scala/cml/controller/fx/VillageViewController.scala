@@ -2,7 +2,7 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-import cml.controller.messages.VillageRequest.EnterVillage
+import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
 import cml.model.base._
 import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
@@ -63,7 +63,7 @@ class VillageViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       println("invio msg delete" )
-//      villageActor ! Delete()
+      villageActor ! DeleteVillage()
     }
   }
 
