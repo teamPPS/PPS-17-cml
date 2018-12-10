@@ -6,7 +6,7 @@ import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.controller.messages.VillageRequest.CreateVillage
-import cml.controller.messages.VillageResponse.{CreateVillageSuccess, DeleteVillageSuccess, VillageFailure}
+import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
 import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 import cml.services.authentication.TokenStorage
 import javafx.application.Platform
