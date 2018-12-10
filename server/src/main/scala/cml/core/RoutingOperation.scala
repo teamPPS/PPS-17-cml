@@ -28,6 +28,7 @@ trait RoutingOperation {
     * @return A Option with the body as String or None
     */
   def getRequestAndBody(implicit routingContext: RoutingContext): Option[String] = {
+    println(routingContext.getBodyAsString())
     routingContext.getBodyAsString()
   }
 

@@ -91,8 +91,9 @@ object Handler {
                 case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
               }
               //Decremento denaro in base al prezzo, update modello remoto e locale
-//              val resourceJson = MoneyJson(INIT_VALUE - price).json
-//              villageActor ! SetUpdateVillage(resourceJson)
+              val resourceJson = MoneyJson(INIT_VALUE - price).json
+              village.gold -= price
+              villageActor ! SetUpdateVillage(resourceJson)
 
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             })
@@ -152,8 +153,11 @@ object Handler {
       villageActor ! UpdateVillage(json)
 //
 //      //Decremento denaro in base al prezzo, update modello remoto e locale
-//      val resourceJson = MoneyJson(INIT_VALUE-price).json
-//      villageActor ! SetUpdateVillage(resourceJson)
+      val resourceJson = MoneyJson(village.gold-price).json
+      println(resourceJson)
+      village.gold -= price
+      println(village.gold)
+      villageActor ! SetUpdateVillage(resourceJson)
 
       c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
       event consume()
