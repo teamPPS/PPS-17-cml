@@ -2,7 +2,6 @@ package cml.controller.messages
 
 import akka.actor.ActorRef
 
-
 /**
   * Arena request message
   *
@@ -28,5 +27,6 @@ object ArenaRequest {
     */
   case class AttackRequest(attackPower: Int) extends ArenaRequest
 
+  case class RequireTurnRequest(attackPower: Int, turn: Int) extends ArenaRequest
 
 }

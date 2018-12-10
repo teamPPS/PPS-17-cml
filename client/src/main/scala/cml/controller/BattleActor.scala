@@ -3,10 +3,12 @@ package cml.controller
 import cml.controller.messages.BattleRequest._
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
-import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, StopRequest}
+import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, RequireTurnRequest, StopRequest}
 import cml.controller.messages.BattleRequest
 import cml.utils.ViewConfig.ArenaWindow
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.actor.utils.TurnImpl
+import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.view.ViewSwitch
 import javafx.application.Platform
 import javafx.scene.Scene
@@ -50,9 +52,15 @@ class BattleActor extends Actor with ActorLogging {
       arenaActor ! ActorRefRequest(self)
       Platform.runLater(() => switchInArena())
     case AttackRequest(attackPower) =>
-      //challenger ! AttackRequest(attackPower)
-      //todo: setta vita
-      log.info("attack " + attackPower )
+      remoteActor ! RequireTurnRequest(attackPower, turn)
+      //todo: invio messaggio e setta vita
+    case RequireTurnSuccess(attackPower, turnValue) =>
+      println("turn")
+      if(turnValue equals turn) {
+        challenger ! "HOLA"
+      }
+    case msg => println(msg)
+    case AttackSuccess() => println("ho ricevuto da " + " im" + sender)
     case StopRequest() => context.stop(self)
   }
 

@@ -14,4 +14,6 @@ object ArenaResponse {
     * Success response to receive attack
     */
   case class AttackSuccess() extends ArenaResponse
+
+  case class RequireTurnSuccess(attackPower: Int, turn: Int) extends ArenaResponse
 }
