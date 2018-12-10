@@ -111,15 +111,15 @@ object VillageService {
     override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = {
       val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
       document = Document(USERNAME -> username)
-      villageCollection.delete(document)
-        .map(deletedDocument => deletedDocument>0)
-        .recoverWith{case e: Throwable =>
-          println(e)
-          Future.failed(e)
-        }
       userCollection.delete(document)
         .map(deletedDocument => deletedDocument>0)
         .recoverWith { case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+      villageCollection.delete(document)
+        .map(deletedDocument => deletedDocument>0)
+        .recoverWith{case e: Throwable =>
           println(e)
           Future.failed(e)
         }

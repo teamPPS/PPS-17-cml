@@ -51,7 +51,6 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   class MockDatabaseClient extends DatabaseClient {
 
-
     var villagesList: ListBuffer[Document] = ListBuffer(
       Document(
         UserField -> "CMLuser",
