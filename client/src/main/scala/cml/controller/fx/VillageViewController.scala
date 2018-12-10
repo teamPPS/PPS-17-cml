@@ -43,11 +43,6 @@ class VillageViewController {
   val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
 
   def initialize(): Unit = {
-//    deleteMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
-//    logoutMenuItem setOnAction (_ => logoutSystem() )
-//    battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
-
-    println("village view init")
     villageActor ! EnterVillage(this)
   }
 

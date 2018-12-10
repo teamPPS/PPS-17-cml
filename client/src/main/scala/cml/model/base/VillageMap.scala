@@ -26,8 +26,4 @@ object VillageMap {
     _instance
   }
 
-  def setInstance(village: VillageMap): Unit = {
-    _instance = Option(village)
-  }
-
 }

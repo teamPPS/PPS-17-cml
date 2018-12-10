@@ -44,7 +44,6 @@ trait Handler {
 object Handler {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val village: VillageMap = VillageMap.instance().get
   val price = 30 //prezzo iniziale deve essere globale ?
 
   val handleVillage: Handler = {
@@ -67,7 +66,7 @@ object Handler {
       disableButtons(c)
       c.selectionInfo setText "Coordinates (" + x + ", " + y + ")"
 
-      for (s <- village.villageStructure) {
+      for (s <- VillageMap.instance().get.villageStructure) {
         if (s.position equals Position(x, y)) {
 
           println(s.creatures)
@@ -77,7 +76,6 @@ object Handler {
             c.addCreatureButton.setOnMouseClicked(_ => {
               val creature = StaticCreatures(s)
               villageActor ! SetUpdateVillage(creature json)
-              VillageMap.setInstance(village)
               c.addCreatureButton setDisable true
               c.battleButton setDisable false
               c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
@@ -148,7 +146,7 @@ object Handler {
 
       val structure = StaticStructure(newTile, x, y)
       val json = structure.json
-      village.villageStructure += structure.getStructure
+      VillageMap.instance().get.villageStructure += structure.getStructure
       villageActor ! UpdateVillage(json)
 //
 //      //Decremento denaro in base al prezzo, update modello remoto e locale
