@@ -63,17 +63,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       println("Village create success")
       loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
-    case DeleteVillageSuccess() =>
-      println("delete village success - deleting user...")
-      authenticationVertx.delete().onComplete{
-        case Success(httpResponse) =>
-          httpResponse match {
-            case "Not a valid request" =>
-              println("Failure to delete user")
-            case _ => println("Deletion Done")
-          }
-        case Failure(exception) => println(exception)
-      }
   }
 
   /**

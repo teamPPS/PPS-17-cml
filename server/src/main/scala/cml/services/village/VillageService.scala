@@ -2,12 +2,12 @@ package cml.services.village
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import cml.schema.User._
-import cml.schema.Village._
+import cml.schema.User.USERNAME
+import cml.schema.Village.{FOOD_FIELD, GOLD_FIELD, VILLAGE_NAME_FIELD}
 import org.mongodb.scala.Document
 import play.api.libs.json.Json
 
-import scala.concurrent._
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Village service
@@ -39,7 +39,12 @@ sealed trait VillageService {
     */
   def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
 
-//TODO doc
+  /**
+    * Update items in user's village
+    * @param username used to find the document
+    * @param update a json describing the existing item to update
+    * @return
+    */
   def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
 
   /**
@@ -60,25 +65,11 @@ object VillageService {
 
     override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
 
-      val initialBuilding  = Document(
-        SINGLE_BUILDING_FIELD -> Document(
-          BUILDING_TYPE_FIELD -> "CAVE",
-          BUILDING_LEVEL_FIELD -> 1,
-          BUILDING_POSITION_FIELD -> Document(
-            "x" -> 1,
-            "y" -> 1
-          )
-        )
-      )
-
-      println("initialBuilding.toString())"+initialBuilding.toString())
-
       document = Document(
         VILLAGE_NAME_FIELD -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
         USERNAME -> username,
         FOOD_FIELD -> 100,
         GOLD_FIELD -> 100
-//        MULTIPLE_BUILDINGS_FIELD -> List(initialBuilding)
       )
       villageCollection.insert(document).map(_ => "Completed")
         .recoverWith{case e: Throwable =>
@@ -108,21 +99,7 @@ object VillageService {
     }
 
     override def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-
       val userDoc = Document(USERNAME -> username)
-//      val queryDocument = Document(
-//        USERNAME -> username,
-//        MULTIPLE_BUILDINGS_FIELD -> Document(
-//          SINGLE_BUILDING_FIELD -> Document(
-//            BUILDING_TYPE_FIELD -> "CAVE",
-//            BUILDING_LEVEL_FIELD -> 1,
-//            BUILDING_POSITION_FIELD -> Document(
-//              "x" -> 1,
-//              "y" -> 1
-//            )
-//          )
-//        )
-//      )
       villageCollection.setUpdate(userDoc, Document(Json.parse(update).toString()))
         .map(modifiedDocument => modifiedDocument>0)
         .recoverWith{case e: Throwable =>
@@ -132,10 +109,17 @@ object VillageService {
     }
 
     override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
       document = Document(USERNAME -> username)
       villageCollection.delete(document)
         .map(deletedDocument => deletedDocument>0)
         .recoverWith{case e: Throwable =>
+          println(e)
+          Future.failed(e)
+        }
+      userCollection.delete(document)
+        .map(deletedDocument => deletedDocument>0)
+        .recoverWith { case e: Throwable =>
           println(e)
           Future.failed(e)
         }

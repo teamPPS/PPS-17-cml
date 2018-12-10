@@ -1,12 +1,11 @@
 package cml.controller.fx
 
-import akka.actor.{ActorRef, ActorSelection, Props}
-import cml.controller.AuthenticationActor
-import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-import cml.view.ViewSwitch
 import cml.controller.actor.utils.InputControl._
+import cml.controller.messages.AuthenticationRequest.{Login, Register}
 import cml.utils.ViewConfig._
+import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control.{Button, Label, PasswordField, TextField}
 
