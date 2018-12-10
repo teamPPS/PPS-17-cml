@@ -7,16 +7,17 @@ package cml.controller
   */
 
 import akka.actor.{Actor, ActorLogging, ActorRef}
-import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest}
+import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, StopRequest}
 
 class ArenaActor extends Actor with ActorLogging {
 
   private var battleActor: ActorRef = _
 
   override def receive: Receive = {
-    case ActorRefRequest(actor) => battleActor = actor
-    case AttackRequest(value) =>
-      println("attack value " + value)
-      battleActor ! AttackRequest(value)
+    case ActorRefRequest(actor) =>
+      log.info("Receive ActorRef: " + actor)
+      battleActor = actor
+    case AttackRequest(value) => battleActor ! AttackRequest(value)
+    case StopRequest() => battleActor ! StopRequest()
   }
 }

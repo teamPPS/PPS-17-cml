@@ -73,7 +73,7 @@ case class BattleRulesImpl() extends BattleRule {
     else if(isCharge) powerAttack = 0
     else powerAttack = powerAttackValue
     creatureLife -= powerAttack
-    creatureLife
+    creatureLife // in teoria deve tornare la potenza
   }
 
   private def decrementAttackPoint(): Unit = {
@@ -89,6 +89,7 @@ case class BattleRulesImpl() extends BattleRule {
     isAttack
   }
 
+  def _creatureLife(): Int = creatureLife
   def _attackPoint: Int = attackPoint
   def isProtect_(): Unit = isProtect = false
   def _isProtection(): Boolean = isProtect

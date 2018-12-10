@@ -23,7 +23,6 @@ class BattleActor extends Actor with ActorLogging {
 
   var remoteActor: ActorSelection = _
   var challenger: ActorRef = _
-  var challengerActor: ActorSelection = _
   var sceneContext: Scene = _
   var turn: Int = _
   val arenaActor: ActorRef = system.actorOf(Props(new ArenaActor()), "ArenaActor")
@@ -50,14 +49,16 @@ class BattleActor extends Actor with ActorLogging {
     case SwitchInArenaRequest() =>
       arenaActor ! ActorRefRequest(self)
       Platform.runLater(() => switchInArena())
-    case AttackRequest(attackPower) => log.info("attack " + attackPower )
+    case AttackRequest(attackPower) =>
+      //challenger ! AttackRequest(attackPower)
+      //todo: setta vita
+      log.info("attack " + attackPower )
     case StopRequest() => context.stop(self)
   }
 
   private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
     user.foreach(actor => if(!actor.equals(self)) challenger = actor)
     log.info("Im user: " + self + " and my challenger is - " + challenger)
-    challenge_()
     _turn(user)
   }
 
@@ -65,12 +66,6 @@ class BattleActor extends Actor with ActorLogging {
     if(user.head equals self) turn = 0
     else turn = 1
     log.info("My turn is: " + turn)
-  }
-
-  private def challenge_(): Unit ={
-    challengerActor = context.actorSelection(challenger.path)
-    //println("actor challeng: " + challengerActor + " ref chal " + challenger)
-    //challenger ! HelloChallenger("Hello my challenger im " + self)
   }
 
   private def switchInArena(): Unit ={

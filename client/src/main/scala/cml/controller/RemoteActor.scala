@@ -16,7 +16,7 @@ import scala.collection.mutable.ListBuffer
 
 class RemoteActor extends Actor with ActorLogging {
 
-  //var battleUserList = new ListBuffer[Int] // sarebbe figo fare una lista di user
+  // sarebbe figo fare una lista di user
   var actorInList = new ListBuffer[ActorRef]
 
   override def receive: Receive = {

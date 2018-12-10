@@ -2,7 +2,7 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
-import cml.controller.messages.ArenaRequest.AttackRequest
+import cml.controller.messages.ArenaRequest.{AttackRequest, StopRequest}
 import cml.model.base.Creature
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
@@ -26,6 +26,7 @@ class ArenaViewController {
 
   var battleGame: BattleRulesImpl = BattleRulesImpl()
   val selectedCreature: Option[Creature] = Creature.selectedCreature
+  var powerAttack: Int = _
 
   val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
 
@@ -57,7 +58,7 @@ class ArenaViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       Creature.setSelectedCreature(None)
-      // todo: send stop message
+      arenaActor ! StopRequest()
       ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
     }
   }
@@ -66,24 +67,24 @@ class ArenaViewController {
   def attackOption(): Unit = {
     battleGame.attack()
     if(battleGame._attackPoint equals 0)  attackButton.setDisable(true)
-    val meno = game()
-    arenaActor ! AttackRequest(meno)
+    powerAttack = game()
+    arenaActor ! AttackRequest(powerAttack)
   }
 
   @FXML
   def chargeOption(): Unit ={
     attackButton.setDisable(false)
     battleGame.charge()
-    val meno = game()
-    arenaActor ! AttackRequest(meno)
+    powerAttack = game()
+    arenaActor ! AttackRequest(powerAttack)
     battleGame.isCharge_()
   }
 
   @FXML
   def protectionOption(): Unit = {
     battleGame.protection()
-    val meno = game()
-    arenaActor ! AttackRequest(meno)
+    powerAttack = game()
+    arenaActor ! AttackRequest(powerAttack)
     battleGame.isProtect_()
   }
 
