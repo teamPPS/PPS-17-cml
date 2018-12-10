@@ -25,13 +25,17 @@ class AuthenticationViewController {
   @FXML var formMsgLabel: Label = _
   val AuthenticationActorPath = "/user/AuthenticationActor"
 
-
   val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
 
   def initialize(): Unit = {
-    registerButton setOnAction(_ => requestAuthentication(register, registrationUsernameField , registrationPasswordField))
-    loginButton setOnAction(_ => requestAuthentication(login, loginUsernameField, loginPasswordField))
+    //TODO invio messaggio con riferimento al controller all'attore di autenticazione
+
+    println("auth view")
   }
+
+  @FXML def onRegister(): Unit = requestAuthentication(register, registrationUsernameField , registrationPasswordField)
+
+  @FXML def onLogin(): Unit = requestAuthentication(login, loginUsernameField, loginPasswordField)
 
   /**
     * Sends requests to the actor which manages the authentication

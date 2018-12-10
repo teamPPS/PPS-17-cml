@@ -42,10 +42,12 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
       .map { document => assert(document.contains("Completed"))}
   }
 
-  test("testDeleteVillageAndUser") {
-    villageService
-      .deleteVillageAndUser("CMLuser").map(result => assert(result, true))
-  }
+
+//TODO
+//  test("testDeleteVillageAndUser") {
+//    villageService
+//      .deleteVillageAndUser("CMLuser").map(result => assert(result, true))
+//  }
 
   class MockDatabaseClient extends DatabaseClient {
 
