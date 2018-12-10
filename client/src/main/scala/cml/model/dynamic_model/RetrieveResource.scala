@@ -23,13 +23,16 @@ case class RetrieveResource(s: Structure) extends Retrieve {
 
   s.getClass.getName match {
     case FARM_CLASS =>
-      json = FoodJson(village.food + s.resource.amount).json
+      village.food += s.resource.amount
+      json = FoodJson(village.food).json
       resType = FOOD
     case CAVE_CLASS =>
-      json = MoneyJson(village.gold + s.resource.amount).json
+      village.gold += s.resource.amount
+      json = MoneyJson(village.gold).json
       resType = MONEY
     case HABITAT_CLASS =>
-      json = MoneyJson(village.gold + s.resource.amount).json
+      village.gold += s.resource.amount
+      json = MoneyJson(village.gold).json
       resType = MONEY
   }
 

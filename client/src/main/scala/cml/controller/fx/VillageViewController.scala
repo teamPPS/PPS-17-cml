@@ -5,13 +5,12 @@ import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
-import cml.model.base._
+import cml.model.base.{Cave, Farm, Structure, VillageMap}
 import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
 import cml.schema.Village
 import cml.utils.ModelConfig
-import cml.utils.ViewConfig._
+import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
-import javafx.beans.binding.Bindings
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
@@ -61,7 +60,6 @@ class VillageViewController {
 
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
-      println("invio msg delete" )
       villageActor ! DeleteVillage(this)
     }
   }
@@ -74,10 +72,9 @@ class VillageViewController {
     val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
 
     playerLevelLabel.setText(villageName)
-//    goldLabel.setText(gold)
-    goldLabel.textProperty().bind(Bindings.createStringBinding(() => gold.toString))
-//    foodLabel.setText(food)
-    foodLabel.textProperty().bind(Bindings.createStringBinding(() => food.toString))
+    goldLabel.setText(gold)
+    foodLabel.setText(food)
+
 
     val buildings = (json \\ Village.SINGLE_BUILDING_FIELD).map(_.as[JsObject])
     VillageMap.initVillage(mutable.MutableList[Structure](), gold.toInt, food.toInt, villageName)

@@ -29,7 +29,6 @@ class AuthenticationViewController {
 
   def initialize(): Unit = {
     authenticationActor ! SetController(this)
-    println("auth view")
   }
 
   @FXML def onRegister(): Unit = requestAuthentication(register, registrationUsernameField , registrationPasswordField)

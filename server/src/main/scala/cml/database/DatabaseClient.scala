@@ -40,7 +40,13 @@ trait DatabaseClient{
     */
   def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
-//TODO doc
+  /**
+    * Update a document with set filter
+    * @param document choose the document
+    * @param update the change we want to make on the document
+    * @param ec implicit for ExecutionContext
+    * @return success if the document has been updated
+    */
   def setUpdate(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
@@ -101,7 +107,7 @@ object DatabaseClient {
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
-      val future = collection.updateOne(document,Document("$addToSet"-> update)).toFuture() //TODO set
+      val future = collection.updateOne(document,Document("$addToSet"-> update)).toFuture()
       future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 

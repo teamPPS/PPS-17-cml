@@ -2,6 +2,7 @@ package cml.services.village
 
 import cml.core.utils.NetworkConfiguration._
 import cml.services.authentication.TokenStorage
+import cml.services.village.utils.VillageUrl.{SetUpdateAPI, VillagesAPI}
 import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
 import io.vertx.lang.scala.json.JsonObject
 import io.vertx.scala.core.Vertx
@@ -61,7 +62,6 @@ object VillageServiceVertx{
   val successfulCreationResponse: Int = HttpResponseStatus.CREATED.code
   val successfulResponse: Int = HttpResponseStatus.OK.code
 
-  val API_Url: String = "/api/villages"
 
   def apply(): VillageServiceVertx = VillageServiceVertxImpl()
 
@@ -72,7 +72,7 @@ object VillageServiceVertx{
 
     override def createVillage(): Future[String] = {
       println(s"sending create village request")
-      client.post(AuthenticationServicePort, ServiceHostForRequest, API_Url)
+      client.post(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture
         .map(r => r.statusCode match {
@@ -83,7 +83,7 @@ object VillageServiceVertx{
 
     override def enterVillage(): Future[String] = {
       println(s"sending enter village request")
-      client.get(AuthenticationServicePort, ServiceHostForRequest, API_Url)
+      client.get(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture
         .map(r => r.statusCode match {
@@ -94,7 +94,7 @@ object VillageServiceVertx{
 
     override def updateVillage(update: JsValue): Future[String] = {
       val updateJsonObj = new JsonObject(update.toString())
-      client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url)
+      client.put(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendJsonFuture(updateJsonObj)
         .map(r => r.statusCode() match {
@@ -105,7 +105,7 @@ object VillageServiceVertx{
 
     override def setUpdateVillage(update: JsValue): Future[String] = {
       val updateJsonObj = new JsonObject(update.toString())
-      client.put(AuthenticationServicePort, ServiceHostForRequest, API_Url+"/set_update")//TODO
+      client.put(AuthenticationServicePort, ServiceHostForRequest, SetUpdateAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendJsonFuture(updateJsonObj)
         .map(r => r.statusCode() match {
@@ -115,7 +115,7 @@ object VillageServiceVertx{
     }
 
     override def deleteVillageAndUser(): Future[String] = {
-      client.delete(AuthenticationServicePort, ServiceHostForRequest, API_Url)
+      client.delete(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture
         .map(r => r.statusCode match {

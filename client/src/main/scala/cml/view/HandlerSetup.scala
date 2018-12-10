@@ -8,10 +8,9 @@ import cml.model.base.{Creature, Position, Structure, VillageMap}
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
-import cml.utils.ModelConfig.Resource.{INIT_VALUE, FOOD, MONEY}
+import cml.utils.ModelConfig.Resource.{FOOD, INIT_VALUE, MONEY}
 import cml.utils.MoneyJson
 import cml.view.utils.TileConfig.tileSet
-import javafx.beans.binding.Bindings
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
@@ -44,11 +43,10 @@ trait Handler {
 
 object Handler {
 
-  val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
+  val VillageActorPath: String= "/user/VillageActor"
+  val villageActor: ActorSelection = system actorSelection VillageActorPath
   val price = 30
 
-  var gold = VillageMap.instance().get.gold
-  var food = VillageMap.instance().get.food
 
   val handleVillage: Handler = {
     (elem: Node, control: VillageViewController) =>
@@ -86,7 +84,6 @@ object Handler {
           } else {
             c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => {
-
               val gold =  VillageMap.instance().get.gold
               if(gold >= price){
                 val upgrade = StructureUpgrade(s)
@@ -94,7 +91,7 @@ object Handler {
                   case null => villageActor ! SetUpdateVillage(upgrade structureJson)
                   case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
                 }
-                decrementMoney(price, c)
+                decrementMoney(gold, price, c)
                 c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
               }
               else{
@@ -111,9 +108,12 @@ object Handler {
               c.takeButton setOnMouseClicked (_ => {
                 val retrieve = RetrieveResource(s)
                 villageActor ! SetUpdateVillage(retrieve resourceJson)
+
+                val gold = VillageMap.instance().get.gold
+                val food = VillageMap.instance().get.food
                 retrieve resourceType match{
-                  case FOOD => c.foodLabel.textProperty().bind(Bindings.createStringBinding(() => food.toString))
-                  case MONEY => c.goldLabel.textProperty().bind(Bindings.createStringBinding(() => gold.toString))
+                  case FOOD => c.foodLabel.setText(food.toString)
+                  case MONEY => c.goldLabel.setText(gold.toString)
                 }
                 c.takeButton setDisable true
                 c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
@@ -135,7 +135,9 @@ object Handler {
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
-      c.selectionInfo setText "Dragged element " + dragBoard.getString
+      val gold = VillageMap.instance().get.gold
+      if(gold >= price) c.selectionInfo setText "Dragged element " + dragBoard.getString
+      else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
   }
@@ -147,33 +149,36 @@ object Handler {
     })
 
     n setOnDragDropped ((event: DragEvent) => {
-      val dragBoard: Dragboard = event getDragboard()
-      val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
-      n match {
-        case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
-        case _ => throw new ClassCastException
-      }
-      val y = GridPane.getColumnIndex(n)
-      val x = GridPane.getRowIndex(n)
-
+      val gold = VillageMap.instance().get.gold
       if(gold >= price){
+        val dragBoard: Dragboard = event getDragboard()
+        val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
+        n match {
+          case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
+          case _ => throw new ClassCastException
+        }
+        val y = GridPane.getColumnIndex(n)
+        val x = GridPane.getRowIndex(n)
+
         val structure = StaticStructure(newTile, x, y)
         val json = structure.json
         VillageMap.instance().get.villageStructure += structure.getStructure
         villageActor ! UpdateVillage(json)
-        decrementMoney(price, c)
         c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
-      }
-      else c.selectionInfo setText "You can't build a structure if you don't have money"
+
+        decrementMoney(gold, price, c)
+
+      }else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
   }
 
-  private def decrementMoney(price: Int, c: VillageViewController): Unit = {
-    Thread.sleep(2000) //TODO controllo invio di messaggi future
+  private def decrementMoney(gold: Int, price: Int, c: VillageViewController): Unit = {
+    Thread.sleep(200) //TODO controllo invio di messaggi future
+    println(gold)
     val resourceJson = MoneyJson(gold - price).json
-    gold = gold - price
-    c.goldLabel.textProperty().bind(Bindings.createStringBinding(() => gold.toString))
+    VillageMap.instance().get.gold = gold - price
+    c.goldLabel.setText(gold.toString)
     villageActor ! SetUpdateVillage(resourceJson)
   }
 

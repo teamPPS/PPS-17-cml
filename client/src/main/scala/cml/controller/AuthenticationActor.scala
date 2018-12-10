@@ -1,7 +1,7 @@
 package cml.controller
 
 import akka.actor.{Actor, ActorRef, Props}
-import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
+import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.{loginFailure, loginSuccess, registerFailure}
 import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register, SetController}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
