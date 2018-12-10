@@ -134,12 +134,9 @@ class VillageViewController {
       var lastUpdate = 0L
 
       override def handle(now: Long): Unit = {
-        if((now - lastUpdate) > 2000000000L) {
+        if((now - lastUpdate) / 1000000 > 2000) {
           val villageStructures = VillageMap.instance().get.villageStructure
-          val structuresModifier = villageStructures.size
-          val finalModifier = villageStructures.map(s => s.level).sum + structuresModifier
-          VillageMap.instance().get.gold += finalModifier
-          VillageMap.instance().get.food += finalModifier
+          villageStructures.foreach(s => s.resource.inc(s.level))
           lastUpdate = now
         }
       }
