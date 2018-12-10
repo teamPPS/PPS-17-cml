@@ -11,6 +11,7 @@ import cml.schema.Village
 import cml.utils.ModelConfig
 import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
+import javafx.animation.AnimationTimer
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
@@ -41,6 +42,7 @@ class VillageViewController {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
   val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
+  var updateResourcesTimer: AnimationTimer = _
 
   def initialize(): Unit = {
     villageActor ! EnterVillage(this)
@@ -126,11 +128,29 @@ class VillageViewController {
     BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)
     buildingsGrid setContent buildingsMenu
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
+
+    updateResourcesTimer = new AnimationTimer() {
+
+      var lastUpdate = 0L
+
+      override def handle(now: Long): Unit = {
+        if((now - lastUpdate) > 2000000000L) {
+          val villageStructures = VillageMap.instance().get.villageStructure
+          val structuresModifier = villageStructures.size
+          val finalModifier = villageStructures.map(s => s.level).sum + structuresModifier
+          VillageMap.instance().get.gold += finalModifier
+          VillageMap.instance().get.food += finalModifier
+          lastUpdate = now
+        }
+      }
+    }
+    updateResourcesTimer.start()
   }
 
   def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)
 
   def logoutSystem(): Unit = {
+    updateResourcesTimer.stop()
     authenticationActor ! Logout()
     ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
 //        System.exit(0)
