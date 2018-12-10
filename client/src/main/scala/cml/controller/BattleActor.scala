@@ -7,7 +7,6 @@ import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, Req
 import cml.controller.messages.BattleRequest
 import cml.utils.ViewConfig.ArenaWindow
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
-import cml.controller.actor.utils.TurnImpl
 import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.view.ViewSwitch
 import javafx.application.Platform
@@ -45,22 +44,19 @@ class BattleActor extends Actor with ActorLogging {
     case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger() //TODO: add progress indicator
     case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
-      log.info("user in list - " + user)
+      log.info("User in list - " + user)
       myChallenge(user)
       self ! BattleRequest.SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
       arenaActor ! ActorRefRequest(self)
       Platform.runLater(() => switchInArena())
-    case AttackRequest(attackPower) =>
-      remoteActor ! RequireTurnRequest(attackPower, turn)
-      //todo: invio messaggio e setta vita
+    case AttackRequest(attackPower) => remoteActor ! RequireTurnRequest(attackPower, turn)
     case RequireTurnSuccess(attackPower, turnValue) =>
-      println("turn")
-      if(turnValue equals turn) {
-        challenger ! "HOLA"
-      }
-    case msg => println(msg)
-    case AttackSuccess() => println("ho ricevuto da " + " im" + sender)
+      log.info("Turn" + turnValue)
+      if(turnValue equals turn) challenger ! AttackSuccess(attackPower)
+    case AttackSuccess(attackPower) =>
+      log.info("Attack " + attackPower)
+      arenaActor ! AttackSuccess(attackPower)
     case StopRequest() => context.stop(self)
   }
 

@@ -33,6 +33,7 @@ class ArenaViewController {
   def initialize(): Unit = {
     battleGame.initialization()
     attackButton.setDisable(true)
+    userLifeBar.setProgress(battleGame.creatureLife())
     println("arena creature: " + selectedCreature.get.name + " level " + selectedCreature.get.level + " " +
       " Attack value " +selectedCreature.get.attackValue)
   }
@@ -66,7 +67,7 @@ class ArenaViewController {
   @FXML
   def attackOption(): Unit = {
     battleGame.attack()
-    if(battleGame._attackPoint equals 0)  attackButton.setDisable(true)
+    if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
     powerAttack = game()
     arenaActor ! AttackRequest(powerAttack)
   }
@@ -90,12 +91,7 @@ class ArenaViewController {
 
   @FXML
   def userLifeBarOption(): Unit = {
-    userLifeBar.setProgress(0.25)
-  }
-
-  @FXML
-  def challengerLifeBarOption(): Unit ={
-    challengerLifeBar.setProgress(0.25)
+    //userLifeBar.setProgress(battleGame.creatureLife_(value)
   }
 
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
