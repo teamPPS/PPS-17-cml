@@ -1,7 +1,8 @@
 package cml.model.dynamic_model
 
-import cml.model.base.Structure
+import cml.model.base.{Structure, VillageMap}
 import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
+import cml.utils.ModelConfig.Resource.{FOOD, MONEY}
 import cml.utils.{FoodJson, MoneyJson}
 import play.api.libs.json.JsValue
 
@@ -11,19 +12,29 @@ import play.api.libs.json.JsValue
   */
 trait Retrieve {
   def resourceJson: JsValue
+  def resourceType: String
 }
 
 case class RetrieveResource(s: Structure) extends Retrieve {
 
   private var json: JsValue = _
+  private var resType: String = _
+  private val village = VillageMap.instance().get
 
   s.getClass.getName match {
-    case FARM_CLASS => json = FoodJson(s.resource amount).json
-    case CAVE_CLASS => json = MoneyJson(s.resource amount).json
-    case HABITAT_CLASS => json = MoneyJson(s.resource amount).json
+    case FARM_CLASS =>
+      json = FoodJson(village.food + s.resource.amount).json
+      resType = FOOD
+    case CAVE_CLASS =>
+      json = MoneyJson(village.gold + s.resource.amount).json
+      resType = MONEY
+    case HABITAT_CLASS =>
+      json = MoneyJson(village.gold + s.resource.amount).json
+      resType = MONEY
   }
 
   s.resource.take()
 
+  override def resourceType: String = resType
   override def resourceJson: JsValue = json
 }

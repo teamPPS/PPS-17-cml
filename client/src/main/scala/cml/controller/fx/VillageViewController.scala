@@ -11,6 +11,7 @@ import cml.schema.Village
 import cml.utils.ModelConfig
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
+import javafx.beans.binding.Bindings
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
@@ -73,8 +74,10 @@ class VillageViewController {
     val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
 
     playerLevelLabel.setText(villageName)
-    goldLabel.setText(gold)
-    foodLabel.setText(food)
+//    goldLabel.setText(gold)
+    goldLabel.textProperty().bind(Bindings.createStringBinding(() => gold.toString))
+//    foodLabel.setText(food)
+    foodLabel.textProperty().bind(Bindings.createStringBinding(() => food.toString))
 
     val buildings = (json \\ Village.SINGLE_BUILDING_FIELD).map(_.as[JsObject])
     VillageMap.initVillage(mutable.MutableList[Structure](), gold.toInt, food.toInt, villageName)

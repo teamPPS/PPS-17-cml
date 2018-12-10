@@ -4,13 +4,14 @@ import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest.{SetUpdateVillage, UpdateVillage}
-import cml.model.base._
+import cml.model.base.{Creature, Position, Structure, VillageMap}
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
-import cml.utils.ModelConfig.Resource._
-import cml.utils.ModelConfig.ModelClass._
+import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
+import cml.utils.ModelConfig.Resource.{INIT_VALUE, FOOD, MONEY}
 import cml.utils.MoneyJson
-import cml.view.utils.TileConfig._
+import cml.view.utils.TileConfig.tileSet
+import javafx.beans.binding.Bindings
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
@@ -44,7 +45,10 @@ trait Handler {
 object Handler {
 
   val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val price = 30 //prezzo iniziale deve essere globale ?
+  val price = 30
+
+  var gold = VillageMap.instance().get.gold
+  var food = VillageMap.instance().get.food
 
   val handleVillage: Handler = {
     (elem: Node, control: VillageViewController) =>
@@ -69,7 +73,6 @@ object Handler {
       for (s <- VillageMap.instance().get.villageStructure) {
         if (s.position equals Position(x, y)) {
 
-          println(s.creatures)
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.selectionInfo setText "Structure: " + getClassName(s)
@@ -83,20 +86,24 @@ object Handler {
           } else {
             c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => {
-              val upgrade = StructureUpgrade(s)
-              upgrade creatureJson match {
-                case null => villageActor ! SetUpdateVillage(upgrade structureJson)
-                case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
-              }
-              //Decremento denaro in base al prezzo, update modello remoto e locale
-              val resourceJson = MoneyJson(INIT_VALUE - price).json
-              village.gold -= price
-              villageActor ! SetUpdateVillage(resourceJson)
 
-              c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+              val gold =  VillageMap.instance().get.gold
+              if(gold >= price){
+                val upgrade = StructureUpgrade(s)
+                upgrade creatureJson match {
+                  case null => villageActor ! SetUpdateVillage(upgrade structureJson)
+                  case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
+                }
+                decrementMoney(price, c)
+                c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+              }
+              else{
+                c.levelUpButton setDisable true
+                c.selectionInfo setText "You can't upgrade a structure if you don't have money"
+              }
             })
 
-            s.resource.inc(s.level) //debug
+            s.resource.inc(s.level) //TODO INCREMENTO NEL TEMPO
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
 
             if (s.resource.amount > INIT_VALUE) { //settare un current value?
@@ -104,6 +111,10 @@ object Handler {
               c.takeButton setOnMouseClicked (_ => {
                 val retrieve = RetrieveResource(s)
                 villageActor ! SetUpdateVillage(retrieve resourceJson)
+                retrieve resourceType match{
+                  case FOOD => c.foodLabel.textProperty().bind(Bindings.createStringBinding(() => food.toString))
+                  case MONEY => c.goldLabel.textProperty().bind(Bindings.createStringBinding(() => gold.toString))
+                }
                 c.takeButton setDisable true
                 c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
               })
@@ -145,25 +156,29 @@ object Handler {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
 
-      val structure = StaticStructure(newTile, x, y)
-      val json = structure.json
-      VillageMap.instance().get.villageStructure += structure.getStructure
-      villageActor ! UpdateVillage(json)
-//
-//      //Decremento denaro in base al prezzo, update modello remoto e locale
-      val resourceJson = MoneyJson(village.gold-price).json
-      println(resourceJson)
-      village.gold -= price
-      println(village.gold)
-      villageActor ! SetUpdateVillage(resourceJson)
-
-      c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
+      if(gold >= price){
+        val structure = StaticStructure(newTile, x, y)
+        val json = structure.json
+        VillageMap.instance().get.villageStructure += structure.getStructure
+        villageActor ! UpdateVillage(json)
+        decrementMoney(price, c)
+        c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
+      }
+      else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
   }
 
+  private def decrementMoney(price: Int, c: VillageViewController): Unit = {
+    Thread.sleep(2000) //TODO controllo invio di messaggi future
+    val resourceJson = MoneyJson(gold - price).json
+    gold = gold - price
+    c.goldLabel.textProperty().bind(Bindings.createStringBinding(() => gold.toString))
+    villageActor ! SetUpdateVillage(resourceJson)
+  }
+
   private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature]): String = {
-    var text:String = ""
+    var text: String = ""
     if(creatures != null && creatures.nonEmpty) {
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +
