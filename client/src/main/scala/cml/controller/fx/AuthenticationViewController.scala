@@ -3,7 +3,7 @@ package cml.controller.fx
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.controller.actor.utils.InputControl._
-import cml.controller.messages.AuthenticationRequest.{Login, Register}
+import cml.controller.messages.AuthenticationRequest.{Login, Register, SetController}
 import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
 import javafx.fxml.FXML
@@ -28,8 +28,7 @@ class AuthenticationViewController {
   val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
 
   def initialize(): Unit = {
-    //TODO invio messaggio con riferimento al controller all'attore di autenticazione
-
+    authenticationActor ! SetController(this)
     println("auth view")
   }
 

@@ -3,7 +3,7 @@ package cml.controller
 import akka.actor.{Actor, ActorRef, Props}
 import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
 import cml.controller.fx.AuthenticationViewController
-import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register}
+import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register, SetController}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
 import cml.controller.messages.VillageRequest.CreateVillage
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
@@ -26,6 +26,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   val authenticationVertx = AuthenticationServiceVertxImpl()
   val villageActor: ActorRef = context.system.actorOf(Props(new VillageActor()), "VillageActor")
+  var authController = controller
 
   override def receive: Receive = authenticationBehaviour orElse villageBehaviour
 
@@ -52,7 +53,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
           displayMsg(loginFailure)
       }
     case Logout() => authenticationVertx.logout(TokenStorage.getUserJWTToken)
-
+    case SetController(controller: AuthenticationViewController) =>  authController = controller
   }
 
   /**
@@ -70,12 +71,12 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     *
     * @param m message to show
     */
-  def displayMsg(m: String): Unit = Platform.runLater(() => controller.formMsgLabel.setText(m))
+  def displayMsg(m: String): Unit = Platform.runLater(() => authController.formMsgLabel.setText(m))
 
   /**
     * Open Village View after login successful
     */
-  def loginSucceedOnGui(): Unit = Platform.runLater(() => controller.openVillageView())
+  def loginSucceedOnGui(): Unit = Platform.runLater(() => authController.openVillageView())
 
   def successAuthenticationCase(tokenValue: String): Unit = {
     println("TOKEN: " + tokenValue)
@@ -99,7 +100,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     * @param b boolean
     */
   def disableButtons(b: Boolean): Unit = {
-    controller.registerButton.setDisable(b)
-    controller.loginButton.setDisable(b)
+    authController.registerButton.setDisable(b)
+    authController.loginButton.setDisable(b)
   }
 }

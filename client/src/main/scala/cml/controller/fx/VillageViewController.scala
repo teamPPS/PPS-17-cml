@@ -2,6 +2,7 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
+import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
 import cml.model.base._
@@ -137,10 +138,10 @@ class VillageViewController {
   def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteButton.getScene)
 
   def logoutSystem(): Unit = {
-//    authenticationActor ! Logout() //TODO non funziona niente dopo queste operazioni di logout perché l'authentication actor ha il riferimento al vecchio controller fx
-//    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
-        System.exit(0)
-        println("Bye!")
+    authenticationActor ! Logout()
+    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
+//        System.exit(0)
+//        println("Bye!")
   }
 
 }
