@@ -2,6 +2,7 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
+import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
 import cml.model.base._
@@ -11,7 +12,6 @@ import cml.utils.ModelConfig
 import cml.utils.ViewConfig._
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.fxml.FXML
-import javafx.scene.Node
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
@@ -36,7 +36,6 @@ class VillageViewController {
   @FXML var villagePane: ScrollPane = _
   @FXML var buildingsGrid: ScrollPane = _
   @FXML var menuButton: MenuButton = _
-  @FXML var deleteButton: Button = _
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
@@ -44,11 +43,6 @@ class VillageViewController {
   val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
 
   def initialize(): Unit = {
-//    deleteMenuItem setOnAction (_ => println("Pressed settings submenu button")) // open settings dialog
-//    logoutMenuItem setOnAction (_ => logoutSystem() )
-//    battleButton setOnAction (_ => ViewSwitch.activate(BattleWindow.path, battleButton.getScene))
-
-    println("village view init")
     villageActor ! EnterVillage(this)
   }
 
@@ -134,13 +128,13 @@ class VillageViewController {
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
   }
 
-  def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteButton.getScene)
+  def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)
 
   def logoutSystem(): Unit = {
-//    authenticationActor ! Logout() //TODO non funziona niente dopo queste operazioni di logout perché l'authentication actor ha il riferimento al vecchio controller fx
-//    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
-        System.exit(0)
-        println("Bye!")
+    authenticationActor ! Logout()
+    ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
+//        System.exit(0)
+//        println("Bye!")
   }
 
 }
