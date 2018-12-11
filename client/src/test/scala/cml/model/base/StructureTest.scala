@@ -15,13 +15,13 @@ class StructureTest extends FunSuite{
   test("Farm level up test"){
     val farm = Farm(Position(x, y), B_INIT_LEVEL)
     farm.levelUp()
-    assert(farm.farmLevel > B_INIT_LEVEL)
+    assert(farm.building_level > B_INIT_LEVEL)
   }
 
   test("Cave level up test"){
     val cave = Cave(Position(x, y), B_INIT_LEVEL)
     cave.levelUp()
-    assert(cave.caveLevel > B_INIT_LEVEL)
+    assert(cave.building_level > B_INIT_LEVEL)
   }
 
   test("Habitat level up test"){

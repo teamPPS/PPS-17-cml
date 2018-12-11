@@ -1,6 +1,10 @@
 package cml.view
 
-import cml.view.utils.TileConfig.{baseTileSet,tileSet}
+import cml.model.base.Habitat.Habitat
+import cml.model.base.{Cave, Farm, VillageMap}
+import cml.view.utils.TileConfig.{tileSet, baseTileSet}
+import cml.utils.ModelConfig.StructureType.{FARM, CAVE, AIR_HABITAT, EARTH_HABITAT, FIRE_HABITAT, WATER_HABITAT}
+import cml.utils.ModelConfig.Elements.{EARTH, FIRE, WATER, AIR}
 import javafx.scene.SnapshotParameters
 import javafx.scene.image.ImageView
 import javafx.scene.layout.GridPane
@@ -31,16 +35,48 @@ trait Setup {
 
 object Setup {
 
+  val MapSide = 10
+
   val setupVillage: Setup = {
-    grid: GridPane => { // scorrere model
+    grid: GridPane => {
 
-      val baseTile = baseTileSet.filter(t => t.description.equals("TERRAIN")).head
+      def createTile(description: String, set: Set[Tile]): ImageView =  {
+        val image: ImageView = new ImageView()
 
-      loop(0, 10) foreach { // INVECE CHE GENERARE DA ZERO SCORRO IL MODEL E SETTO LE TILE CORRISPONDENTI
+        image.setImage(
+          set.filter(t => t.description.equals(description))
+            .head
+            .imageSprite
+            .snapshot(new SnapshotParameters, null)
+        )
+        image
+      }
+
+      val terrainImage: ImageView = new ImageView()
+      terrainImage.setImage(
+        baseTileSet.filter(t => t.description.equals("TERRAIN"))
+          .head
+          .imageSprite
+          .snapshot(new SnapshotParameters(), null)
+      )
+      val baseTile = terrainImage //TODO mettere a posto Tile.scala in modo che baseTile e Tile siano accumunabili ad un interfaccia comune
+
+      loop(0, MapSide) foreach {
         case(x, y) =>
           val imageTile = new ImageView()
-          imageTile.setImage(baseTile.imageSprite.snapshot(new SnapshotParameters, null))
+          imageTile.setImage(baseTile.snapshot(new SnapshotParameters(), null))
           grid add(imageTile, x, y)
+      }
+
+      VillageMap.instance().get.villageStructure.foreach {
+        case f: Farm => grid.add(createTile(FARM, tileSet), f.position.y, f.position.x)
+        case c: Cave => grid.add(createTile(CAVE, tileSet), c.position.y, c.position.x)
+        case h: Habitat => h.element match {
+          case FIRE => grid.add(createTile(FIRE_HABITAT, tileSet), h.position.y, h.position.x)
+          case WATER => grid.add(createTile(WATER_HABITAT, tileSet), h.position.y, h.position.x)
+          case AIR => grid.add(createTile(AIR_HABITAT, tileSet), h.position.y, h.position.x)
+          case EARTH => grid.add(createTile(EARTH_HABITAT, tileSet), h.position.y, h.position.x)
+        }
       }
 
       def loop(s: Int, e: Int) =
@@ -68,8 +104,8 @@ object Setup {
 object BaseGridInitializer extends GridInitializer {
 
   private def setupGrid(grid: GridPane, setup: Setup): Unit = {
-    grid setHgap 10
-    grid setVgap 10
+    grid setHgap 1
+    grid setVgap 1
     setup.configure(grid)
   }
 

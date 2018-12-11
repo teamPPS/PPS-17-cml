@@ -8,6 +8,7 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
+import io.vertx.scala.ext.web.handler.BodyHandler
 
 /**
   * This class implements AuthenticationVerticle
@@ -20,6 +21,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   private var authenticationService: AuthenticationService = _
 
   override def initializeRouter(router: Router): Unit = {
+    router.route.handler(BodyHandler.create())
     router post RegisterApi handler register
     router put LoginApi handler login
     router delete  LogoutApi handler logout
@@ -67,10 +69,11 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      authenticationService.logout(username).onComplete {
-        case Success(_) => sendResponse(OK, username)
-        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-      }
+//      authenticationService.logout(username).onComplete {
+//        case Success(_) => sendResponse(OK, username)
+//        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
+//      }
+      sendResponse(OK, username)
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
@@ -87,4 +90,6 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       }
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
+
 }
+

@@ -1,7 +1,7 @@
 package cml.model.static_model
 
 import cml.model.base.{Creature, Structure}
-import cml.model.creatures.{Dragon, Golem, Griffin, Kraken}
+import cml.model.creatures.{FireCreature, EarthCreature, AirCreature, WaterCreature}
 import cml.utils.CreatureJson
 import cml.utils.ModelConfig.Creature._
 import cml.utils.ModelConfig.Elements.{AIR, EARTH, FIRE, WATER}
@@ -13,7 +13,6 @@ import play.api.libs.json.JsValue
 
 trait StaticCreature {
   def json: JsValue
-  def getCreature: Creature
 }
 
 case class StaticCreatures(s: Structure) extends StaticCreature {
@@ -21,22 +20,23 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
   private var creature: Creature = _
   private var creatureJson: JsValue = _
 
-  s.element match {
+  s.habitatElement match {
     case FIRE =>
-      creature = Dragon(DRAGON_NAME,INITIAL_LEVEL)
-      creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL).json //passare anche il tipo drago/kraken ecc ?
+      creature = FireCreature(DRAGON_NAME,INITIAL_LEVEL)
+      creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL, DRAGON, s).json //passare anche il tipo drago/kraken ecc ?
     case WATER =>
-      creature = Kraken(KRAKEN_NAME, INITIAL_LEVEL)
-      creatureJson = CreatureJson(KRAKEN_NAME,INITIAL_LEVEL).json
+      creature = WaterCreature(WATERDEMON_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(WATERDEMON_NAME,INITIAL_LEVEL, GRIFFIN, s).json
     case EARTH =>
-      creature = Golem(GOLEM_NAME, INITIAL_LEVEL)
-      creatureJson = CreatureJson(GOLEM_NAME,INITIAL_LEVEL).json
+      creature = EarthCreature(GOLEM_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(GOLEM_NAME,INITIAL_LEVEL, GOLEM, s).json
     case AIR =>
-      creature = Griffin(GRIFFIN_NAME, INITIAL_LEVEL)
-      creatureJson = CreatureJson(GRIFFIN_NAME,INITIAL_LEVEL).json
+      creature = AirCreature(GRIFFIN_NAME, INITIAL_LEVEL)
+      creatureJson = CreatureJson(GRIFFIN_NAME,INITIAL_LEVEL, WATERDEMON, s).json
     case "Not an habitat" => throw new IllegalArgumentException
   }
 
+  s.addCreature(creature)
+
   override def json: JsValue = creatureJson
-  override def getCreature: Creature = creature
 }

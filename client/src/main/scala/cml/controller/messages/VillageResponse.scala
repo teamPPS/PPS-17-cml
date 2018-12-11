@@ -19,4 +19,5 @@ object VillageResponse {
     * @param m message
     */
   case class VillageFailure(m: String) extends VillageResponse
+
 }

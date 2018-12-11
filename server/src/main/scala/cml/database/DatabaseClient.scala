@@ -41,6 +41,15 @@ trait DatabaseClient{
   def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
+    * Update a document with set filter
+    * @param document choose the document
+    * @param update the change we want to make on the document
+    * @param ec implicit for ExecutionContext
+    * @return success if the document has been updated
+    */
+  def setUpdate(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
+
+  /**
     * Find a requested document
     * @param document what we want to find
     * @param ec implicit for ExecutionContext
@@ -89,7 +98,7 @@ object DatabaseClient {
 
     override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
       val future = collection.insertOne(document).toFuture()
-      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_ => "Insertion Completed") recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
@@ -98,8 +107,13 @@ object DatabaseClient {
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+      val future = collection.updateOne(document,Document("$addToSet"-> update)).toFuture()
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
+    }
+
+    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
       val future = collection.updateOne(document,Document("$set"-> update)).toFuture()
-      future map(_.getMatchedCount) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
@@ -108,17 +122,17 @@ object DatabaseClient {
 
     override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
       val future = collection.insertMany(documents).toFuture()
-      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_ => "InsertionCompleted") recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
       val future = collection.deleteMany(documents).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e.getCause)}
+      future map(_ => {}) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }
 
     override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
       val future = collection.updateMany(document,update).toFuture()
-      future map(_ => {}) recoverWith{case e: Throwable => Future.failed(e)}
+      future map(_ => {}) recoverWith{case e: Throwable => println(e); Future.failed(e)}
     }
   }
 }

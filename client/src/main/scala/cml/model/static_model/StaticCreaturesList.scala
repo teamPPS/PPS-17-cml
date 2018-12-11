@@ -1,7 +1,7 @@
 package cml.model.static_model
 
 import cml.model.base.Creature
-import cml.model.creatures.{Dragon, Golem, Griffin, Kraken}
+import cml.model.creatures.{FireCreature, EarthCreature, AirCreature, WaterCreature}
 import cml.utils.ModelConfig.Creature._
 
 /**
@@ -12,10 +12,10 @@ import cml.utils.ModelConfig.Creature._
 object StaticCreaturesList {
 
   val creaturesList : List[Creature] = List(
-    Dragon(DRAGON_NAME,INITIAL_LEVEL),
-    Golem(GOLEM_NAME,INITIAL_LEVEL),
-    Griffin(GRIFFIN_NAME, INITIAL_LEVEL),
-    Kraken(KRAKEN_NAME,INITIAL_LEVEL)
+    FireCreature(DRAGON_NAME,INITIAL_LEVEL),
+    EarthCreature(GOLEM_NAME,INITIAL_LEVEL),
+    AirCreature(GRIFFIN_NAME, INITIAL_LEVEL),
+    WaterCreature(WATERDEMON_NAME,INITIAL_LEVEL)
   )
 
 }

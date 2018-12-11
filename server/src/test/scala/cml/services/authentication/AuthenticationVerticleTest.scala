@@ -13,7 +13,6 @@ import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.language.implicitConversions
 import scala.util.{Failure, Random, Success}
 
@@ -44,7 +43,7 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-    println("Response create because handler is corrected create")
+    println("Response create because handler is correctly created")
     client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
       .sendFuture
@@ -66,31 +65,31 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-  /*  println("Response ok because handler is corrected create")
+    println("Response ok because handler is correctly created")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
       .sendFuture
       .map(response => {
         println("res " +response )
         assert(response.statusCode().toString equals OK.code().toString)
-      })*/
+      })
 
-
-   /* println("Response unauthorized because handler is incorrect")
+    println("Response unauthorized because handler is incorrect")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, invalidPassword))
       .sendFuture
-      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
+      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))
   }
 
-  /*test("Logout test") {
+  test("Logout test") {
     println("Response bad request because handler is empty")
     client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
-*/
-    //Stessa storia find non giusta? DA RIGUARDARE
-   /* println("Response ok because token success delete")
+
+
+    /* Stessa storia find non giusta? DA RIGUARDARE*
+    println("Response ok because token success delete")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputForTokenReturn, inputForTokenReturn))
       .sendFuture
@@ -110,6 +109,7 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
         println("..................................................................................." + OK.code().toString)
         println("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" + token)
         assert(response.statusCode().toString equals OK.code().toString)})*/
+  }
 
     /* Da provare
     println("Response bad request because token is invalid")

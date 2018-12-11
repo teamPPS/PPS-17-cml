@@ -58,46 +58,46 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  val collection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
+  val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
 
   case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits {
     var document: Document = _
 
-    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
-      document = Document(USERNAME->username, PASSWORD->password)
+    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
+      document = Document(USERNAME -> username, PASSWORD -> password)
       println(document)
-      collection.insert(document).map(_ => "Insertion Completed")
-        .recoverWith{case e: Throwable =>
+      userCollection.insert(document).map(_ => "Insertion Completed")
+        .recoverWith { case e: Throwable =>
           println(e)
           Future.failed(e)
         }
     }
 
-    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] =  {
-      document = Document(USERNAME->username, PASSWORD->password)
+    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+      document = Document(USERNAME -> username, PASSWORD -> password)
       println(document)
-      collection.find(document).map(doc => doc.size()>0)
-        .recoverWith{case e: Throwable =>
+      userCollection.find(document).map(doc => doc.size() > 0)
+        .recoverWith { case e: Throwable =>
           println(e)
           Future.failed(e)
         }
     }
 
     override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
-      collection.delete(document).map(_ => {})
-        .recoverWith{case e: Throwable =>
+      document = Document(USERNAME -> username)
+      userCollection.delete(document).map(_ => {})
+        .recoverWith { case e: Throwable =>
           println(e)
           Future.failed(e)
         }
     }
 
     override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-      document = Document(USERNAME->username)
-      collection.find(document).map(_ => {})
-        .recoverWith{case e: Throwable =>
+      document = Document(USERNAME -> username)
+      userCollection.find(document).map(_ => {})
+        .recoverWith { case e: Throwable =>
           println(e)
           Future.failed(e)
         }

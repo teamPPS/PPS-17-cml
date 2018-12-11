@@ -1,6 +1,7 @@
 package cml.controller.messages
 
-import java.io.Serializable
+import akka.actor.ActorRef
+import scala.collection.mutable.ListBuffer
 
 /**
   * Battle response message
@@ -12,7 +13,25 @@ object BattleResponse {
 
   sealed trait BattleResponse
 
-  case class RequireChallengerSuccess() extends BattleResponse
+
+  /**
+    * Success response to add user into a list for require enter in battle arena
+    */
+  case class RequireEnterInArenaSuccess() extends BattleResponse
+
   case class RequireChallengerFailure() extends BattleResponse
+
+  /**
+    * Success response for require challenger
+    *
+    * @param user user list for battle
+    */
+  case class ExistChallengerSuccess(user: ListBuffer[ActorRef]) extends BattleResponse
+
+  /**
+    * Success response for delete user into a list of wait challenger
+    */
+  case class ExitSuccess() extends BattleResponse
+
 
 }

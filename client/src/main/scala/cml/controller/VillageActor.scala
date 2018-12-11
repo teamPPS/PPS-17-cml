@@ -2,6 +2,7 @@ package cml.controller
 
 import akka.actor.{Actor, ActorRef, ActorSelection}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
+import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest._
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
 import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
@@ -42,21 +43,42 @@ class VillageActor() extends Actor{
         case Success(httpResponse) =>
           httpResponse match {
             case "Not a valid request" => println("Failure entering in village")
-            case _ => Platform.runLater(() => controller.setGridAndHandlers())
+            case _ => Platform.runLater(() => controller.setGridAndHandlers(httpResponse))
           }
         case Failure(exception) => authenticationActor ! VillageFailure(enterFailure)
       }
 
-    case UpdateVillage(update) => villageVertx.updateVillage(update)
-      .onComplete {
-        case Success(httpResponse) => println(httpResponse) //modificare model: Passo textarea(?) e model nel messaggio UpdateVillage
-        case Failure(exception) => println(exception) //visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
+    case UpdateVillage(update) =>
+      villageVertx.updateVillage(update).onComplete {
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => println("Failure to update village")
+            case _ => println("Update Done")
+          }
+        case Failure(exception) => println(exception)
       }
 
-    case DeleteVillage() => villageVertx.deleteVillageAndUser()
-      .onComplete {
-        case Success(httpResponse) => println(httpResponse) //cancella tutto torna alla schermata di autenticazione
-        case Failure(exception) => println(exception) // visualizza cose nella gui -> altro attore con controller? Passo textarea e model nel messaggio dall'handler
+    case SetUpdateVillage(update) =>
+      villageVertx.setUpdateVillage(update).onComplete {
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => println("Failure to set update village")
+            case _ => println("Update Set Done")
+          }
+        case Failure(exception) => println(exception)
+      }
+
+    case DeleteVillage(controller) =>
+      villageVertx.deleteVillageAndUser().onComplete {
+        case Success(httpResponse) =>
+          httpResponse match {
+            case "Not a valid request" => println("Failure to delete village")
+            case _ => deleteSucceedOnGui(controller)
+              println("Deletion Done")
+          }
+        case Failure(exception) => println(exception)
       }
   }
+
+  def deleteSucceedOnGui(controller: VillageViewController): Unit = Platform.runLater(() => controller.openAuthenticationView())
 }

@@ -2,6 +2,8 @@ package cml.model.creatures
 
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Elements.EARTH
+import cml.utils.ModelConfig.Creature.GOLEM
+import play.api.libs.json.Json
 
 /**
   * This class models a golem
@@ -9,8 +11,7 @@ import cml.utils.ModelConfig.Elements.EARTH
   * @param creatureLevel set the golem level
   * @author Filippo Portolani
   */
-
-case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
+case class EarthCreature(creature_name: String, creature_level: Int) extends Creature {
 
   val _element : String = EARTH
 
@@ -34,16 +35,25 @@ case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
 
   override def element: String = _element
 
-  override def level: Int = currentLevel
+  override def level: Int = {
+    if(currentLevel < creature_level)
+      currentLevel = creature_level
+    currentLevel
+  }
 
   override def attackPower: Int = attackValue
 
   override def currentLevel_ : Unit = {
-    currentLevel = creatureLevel
+    currentLevel = creature_level
     setAttack()
   }
 
-  override def name: String = creatureName
+  override def name: String = creature_name
 
-  override def creatureType: String = "Golem"
+  override def creatureType: String = GOLEM
 }
+
+object EarthCreature {
+  implicit val reader = Json.format[EarthCreature]
+}
+

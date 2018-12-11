@@ -1,5 +1,6 @@
 package cml.utils
 
+import cml.model.base.{Position, Structure}
 import cml.schema.Village._
 import play.api.libs.json.{JsValue, Json}
 
@@ -16,12 +17,16 @@ trait JsonMaker{
   * @param buildingType type of building
   * @param buildingLevel level of the building
   */
-case class BuildingJson(buildingType: String, buildingLevel: Int) extends JsonMaker {
+case class BuildingJson(buildingType: String, buildingLevel: Int, buildingPosition: Position) extends JsonMaker {
   override def json: JsValue = Json.obj(
-    BUILDINGS -> Json.obj(
-      "building_id" -> Json.obj(
-        BUILDING_TYPE -> buildingType,
-        BUILDING_LEVEL -> buildingLevel
+    buildingPosition.toString -> Json.obj(
+      SINGLE_BUILDING_FIELD -> Json.obj(
+        BUILDING_TYPE_FIELD -> buildingType,
+        BUILDING_LEVEL_FIELD -> buildingLevel,
+        BUILDING_POSITION_FIELD -> Json.obj(
+          "x" -> buildingPosition.x,
+          "y" -> buildingPosition.y
+        )
       )
     )
   )
@@ -32,12 +37,16 @@ case class BuildingJson(buildingType: String, buildingLevel: Int) extends JsonMa
   * @param habitatElem natural element
   * @param habitatLevel level of the habitat
   */
-case class HabitatJson(habitatElem: String, habitatLevel: Int) extends JsonMaker { //passare CreatureJson
+case class HabitatJson(habitatElem: String, habitatLevel: Int, habitatPosition: Position) extends JsonMaker { //passare CreatureJson
   override def json: JsValue = Json.obj(
-    HABITAT -> Json.obj(
-      "habitat_id" -> Json.obj(
-        HABITAT_LEVEL -> habitatLevel,
-        NATURAL_ELEMENT -> habitatElem
+    habitatPosition.toString -> Json.obj(
+      SINGLE_HABITAT_FIELD -> Json.obj(
+        HABITAT_LEVEL_FIELD -> habitatLevel,
+        NATURAL_ELEMENT_FIELD -> habitatElem,
+        HABITAT_POSITION_FIELD -> Json.obj(
+          "x" -> habitatPosition.x,
+          "y" -> habitatPosition.y
+        )
       )
     )
   )
@@ -48,11 +57,24 @@ case class HabitatJson(habitatElem: String, habitatLevel: Int) extends JsonMaker
   * @param creatureName type of creature
   * @param creatureLevel level of the creature
   */
-case class CreatureJson(creatureName: String, creatureLevel: Int) extends  JsonMaker {
+case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: String, s: Structure) extends  JsonMaker {
   override def json: JsValue = Json.obj(
-    CREATURES -> Json.obj(
-      CREATURE_NAME -> creatureName,
-      CREATURE_LEVEL -> creatureLevel
+    s.position.toString -> Json.obj(
+      SINGLE_HABITAT_FIELD -> Json.obj(
+        HABITAT_LEVEL_FIELD -> s.level,
+        NATURAL_ELEMENT_FIELD -> s.habitatElement,
+        HABITAT_POSITION_FIELD -> Json.obj(
+          "x" -> s.position.x,
+          "y" -> s.position.y
+        ),
+        MULTIPLE_CREATURES_FIELD -> Json.obj(
+          SINGLE_CREATURE_FIELD -> Json.obj(
+            CREATURE_NAME_FIELD -> creatureName,
+            CREATURE_LEVEL_FIELD -> creatureLevel,
+            CREATURE_TYPE_FIELD -> creatureType
+          )
+        )
+      )
     )
   )
 }
@@ -63,7 +85,7 @@ case class CreatureJson(creatureName: String, creatureLevel: Int) extends  JsonM
   */
 case class FoodJson(amount: Int) extends JsonMaker {
   override def json: JsValue = Json.obj(
-      FOOD -> amount
+      FOOD_FIELD -> amount
   )
 }
 
@@ -73,6 +95,31 @@ case class FoodJson(amount: Int) extends JsonMaker {
   */
 case class MoneyJson(amount: Int) extends JsonMaker {
   override def json: JsValue = Json.obj(
-    GOLD -> amount
+    GOLD_FIELD -> amount
   )
 }
+
+case class PositionJson(structType: String, x: Int, y: Int) extends JsonMaker {
+
+  private var structJson: JsValue = _
+  structType match{
+    case "BUILDING" => structJson = Json.obj(
+      BUILDING_POSITION_FIELD -> Json.obj(
+        "x" -> x,
+        "y" -> y
+      )
+    )
+    case "HABITAT" => structJson = Json.obj(
+      HABITAT_POSITION_FIELD -> Json.obj(
+      "x" -> x,
+      "y" -> y
+     )
+    )
+  }
+  override def json: JsValue = structJson
+}
+
+
+
+
+

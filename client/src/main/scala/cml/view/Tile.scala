@@ -28,8 +28,8 @@ object BaseTile {
 object Tile {
 
   def apply(description: String, imageSprite: Canvas, json: JsValue): Tile = TileImplementation(description, imageSprite, json)
-  
+
   case class TileImplementation(override val description: String, override val imageSprite: Canvas, override val json: JsValue)
-    extends Tile 
+    extends Tile
 }
 
