@@ -1,17 +1,10 @@
 package cml.controller
 
-/**
-  * Class that implements the actor which manages the arena interaction with user
-  *
-  * @author Chiara Volonnino
-  */
-
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, StopRequest}
 import cml.controller.messages.ArenaResponse.AttackSuccess
 
 class ArenaActor extends Actor with ActorLogging {
-
   private var battleActor: ActorRef = _
   private var _powerValue: Int = _
 
@@ -21,6 +14,5 @@ class ArenaActor extends Actor with ActorLogging {
     case AttackSuccess(value) => _powerValue = value
     case StopRequest() => battleActor ! StopRequest()
   }
-
-  def powerValue_(): Double = _powerValue
+    def powerValue_(): Double = _powerValue
 }

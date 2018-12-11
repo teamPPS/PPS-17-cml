@@ -51,7 +51,7 @@ case class BattleRulesImpl() extends BattleRule {
   private var isCharge: Boolean = _
 
   def initialization(): Unit = {
-    _creatureLife = 100
+    _creatureLife = 50
     _attackPoint = 0
     isProtect = false
     isAttack = false
@@ -94,5 +94,5 @@ case class BattleRulesImpl() extends BattleRule {
   def isProtect_(): Unit = isProtect = false
   def isProtection: Boolean = isProtect
   def isCharge_(): Unit = isCharge = false
-  //def creatureLife_(powerAttack: Int): Unit = _creatureLife -= powerAttack
+
 }

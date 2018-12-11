@@ -4,7 +4,6 @@ import cml.controller.messages.BattleRequest._
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
 import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, RequireTurnRequest, StopRequest}
-import cml.controller.messages.BattleRequest
 import cml.utils.ViewConfig.ArenaWindow
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
@@ -26,7 +25,7 @@ class BattleActor extends Actor with ActorLogging {
   var challenger: ActorRef = _
   var sceneContext: Scene = _
   var turn: Int = _
-  val arenaActor: ActorRef = system.actorOf(Props(new ArenaActor()), "ArenaActor")
+  var arenaActor: ActorRef = system.actorOf(Props(new ArenaActor()), "ArenaActor")
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
@@ -46,7 +45,7 @@ class BattleActor extends Actor with ActorLogging {
       remoteActor ! ExitRequest()
       log.info("User in list - " + user)
       myChallenge(user)
-      self ! BattleRequest.SwitchInArenaRequest()
+      self ! SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
       arenaActor ! ActorRefRequest(self)
       Platform.runLater(() => switchInArena())
