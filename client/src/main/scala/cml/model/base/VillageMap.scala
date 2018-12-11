@@ -25,4 +25,5 @@ object VillageMap {
       initVillage(mutable.MutableList[Structure](), 0, 0, "default")
     _instance
   }
+
 }

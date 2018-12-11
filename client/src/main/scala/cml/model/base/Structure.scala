@@ -37,8 +37,8 @@ trait Structure{
 
 /**
   * Implementation of building structure Farm
-  * @param farmPosition coordinates of the building in the village
-  * @param farmLevel level of the building
+  * @param building_pos coordinates of the building in the village
+  * @param building_level level of the building
   */
 case class Farm(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
   val food = Food(INIT_VALUE)
@@ -54,14 +54,15 @@ case class Farm(building_pos: Position, var building_level: Int) extends Structu
   override def creatures: mutable.MutableList[Creature] = null
   override def habitatElement: String = "Not an habitat"
 }
+
 object Farm {
   implicit val farmReader = Json.format[Farm]
 }
 
 /**
   * Implementation of building structure Cave
-  * @param cavePosition coordinates of the building in the village
-  * @param caveLevel level of the building
+  * @param building_pos coordinates of the building in the village
+  * @param building_level level of the building
   */
 case class Cave(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
   val money = Money(INIT_VALUE)
@@ -89,9 +90,9 @@ object Habitat {
 
   /**
     * Implementation of structure habitat
-    * @param habitatElement         of the habitat
-    * @param habitatPosition coordinates of the habitat in the village
-    * @param habitatLevel    level of the habitat
+    * @param element         of the habitat
+    * @param habitat_pos coordinates of the habitat in the village
+    * @param habitat_level    level of the habitat
     */
   case class Habitat(element: String, habitat_pos: Position, var habitat_level: Int) extends Structure {
     var creatureList: mutable.MutableList[Creature] = mutable.MutableList[Creature]()

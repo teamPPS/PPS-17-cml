@@ -41,6 +41,15 @@ trait DatabaseClient{
   def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
 
   /**
+    * Update a document with set filter
+    * @param document choose the document
+    * @param update the change we want to make on the document
+    * @param ec implicit for ExecutionContext
+    * @return success if the document has been updated
+    */
+  def setUpdate(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
+
+  /**
     * Find a requested document
     * @param document what we want to find
     * @param ec implicit for ExecutionContext
@@ -98,6 +107,11 @@ object DatabaseClient {
     }
 
     override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+      val future = collection.updateOne(document,Document("$addToSet"-> update)).toFuture()
+      future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
+    }
+
+    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
       val future = collection.updateOne(document,Document("$set"-> update)).toFuture()
       future map(_.getMatchedCount) recoverWith{case e: Throwable => println(e); Future.failed(e.getCause)}
     }

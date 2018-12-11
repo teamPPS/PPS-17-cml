@@ -69,10 +69,11 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-      authenticationService.logout(username).onComplete {
-        case Success(_) => sendResponse(OK, username)
-        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-      }
+//      authenticationService.logout(username).onComplete {
+//        case Success(_) => sendResponse(OK, username)
+//        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
+//      }
+      sendResponse(OK, username)
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
 
@@ -89,4 +90,6 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
       }
     }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
   }
+
 }
+

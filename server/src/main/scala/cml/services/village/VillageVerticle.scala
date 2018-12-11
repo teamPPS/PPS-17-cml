@@ -33,6 +33,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     router get VillagesAPI handler enter
     router post VillagesAPI handler create
     router put VillagesAPI handler update
+    router put SetUpdateAPI handler setUpdate
     router delete VillagesAPI handler delete
     router put LogoutApi handler exit
   }
@@ -87,9 +88,31 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     ) yield {
       villageService.updateVillage(username, body).onComplete {
         case Success(value) => if (value) {
-          sendResponse(HttpResponseStatus.ACCEPTED, "Update done")
+          sendResponse(HttpResponseStatus.OK, "Update done")
         } else {
           sendResponse(BAD_REQUEST, "Error while update")
+        }
+        case Failure(_) => {
+          sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
+        }
+      }
+    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
+  }
+
+  private def setUpdate: Handler[RoutingContext] = implicit routingContext => {
+    println("Request to set update village")
+    (for(
+      headerAuthorization <- getRequestAndHeader;
+      body <- getRequestAndBody;
+      if !body.isEmpty;
+      token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+      username <- JWTAuthentication.decodeUsernameToken(token)
+    ) yield {
+      villageService.setUpdateVillage(username, body).onComplete {
+        case Success(value) => if (value) {
+          sendResponse(HttpResponseStatus.OK, "Update set done")
+        } else {
+          sendResponse(BAD_REQUEST, "Error while update set")
         }
         case Failure(_) => {
           sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server Error")
@@ -107,7 +130,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     ) yield {
       villageService.deleteVillageAndUser(username).onComplete {
         case Success(value) => if (value) {
-          sendResponse(HttpResponseStatus.ACCEPTED, "Deleted")
+          sendResponse(HttpResponseStatus.OK, "Deleted")
         } else {
           sendResponse(BAD_REQUEST, "Error while deleting")
         }

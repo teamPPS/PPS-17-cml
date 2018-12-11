@@ -41,13 +41,13 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
       .map { document => assert(document.contains("Completed"))}
   }
 
+
   test("testDeleteVillageAndUser") {
     villageService
       .deleteVillageAndUser("CMLuser").map(result => assert(result, true))
   }
 
   class MockDatabaseClient extends DatabaseClient {
-
 
     var villagesList: ListBuffer[Document] = ListBuffer(
       Document(
@@ -96,5 +96,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
     override def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
 
     override def multipleUpdate(query: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = ???
+
+    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = ???
   }
 }

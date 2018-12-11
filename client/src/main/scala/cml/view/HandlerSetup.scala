@@ -3,14 +3,14 @@ package cml.view
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.fx.VillageViewController
-import cml.controller.messages.VillageRequest.UpdateVillage
-import cml.model.base._
+import cml.controller.messages.VillageRequest.{SetUpdateVillage, UpdateVillage}
+import cml.model.base.{Creature, Position, Structure, VillageMap}
 import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
-import cml.utils.ModelConfig.Resource._
-import cml.utils.ModelConfig.ModelClass._
-import cml.utils.MoneyJson
-import cml.view.utils.TileConfig._
+import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
+import cml.utils.ModelConfig.Resource.{FOOD, INIT_VALUE, MONEY}
+import cml.utils.{FoodJson, MoneyJson}
+import cml.view.utils.TileConfig.tileSet
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
@@ -43,9 +43,10 @@ trait Handler {
 
 object Handler {
 
-  val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val village: VillageMap = VillageMap.instance().get
-  val price = 30 //prezzo iniziale deve essere globale ?
+  val VillageActorPath: String= "/user/VillageActor"
+  val villageActor: ActorSelection = system actorSelection VillageActorPath
+  val price = 30
+
 
   val handleVillage: Handler = {
     (elem: Node, control: VillageViewController) =>
@@ -67,46 +68,21 @@ object Handler {
       disableButtons(c)
       c.selectionInfo setText "Coordinates (" + x + ", " + y + ")"
 
-      for (s <- village.villageStructure) {
+      for (s <- VillageMap.instance().get.villageStructure) {
         if (s.position equals Position(x, y)) {
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
-            c.selectionInfo setText "Structure: " + getClassName(s)
-            c.addCreatureButton.setOnMouseClicked(_ => {
-              val creature = StaticCreatures(s)
-              s.addCreature(creature getCreature)
-              villageActor ! UpdateVillage(creature json)
-              c.addCreatureButton setDisable true
-              c.battleButton setDisable false
-              c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-            })
+            c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount)
+            c.addCreatureButton.setOnMouseClicked(_ => addNewCreature(s, c))
           } else {
             c.levelUpButton setDisable false
-            c.levelUpButton setOnMouseClicked (_ => {
-              val upgrade = StructureUpgrade(s)
-              villageActor ! UpdateVillage(upgrade structureJson)
-              upgrade creatureJson match {
-                case null => println("Not an habitat")
-                case _ => villageActor ! UpdateVillage(upgrade creatureJson)
-              }
-              //Decremento denaro in base al prezzo, update modello remoto e locale
-              val resourceJson = MoneyJson(INIT_VALUE - price).json
-              villageActor ! UpdateVillage(resourceJson)
+            c.levelUpButton setOnMouseClicked (_ => upgradeStructure(s, c))
 
-              c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-            })
-
-            s.resource.inc(s.level) //debug
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
 
-            if (s.resource.amount > INIT_VALUE) { //settare un current value?
+            if (s.resource.amount > INIT_VALUE) {
               c.takeButton setDisable false
-              c.takeButton setOnMouseClicked (_ => {
-                val retrieve = RetrieveResource(s)
-                villageActor ! UpdateVillage(retrieve resourceJson)
-                c.takeButton setDisable true
-                c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-              })
+              c.takeButton setOnMouseClicked (_ => retrieveResource(s, c))
             }
           }
         }
@@ -124,10 +100,13 @@ object Handler {
       val content: ClipboardContent = new ClipboardContent
       content putString t.description
       dragBoard setContent content
-      c.selectionInfo setText "Dragged element " + dragBoard.getString
+      val gold = VillageMap.instance().get.gold
+      if(gold >= price) c.selectionInfo setText "Dragged element " + dragBoard.getString
+      else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
   }
+
 
   private def addDragAndDropTargetHandler(n: Node, c: VillageViewController): Unit = {
     n setOnDragOver ((event: DragEvent) => {
@@ -136,37 +115,98 @@ object Handler {
     })
 
     n setOnDragDropped ((event: DragEvent) => {
-      val dragBoard: Dragboard = event getDragboard()
-      val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
-      n match {
-        case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
-        case _ => throw new ClassCastException
-      }
-      val y = GridPane.getColumnIndex(n)
-      val x = GridPane.getRowIndex(n)
+      val gold = VillageMap.instance().get.gold
+      if(gold >= price){
+        val dragBoard: Dragboard = event getDragboard()
+        val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
+        n match {
+          case i: ImageView => i setImage newTile.imageSprite.snapshot(new SnapshotParameters, null)
+          case _ => throw new ClassCastException
+        }
+        val y = GridPane.getColumnIndex(n)
+        val x = GridPane.getRowIndex(n)
 
-      val structure = StaticStructure(newTile, x, y)
-      val json = structure.json
-      village.villageStructure += structure.getStructure
-      villageActor ! UpdateVillage(json)
+        val structure = StaticStructure(newTile, x, y)
+        val json = structure.json
+        VillageMap.instance().get.villageStructure += structure.getStructure
+        villageActor ! UpdateVillage(json)
+        c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
 
-      //Decremento denaro in base al prezzo, update modello remoto e locale
-      val resourceJson = MoneyJson(INIT_VALUE-price).json
-      villageActor ! UpdateVillage(resourceJson)
+        decrementMoney(gold, price, c)
 
-      c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
+      } else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
   }
 
-  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature]): String = {
-    var text:String = ""
+  private def addNewCreature(s: Structure, c: VillageViewController): Unit ={
+    val creature = StaticCreatures(s)
+    villageActor ! SetUpdateVillage(creature json)
+    c.addCreatureButton setDisable true
+    c.battleButton setDisable false
+    c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+  }
+
+  private def upgradeStructure(s: Structure, c: VillageViewController): Unit = {
+    val gold =  VillageMap.instance().get.gold
+    val food =  VillageMap.instance().get.food
+    if(gold >= price){
+      val upgrade = StructureUpgrade(s)
+      upgrade creatureJson match {
+        case null => villageActor ! SetUpdateVillage(upgrade structureJson)
+        case _ => {
+          villageActor ! SetUpdateVillage(upgrade creatureJson)
+          decrementFood(food, price*s.level, c)
+        }
+      }
+      decrementMoney(gold, price*s.level, c)
+      c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+    }
+    else{
+      c.levelUpButton setDisable true
+      c.selectionInfo setText "You can't upgrade a structure if you don't have money"
+    }
+  }
+
+  private def retrieveResource(s: Structure, c: VillageViewController): Unit ={
+    val retrieve = RetrieveResource(s)
+    villageActor ! SetUpdateVillage(retrieve resourceJson)
+
+    val gold = VillageMap.instance().get.gold
+    val food = VillageMap.instance().get.food
+    
+    retrieve resourceType match{
+      case FOOD => c.foodLabel.setText(food.toString)
+      case MONEY => c.goldLabel.setText(gold.toString)
+    }
+    c.takeButton setDisable true
+    c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+  }
+// TODO i due decrementi stesso codice!!!
+  private def decrementMoney(gold: Int, price: Int, c: VillageViewController): Unit = {
+    Thread.sleep(200) //TODO controllo invio di messaggi future
+    val resourceJson = MoneyJson(gold - price).json
+    VillageMap.instance().get.gold = gold - price
+    c.goldLabel.setText((gold - price).toString)
+    villageActor ! SetUpdateVillage(resourceJson)
+  }
+
+  private def decrementFood(food: Int, price: Int, c: VillageViewController): Unit = {
+    Thread.sleep(200)
+    val resourceJson = FoodJson(food - price).json
+    VillageMap.instance().get.food = food - price
+    c.foodLabel.setText((food - price).toString)
+    villageActor ! SetUpdateVillage(resourceJson)
+  }
+
+  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()): String = {
+    var text: String = ""
     if(creatures != null && creatures.nonEmpty) {
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +
         "Resources: " + resourceAmount + "\n" +
         "Creature: " + creatures.head.name + "\nType: "+ creatures.head.creatureType +"\n"+
-        "Creature level: " + creatures.head.currentLevel
+        "Creature level: " + creatures.head.level
     }else{
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +
@@ -184,9 +224,9 @@ object Handler {
   private def getClassName(s: Structure): String = {
     var name: String = ""
     s.getClass.getName match {
-      case FARM => name = "FARM"
-      case CAVE => name = "CAVE"
-      case HABITAT => name = "HABITAT - Element: " + s.habitatElement
+      case FARM_CLASS => name = "FARM"
+      case CAVE_CLASS => name = "CAVE"
+      case HABITAT_CLASS => name = "HABITAT - Element: " + s.habitatElement
     }
     name
   }

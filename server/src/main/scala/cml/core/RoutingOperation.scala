@@ -28,6 +28,7 @@ trait RoutingOperation {
     * @return A Option with the body as String or None
     */
   def getRequestAndBody(implicit routingContext: RoutingContext): Option[String] = {
+    println(routingContext.getBodyAsString())
     routingContext.getBodyAsString()
   }
 
@@ -53,9 +54,9 @@ trait RoutingOperation {
   }
 
 
-  //abstract def validate(input: String): Future[String]  ---> da spostare in altra classe
+  //TODO abstract def validate(input: String): Future[String]  ---> da spostare in altra classe
 
-  // da implementare in VillageVerticle per controllo user - sicuro da modificare
+  //TODO da implementare in VillageVerticle per controllo user - sicuro da modificare
   def checkAuthenticationHandler(implicit routingContext: RoutingContext): Future[String] =
     getRequestAndHeader match {
       case Some(authenticationHeader) => Future.successful(authenticationHeader)

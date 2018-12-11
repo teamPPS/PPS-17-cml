@@ -44,7 +44,7 @@
                     <Button fx:id="takeButton" disable="true" layoutY="55.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="104.0" text="Take" />
                   </children>
                 </Pane>
-                <Button fx:id="battleButton" disable="false" mnemonicParsing="false" prefHeight="90.0" prefWidth="156.0" text="Battle" HBox.hgrow="SOMETIMES">
+                <Button fx:id="battleButton" disable="false" mnemonicParsing="false" onAction="#goToBattle" prefHeight="90.0" prefWidth="156.0" text="Battle" HBox.hgrow="SOMETIMES">
                   <HBox.margin>
                     <Insets right="10.0" fx:id="x2" />
                   </HBox.margin>
@@ -69,10 +69,10 @@
                 </Label>
                 <Label fx:id="goldLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Gold" HBox.hgrow="ALWAYS" />
                 <Label fx:id="foodLabel" alignment="CENTER" prefHeight="98.0" prefWidth="205.0" text="Food" HBox.hgrow="ALWAYS" />
-                <MenuButton id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="78.0" prefWidth="169.0" text="Menu" HBox.hgrow="ALWAYS">
+                <MenuButton fx:id="menuButton" alignment="CENTER" mnemonicParsing="false" prefHeight="46.0" prefWidth="99.0" text="Menu" HBox.hgrow="ALWAYS">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Settings" fx:id="settingsMenuItem" />
-                    <MenuItem mnemonicParsing="false" text="Logout" fx:id="logoutMenuItem" />
+                    <MenuItem mnemonicParsing="false" onAction="#deleteAccount" text="Delete Account" fx:id="deleteMenuItem" />
+                    <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" fx:id="logoutMenuItem" />
                   </items>
                   <HBox.margin>
                     <Insets left="10.0" fx:id="x3" />

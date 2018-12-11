@@ -76,7 +76,7 @@ class BattleViewController {
         case None => throw new NoSuchElementException
         case _ => setCreatureImage(selectedCreature.get)
           creatureArea setText displayText(selectedCreature.get.name, selectedCreature.get.creatureType,
-            selectedCreature.get.currentLevel,selectedCreature.get.attackValue)
+            selectedCreature.get.level, selectedCreature.get.attackValue)
           playButton setDisable false
       }
     })
@@ -90,7 +90,7 @@ class BattleViewController {
   }
 
   @FXML
-  def creatureOption(): Unit = {
+  def startGame(): Unit = {
     val alert = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
       setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level)
