@@ -9,6 +9,7 @@ import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
 import cml.utils.ModelConfig.Resource.{FOOD, INIT_VALUE, MONEY}
+import cml.utils.ModelConfig.StructureType.FARM
 import cml.utils.MoneyJson
 import cml.view.utils.TileConfig.tileSet
 import javafx.scene.image.ImageView
@@ -70,54 +71,20 @@ object Handler {
 
       for (s <- VillageMap.instance().get.villageStructure) {
         if (s.position equals Position(x, y)) {
-
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
             c.selectionInfo setText "Structure: " + getClassName(s)
-            c.addCreatureButton.setOnMouseClicked(_ => {
-              val creature = StaticCreatures(s)
-              villageActor ! SetUpdateVillage(creature json)
-              c.addCreatureButton setDisable true
-              c.battleButton setDisable false
-              c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-            })
+            c.addCreatureButton.setOnMouseClicked(_ => addNewCreature(s, c))
           } else {
             c.levelUpButton setDisable false
-            c.levelUpButton setOnMouseClicked (_ => {
-              val gold =  VillageMap.instance().get.gold
-              if(gold >= price){
-                val upgrade = StructureUpgrade(s)
-                upgrade creatureJson match {
-                  case null => villageActor ! SetUpdateVillage(upgrade structureJson)
-                  case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
-                }
-                decrementMoney(gold, price, c)
-                c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-              }
-              else{
-                c.levelUpButton setDisable true
-                c.selectionInfo setText "You can't upgrade a structure if you don't have money"
-              }
-            })
+            c.levelUpButton setOnMouseClicked (_ => upgradeStructure(s, c))
 
             s.resource.inc(s.level) //TODO INCREMENTO NEL TEMPO
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
 
-            if (s.resource.amount > INIT_VALUE) { //settare un current value?
+            if (s.resource.amount > INIT_VALUE) { //TODO risorsa corrente
               c.takeButton setDisable false
-              c.takeButton setOnMouseClicked (_ => {
-                val retrieve = RetrieveResource(s)
-                villageActor ! SetUpdateVillage(retrieve resourceJson)
-
-                val gold = VillageMap.instance().get.gold
-                val food = VillageMap.instance().get.food
-                retrieve resourceType match{
-                  case FOOD => c.foodLabel.setText(food.toString)
-                  case MONEY => c.goldLabel.setText(gold.toString)
-                }
-                c.takeButton setDisable true
-                c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-              })
+              c.takeButton setOnMouseClicked (_ => retrieveResource(s, c))
             }
           }
         }
@@ -171,6 +138,45 @@ object Handler {
       }else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
+  }
+
+  private def addNewCreature(s: Structure, c: VillageViewController): Unit ={
+    val creature = StaticCreatures(s)
+    villageActor ! SetUpdateVillage(creature json)
+    c.addCreatureButton setDisable true
+    c.battleButton setDisable false
+    c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+  }
+
+  private def upgradeStructure(s: Structure, c: VillageViewController): Unit = {
+    val gold =  VillageMap.instance().get.gold
+    if(gold >= price){
+      val upgrade = StructureUpgrade(s)
+      upgrade creatureJson match {
+        case null => villageActor ! SetUpdateVillage(upgrade structureJson)
+        case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
+      }
+      decrementMoney(gold, price, c)
+      c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
+    }
+    else{
+      c.levelUpButton setDisable true
+      c.selectionInfo setText "You can't upgrade a structure if you don't have money"
+    }
+  }
+
+  private def retrieveResource(s: Structure, c: VillageViewController): Unit ={
+    val retrieve = RetrieveResource(s)
+    villageActor ! SetUpdateVillage(retrieve resourceJson)
+
+    val gold = VillageMap.instance().get.gold
+    val food = VillageMap.instance().get.food
+    retrieve resourceType match{
+      case FOOD => c.foodLabel.setText(food.toString)
+      case MONEY => c.goldLabel.setText(gold.toString)
+    }
+    c.takeButton setDisable true
+    c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
   }
 
   private def decrementMoney(gold: Int, price: Int, c: VillageViewController): Unit = {
