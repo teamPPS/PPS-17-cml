@@ -12,7 +12,7 @@ import play.api.libs.json.Json
   * @author Filippo Portolani
   */
 
-case class Griffin(creature_name: String, creature_level: Int) extends Creature {
+case class AirCreature(creature_name: String, creature_level: Int) extends Creature {
 
   val _element : String = AIR
 
@@ -50,7 +50,7 @@ case class Griffin(creature_name: String, creature_level: Int) extends Creature 
   override def creatureType: String = GRIFFIN
 }
 
-object Griffin {
-  implicit val reader = Json.format[Griffin]
+object AirCreature {
+  implicit val reader = Json.format[AirCreature]
 }
 

@@ -1,0 +1,10 @@
+apply plugin: 'application'
+
+mainClassName = 'cml.RemoteActor'
+
+dependencies {
+    implementation project(':client')
+    implementation group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.18'
+    implementation group: 'com.typesafe.akka', name: 'akka-remote_2.12', version: '2.5.18'
+    runtimeOnly 'com.github.romix.akka:akka-kryo-serialization_2.12:0.5.2'
+}

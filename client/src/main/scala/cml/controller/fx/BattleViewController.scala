@@ -100,14 +100,12 @@ class BattleViewController {
     val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       createBattleActor()
-      println("context --- > " + exitButton.getScene )
       battleActor ! SceneInfo(exitButton.getScene)
     }
-    //TODO: add progress indicator
   }
 
   private def createBattleActor(): Unit ={
-    val configFile = getClass.getClassLoader.getResource(Path).getFile
+    val configFile = getClass.getClassLoader.getResource(Configuration).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem("LocalContext", config)
     battleActor = system.actorOf(Props[BattleActor], name=Name)

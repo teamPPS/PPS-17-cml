@@ -2,4 +2,5 @@ rootProject.name = 'PPS-17-cml'
 
 include 'server'
 include 'client'
+include 'remote'
 

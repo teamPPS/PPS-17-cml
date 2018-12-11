@@ -11,8 +11,7 @@ import play.api.libs.json.Json
   * @param creatureLevel set the golem level
   * @author Filippo Portolani
   */
-
-case class Golem(creature_name: String, creature_level: Int) extends Creature {
+case class EarthCreature(creature_name: String, creature_level: Int) extends Creature {
 
   val _element : String = EARTH
 
@@ -54,7 +53,7 @@ case class Golem(creature_name: String, creature_level: Int) extends Creature {
   override def creatureType: String = GOLEM
 }
 
-object Golem {
-  implicit val reader = Json.format[Golem]
+object EarthCreature {
+  implicit val reader = Json.format[EarthCreature]
 }
 

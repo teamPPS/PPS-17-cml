@@ -75,7 +75,7 @@
                     <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" fx:id="logoutMenuItem" />
                   </items>
                   <HBox.margin>
-                    <Insets left="10.0" fx:id="x3" />
+                    <Insets left="10.0" fx:id="x4"/>
                   </HBox.margin>
                 </MenuButton>
               </children>

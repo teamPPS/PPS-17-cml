@@ -6,7 +6,7 @@ import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
 import cml.model.base.{Cave, Farm, Structure, VillageMap}
-import cml.model.creatures.{Dragon, Golem, Griffin, WaterDemon}
+import cml.model.creatures.{FireCreature, EarthCreature, AirCreature, WaterCreature}
 import cml.schema.Village
 import cml.utils.ModelConfig
 import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
@@ -98,10 +98,10 @@ class VillageViewController {
       creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]);
       creatureType <- creature \\ Village.CREATURE_TYPE_FIELD;
       specificCreature = creatureType.as[String] match {
-        case ModelConfig.Creature.DRAGON => creature.as[Dragon]
-        case ModelConfig.Creature.GOLEM => creature.as[Golem]
-        case ModelConfig.Creature.GRIFFIN => creature.as[Griffin]
-        case ModelConfig.Creature.WATERDEMON => creature.as[WaterDemon]
+        case ModelConfig.Creature.DRAGON => creature.as[FireCreature]
+        case ModelConfig.Creature.GOLEM => creature.as[EarthCreature]
+        case ModelConfig.Creature.GRIFFIN => creature.as[AirCreature]
+        case ModelConfig.Creature.WATERDEMON => creature.as[WaterCreature]
       }
     ) yield {
       specificHabitat.creatureList += specificCreature

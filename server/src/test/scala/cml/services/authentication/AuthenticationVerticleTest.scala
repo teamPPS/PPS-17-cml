@@ -81,14 +81,15 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))
   }
 
-  /*test("Logout test") {
+  test("Logout test") {
     println("Response bad request because handler is empty")
     client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
-*/
-    //Stessa storia find non giusta? DA RIGUARDARE
-   /* println("Response ok because token success delete")
+
+
+    /* Stessa storia find non giusta? DA RIGUARDARE*
+    println("Response ok because token success delete")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputForTokenReturn, inputForTokenReturn))
       .sendFuture
@@ -108,6 +109,7 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
         println("..................................................................................." + OK.code().toString)
         println("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" + token)
         assert(response.statusCode().toString equals OK.code().toString)})*/
+  }
 
     /* Da provare
     println("Response bad request because token is invalid")

@@ -2,7 +2,6 @@ package cml
 
 import cml.services.authentication.AuthenticationVerticle
 import cml.services.village.VillageVerticle
-import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.Vertx
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,7 +16,6 @@ import scala.util.{Failure, Success}
   */
 
 object ServerMain extends App {
-
   var vertx = Vertx.vertx()
 
   vertx.deployVerticleFuture(AuthenticationVerticle()).onComplete {
