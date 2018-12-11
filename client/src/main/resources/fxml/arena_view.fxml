@@ -23,7 +23,7 @@
             <Separator prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="54.0" prefWidth="900.0" spacing="50.0">
               <children>
-                <ProgressBar fx:id="userLifeBar" onDragDetected="#userLifeBar_" prefWidth="400.0" progress="0.0" HBox.hgrow="ALWAYS" />
+                <ProgressBar fx:id="userLifeBar" prefWidth="400.0" progress="0.0" HBox.hgrow="ALWAYS" />
                 <ProgressBar fx:id="challengerLifeBar" prefWidth="400.0" progress="0.0" HBox.hgrow="ALWAYS" />
               </children>
             </HBox>

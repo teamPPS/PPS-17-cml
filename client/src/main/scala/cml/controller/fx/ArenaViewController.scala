@@ -1,8 +1,9 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
+import cml.controller.ArenaActor
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
-import cml.controller.messages.ArenaRequest.{AttackRequest, StopRequest}
+import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
 import cml.model.base.Creature
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
@@ -29,13 +30,13 @@ class ArenaViewController {
   private val battleGame: BattleRulesImpl = BattleRulesImpl()
   private val selectedCreature: Option[Creature] = Creature.selectedCreature
   private var userPowerAttack: Int = _
-  private var _creatureLife: Double = _
+  private var _creatureLife: Int = _
   private var _challengerLife: Int = _
-  private var _challengerPowerAttack: Int = _
 
   private val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
 
   def initialize(): Unit ={
+    arenaActor ! ControllerRefRequest(this)
     battleGame.initialization()
     attackButton.setDisable(true)
     _creatureLife = battleGame.creatureLife()
@@ -76,7 +77,7 @@ class ArenaViewController {
     if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
     userPowerAttack = game()
     println(" attack -- > " + userPowerAttack)
-    userLifeBar_()
+    challengerLifeBar_()
     arenaActor ! AttackRequest(userPowerAttack)
   }
 
@@ -99,20 +100,13 @@ class ArenaViewController {
     battleGame.isProtect_()
   }
 
-  def userLifeBar_(): Unit = {
-    /*userList.foreach(actor =>
-      if(actor.equals(battleActor)) {
-        _creatureLife -= powerValue_()
-        val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
-        userLifeBar.setProgress(progress)
-      } else {
-        _challengerLife -= userPowerAttack
-        println("CHALLENGER LIFE BAR: " + _challengerLife)
-        val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
-        challengerLifeBar.setProgress(progress)
-      }
-    )*/
-    challengerLifeBar_()
+  def userLifeBar_(challengerPowerAttack: Int): Unit = {
+    println("_challengerPowerAttack ---> " + challengerPowerAttack)
+    _creatureLife -= challengerPowerAttack
+    println("_challengerPowerAttack ---> " + _creatureLife)
+    val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
+    println("progress value --> " + progress)
+    userLifeBar.setProgress(progress)
   }
 
   def challengerLifeBar_(): Unit = {
@@ -125,7 +119,5 @@ class ArenaViewController {
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
 
   private def game(): Int = battleGame.gameEngine(creatureAttackValue_())
-
-  private def powerValue_(): Double = _challengerPowerAttack
 
 }

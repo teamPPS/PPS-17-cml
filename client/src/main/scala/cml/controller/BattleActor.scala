@@ -8,6 +8,7 @@ import cml.utils.ViewConfig.ArenaWindow
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.view.ViewSwitch
+import cml.view.utils.ProgressView
 import javafx.application.Platform
 import javafx.scene.Scene
 
@@ -25,11 +26,12 @@ class BattleActor extends Actor with ActorLogging {
   var challenger: ActorRef = _
   var sceneContext: Scene = _
   var turn: Int = _
-  var arenaActor: ActorRef = system.actorOf(Props(new ArenaActor()), "ArenaActor")
+  var arenaActor: ActorRef = _
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
     remoteActor = context.actorSelection("akka.tcp://CML@127.0.0.1:5150/user/RemoteActor")
+    arenaActor = system.actorOf(Props(new ArenaActor()), "ArenaActor")
     remoteActor ! RequireEnterInArena()
   }
 
@@ -40,7 +42,8 @@ class BattleActor extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case SceneInfo(scene) => sceneContext = scene
-    case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger() //TODO: add progress indicator
+    case RequireEnterInArenaSuccess() =>
+      remoteActor ! ExistChallenger()
     case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
       log.info("User in list - " + user)
