@@ -82,7 +82,7 @@ object Handler {
             s.resource.inc(s.level) //TODO INCREMENTO NEL TEMPO
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
 
-            if (s.resource.amount > INIT_VALUE) { //TODO risorsa corrente
+            if (s.resource.amount > INIT_VALUE) {
               c.takeButton setDisable false
               c.takeButton setOnMouseClicked (_ => retrieveResource(s, c))
             }
@@ -108,6 +108,7 @@ object Handler {
       event consume()
     })
   }
+
 
   private def addDragAndDropTargetHandler(n: Node, c: VillageViewController): Unit = {
     n setOnDragOver ((event: DragEvent) => {
