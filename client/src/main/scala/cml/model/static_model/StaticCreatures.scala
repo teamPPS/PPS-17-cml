@@ -26,13 +26,13 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
       creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL, DRAGON, s).json //passare anche il tipo drago/kraken ecc ?
     case WATER =>
       creature = WaterCreature(WATERDEMON_NAME, INITIAL_LEVEL)
-      creatureJson = CreatureJson(WATERDEMON_NAME,INITIAL_LEVEL, GRIFFIN, s).json
+      creatureJson = CreatureJson(WATERDEMON_NAME,INITIAL_LEVEL, WATERDEMON, s).json
     case EARTH =>
       creature = EarthCreature(GOLEM_NAME, INITIAL_LEVEL)
       creatureJson = CreatureJson(GOLEM_NAME,INITIAL_LEVEL, GOLEM, s).json
     case AIR =>
       creature = AirCreature(GRIFFIN_NAME, INITIAL_LEVEL)
-      creatureJson = CreatureJson(GRIFFIN_NAME,INITIAL_LEVEL, WATERDEMON, s).json
+      creatureJson = CreatureJson(GRIFFIN_NAME,INITIAL_LEVEL, GRIFFIN, s).json
     case "Not an habitat" => throw new IllegalArgumentException
   }
 
