@@ -9,7 +9,7 @@ import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
 import cml.utils.ModelConfig.Resource.{FOOD, INIT_VALUE, MONEY}
-import cml.utils.MoneyJson
+import cml.utils.{FoodJson, MoneyJson}
 import cml.view.utils.TileConfig.tileSet
 import javafx.scene.image.ImageView
 import javafx.scene.input._
@@ -72,7 +72,7 @@ object Handler {
         if (s.position equals Position(x, y)) {
           if (s.creatures != null && s.creatures.isEmpty) {
             c.addCreatureButton setDisable false
-            c.selectionInfo setText "Structure: " + getClassName(s)
+            c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount)
             c.addCreatureButton.setOnMouseClicked(_ => addNewCreature(s, c))
           } else {
             c.levelUpButton setDisable false
@@ -134,7 +134,7 @@ object Handler {
 
         decrementMoney(gold, price, c)
 
-      }else c.selectionInfo setText "You can't build a structure if you don't have money"
+      } else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
   }
@@ -149,13 +149,17 @@ object Handler {
 
   private def upgradeStructure(s: Structure, c: VillageViewController): Unit = {
     val gold =  VillageMap.instance().get.gold
+    val food =  VillageMap.instance().get.food
     if(gold >= price){
       val upgrade = StructureUpgrade(s)
       upgrade creatureJson match {
         case null => villageActor ! SetUpdateVillage(upgrade structureJson)
-        case _ => villageActor ! SetUpdateVillage(upgrade creatureJson)
+        case _ => {
+          villageActor ! SetUpdateVillage(upgrade creatureJson)
+          decrementFood(food, price*s.level, c)
+        }
       }
-      decrementMoney(gold, price, c)
+      decrementMoney(gold, price*s.level, c)
       c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
     }
     else{
@@ -178,17 +182,24 @@ object Handler {
     c.takeButton setDisable true
     c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
   }
-
+// TODO i due decrementi stesso codice!!!
   private def decrementMoney(gold: Int, price: Int, c: VillageViewController): Unit = {
     Thread.sleep(200) //TODO controllo invio di messaggi future
-    println(gold)
     val resourceJson = MoneyJson(gold - price).json
     VillageMap.instance().get.gold = gold - price
-    c.goldLabel.setText(gold.toString)
+    c.goldLabel.setText((gold - price).toString)
     villageActor ! SetUpdateVillage(resourceJson)
   }
 
-  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature]): String = {
+  private def decrementFood(food: Int, price: Int, c: VillageViewController): Unit = {
+    Thread.sleep(200)
+    val resourceJson = FoodJson(food - price).json
+    VillageMap.instance().get.food = food - price
+    c.foodLabel.setText((food - price).toString)
+    villageActor ! SetUpdateVillage(resourceJson)
+  }
+
+  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()): String = {
     var text: String = ""
     if(creatures != null && creatures.nonEmpty) {
       text = "Structure " + name + "\n" +
