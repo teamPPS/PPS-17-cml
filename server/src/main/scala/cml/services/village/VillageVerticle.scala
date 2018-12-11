@@ -94,7 +94,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def delete: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to enter village")
+    println("Request to delete village")
     (for(
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);

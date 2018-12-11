@@ -65,21 +65,20 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-  /*  println("Response ok because handler is corrected create")
+    println("Response ok because handler is correctly created")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, inputTest))
       .sendFuture
       .map(response => {
         println("res " +response )
         assert(response.statusCode().toString equals OK.code().toString)
-      })*/
+      })
 
-
-   /* println("Response unauthorized because handler is incorrect")
+    println("Response unauthorized because handler is incorrect")
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputTest, invalidPassword))
       .sendFuture
-      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
+      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))
   }
 
   /*test("Logout test") {
