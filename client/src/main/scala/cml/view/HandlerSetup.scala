@@ -9,7 +9,6 @@ import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
 import cml.utils.ModelConfig.Resource.{FOOD, INIT_VALUE, MONEY}
-import cml.utils.ModelConfig.StructureType.FARM
 import cml.utils.MoneyJson
 import cml.view.utils.TileConfig.tileSet
 import javafx.scene.image.ImageView
@@ -79,7 +78,6 @@ object Handler {
             c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => upgradeStructure(s, c))
 
-            s.resource.inc(s.level) //TODO INCREMENTO NEL TEMPO
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
 
             if (s.resource.amount > INIT_VALUE) {
@@ -172,6 +170,7 @@ object Handler {
 
     val gold = VillageMap.instance().get.gold
     val food = VillageMap.instance().get.food
+    
     retrieve resourceType match{
       case FOOD => c.foodLabel.setText(food.toString)
       case MONEY => c.goldLabel.setText(gold.toString)
