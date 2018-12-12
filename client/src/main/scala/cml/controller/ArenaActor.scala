@@ -22,11 +22,9 @@ class ArenaActor extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case ActorRefRequest(actor) => battleActor = actor
-    case ChallengerCreature(creature) => {
+    case ChallengerCreature(creature) =>
       challengerCreature = creature
-      println("challengerCreature"+challengerCreature.get)
       Platform.runLater(() => setChallengerCreatureImage(challengerCreature.get, controller))
-    }
     case AttackRequest(value) => battleActor ! AttackRequest(value)
     case AttackSuccess(value) => _powerValue = value
       Platform.runLater(() => controller.userLifeBar_(_powerValue))

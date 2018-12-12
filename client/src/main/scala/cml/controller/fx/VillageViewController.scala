@@ -2,6 +2,7 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
+import cml.controller.actor.utils.ActorUtils.ActorPath.{AuthenticationActorPath,VillageActorPath}
 import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
@@ -40,8 +41,8 @@ class VillageViewController {
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
 
-  val villageActor: ActorSelection = system actorSelection "/user/VillageActor"
-  val authenticationActor: ActorSelection = system actorSelection "/user/AuthenticationActor"
+  val villageActor: ActorSelection = system actorSelection VillageActorPath
+  val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
   var updateResourcesTimer: AnimationTimer = _
 
   def initialize(): Unit = {

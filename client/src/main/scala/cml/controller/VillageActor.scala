@@ -2,6 +2,7 @@ package cml.controller
 
 import akka.actor.{Actor, ActorRef, ActorSelection}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
+import cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
 import cml.controller.fx.VillageViewController
 import cml.controller.messages.VillageRequest._
 import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
@@ -20,7 +21,7 @@ import scala.util.{Failure, Success}
 class VillageActor() extends Actor{
 
   val villageVertx = VillageServiceVertxImpl()
-  val authenticationActor: ActorSelection = context.actorSelection("/user/AuthenticationActor")
+  val authenticationActor: ActorSelection = context actorSelection AuthenticationActorPath
 
   /**
     * @return village behaviour

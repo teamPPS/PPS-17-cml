@@ -23,7 +23,10 @@ object ActorUtils {
 
 
   object ActorPath {
-
+    val AuthenticationActorPath = "/user/AuthenticationActor"
+    val VillageActorPath = "/user/VillageActor"
+    val BattleActorPath = "/user/BattleActor"
+    val ArenaActorPath = "user/ArenaActor"
   }
 
 }

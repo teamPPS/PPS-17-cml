@@ -2,6 +2,7 @@ package cml.controller
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.actor.utils.ActorUtils.RemoteActorInfo
 import cml.controller.messages.ArenaRequest._
 import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.controller.messages.BattleRequest._
@@ -31,9 +32,8 @@ class BattleActor extends Actor with ActorLogging {
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
-    remoteActor = context.actorSelection("akka.tcp://CML@127.0.0.1:5150/user/RemoteActor")
+    remoteActor = context.actorSelection(RemoteActorInfo.Path)
     arenaActor = system.actorOf(Props(new ArenaActor()), "ArenaActor")
-    println(selectedCreature)
     remoteActor ! RequireEnterInArena(selectedCreature)
   }
 

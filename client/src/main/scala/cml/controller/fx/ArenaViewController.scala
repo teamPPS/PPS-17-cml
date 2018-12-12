@@ -2,6 +2,7 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.actor.utils.ActorUtils.ActorPath.ArenaActorPath
 import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
@@ -38,7 +39,7 @@ class ArenaViewController {
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
 
-  private val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
+  private val arenaActor: ActorSelection = system actorSelection ArenaActorPath
 
   def initialize(): Unit ={
     arenaActor ! ControllerRefRequest(this)
