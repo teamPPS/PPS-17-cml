@@ -4,6 +4,7 @@
 
 ## Documentation 
 - Client:
+  - [Scala](/PPS-17-cml/doc/client/)
 - Server: 
 - Remote:
 
