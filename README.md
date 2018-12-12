@@ -12,8 +12,8 @@
 
 ## Reports
 - Client:
-  - [Scala](/PPS-17-cml/scoverage/client/)
+  - [Scoverage](/PPS-17-cml/scoverage/client/)
 - Server:
-  - [Scala](/PPS-17-cml/scoverage/server/)
+  - [Scoverage](/PPS-17-cml/scoverage/server/)
 - Remote:
-  - [Scala](/PPS-17-cml/scoverage/remote/)
+  - [Scoverage](/PPS-17-cml/scoverage/remote/)
