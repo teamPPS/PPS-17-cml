@@ -118,15 +118,15 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="cml.model">model</a></dd></dl></div>
     </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Cave$.html" title=""></a>
                         <a class="class" href="Cave.html" title="Implementation of building structure Cave"></a>
                         <a href="Cave.html" title="Implementation of building structure Cave">Cave</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Creature$.html" title=""></a>
                         <a class="trait" href="Creature.html" title="This trait defines a base creature"></a>
                         <a href="Creature.html" title="This trait defines a base creature">Creature</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Farm$.html" title=""></a>
                         <a class="class" href="Farm.html" title="Implementation of building structure Farm"></a>
                         <a href="Farm.html" title="Implementation of building structure Farm">Farm</a>
                       </li><li class="current-entities indented3">
@@ -142,7 +142,7 @@
                         <a class="class" href="Money.html" title="Implementation on resource money"></a>
                         <a href="Money.html" title="Implementation on resource money">Money</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Position$.html" title=""></a>
                         <a class="class" href="Position.html" title="Represents a position in the village grid"></a>
                         <a href="Position.html" title="Represents a position in the village grid">Position</a>
                       </li><li class="current-entities indented3">
@@ -154,9 +154,9 @@
                         <a class="trait" href="Structure.html" title="This trait defines common operations over structures"></a>
                         <a href="Structure.html" title="This trait defines common operations over structures">Structure</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="" title="This class implements a VillageMap"></a>
-                        <a href="" title="This class implements a VillageMap">VillageMap</a>
+                        <a class="object" href="VillageMap$.html" title=""></a>
+                        <a class="class" href="" title="Case class representing the current state of the user's village"></a>
+                        <a href="" title="Case class representing the current state of the user's village">VillageMap</a>
                       </li>
               </ul>
             </div>
@@ -164,14 +164,16 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <a href="VillageMap$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
         <p id="owner"><a href="../../index.html" class="extype" name="cml">cml</a>.<a href="../index.html" class="extype" name="cml.model">model</a>.<a href="index.html" class="extype" name="cml.model.base">base</a></p>
-        <h1>VillageMap<span class="permalink">
+        <h1><a href="VillageMap$.html" title="See companion object">VillageMap</a><span class="permalink">
       <a href="../../../cml/model/base/VillageMap.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="VillageMap$.html" title="See companion object">object VillageMap</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -180,13 +182,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">VillageMap</span><span class="params">(<span name="structures">structures: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">VillageMap</span><span class="params">(<span name="villageStructure">villageStructure: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>, <span name="gold">gold: <span class="extype" name="scala.Int">Int</span></span>, <span name="food">food: <span class="extype" name="scala.Int">Int</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>This class implements a VillageMap
-</p></div><dl class="paramcmts block"><dt class="param">structures</dt><dd class="cmt"><p>list of structures composing the village</p></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Case class representing the current state of the user's village</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -236,10 +237,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="cml.model.base.VillageMap#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(structures:scala.collection.mutable.MutableList[cml.model.base.Structure]):cml.model.base.VillageMap"></a><a id="&lt;init&gt;:VillageMap"></a>
+              <ol><li name="cml.model.base.VillageMap#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(villageStructure:scala.collection.mutable.MutableList[cml.model.base.Structure],gold:Int,food:Int,username:String):cml.model.base.VillageMap"></a><a id="&lt;init&gt;:VillageMap"></a>
       <span class="permalink">
-      <a href="../../../cml/model/base/VillageMap.html#&lt;init&gt;(structures:scala.collection.mutable.MutableList[cml.model.base.Structure]):cml.model.base.VillageMap" title="Permalink">
+      <a href="../../../cml/model/base/VillageMap.html#&lt;init&gt;(villageStructure:scala.collection.mutable.MutableList[cml.model.base.Structure],gold:Int,food:Int,username:String):cml.model.base.VillageMap" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -248,10 +249,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">VillageMap</span><span class="params">(<span name="structures">structures: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>)</span>
+        <span class="name">VillageMap</span><span class="params">(<span name="villageStructure">villageStructure: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>, <span name="gold">gold: <span class="extype" name="scala.Int">Int</span></span>, <span name="food">food: <span class="extype" name="scala.Int">Int</span></span>, <span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
       </span>
       
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">structures</dt><dd class="cmt"><p>list of structures composing the village</p></dd></dl></div>
+      
     </li></ol>
             </div>
 
@@ -388,6 +389,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="cml.model.base.VillageMap#food" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="food:Int"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/VillageMap.html#food:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">food</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -407,6 +424,22 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="cml.model.base.VillageMap#gold" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="gold:Int"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/VillageMap.html#gold:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gold</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -477,22 +510,6 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li name="cml.model.base.VillageMap#structures" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="structures:scala.collection.mutable.MutableList[cml.model.base.Structure]"></a><a id="structures:MutableList[Structure]"></a>
-      <span class="permalink">
-      <a href="../../../cml/model/base/VillageMap.html#structures:scala.collection.mutable.MutableList[cml.model.base.Structure]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">structures</span><span class="result">: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -509,6 +526,38 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="cml.model.base.VillageMap#username" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="username:String"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/VillageMap.html#username:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">username</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="cml.model.base.VillageMap#villageStructure" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="villageStructure:scala.collection.mutable.MutableList[cml.model.base.Structure]"></a><a id="villageStructure:MutableList[Structure]"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/VillageMap.html#villageStructure:scala.collection.mutable.MutableList[cml.model.base.Structure]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">villageStructure</span><span class="result">: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">

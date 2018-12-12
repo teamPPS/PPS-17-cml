@@ -32,86 +32,91 @@
 </span>8 <span style=''>
 </span>9 <span style=''>import scala.util.{Failure, Success}
 </span>10 <span style=''>import cml.services.authentication.utils.AuthenticationUrl._
-</span>11 <span style=''>
-</span>12 <span style=''>/**
-</span>13 <span style=''>  * This class implements AuthenticationVerticle
-</span>14 <span style=''>  *
-</span>15 <span style=''>  * @author Chiara Volonnino
-</span>16 <span style=''>  */
-</span>17 <span style=''>
-</span>18 <span style=''>case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation {
-</span>19 <span style=''>
-</span>20 <span style=''>  private var authenticationService: AuthenticationService = _
-</span>21 <span style=''>
-</span>22 <span style=''>  override def initializeRouter(router: Router): Unit = {
-</span>23 <span style=''>    </span><span style='background: #AEF1AE'>router post RegisterApi handler register</span><span style=''>
-</span>24 <span style=''>    </span><span style='background: #AEF1AE'>router put LoginApi handler login</span><span style=''>
-</span>25 <span style=''>    </span><span style='background: #AEF1AE'>router delete  LogoutApi handler logout</span><span style=''>
-</span>26 <span style=''>    </span><span style='background: #AEF1AE'>router get ValidationTokenApi handler validationToken</span><span style=''>
-</span>27 <span style=''>  }
-</span>28 <span style=''>
-</span>29 <span style=''>  override def initializeService: Unit = {
-</span>30 <span style=''>    </span><span style='background: #AEF1AE'>authenticationService = AuthenticationService()</span><span style=''>
-</span>31 <span style=''>  }
-</span>32 <span style=''>
-</span>33 <span style=''>  private def register: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>34 <span style=''>    </span><span style='background: #AEF1AE'>println(&quot;Receive register request&quot;)</span><span style=''>
-</span>35 <span style=''>    (</span><span style='background: #AEF1AE'>for(
-</span>36 <span style=''></span><span style='background: #AEF1AE'>      request &lt;- getRequestAndHeader;
-</span>37 <span style=''></span><span style='background: #AEF1AE'>      (username, password) &lt;- TokenAuthentication.checkBase64Authentication(request)
-</span>38 <span style=''></span><span style='background: #AEF1AE'>    ) yield {
-</span>39 <span style=''></span><span style='background: #AEF1AE'>      authenticationService.register(username,password).onComplete {
-</span>40 <span style=''></span><span style='background: #AEF1AE'>        case Success(_) =&gt;
-</span>41 <span style=''></span><span style='background: #AEF1AE'>          </span><span style='background: #F0ADAD'>JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(CREATED,_))</span><span style='background: #AEF1AE'>
-</span>42 <span style=''></span><span style='background: #AEF1AE'>        case Failure(_) =&gt; </span><span style='background: #F0ADAD'>sendResponse(BAD_REQUEST, BAD_REQUEST.toString)</span><span style='background: #AEF1AE'>
-</span>43 <span style=''></span><span style='background: #AEF1AE'>      }
-</span>44 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
-</span>45 <span style=''>  }
-</span>46 <span style=''>
-</span>47 <span style=''>  private def login: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>48 <span style=''>    </span><span style='background: #AEF1AE'>println(&quot;Receive login request&quot;)</span><span style=''>
-</span>49 <span style=''>    (</span><span style='background: #AEF1AE'>for (
-</span>50 <span style=''></span><span style='background: #AEF1AE'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>51 <span style=''></span><span style='background: #AEF1AE'>      </span><span style='background: #F0ADAD'>(username, password) &lt;- TokenAuthentication.checkBase64Authentication(headerAuthorization)
-</span>52 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>53 <span style=''></span><span style='background: #F0ADAD'>      authenticationService.login(username, password).onComplete {
-</span>54 <span style=''></span><span style='background: #F0ADAD'>        case Success(x) =&gt;
-</span>55 <span style=''></span><span style='background: #F0ADAD'>          if(x) JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(OK,_)) else {
-</span>56 <span style=''></span><span style='background: #F0ADAD'>            sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-</span>57 <span style=''></span><span style='background: #F0ADAD'>          }
-</span>58 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-</span>59 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style='background: #AEF1AE'>
-</span>60 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
-</span>61 <span style=''>  }
-</span>62 <span style=''>
-</span>63 <span style=''>  private def logout: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>64 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Receive logout request&quot;)</span><span style=''> // delete only token da valutare, cosÃ¬ non va bene! o salviamo il token nel db o non soS
-</span>65 <span style=''>    </span><span style='background: #F0ADAD'>(for (
-</span>66 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>67 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-</span>68 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
-</span>69 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>70 <span style=''></span><span style='background: #F0ADAD'>      authenticationService.logout(username).onComplete {
-</span>71 <span style=''></span><span style='background: #F0ADAD'>        case Success(_) =&gt; sendResponse(OK, username)
-</span>72 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-</span>73 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>74 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString)</span><span style=''>)
-</span>75 <span style=''>  }
-</span>76 <span style=''>
-</span>77 <span style=''>  private def validationToken: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>78 <span style=''>   </span><span style='background: #AEF1AE'> println(&quot;Receive validationToken request&quot;</span><span style=''>)
-</span>79 <span style=''>    </span><span style='background: #AEF1AE'>(for (
-</span>80 <span style=''></span><span style='background: #AEF1AE'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>81 <span style=''></span><span style='background: #AEF1AE'>     </span><span style='background: #F0ADAD'> token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-</span>82 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
-</span>83 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>84 <span style=''></span><span style='background: #F0ADAD'>      authenticationService.validationToken(username).onComplete {
-</span>85 <span style=''></span><span style='background: #F0ADAD'>        case Success(_) =&gt; sendResponse(OK, username)
-</span>86 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-</span>87 <span style=''></span><span style='background: #F0ADAD'>      </span><span style='background: #AEF1AE'>}
-</span>88 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString)</span><span style=''>)
-</span>89 <span style=''>  }
-</span>90 <span style=''>}
+</span>11 <span style=''>import io.vertx.scala.ext.web.handler.BodyHandler
+</span>12 <span style=''>
+</span>13 <span style=''>/**
+</span>14 <span style=''>  * This class implements AuthenticationVerticle
+</span>15 <span style=''>  *
+</span>16 <span style=''>  * @author Chiara Volonnino
+</span>17 <span style=''>  */
+</span>18 <span style=''>
+</span>19 <span style=''>case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation {
+</span>20 <span style=''>
+</span>21 <span style=''>  private var authenticationService: AuthenticationService = _
+</span>22 <span style=''>
+</span>23 <span style=''>  override def initializeRouter(router: Router): Unit = {
+</span>24 <span style=''>    </span><span style='background: #AEF1AE'>router.route.handler(BodyHandler.create())</span><span style=''>
+</span>25 <span style=''>    </span><span style='background: #AEF1AE'>router post RegisterApi handler register</span><span style=''>
+</span>26 <span style=''>    </span><span style='background: #AEF1AE'>router put LoginApi handler login</span><span style=''>
+</span>27 <span style=''>    </span><span style='background: #AEF1AE'>router delete  LogoutApi handler logout</span><span style=''>
+</span>28 <span style=''>    </span><span style='background: #AEF1AE'>router get ValidationTokenApi handler validationToken</span><span style=''>
+</span>29 <span style=''>  }
+</span>30 <span style=''>
+</span>31 <span style=''>  override def initializeService: Unit = {
+</span>32 <span style=''>    </span><span style='background: #AEF1AE'>authenticationService = AuthenticationService()</span><span style=''>
+</span>33 <span style=''>  }
+</span>34 <span style=''>
+</span>35 <span style=''>  private def register: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>36 <span style=''>    </span><span style='background: #AEF1AE'>println(&quot;Receive register request&quot;)</span><span style=''>
+</span>37 <span style=''>    (</span><span style='background: #AEF1AE'>for(
+</span>38 <span style=''></span><span style='background: #AEF1AE'>      request &lt;- getRequestAndHeader;
+</span>39 <span style=''></span><span style='background: #AEF1AE'>      (username, password) &lt;- TokenAuthentication.checkBase64Authentication(request)
+</span>40 <span style=''></span><span style='background: #AEF1AE'>    ) yield {
+</span>41 <span style=''></span><span style='background: #AEF1AE'>      authenticationService.register(username,password).onComplete {
+</span>42 <span style=''></span><span style='background: #AEF1AE'>        case Success(_) =&gt;
+</span>43 <span style=''></span><span style='background: #AEF1AE'>          </span><span style='background: #F0ADAD'>JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(CREATED,_))</span><span style='background: #AEF1AE'>
+</span>44 <span style=''></span><span style='background: #AEF1AE'>        case Failure(_) =&gt; sendResponse(BAD_REQUEST, BAD_REQUEST.toString)
+</span>45 <span style=''></span><span style='background: #AEF1AE'>      }
+</span>46 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>47 <span style=''>  }
+</span>48 <span style=''>
+</span>49 <span style=''>  private def login: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>50 <span style=''>    </span><span style='background: #AEF1AE'>println(&quot;Receive login request&quot;)</span><span style=''>
+</span>51 <span style=''>    (</span><span style='background: #AEF1AE'>for (
+</span>52 <span style=''></span><span style='background: #AEF1AE'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>53 <span style=''></span><span style='background: #AEF1AE'>      (username, password) &lt;- TokenAuthentication.checkBase64Authentication(headerAuthorization)
+</span>54 <span style=''></span><span style='background: #AEF1AE'>    ) yield {
+</span>55 <span style=''></span><span style='background: #AEF1AE'>      authenticationService.login(username, password).onComplete {
+</span>56 <span style=''></span><span style='background: #AEF1AE'>        case Success(x) =&gt;
+</span>57 <span style=''></span><span style='background: #AEF1AE'>          if(x) JWTAuthentication.encodeUsernameToken(username).foreach(sendResponse(OK,_)) else {
+</span>58 <span style=''></span><span style='background: #AEF1AE'>            </span><span style='background: #F0ADAD'>sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)</span><span style='background: #AEF1AE'>
+</span>59 <span style=''></span><span style='background: #AEF1AE'>          }
+</span>60 <span style=''></span><span style='background: #AEF1AE'>        case Failure(_) =&gt; sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
+</span>61 <span style=''></span><span style='background: #AEF1AE'>      }
+</span>62 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>63 <span style=''>  }
+</span>64 <span style=''>
+</span>65 <span style=''>  private def logout: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>66 <span style=''>    </span><span style='background: #AEF1AE'>println(&quot;Receive logout request&quot;)</span><span style=''> // delete only token da valutare, cosÃ¬ non va bene! o salviamo il token nel db o non soS
+</span>67 <span style=''>    </span><span style='background: #AEF1AE'>(for (
+</span>68 <span style=''></span><span style='background: #AEF1AE'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>69 <span style=''></span><span style='background: #AEF1AE'>     </span><span style='background: #F0ADAD'> token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>70 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>71 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>72 <span style=''></span><span style='background: #F0ADAD'>//      authenticationService.logout(username).onComplete {
+</span>73 <span style=''></span><span style='background: #F0ADAD'>//        case Success(_) =&gt; sendResponse(OK, username)
+</span>74 <span style=''></span><span style='background: #F0ADAD'>//        case Failure(_) =&gt; sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
+</span>75 <span style=''></span><span style='background: #F0ADAD'>//      }
+</span>76 <span style=''></span><span style='background: #F0ADAD'>      sendResponse(OK, username</span><span style='background: #AEF1AE'>)
+</span>77 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString)</span><span style=''>)
+</span>78 <span style=''>  }
+</span>79 <span style=''>
+</span>80 <span style=''>  private def validationToken: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>81 <span style=''>   </span><span style='background: #AEF1AE'> println(&quot;Receive validationToken request&quot;</span><span style=''>)
+</span>82 <span style=''>    </span><span style='background: #AEF1AE'>(for (
+</span>83 <span style=''></span><span style='background: #AEF1AE'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>84 <span style=''></span><span style='background: #AEF1AE'>     </span><span style='background: #F0ADAD'> token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>85 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>86 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>87 <span style=''></span><span style='background: #F0ADAD'>      authenticationService.validationToken(username).onComplete {
+</span>88 <span style=''></span><span style='background: #F0ADAD'>        case Success(_) =&gt; sendResponse(OK, username)
+</span>89 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
+</span>90 <span style=''></span><span style='background: #F0ADAD'>      </span><span style='background: #AEF1AE'>}
+</span>91 <span style=''></span><span style='background: #AEF1AE'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString)</span><span style=''>)
+</span>92 <span style=''>  }
+</span>93 <span style=''>
+</span>94 <span style=''>}
+</span>95 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -125,36 +130,57 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          23
+          24
         </td>
         <td>
-          209
+          204
         </td>
         <td>
-          745
+          764
           -
-          753
+          806
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.services.authentication.AuthenticationVerticle.register
+          io.vertx.scala.ext.web.Route.handler
         </td>
         <td style="background: #AEF1AE">
-          AuthenticationVerticle.this.register
+          router.route().handler(io.vertx.scala.ext.web.handler.BodyHandler.create())
         </td>
       </tr><tr>
         <td>
-          23
+          24
         </td>
         <td>
-          208
+          203
         </td>
         <td>
-          725
+          785
           -
-          736
+          805
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.handler.BodyHandler.create
+        </td>
+        <td style="background: #AEF1AE">
+          io.vertx.scala.ext.web.handler.BodyHandler.create()
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          205
+        </td>
+        <td>
+          824
+          -
+          835
         </td>
         <td>
           Select
@@ -167,15 +193,15 @@
         </td>
       </tr><tr>
         <td>
-          23
+          25
         </td>
         <td>
-          210
+          207
         </td>
         <td>
-          713
+          812
           -
-          753
+          852
         </td>
         <td>
           Apply
@@ -188,57 +214,36 @@
         </td>
       </tr><tr>
         <td>
-          24
+          25
         </td>
         <td>
-          211
+          206
         </td>
         <td>
-          770
+          844
           -
-          778
+          852
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+          cml.services.authentication.AuthenticationVerticle.register
         </td>
         <td style="background: #AEF1AE">
-          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+          AuthenticationVerticle.this.register
         </td>
       </tr><tr>
         <td>
-          24
+          26
         </td>
         <td>
-          213
+          209
         </td>
         <td>
-          759
+          886
           -
-          792
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.Route.handler
-        </td>
-        <td style="background: #AEF1AE">
-          router.put(cml.services.authentication.utils.AuthenticationUrl.LoginApi).handler(AuthenticationVerticle.this.login)
-        </td>
-      </tr><tr>
-        <td>
-          24
-        </td>
-        <td>
-          212
-        </td>
-        <td>
-          787
-          -
-          792
+          891
         </td>
         <td>
           Select
@@ -251,15 +256,57 @@
         </td>
       </tr><tr>
         <td>
-          25
+          26
         </td>
         <td>
-          214
+          208
         </td>
         <td>
-          813
+          869
           -
-          822
+          877
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+        <td style="background: #AEF1AE">
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          210
+        </td>
+        <td>
+          858
+          -
+          891
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.Route.handler
+        </td>
+        <td style="background: #AEF1AE">
+          router.put(cml.services.authentication.utils.AuthenticationUrl.LoginApi).handler(AuthenticationVerticle.this.login)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          211
+        </td>
+        <td>
+          912
+          -
+          921
         </td>
         <td>
           Select
@@ -272,15 +319,15 @@
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          216
+          213
         </td>
         <td>
-          798
+          897
           -
-          837
+          936
         </td>
         <td>
           Apply
@@ -293,15 +340,15 @@
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          215
+          212
         </td>
         <td>
-          831
+          930
           -
-          837
+          936
         </td>
         <td>
           Select
@@ -314,36 +361,36 @@
         </td>
       </tr><tr>
         <td>
-          26
+          28
         </td>
         <td>
-          218
+          214
         </td>
         <td>
-          881
+          953
           -
-          896
+          971
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.authentication.AuthenticationVerticle.validationToken
+          cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi
         </td>
         <td style="background: #AEF1AE">
-          AuthenticationVerticle.this.validationToken
+          cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi
         </td>
       </tr><tr>
         <td>
-          26
+          28
         </td>
         <td>
-          220
+          217
         </td>
         <td>
-          873
+          972
           -
-          873
+          972
         </td>
         <td>
           Literal
@@ -356,36 +403,15 @@
         </td>
       </tr><tr>
         <td>
-          26
+          28
         </td>
         <td>
-          217
+          216
         </td>
         <td>
-          854
+          942
           -
-          872
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi
-        </td>
-        <td style="background: #AEF1AE">
-          cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi
-        </td>
-      </tr><tr>
-        <td>
-          26
-        </td>
-        <td>
-          219
-        </td>
-        <td>
-          843
-          -
-          896
+          995
         </td>
         <td>
           Apply
@@ -398,36 +424,36 @@
         </td>
       </tr><tr>
         <td>
-          30
+          28
         </td>
         <td>
-          222
+          215
         </td>
         <td>
-          953
+          980
           -
-          1000
+          995
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          cml.services.authentication.AuthenticationVerticle.authenticationService_=
+          cml.services.authentication.AuthenticationVerticle.validationToken
         </td>
         <td style="background: #AEF1AE">
-          AuthenticationVerticle.this.authenticationService_=(AuthenticationService.apply())
+          AuthenticationVerticle.this.validationToken
         </td>
       </tr><tr>
         <td>
-          30
+          32
         </td>
         <td>
-          221
+          218
         </td>
         <td>
-          977
+          1076
           -
-          1000
+          1099
         </td>
         <td>
           Apply
@@ -440,15 +466,36 @@
         </td>
       </tr><tr>
         <td>
-          34
+          32
         </td>
         <td>
-          223
+          219
         </td>
         <td>
-          1093
+          1052
           -
-          1128
+          1099
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.authentication.AuthenticationVerticle.authenticationService_=
+        </td>
+        <td style="background: #AEF1AE">
+          AuthenticationVerticle.this.authenticationService_=(AuthenticationService.apply())
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          220
+        </td>
+        <td>
+          1192
+          -
+          1227
         </td>
         <td>
           Apply
@@ -461,15 +508,15 @@
         </td>
       </tr><tr>
         <td>
-          37
+          39
         </td>
         <td>
-          230
+          227
         </td>
         <td>
-          1186
+          1285
           -
-          1554
+          1653
         </td>
         <td>
           Apply
@@ -490,15 +537,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          41
         </td>
         <td>
-          229
+          226
         </td>
         <td>
-          1287
+          1386
           -
-          1554
+          1653
         </td>
         <td>
           ApplyToImplicitArgs
@@ -514,36 +561,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          41
         </td>
         <td>
-          228
+          225
         </td>
         <td>
-          1348
+          1447
           -
-          1348
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #AEF1AE">
-          AuthenticationVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          39
-        </td>
-        <td>
-          224
-        </td>
-        <td>
-          1317
-          -
-          1317
+          1447
         </td>
         <td>
           Select
@@ -559,12 +585,33 @@
           41
         </td>
         <td>
-          226
+          221
         </td>
         <td>
-          1389
+          1416
           -
-          1469
+          1416
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #AEF1AE">
+          AuthenticationVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          223
+        </td>
+        <td>
+          1488
+          -
+          1568
         </td>
         <td>
           Apply
@@ -577,15 +624,15 @@
         </td>
       </tr><tr>
         <td>
-          41
+          43
         </td>
         <td>
-          225
+          222
         </td>
         <td>
-          1445
+          1544
           -
-          1468
+          1567
         </td>
         <td>
           ApplyToImplicitArgs
@@ -598,15 +645,15 @@
         </td>
       </tr><tr>
         <td>
-          42
+          44
         </td>
         <td>
-          227
+          224
         </td>
         <td>
-          1498
+          1597
           -
-          1545
+          1644
         </td>
         <td>
           ApplyToImplicitArgs
@@ -614,20 +661,20 @@
         <td>
           cml.core.RoutingOperation.sendResponse
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
         </td>
       </tr><tr>
         <td>
-          44
+          46
         </td>
         <td>
-          232
+          229
         </td>
         <td>
-          1135
+          1234
           -
-          1621
+          1720
         </td>
         <td>
           Apply
@@ -648,15 +695,15 @@
         </td>
       </tr><tr>
         <td>
-          44
+          46
         </td>
         <td>
-          231
+          228
         </td>
         <td>
-          1573
+          1672
           -
-          1620
+          1719
         </td>
         <td>
           ApplyToImplicitArgs
@@ -669,15 +716,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          50
         </td>
         <td>
-          233
+          230
         </td>
         <td>
-          1711
+          1810
           -
-          1743
+          1842
         </td>
         <td>
           Apply
@@ -690,15 +737,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          53
         </td>
         <td>
-          244
+          241
         </td>
         <td>
-          1814
+          1913
           -
-          2278
+          2377
         </td>
         <td>
           Apply
@@ -706,7 +753,7 @@
         <td>
           scala.Option.WithFilter.map
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cml.core.TokenAuthentication.checkBase64Authentication(headerAuthorization).withFilter(((check$ifrefutable$2: (String, String)) =&gt; (check$ifrefutable$2: (String, String) @unchecked) match {
   case (_1: String, _2: String)(String, String)((username @ _), (password @ _)) =&gt; true
   case _ =&gt; false
@@ -722,15 +769,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          53
         </td>
         <td>
-          234
+          231
         </td>
         <td>
-          1883
+          1982
           -
-          1883
+          1982
         </td>
         <td>
           Literal
@@ -738,20 +785,20 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           true
         </td>
       </tr><tr>
         <td>
-          53
+          55
         </td>
         <td>
-          235
+          232
         </td>
         <td>
-          1954
+          2053
           -
-          1954
+          2053
         </td>
         <td>
           Select
@@ -759,20 +806,20 @@
         <td>
           io.vertx.lang.scala.ScalaVerticle.executionContext
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationVerticle.this.executionContext
         </td>
       </tr><tr>
         <td>
-          53
+          55
         </td>
         <td>
-          243
+          240
         </td>
         <td>
-          1927
+          2026
           -
-          2278
+          2377
         </td>
         <td>
           ApplyToImplicitArgs
@@ -780,7 +827,7 @@
         <td>
           scala.concurrent.Future.onComplete
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationVerticle.this.authenticationService.login(username, password)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$2: scala.util.Try[Boolean]) =&gt; x0$2 match {
   case (value: Boolean)scala.util.Success[Boolean]((x @ _)) =&gt; if (x)
     cml.core.utils.JWTAuthentication.encodeUsernameToken(username).foreach[Unit](((x$3: String) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, x$3)(routingContext)))
@@ -791,15 +838,15 @@
         </td>
       </tr><tr>
         <td>
-          53
+          55
         </td>
         <td>
-          242
+          239
         </td>
         <td>
-          1986
+          2085
           -
-          1986
+          2085
         </td>
         <td>
           Select
@@ -807,41 +854,20 @@
         <td>
           io.vertx.lang.scala.ScalaVerticle.executionContext
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationVerticle.this.executionContext
         </td>
       </tr><tr>
         <td>
-          55
+          57
         </td>
         <td>
-          236
+          235
         </td>
         <td>
-          2089
+          2132
           -
-          2107
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, x$3)(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          55
-        </td>
-        <td>
-          238
-        </td>
-        <td>
-          2033
-          -
-          2108
+          2207
         </td>
         <td>
           Block
@@ -849,20 +875,20 @@
         <td>
           scala.Option.foreach
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cml.core.utils.JWTAuthentication.encodeUsernameToken(username).foreach[Unit](((x$3: String) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, x$3)(routingContext)))
         </td>
       </tr><tr>
         <td>
-          55
+          57
         </td>
         <td>
-          237
+          234
         </td>
         <td>
-          2033
+          2132
           -
-          2108
+          2207
         </td>
         <td>
           Apply
@@ -870,41 +896,41 @@
         <td>
           scala.Option.foreach
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cml.core.utils.JWTAuthentication.encodeUsernameToken(username).foreach[Unit](((x$3: String) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, x$3)(routingContext)))
         </td>
       </tr><tr>
         <td>
-          56
+          57
         </td>
         <td>
-          240
+          233
         </td>
         <td>
-          2129
+          2188
           -
-          2178
+          2206
         </td>
         <td>
-          Block
+          ApplyToImplicitArgs
         </td>
         <td>
           cml.core.RoutingOperation.sendResponse
         </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
+        <td style="background: #AEF1AE">
+          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, x$3)(routingContext)
         </td>
       </tr><tr>
         <td>
-          56
+          58
         </td>
         <td>
-          239
+          236
         </td>
         <td>
-          2129
+          2228
           -
-          2178
+          2277
         </td>
         <td>
           ApplyToImplicitArgs
@@ -920,15 +946,15 @@
           58
         </td>
         <td>
-          241
+          237
         </td>
         <td>
-          2220
+          2228
           -
-          2269
+          2277
         </td>
         <td>
-          ApplyToImplicitArgs
+          Block
         </td>
         <td>
           cml.core.RoutingOperation.sendResponse
@@ -941,12 +967,12 @@
           60
         </td>
         <td>
-          245
+          238
         </td>
         <td>
-          2297
+          2319
           -
-          2344
+          2368
         </td>
         <td>
           ApplyToImplicitArgs
@@ -955,19 +981,19 @@
           cml.core.RoutingOperation.sendResponse
         </td>
         <td style="background: #AEF1AE">
-          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
+          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
         </td>
       </tr><tr>
         <td>
-          60
+          62
         </td>
         <td>
-          246
+          243
         </td>
         <td>
-          1750
+          1849
           -
-          2345
+          2444
         </td>
         <td>
           Apply
@@ -991,15 +1017,36 @@
         </td>
       </tr><tr>
         <td>
-          64
+          62
         </td>
         <td>
-          247
+          242
         </td>
         <td>
-          2436
+          2396
           -
-          2469
+          2443
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #AEF1AE">
+          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          244
+        </td>
+        <td>
+          2535
+          -
+          2568
         </td>
         <td>
           Apply
@@ -1007,20 +1054,20 @@
         <td>
           scala.Predef.println
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.println(&quot;Receive logout request&quot;)
         </td>
       </tr><tr>
         <td>
-          67
+          69
         </td>
         <td>
-          254
+          247
         </td>
         <td>
-          2629
+          2728
           -
-          2984
+          3125
         </td>
         <td>
           Apply
@@ -1029,22 +1076,19 @@
           scala.Option.flatMap
         </td>
         <td style="background: #F0ADAD">
-          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.logout(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
-  case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
-  case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
-}))(AuthenticationVerticle.this.executionContext)))))
+          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)))))
         </td>
       </tr><tr>
         <td>
-          68
+          70
         </td>
         <td>
-          253
+          246
         </td>
         <td>
-          2712
+          2811
           -
-          2984
+          3125
         </td>
         <td>
           Apply
@@ -1053,88 +1097,19 @@
           scala.Option.map
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.logout(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
-  case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
-  case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
-}))(AuthenticationVerticle.this.executionContext)))
+          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)))
         </td>
       </tr><tr>
         <td>
-          70
+          76
         </td>
         <td>
-          252
+          245
         </td>
         <td>
-          2791
+          3099
           -
-          2984
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.onComplete
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.authenticationService.logout(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
-  case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
-  case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
-}))(AuthenticationVerticle.this.executionContext)
-        </td>
-      </tr><tr>
-        <td>
-          70
-        </td>
-        <td>
-          248
-        </td>
-        <td>
-          2819
-          -
-          2819
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          70
-        </td>
-        <td>
-          251
-        </td>
-        <td>
-          2841
-          -
-          2841
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          71
-        </td>
-        <td>
-          249
-        </td>
-        <td>
-          2871
-          -
-          2897
+          3125
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1147,36 +1122,15 @@
         </td>
       </tr><tr>
         <td>
-          72
+          77
         </td>
         <td>
-          250
+          249
         </td>
         <td>
-          2926
+          2664
           -
-          2975
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          74
-        </td>
-        <td>
-          256
-        </td>
-        <td>
-          2565
-          -
-          3051
+          3192
         </td>
         <td>
           Apply
@@ -1184,23 +1138,20 @@
         <td>
           scala.Option.getOrElse
         </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.logout(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
-  case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
-  case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
-}))(AuthenticationVerticle.this.executionContext))))))).getOrElse[Unit](AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext))
+        <td style="background: #AEF1AE">
+          AuthenticationVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext))))))).getOrElse[Unit](AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext))
         </td>
       </tr><tr>
         <td>
-          74
+          77
         </td>
         <td>
-          255
+          248
         </td>
         <td>
-          3003
+          3144
           -
-          3050
+          3191
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1208,20 +1159,20 @@
         <td>
           cml.core.RoutingOperation.sendResponse
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
         </td>
       </tr><tr>
         <td>
-          78
+          81
         </td>
         <td>
-          257
+          250
         </td>
         <td>
-          3151
+          3292
           -
-          3193
+          3334
         </td>
         <td>
           Apply
@@ -1234,15 +1185,15 @@
         </td>
       </tr><tr>
         <td>
-          81
+          84
         </td>
         <td>
-          264
+          257
         </td>
         <td>
-          3264
+          3405
           -
-          3628
+          3769
         </td>
         <td>
           Apply
@@ -1251,22 +1202,22 @@
           scala.Option.flatMap
         </td>
         <td style="background: #F0ADAD">
-          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Unit]) =&gt; x0$4 match {
+          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
   case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
   case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
 }))(AuthenticationVerticle.this.executionContext)))))
         </td>
       </tr><tr>
         <td>
-          82
+          85
         </td>
         <td>
-          263
+          256
         </td>
         <td>
-          3347
+          3488
           -
-          3628
+          3769
         </td>
         <td>
           Apply
@@ -1275,22 +1226,43 @@
           scala.Option.map
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Unit]) =&gt; x0$4 match {
+          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
   case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
   case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
 }))(AuthenticationVerticle.this.executionContext)))
         </td>
       </tr><tr>
         <td>
-          84
+          87
         </td>
         <td>
-          262
+          254
         </td>
         <td>
-          3426
+          3626
           -
-          3628
+          3626
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          255
+        </td>
+        <td>
+          3567
+          -
+          3769
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1299,22 +1271,22 @@
           scala.concurrent.Future.onComplete
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Unit]) =&gt; x0$4 match {
+          AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
   case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
   case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
 }))(AuthenticationVerticle.this.executionContext)
         </td>
       </tr><tr>
         <td>
-          84
+          87
         </td>
         <td>
-          258
+          251
         </td>
         <td>
-          3463
+          3604
           -
-          3463
+          3604
         </td>
         <td>
           Select
@@ -1327,36 +1299,15 @@
         </td>
       </tr><tr>
         <td>
-          84
+          88
         </td>
         <td>
-          261
+          252
         </td>
         <td>
-          3485
+          3656
           -
-          3485
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          85
-        </td>
-        <td>
-          259
-        </td>
-        <td>
-          3515
-          -
-          3541
+          3682
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1369,15 +1320,15 @@
         </td>
       </tr><tr>
         <td>
-          86
+          89
         </td>
         <td>
-          260
+          253
         </td>
         <td>
-          3570
+          3711
           -
-          3619
+          3760
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1390,15 +1341,39 @@
         </td>
       </tr><tr>
         <td>
-          88
+          91
         </td>
         <td>
-          265
+          259
         </td>
         <td>
-          3647
+          3341
           -
-          3694
+          3836
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #AEF1AE">
+          AuthenticationVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Unit]) =&gt; x0$3 match {
+  case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
+  case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
+}))(AuthenticationVerticle.this.executionContext))))))).getOrElse[Unit](AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext))
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          258
+        </td>
+        <td>
+          3788
+          -
+          3835
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1408,30 +1383,6 @@
         </td>
         <td style="background: #AEF1AE">
           AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          88
-        </td>
-        <td>
-          266
-        </td>
-        <td>
-          3200
-          -
-          3695
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Option.getOrElse
-        </td>
-        <td style="background: #AEF1AE">
-          AuthenticationVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; AuthenticationVerticle.this.authenticationService.validationToken(username)(AuthenticationVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Unit]) =&gt; x0$4 match {
-  case (value: Unit)scala.util.Success[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, username)(routingContext)
-  case (exception: Throwable)scala.util.Failure[Unit](_) =&gt; AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED, io.netty.handler.codec.http.HttpResponseStatus.UNAUTHORIZED.toString())(routingContext)
-}))(AuthenticationVerticle.this.executionContext))))))).getOrElse[Unit](AuthenticationVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext))
         </td>
       </tr>
     </table>

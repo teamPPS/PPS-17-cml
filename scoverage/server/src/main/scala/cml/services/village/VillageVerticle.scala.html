@@ -32,114 +32,142 @@
 </span>8 <span style=''>import cml.services.authentication.utils.AuthenticationUrl._
 </span>9 <span style=''>import io.netty.handler.codec.http.HttpResponseStatus
 </span>10 <span style=''>import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
-</span>11 <span style=''>import play.api.libs.json.Json
-</span>12 <span style=''>
-</span>13 <span style=''>import scala.util.{Failure, Success}
-</span>14 <span style=''>
-</span>15 <span style=''>/**
-</span>16 <span style=''>  * This class implement VillagesVerticle
-</span>17 <span style=''>  *
-</span>18 <span style=''>  * @author ecavina
-</span>19 <span style=''>  */
-</span>20 <span style=''>case class VillageVerticle() extends RouterVerticle with RoutingOperation {
-</span>21 <span style=''>
-</span>22 <span style=''>  private var villageService: VillageService = _
-</span>23 <span style=''>
-</span>24 <span style=''>  /**
-</span>25 <span style=''>    * Initialize router
-</span>26 <span style=''>    *
-</span>27 <span style=''>    * @param router is router to initialize
-</span>28 <span style=''>    */
-</span>29 <span style=''>
-</span>30 <span style=''>  override def initializeRouter(router: Router): Unit = {
-</span>31 <span style=''>    </span><span style='background: #F0ADAD'>router get VillagesAPI handler enter</span><span style=''>
-</span>32 <span style=''>    </span><span style='background: #F0ADAD'>router post VillagesAPI handler create</span><span style=''>
-</span>33 <span style=''>    </span><span style='background: #F0ADAD'>router put VillagesAPI handler update</span><span style=''>
-</span>34 <span style=''>    </span><span style='background: #F0ADAD'>router delete VillagesAPI handler delete</span><span style=''>
-</span>35 <span style=''>    </span><span style='background: #F0ADAD'>router put LogoutApi handler exit</span><span style=''>
-</span>36 <span style=''>  }
-</span>37 <span style=''>
-</span>38 <span style=''>  override def initializeService: Unit = {
-</span>39 <span style=''>    </span><span style='background: #F0ADAD'>villageService =  VillageService()</span><span style=''>
-</span>40 <span style=''>  }
-</span>41 <span style=''>
-</span>42 <span style=''>  private def create: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>43 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to create village&quot;)</span><span style=''>
-</span>44 <span style=''>    (</span><span style='background: #F0ADAD'>for(
-</span>45 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>46 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-</span>47 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
-</span>48 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>49 <span style=''></span><span style='background: #F0ADAD'>        villageService.createVillage(username).onComplete {
-</span>50 <span style=''></span><span style='background: #F0ADAD'>          case Success(document) =&gt;
-</span>51 <span style=''></span><span style='background: #F0ADAD'>            getResponse.putHeader(&quot;content-type&quot;, &quot;application/json; charset=utf-8&quot;)
-</span>52 <span style=''></span><span style='background: #F0ADAD'>              .setStatusCode(HttpResponseStatus.CREATED.code())
-</span>53 <span style=''></span><span style='background: #F0ADAD'>              .end(document)
-</span>54 <span style=''></span><span style='background: #F0ADAD'>          case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Can't create a new village&quot;)
-</span>55 <span style=''></span><span style='background: #F0ADAD'>        }
-</span>56 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
-</span>57 <span style=''>}
-</span>58 <span style=''>
-</span>59 <span style=''>  private def enter: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>60 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to enter village&quot;)</span><span style=''>
-</span>61 <span style=''>    (</span><span style='background: #F0ADAD'>for(
-</span>62 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>63 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-</span>64 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
-</span>65 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>66 <span style=''></span><span style='background: #F0ADAD'>      villageService.enterVillage(username).onComplete {
-</span>67 <span style=''></span><span style='background: #F0ADAD'>        case Success(document) =&gt;
-</span>68 <span style=''></span><span style='background: #F0ADAD'>          println(Json.parse(document).toString())
-</span>69 <span style=''></span><span style='background: #F0ADAD'>          getResponse.putHeader(&quot;content-type&quot;, &quot;application/json; charset=utf-8&quot;)
-</span>70 <span style=''></span><span style='background: #F0ADAD'>            .setStatusCode(HttpResponseStatus.OK.code())
-</span>71 <span style=''></span><span style='background: #F0ADAD'>            .end(Json.parse(document).toString())
-</span>72 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
-</span>73 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>74 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
-</span>75 <span style=''>  }
-</span>76 <span style=''>
-</span>77 <span style=''>  private def update: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>78 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to update village&quot;)</span><span style=''>
-</span>79 <span style=''>    (</span><span style='background: #F0ADAD'>for(
-</span>80 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>81 <span style=''></span><span style='background: #F0ADAD'>      body &lt;- getRequestAndBody;// TODO add check if body present
-</span>82 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-</span>83 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
-</span>84 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>85 <span style=''></span><span style='background: #F0ADAD'>      villageService.updateVillage(username, body).onComplete {
-</span>86 <span style=''></span><span style='background: #F0ADAD'>        case Success(value) =&gt; if (value) {
-</span>87 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)
-</span>88 <span style=''></span><span style='background: #F0ADAD'>        } else {
-</span>89 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(BAD_REQUEST, &quot;Error while update&quot;)
-</span>90 <span style=''></span><span style='background: #F0ADAD'>        }
-</span>91 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
-</span>92 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>93 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
-</span>94 <span style=''>  }
-</span>95 <span style=''>
-</span>96 <span style=''>  private def delete: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>97 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to enter village&quot;)</span><span style=''>
-</span>98 <span style=''>    (</span><span style='background: #F0ADAD'>for(
-</span>99 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
-</span>100 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
-</span>101 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
-</span>102 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>103 <span style=''></span><span style='background: #F0ADAD'>      villageService.deleteVillageAndUser(username).onComplete {
-</span>104 <span style=''></span><span style='background: #F0ADAD'>        case Success(value) =&gt; if (value) {
-</span>105 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)
-</span>106 <span style=''></span><span style='background: #F0ADAD'>        } else {
-</span>107 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(BAD_REQUEST, &quot;Error while deleting&quot;)
-</span>108 <span style=''></span><span style='background: #F0ADAD'>        }
-</span>109 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
-</span>110 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>111 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
-</span>112 <span style=''>  }
-</span>113 <span style=''>
-</span>114 <span style=''>  private def exit: Handler[RoutingContext] = implicit routingContext =&gt; {
-</span>115 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to exit village &quot;, routingContext request())</span><span style=''>
-</span>116 <span style=''>  }
-</span>117 <span style=''>
-</span>118 <span style=''>}
+</span>11 <span style=''>import io.vertx.scala.ext.web.handler.BodyHandler
+</span>12 <span style=''>import play.api.libs.json.Json
+</span>13 <span style=''>
+</span>14 <span style=''>import scala.util.{Failure, Success}
+</span>15 <span style=''>
+</span>16 <span style=''>/**
+</span>17 <span style=''>  * This class implement VillagesVerticle
+</span>18 <span style=''>  *
+</span>19 <span style=''>  * @author ecavina
+</span>20 <span style=''>  */
+</span>21 <span style=''>case class VillageVerticle() extends RouterVerticle with RoutingOperation {
+</span>22 <span style=''>
+</span>23 <span style=''>  private var villageService: VillageService = _
+</span>24 <span style=''>
+</span>25 <span style=''>  /**
+</span>26 <span style=''>    * Initialize router
+</span>27 <span style=''>    *
+</span>28 <span style=''>    * @param router is router to initialize
+</span>29 <span style=''>    */
+</span>30 <span style=''>
+</span>31 <span style=''>  override def initializeRouter(router: Router): Unit = {
+</span>32 <span style=''>    </span><span style='background: #F0ADAD'>router.route.handler(BodyHandler.create())</span><span style=''>
+</span>33 <span style=''>    </span><span style='background: #F0ADAD'>router get VillagesAPI handler enter</span><span style=''>
+</span>34 <span style=''>    </span><span style='background: #F0ADAD'>router post VillagesAPI handler create</span><span style=''>
+</span>35 <span style=''>    </span><span style='background: #F0ADAD'>router put VillagesAPI handler update</span><span style=''>
+</span>36 <span style=''>    </span><span style='background: #F0ADAD'>router put SetUpdateAPI handler setUpdate</span><span style=''>
+</span>37 <span style=''>    </span><span style='background: #F0ADAD'>router delete VillagesAPI handler delete</span><span style=''>
+</span>38 <span style=''>    </span><span style='background: #F0ADAD'>router put LogoutApi handler exit</span><span style=''>
+</span>39 <span style=''>  }
+</span>40 <span style=''>
+</span>41 <span style=''>  override def initializeService: Unit = {
+</span>42 <span style=''>    </span><span style='background: #F0ADAD'>villageService =  VillageService()</span><span style=''>
+</span>43 <span style=''>  }
+</span>44 <span style=''>
+</span>45 <span style=''>  private def create: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>46 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to create village&quot;)</span><span style=''>
+</span>47 <span style=''>    (</span><span style='background: #F0ADAD'>for(
+</span>48 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>49 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>50 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>51 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>52 <span style=''></span><span style='background: #F0ADAD'>        villageService.createVillage(username).onComplete {
+</span>53 <span style=''></span><span style='background: #F0ADAD'>          case Success(document) =&gt;
+</span>54 <span style=''></span><span style='background: #F0ADAD'>            getResponse.putHeader(&quot;content-type&quot;, &quot;application/json; charset=utf-8&quot;)
+</span>55 <span style=''></span><span style='background: #F0ADAD'>              .setStatusCode(HttpResponseStatus.CREATED.code())
+</span>56 <span style=''></span><span style='background: #F0ADAD'>              .end(document)
+</span>57 <span style=''></span><span style='background: #F0ADAD'>          case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Can't create a new village&quot;)
+</span>58 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>59 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>60 <span style=''>}
+</span>61 <span style=''>
+</span>62 <span style=''>  private def enter: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>63 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to enter village&quot;)</span><span style=''>
+</span>64 <span style=''>    (</span><span style='background: #F0ADAD'>for(
+</span>65 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>66 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>67 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>68 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>69 <span style=''></span><span style='background: #F0ADAD'>      villageService.enterVillage(username).onComplete {
+</span>70 <span style=''></span><span style='background: #F0ADAD'>        case Success(document) =&gt;
+</span>71 <span style=''></span><span style='background: #F0ADAD'>          println(Json.parse(document).toString())
+</span>72 <span style=''></span><span style='background: #F0ADAD'>          getResponse.putHeader(&quot;content-type&quot;, &quot;application/json; charset=utf-8&quot;)
+</span>73 <span style=''></span><span style='background: #F0ADAD'>            .setStatusCode(HttpResponseStatus.OK.code())
+</span>74 <span style=''></span><span style='background: #F0ADAD'>            .end(Json.parse(document).toString())
+</span>75 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
+</span>76 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>77 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>78 <span style=''>  }
+</span>79 <span style=''>
+</span>80 <span style=''>  private def update: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>81 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to update village&quot;)</span><span style=''>
+</span>82 <span style=''>    (</span><span style='background: #F0ADAD'>for(
+</span>83 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>84 <span style=''></span><span style='background: #F0ADAD'>      body &lt;- getRequestAndBody;
+</span>85 <span style=''></span><span style='background: #F0ADAD'>      if !body.isEmpty;
+</span>86 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>87 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>88 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>89 <span style=''></span><span style='background: #F0ADAD'>      villageService.updateVillage(username, body).onComplete {
+</span>90 <span style=''></span><span style='background: #F0ADAD'>        case Success(value) =&gt; if (value) {
+</span>91 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.OK, &quot;Update done&quot;)
+</span>92 <span style=''></span><span style='background: #F0ADAD'>        } else {
+</span>93 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(BAD_REQUEST, &quot;Error while update&quot;)
+</span>94 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>95 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; {
+</span>96 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
+</span>97 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>98 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>99 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>100 <span style=''>  }
+</span>101 <span style=''>
+</span>102 <span style=''>  private def setUpdate: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>103 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to set update village&quot;)</span><span style=''>
+</span>104 <span style=''>    (</span><span style='background: #F0ADAD'>for(
+</span>105 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>106 <span style=''></span><span style='background: #F0ADAD'>      body &lt;- getRequestAndBody;
+</span>107 <span style=''></span><span style='background: #F0ADAD'>      if !body.isEmpty;
+</span>108 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>109 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>110 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>111 <span style=''></span><span style='background: #F0ADAD'>      villageService.setUpdateVillage(username, body).onComplete {
+</span>112 <span style=''></span><span style='background: #F0ADAD'>        case Success(value) =&gt; if (value) {
+</span>113 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.OK, &quot;Update set done&quot;)
+</span>114 <span style=''></span><span style='background: #F0ADAD'>        } else {
+</span>115 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(BAD_REQUEST, &quot;Error while update set&quot;)
+</span>116 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>117 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; {
+</span>118 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
+</span>119 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>120 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>121 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>122 <span style=''>  }
+</span>123 <span style=''>
+</span>124 <span style=''>  private def delete: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>125 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to delete village&quot;)</span><span style=''>
+</span>126 <span style=''>    (</span><span style='background: #F0ADAD'>for(
+</span>127 <span style=''></span><span style='background: #F0ADAD'>      headerAuthorization &lt;- getRequestAndHeader;
+</span>128 <span style=''></span><span style='background: #F0ADAD'>      token &lt;- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
+</span>129 <span style=''></span><span style='background: #F0ADAD'>      username &lt;- JWTAuthentication.decodeUsernameToken(token)
+</span>130 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
+</span>131 <span style=''></span><span style='background: #F0ADAD'>      villageService.deleteVillageAndUser(username).onComplete {
+</span>132 <span style=''></span><span style='background: #F0ADAD'>        case Success(value) =&gt; if (value) {
+</span>133 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(HttpResponseStatus.OK, &quot;Deleted&quot;)
+</span>134 <span style=''></span><span style='background: #F0ADAD'>        } else {
+</span>135 <span style=''></span><span style='background: #F0ADAD'>          sendResponse(BAD_REQUEST, &quot;Error while deleting&quot;)
+</span>136 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>137 <span style=''></span><span style='background: #F0ADAD'>        case Failure(_) =&gt; sendResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)
+</span>138 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>139 <span style=''></span><span style='background: #F0ADAD'>    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))</span><span style=''>
+</span>140 <span style=''>  }
+</span>141 <span style=''>
+</span>142 <span style=''>  private def exit: Handler[RoutingContext] = implicit routingContext =&gt; {
+</span>143 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Request to exit village &quot;, routingContext request())</span><span style=''>
+</span>144 <span style=''>  }
+</span>145 <span style=''>
+</span>146 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -153,57 +181,57 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          31
+          32
         </td>
         <td>
-          367
+          325
         </td>
         <td>
-          937
+          957
           -
-          942
+          999
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.services.village.VillageVerticle.enter
+          io.vertx.scala.ext.web.Route.handler
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.enter
+          router.route().handler(io.vertx.scala.ext.web.handler.BodyHandler.create())
         </td>
       </tr><tr>
         <td>
-          31
+          32
         </td>
         <td>
-          366
+          324
         </td>
         <td>
-          917
+          978
           -
-          928
+          998
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.services.village.utils.VillageUrl.VillagesAPI
+          io.vertx.scala.ext.web.handler.BodyHandler.create
         </td>
         <td style="background: #F0ADAD">
-          cml.services.village.utils.VillageUrl.VillagesAPI
+          io.vertx.scala.ext.web.handler.BodyHandler.create()
         </td>
       </tr><tr>
         <td>
-          31
+          33
         </td>
         <td>
-          368
+          328
         </td>
         <td>
-          906
+          1005
           -
-          942
+          1041
         </td>
         <td>
           Apply
@@ -216,36 +244,36 @@
         </td>
       </tr><tr>
         <td>
-          32
+          33
         </td>
         <td>
-          370
+          327
         </td>
         <td>
-          980
+          1036
           -
-          986
+          1041
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.village.VillageVerticle.create
+          cml.services.village.VillageVerticle.enter
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.create
+          VillageVerticle.this.enter
         </td>
       </tr><tr>
         <td>
-          32
+          33
         </td>
         <td>
-          369
+          326
         </td>
         <td>
-          960
+          1016
           -
-          971
+          1027
         </td>
         <td>
           Select
@@ -258,15 +286,15 @@
         </td>
       </tr><tr>
         <td>
-          32
+          34
         </td>
         <td>
-          371
+          331
         </td>
         <td>
-          948
+          1047
           -
-          986
+          1085
         </td>
         <td>
           Apply
@@ -279,36 +307,36 @@
         </td>
       </tr><tr>
         <td>
-          33
+          34
         </td>
         <td>
-          373
+          330
         </td>
         <td>
-          1023
+          1079
           -
-          1029
+          1085
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.village.VillageVerticle.update
+          cml.services.village.VillageVerticle.create
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.update
+          VillageVerticle.this.create
         </td>
       </tr><tr>
         <td>
-          33
+          34
         </td>
         <td>
-          372
+          329
         </td>
         <td>
-          1003
+          1059
           -
-          1014
+          1070
         </td>
         <td>
           Select
@@ -321,15 +349,15 @@
         </td>
       </tr><tr>
         <td>
-          33
+          35
         </td>
         <td>
-          374
+          334
         </td>
         <td>
-          992
+          1091
           -
-          1029
+          1128
         </td>
         <td>
           Apply
@@ -342,36 +370,36 @@
         </td>
       </tr><tr>
         <td>
-          34
+          35
         </td>
         <td>
-          376
+          333
         </td>
         <td>
-          1069
+          1122
           -
-          1075
+          1128
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.village.VillageVerticle.delete
+          cml.services.village.VillageVerticle.update
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.delete
+          VillageVerticle.this.update
         </td>
       </tr><tr>
         <td>
-          34
+          35
         </td>
         <td>
-          375
+          332
         </td>
         <td>
-          1049
+          1102
           -
-          1060
+          1113
         </td>
         <td>
           Select
@@ -384,15 +412,78 @@
         </td>
       </tr><tr>
         <td>
-          34
+          36
         </td>
         <td>
-          377
+          337
         </td>
         <td>
-          1035
+          1134
           -
-          1075
+          1175
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.Route.handler
+        </td>
+        <td style="background: #F0ADAD">
+          router.put(cml.services.village.utils.VillageUrl.SetUpdateAPI).handler(VillageVerticle.this.setUpdate)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          336
+        </td>
+        <td>
+          1166
+          -
+          1175
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.village.VillageVerticle.setUpdate
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.setUpdate
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          335
+        </td>
+        <td>
+          1145
+          -
+          1157
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.village.utils.VillageUrl.SetUpdateAPI
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.village.utils.VillageUrl.SetUpdateAPI
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          340
+        </td>
+        <td>
+          1181
+          -
+          1221
         </td>
         <td>
           Apply
@@ -405,78 +496,57 @@
         </td>
       </tr><tr>
         <td>
-          35
+          37
         </td>
         <td>
-          379
+          339
         </td>
         <td>
-          1110
+          1215
           -
-          1114
+          1221
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.village.VillageVerticle.exit
+          cml.services.village.VillageVerticle.delete
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.exit
+          VillageVerticle.this.delete
         </td>
       </tr><tr>
         <td>
-          35
+          37
         </td>
         <td>
-          378
+          338
         </td>
         <td>
-          1092
+          1195
           -
-          1101
+          1206
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.authentication.utils.AuthenticationUrl.LogoutApi
+          cml.services.village.utils.VillageUrl.VillagesAPI
         </td>
         <td style="background: #F0ADAD">
-          cml.services.authentication.utils.AuthenticationUrl.LogoutApi
+          cml.services.village.utils.VillageUrl.VillagesAPI
         </td>
       </tr><tr>
         <td>
-          35
+          38
         </td>
         <td>
-          381
+          343
         </td>
         <td>
-          1102
+          1227
           -
-          1102
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          35
-        </td>
-        <td>
-          380
-        </td>
-        <td>
-          1081
-          -
-          1114
+          1260
         </td>
         <td>
           Apply
@@ -489,57 +559,78 @@
         </td>
       </tr><tr>
         <td>
-          39
+          38
         </td>
         <td>
-          382
+          342
         </td>
         <td>
-          1189
+          1256
           -
-          1189
+          1260
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.village.VillageService.apply$default$1
+          cml.services.village.VillageVerticle.exit
         </td>
         <td style="background: #F0ADAD">
-          VillageService.apply$default$1
+          VillageVerticle.this.exit
         </td>
       </tr><tr>
         <td>
-          39
+          38
         </td>
         <td>
-          384
+          341
         </td>
         <td>
-          1171
+          1238
           -
-          1205
+          1247
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          cml.services.village.VillageVerticle.villageService_=
+          cml.services.authentication.utils.AuthenticationUrl.LogoutApi
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.villageService_=(VillageService.apply(VillageService.apply$default$1))
+          cml.services.authentication.utils.AuthenticationUrl.LogoutApi
         </td>
       </tr><tr>
         <td>
-          39
+          38
         </td>
         <td>
-          383
+          344
         </td>
         <td>
-          1189
+          1248
           -
-          1205
+          1248
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          346
+        </td>
+        <td>
+          1335
+          -
+          1351
         </td>
         <td>
           Apply
@@ -552,15 +643,57 @@
         </td>
       </tr><tr>
         <td>
-          43
+          42
         </td>
         <td>
-          385
+          345
         </td>
         <td>
-          1296
+          1335
           -
-          1332
+          1335
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.village.VillageService.apply$default$1
+        </td>
+        <td style="background: #F0ADAD">
+          VillageService.apply$default$1
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          347
+        </td>
+        <td>
+          1317
+          -
+          1351
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.village.VillageVerticle.villageService_=
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.villageService_=(VillageService.apply(VillageService.apply$default$1))
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          348
+        </td>
+        <td>
+          1442
+          -
+          1478
         </td>
         <td>
           Apply
@@ -573,15 +706,15 @@
         </td>
       </tr><tr>
         <td>
-          46
+          49
         </td>
         <td>
-          392
+          355
         </td>
         <td>
-          1402
+          1548
           -
-          1961
+          2107
         </td>
         <td>
           Apply
@@ -597,15 +730,15 @@
         </td>
       </tr><tr>
         <td>
-          47
+          50
         </td>
         <td>
-          391
+          354
         </td>
         <td>
-          1485
+          1631
           -
-          1961
+          2107
         </td>
         <td>
           Apply
@@ -621,15 +754,57 @@
         </td>
       </tr><tr>
         <td>
-          49
+          52
         </td>
         <td>
-          390
+          349
         </td>
         <td>
-          1566
+          1740
           -
-          1961
+          1740
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          352
+        </td>
+        <td>
+          1762
+          -
+          1762
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          353
+        </td>
+        <td>
+          1712
+          -
+          2107
         </td>
         <td>
           ApplyToImplicitArgs
@@ -645,57 +820,15 @@
         </td>
       </tr><tr>
         <td>
-          49
+          56
         </td>
         <td>
-          386
+          350
         </td>
         <td>
-          1594
+          1814
           -
-          1594
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          49
-        </td>
-        <td>
-          389
-        </td>
-        <td>
-          1616
-          -
-          1616
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          53
-        </td>
-        <td>
-          387
-        </td>
-        <td>
-          1668
-          -
-          1835
+          1981
         </td>
         <td>
           Apply
@@ -708,15 +841,15 @@
         </td>
       </tr><tr>
         <td>
-          54
+          57
         </td>
         <td>
-          388
+          351
         </td>
         <td>
-          1866
+          2012
           -
-          1950
+          2096
         </td>
         <td>
           ApplyToImplicitArgs
@@ -729,15 +862,15 @@
         </td>
       </tr><tr>
         <td>
-          56
+          59
         </td>
         <td>
-          394
+          357
         </td>
         <td>
-          1339
+          1485
           -
-          2028
+          2174
         </td>
         <td>
           Apply
@@ -753,15 +886,15 @@
         </td>
       </tr><tr>
         <td>
-          56
+          59
         </td>
         <td>
-          393
+          356
         </td>
         <td>
-          1980
+          2126
           -
-          2027
+          2173
         </td>
         <td>
           ApplyToImplicitArgs
@@ -774,15 +907,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          63
         </td>
         <td>
-          395
+          358
         </td>
         <td>
-          2116
+          2262
           -
-          2151
+          2297
         </td>
         <td>
           Apply
@@ -795,15 +928,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          66
         </td>
         <td>
-          408
+          371
         </td>
         <td>
-          2221
+          2367
           -
-          2821
+          2967
         </td>
         <td>
           Apply
@@ -822,15 +955,15 @@
         </td>
       </tr><tr>
         <td>
-          64
+          67
         </td>
         <td>
-          407
+          370
         </td>
         <td>
-          2304
+          2450
           -
-          2821
+          2967
         </td>
         <td>
           Apply
@@ -849,15 +982,15 @@
         </td>
       </tr><tr>
         <td>
-          66
+          69
         </td>
         <td>
-          406
+          369
         </td>
         <td>
-          2383
+          2529
           -
-          2821
+          2967
         </td>
         <td>
           ApplyToImplicitArgs
@@ -876,15 +1009,15 @@
         </td>
       </tr><tr>
         <td>
-          66
+          69
         </td>
         <td>
-          396
+          359
         </td>
         <td>
-          2410
+          2556
           -
-          2410
+          2556
         </td>
         <td>
           Select
@@ -897,15 +1030,15 @@
         </td>
       </tr><tr>
         <td>
-          66
+          69
         </td>
         <td>
-          405
+          368
         </td>
         <td>
-          2432
+          2578
           -
-          2432
+          2578
         </td>
         <td>
           Select
@@ -918,36 +1051,15 @@
         </td>
       </tr><tr>
         <td>
-          68
+          71
         </td>
         <td>
-          397
+          361
         </td>
         <td>
-          2488
+          2626
           -
-          2519
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          play.api.libs.json.JsValue.toString
-        </td>
-        <td style="background: #F0ADAD">
-          play.api.libs.json.Json.parse(document).toString()
-        </td>
-      </tr><tr>
-        <td>
-          68
-        </td>
-        <td>
-          398
-        </td>
-        <td>
-          2480
-          -
-          2520
+          2666
         </td>
         <td>
           Apply
@@ -960,99 +1072,15 @@
         </td>
       </tr><tr>
         <td>
-          69
-        </td>
-        <td>
-          400
-        </td>
-        <td>
-          2570
-          -
-          2603
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;application/json; charset=utf-8&quot;
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          399
-        </td>
-        <td>
-          2554
-          -
-          2568
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;content-type&quot;
-        </td>
-      </tr><tr>
-        <td>
-          70
-        </td>
-        <td>
-          401
-        </td>
-        <td>
-          2633
-          -
-          2661
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.netty.handler.codec.http.HttpResponseStatus.code
-        </td>
-        <td style="background: #F0ADAD">
-          io.netty.handler.codec.http.HttpResponseStatus.OK.code()
-        </td>
-      </tr><tr>
-        <td>
           71
         </td>
         <td>
-          403
+          360
         </td>
         <td>
-          2532
+          2634
           -
-          2713
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.core.http.HttpServerResponse.end
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.getResponse(routingContext).putHeader(&quot;content-type&quot;, &quot;application/json; charset=utf-8&quot;).setStatusCode(io.netty.handler.codec.http.HttpResponseStatus.OK.code()).end(play.api.libs.json.Json.parse(document).toString())
-        </td>
-      </tr><tr>
-        <td>
-          71
-        </td>
-        <td>
-          402
-        </td>
-        <td>
-          2681
-          -
-          2712
+          2665
         </td>
         <td>
           Apply
@@ -1068,12 +1096,117 @@
           72
         </td>
         <td>
-          404
+          363
         </td>
         <td>
-          2742
+          2716
           -
-          2812
+          2749
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;application/json; charset=utf-8&quot;
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          362
+        </td>
+        <td>
+          2700
+          -
+          2714
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;content-type&quot;
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          364
+        </td>
+        <td>
+          2779
+          -
+          2807
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.handler.codec.http.HttpResponseStatus.code
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpResponseStatus.OK.code()
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          366
+        </td>
+        <td>
+          2678
+          -
+          2859
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.core.http.HttpServerResponse.end
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.getResponse(routingContext).putHeader(&quot;content-type&quot;, &quot;application/json; charset=utf-8&quot;).setStatusCode(io.netty.handler.codec.http.HttpResponseStatus.OK.code()).end(play.api.libs.json.Json.parse(document).toString())
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          365
+        </td>
+        <td>
+          2827
+          -
+          2858
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          play.api.libs.json.JsValue.toString
+        </td>
+        <td style="background: #F0ADAD">
+          play.api.libs.json.Json.parse(document).toString()
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          367
+        </td>
+        <td>
+          2888
+          -
+          2958
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1086,36 +1219,15 @@
         </td>
       </tr><tr>
         <td>
-          74
+          77
         </td>
         <td>
-          409
+          373
         </td>
         <td>
-          2840
+          2304
           -
-          2887
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          74
-        </td>
-        <td>
-          410
-        </td>
-        <td>
-          2158
-          -
-          2888
+          3034
         </td>
         <td>
           Apply
@@ -1134,15 +1246,36 @@
         </td>
       </tr><tr>
         <td>
-          78
+          77
         </td>
         <td>
-          411
+          372
         </td>
         <td>
-          2979
+          2986
           -
-          3015
+          3033
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          374
+        </td>
+        <td>
+          3125
+          -
+          3161
         </td>
         <td>
           Apply
@@ -1155,26 +1288,26 @@
         </td>
       </tr><tr>
         <td>
-          81
+          84
         </td>
         <td>
-          422
+          386
         </td>
         <td>
-          3085
+          3231
           -
-          3680
+          3836
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Option.flatMap
+          scala.Option.WithFilter.flatMap
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.getRequestAndBody(routingContext).flatMap[Unit](((body: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
+          VillageVerticle.this.getRequestAndBody(routingContext).withFilter(((body: String) =&gt; body.isEmpty().unary_!)).flatMap[Unit](((body: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
   else
     VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
@@ -1182,15 +1315,36 @@
         </td>
       </tr><tr>
         <td>
-          82
+          85
         </td>
         <td>
-          421
+          375
         </td>
         <td>
-          3152
+          3268
           -
-          3680
+          3281
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Boolean.unary_!
+        </td>
+        <td style="background: #F0ADAD">
+          body.isEmpty().unary_!
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          385
+        </td>
+        <td>
+          3290
+          -
+          3836
         </td>
         <td>
           Apply
@@ -1201,7 +1355,7 @@
         <td style="background: #F0ADAD">
           cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
   else
     VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
@@ -1209,15 +1363,15 @@
         </td>
       </tr><tr>
         <td>
-          83
+          87
         </td>
         <td>
-          420
+          384
         </td>
         <td>
-          3235
+          3373
           -
-          3680
+          3836
         </td>
         <td>
           Apply
@@ -1228,7 +1382,7 @@
         <td style="background: #F0ADAD">
           cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
   else
     VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
@@ -1236,15 +1390,15 @@
         </td>
       </tr><tr>
         <td>
-          85
+          89
         </td>
         <td>
-          418
+          382
         </td>
         <td>
-          3370
+          3508
           -
-          3370
+          3508
         </td>
         <td>
           Select
@@ -1257,15 +1411,15 @@
         </td>
       </tr><tr>
         <td>
-          85
+          89
         </td>
         <td>
-          412
+          376
         </td>
         <td>
-          3342
+          3480
           -
-          3342
+          3480
         </td>
         <td>
           Select
@@ -1278,15 +1432,15 @@
         </td>
       </tr><tr>
         <td>
-          85
+          89
         </td>
         <td>
-          419
+          383
         </td>
         <td>
-          3314
+          3452
           -
-          3680
+          3836
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1297,7 +1451,7 @@
         <td style="background: #F0ADAD">
           VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
   else
     VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
@@ -1305,15 +1459,15 @@
         </td>
       </tr><tr>
         <td>
-          87
+          91
         </td>
         <td>
-          414
+          378
         </td>
         <td>
-          3428
+          3566
           -
-          3484
+          3616
         </td>
         <td>
           Block
@@ -1322,82 +1476,82 @@
           cml.core.RoutingOperation.sendResponse
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          413
-        </td>
-        <td>
-          3428
-          -
-          3484
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          415
-        </td>
-        <td>
-          3514
-          -
-          3561
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          416
-        </td>
-        <td>
-          3514
-          -
-          3561
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
         </td>
       </tr><tr>
         <td>
           91
         </td>
         <td>
-          417
+          377
         </td>
         <td>
-          3601
+          3566
           -
-          3671
+          3616
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          379
+        </td>
+        <td>
+          3646
+          -
+          3693
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          380
+        </td>
+        <td>
+          3646
+          -
+          3693
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          381
+        </td>
+        <td>
+          3746
+          -
+          3816
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1410,15 +1564,15 @@
         </td>
       </tr><tr>
         <td>
-          93
+          99
         </td>
         <td>
-          424
+          388
         </td>
         <td>
-          3022
+          3168
           -
-          3747
+          3903
         </td>
         <td>
           Apply
@@ -1427,9 +1581,9 @@
           scala.Option.getOrElse
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; VillageVerticle.this.getRequestAndBody(routingContext).flatMap[Unit](((body: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
+          VillageVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; VillageVerticle.this.getRequestAndBody(routingContext).withFilter(((body: String) =&gt; body.isEmpty().unary_!)).flatMap[Unit](((body: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.updateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$3: scala.util.Try[Boolean]) =&gt; x0$3 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Update done&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update done&quot;)(routingContext)
   else
     VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
@@ -1437,15 +1591,15 @@
         </td>
       </tr><tr>
         <td>
-          93
+          99
         </td>
         <td>
-          423
+          387
         </td>
         <td>
-          3699
+          3855
           -
-          3746
+          3902
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1458,15 +1612,15 @@
         </td>
       </tr><tr>
         <td>
-          97
+          103
         </td>
         <td>
-          425
+          389
         </td>
         <td>
-          3838
+          3997
           -
-          3873
+          4037
         </td>
         <td>
           Apply
@@ -1475,19 +1629,67 @@
           scala.Predef.println
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Request to enter village&quot;)
+          scala.Predef.println(&quot;Request to set update village&quot;)
         </td>
       </tr><tr>
         <td>
-          100
+          106
         </td>
         <td>
-          435
+          401
         </td>
         <td>
-          3943
+          4107
           -
-          4470
+          4723
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.WithFilter.flatMap
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.getRequestAndBody(routingContext).withFilter(((body: String) =&gt; body.isEmpty().unary_!)).flatMap[Unit](((body: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.setUpdateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
+  case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
+  else
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
+  case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
+}))(VillageVerticle.this.executionContext)))))))
+        </td>
+      </tr><tr>
+        <td>
+          107
+        </td>
+        <td>
+          390
+        </td>
+        <td>
+          4144
+          -
+          4157
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Boolean.unary_!
+        </td>
+        <td style="background: #F0ADAD">
+          body.isEmpty().unary_!
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          400
+        </td>
+        <td>
+          4166
+          -
+          4723
         </td>
         <td>
           Apply
@@ -1496,25 +1698,25 @@
           scala.Option.flatMap
         </td>
         <td style="background: #F0ADAD">
-          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
+          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.setUpdateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
   else
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
 }))(VillageVerticle.this.executionContext)))))
         </td>
       </tr><tr>
         <td>
-          101
+          109
         </td>
         <td>
-          434
+          399
         </td>
         <td>
-          4026
+          4249
           -
-          4470
+          4723
         </td>
         <td>
           Apply
@@ -1523,25 +1725,67 @@
           scala.Option.map
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
+          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.setUpdateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
   else
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
 }))(VillageVerticle.this.executionContext)))
         </td>
       </tr><tr>
         <td>
-          103
+          111
         </td>
         <td>
-          433
+          391
         </td>
         <td>
-          4105
+          4359
           -
-          4470
+          4359
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          111
+        </td>
+        <td>
+          397
+        </td>
+        <td>
+          4387
+          -
+          4387
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          111
+        </td>
+        <td>
+          398
+        </td>
+        <td>
+          4328
+          -
+          4723
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1550,88 +1794,25 @@
           scala.concurrent.Future.onComplete
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
+          VillageVerticle.this.villageService.setUpdateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
   else
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
 }))(VillageVerticle.this.executionContext)
         </td>
       </tr><tr>
         <td>
-          103
+          113
         </td>
         <td>
-          432
+          393
         </td>
         <td>
-          4162
+          4445
           -
-          4162
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          103
-        </td>
-        <td>
-          426
-        </td>
-        <td>
-          4140
-          -
-          4140
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.executionContext
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.executionContext
-        </td>
-      </tr><tr>
-        <td>
-          105
-        </td>
-        <td>
-          427
-        </td>
-        <td>
-          4220
-          -
-          4272
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          105
-        </td>
-        <td>
-          428
-        </td>
-        <td>
-          4220
-          -
-          4272
+          4499
         </td>
         <td>
           Block
@@ -1640,40 +1821,19 @@
           cml.core.RoutingOperation.sendResponse
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)(routingContext)
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
         </td>
       </tr><tr>
         <td>
-          107
+          113
         </td>
         <td>
-          430
+          392
         </td>
         <td>
-          4302
+          4445
           -
-          4351
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          cml.core.RoutingOperation.sendResponse
-        </td>
-        <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
-        </td>
-      </tr><tr>
-        <td>
-          107
-        </td>
-        <td>
-          429
-        </td>
-        <td>
-          4302
-          -
-          4351
+          4499
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1682,19 +1842,61 @@
           cml.core.RoutingOperation.sendResponse
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
         </td>
       </tr><tr>
         <td>
-          109
+          115
         </td>
         <td>
-          431
+          394
         </td>
         <td>
-          4391
+          4529
           -
-          4461
+          4580
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          115
+        </td>
+        <td>
+          395
+        </td>
+        <td>
+          4529
+          -
+          4580
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          118
+        </td>
+        <td>
+          396
+        </td>
+        <td>
+          4633
+          -
+          4703
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1707,15 +1909,42 @@
         </td>
       </tr><tr>
         <td>
-          111
+          121
         </td>
         <td>
-          436
+          403
         </td>
         <td>
-          4489
+          4044
           -
-          4536
+          4790
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; VillageVerticle.this.getRequestAndBody(routingContext).withFilter(((body: String) =&gt; body.isEmpty().unary_!)).flatMap[Unit](((body: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.setUpdateVillage(username, body)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
+  case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Update set done&quot;)(routingContext)
+  else
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while update set&quot;)(routingContext)
+  case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
+}))(VillageVerticle.this.executionContext))))))))).getOrElse[Unit](VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext))
+        </td>
+      </tr><tr>
+        <td>
+          121
+        </td>
+        <td>
+          402
+        </td>
+        <td>
+          4742
+          -
+          4789
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1728,15 +1957,285 @@
         </td>
       </tr><tr>
         <td>
-          111
+          125
         </td>
         <td>
-          437
+          404
         </td>
         <td>
-          3880
+          4881
           -
-          4537
+          4917
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;Request to delete village&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          128
+        </td>
+        <td>
+          414
+        </td>
+        <td>
+          4987
+          -
+          5508
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.flatMap
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$5: scala.util.Try[Boolean]) =&gt; x0$5 match {
+  case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Deleted&quot;)(routingContext)
+  else
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+  case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
+}))(VillageVerticle.this.executionContext)))))
+        </td>
+      </tr><tr>
+        <td>
+          129
+        </td>
+        <td>
+          413
+        </td>
+        <td>
+          5070
+          -
+          5508
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.map
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$5: scala.util.Try[Boolean]) =&gt; x0$5 match {
+  case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Deleted&quot;)(routingContext)
+  else
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+  case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
+}))(VillageVerticle.this.executionContext)))
+        </td>
+      </tr><tr>
+        <td>
+          131
+        </td>
+        <td>
+          412
+        </td>
+        <td>
+          5149
+          -
+          5508
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.onComplete
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$5: scala.util.Try[Boolean]) =&gt; x0$5 match {
+  case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Deleted&quot;)(routingContext)
+  else
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+  case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
+}))(VillageVerticle.this.executionContext)
+        </td>
+      </tr><tr>
+        <td>
+          131
+        </td>
+        <td>
+          405
+        </td>
+        <td>
+          5184
+          -
+          5184
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          131
+        </td>
+        <td>
+          411
+        </td>
+        <td>
+          5206
+          -
+          5206
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.executionContext
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.executionContext
+        </td>
+      </tr><tr>
+        <td>
+          133
+        </td>
+        <td>
+          406
+        </td>
+        <td>
+          5264
+          -
+          5310
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Deleted&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          133
+        </td>
+        <td>
+          407
+        </td>
+        <td>
+          5264
+          -
+          5310
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Deleted&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          135
+        </td>
+        <td>
+          409
+        </td>
+        <td>
+          5340
+          -
+          5389
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          135
+        </td>
+        <td>
+          408
+        </td>
+        <td>
+          5340
+          -
+          5389
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          137
+        </td>
+        <td>
+          410
+        </td>
+        <td>
+          5429
+          -
+          5499
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          139
+        </td>
+        <td>
+          415
+        </td>
+        <td>
+          5527
+          -
+          5574
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          cml.core.RoutingOperation.sendResponse
+        </td>
+        <td style="background: #F0ADAD">
+          VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST.toString())(routingContext)
+        </td>
+      </tr><tr>
+        <td>
+          139
+        </td>
+        <td>
+          416
+        </td>
+        <td>
+          4924
+          -
+          5575
         </td>
         <td>
           Apply
@@ -1745,9 +2244,9 @@
           scala.Option.getOrElse
         </td>
         <td style="background: #F0ADAD">
-          VillageVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$4: scala.util.Try[Boolean]) =&gt; x0$4 match {
+          VillageVerticle.this.getRequestAndHeader(routingContext).flatMap[Unit](((headerAuthorization: String) =&gt; cml.core.TokenAuthentication.checkAuthenticationToken(headerAuthorization).flatMap[Unit](((token: String) =&gt; cml.core.utils.JWTAuthentication.decodeUsernameToken(token).map[Unit](((username: String) =&gt; VillageVerticle.this.villageService.deleteVillageAndUser(username)(VillageVerticle.this.executionContext).onComplete[Unit](((x0$5: scala.util.Try[Boolean]) =&gt; x0$5 match {
   case (value: Boolean)scala.util.Success[Boolean]((value @ _)) =&gt; if (value)
-    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.ACCEPTED, &quot;Deleted&quot;)(routingContext)
+    VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.OK, &quot;Deleted&quot;)(routingContext)
   else
     VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST, &quot;Error while deleting&quot;)(routingContext)
   case (exception: Throwable)scala.util.Failure[Boolean](_) =&gt; VillageVerticle.this.sendResponse(io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR, &quot;Server Error&quot;)(routingContext)
@@ -1755,15 +2254,15 @@
         </td>
       </tr><tr>
         <td>
-          115
+          143
         </td>
         <td>
-          439
+          418
         </td>
         <td>
-          4662
+          5700
           -
-          4686
+          5724
         </td>
         <td>
           Apply
@@ -1776,36 +2275,15 @@
         </td>
       </tr><tr>
         <td>
-          115
+          143
         </td>
         <td>
-          438
+          420
         </td>
         <td>
-          4634
+          5664
           -
-          4660
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Request to exit village &quot;
-        </td>
-      </tr><tr>
-        <td>
-          115
-        </td>
-        <td>
-          441
-        </td>
-        <td>
-          4626
-          -
-          4687
+          5725
         </td>
         <td>
           Apply
@@ -1818,15 +2296,36 @@
         </td>
       </tr><tr>
         <td>
-          115
+          143
         </td>
         <td>
-          440
+          417
         </td>
         <td>
-          4626
+          5672
           -
-          4687
+          5698
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Request to exit village &quot;
+        </td>
+      </tr><tr>
+        <td>
+          143
+        </td>
+        <td>
+          419
+        </td>
+        <td>
+          5664
+          -
+          5725
         </td>
         <td>
           Apply

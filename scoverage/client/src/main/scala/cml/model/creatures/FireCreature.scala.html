@@ -1,0 +1,664 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\creatures\FireCreature.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.creatures
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Creature
+</span>4 <span style=''>import cml.utils.ModelConfig.Elements.FIRE
+</span>5 <span style=''>import cml.utils.ModelConfig.Creature.DRAGON
+</span>6 <span style=''>import play.api.libs.json.Json
+</span>7 <span style=''>
+</span>8 <span style=''>/**
+</span>9 <span style=''>  * This class models a dragon
+</span>10 <span style=''>  * @param creatureName name of the dragon
+</span>11 <span style=''>  * @param creatureLevel set the dragon level
+</span>12 <span style=''>  *
+</span>13 <span style=''>  * @author Filippo Portolani, (edited by) ecavina
+</span>14 <span style=''>  */
+</span>15 <span style=''>
+</span>16 <span style=''>case class FireCreature(creature_name: String, creature_level: Int) extends Creature{
+</span>17 <span style=''>
+</span>18 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>FIRE</span><span style=''>
+</span>19 <span style=''>
+</span>20 <span style=''>  override def levelUp(): Unit = {
+</span>21 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel += 1</span><span style=''>
+</span>22 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>23 <span style=''>  }
+</span>24 <span style=''>
+</span>25 <span style=''>  override def setAttack() : Unit = {
+</span>26 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
+</span>27 <span style=''>      case 10 =&gt; </span><span style='background: #AEF1AE'>attackValue += 10</span><span style=''>
+</span>28 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>29 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>30 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
+</span>31 <span style=''>    }
+</span>32 <span style=''>
+</span>33 <span style=''>  }
+</span>34 <span style=''>
+</span>35 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
+</span>36 <span style=''>
+</span>37 <span style=''>  override def level: Int = {
+</span>38 <span style=''>    if(</span><span style='background: #F0ADAD'>currentLevel &lt; creature_level</span><span style=''>)
+</span>39 <span style=''>      </span><span style='background: #F0ADAD'>currentLevel = creature_level</span><span style=''>
+</span>40 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>41 <span style=''>  }
+</span>42 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>43 <span style=''>
+</span>44 <span style=''>  override def currentLevel_ : Unit = {
+</span>45 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creature_level</span><span style=''>
+</span>46 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>47 <span style=''>  }
+</span>48 <span style=''>
+</span>49 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creature_name</span><span style=''>
+</span>50 <span style=''>
+</span>51 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>DRAGON</span><span style=''>
+</span>52 <span style=''>}
+</span>53 <span style=''>
+</span>54 <span style=''>object FireCreature {
+</span>55 <span style=''>  implicit val reader = Json.format[FireCreature]
+</span>56 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          760
+        </td>
+        <td>
+          495
+          -
+          499
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Elements.FIRE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Elements.FIRE
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          762
+        </td>
+        <td>
+          543
+          -
+          560
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel_=(FireCreature.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          761
+        </td>
+        <td>
+          543
+          -
+          560
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          763
+        </td>
+        <td>
+          566
+          -
+          577
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.FireCreature.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          764
+        </td>
+        <td>
+          629
+          -
+          641
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          765
+        </td>
+        <td>
+          668
+          -
+          685
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          766
+        </td>
+        <td>
+          668
+          -
+          685
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.attackValue_=(FireCreature.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          768
+        </td>
+        <td>
+          704
+          -
+          721
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.attackValue_=(FireCreature.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          767
+        </td>
+        <td>
+          704
+          -
+          721
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          770
+        </td>
+        <td>
+          740
+          -
+          757
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.attackValue_=(FireCreature.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          769
+        </td>
+        <td>
+          740
+          -
+          757
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          771
+        </td>
+        <td>
+          772
+          -
+          774
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          772
+        </td>
+        <td>
+          827
+          -
+          835
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.FireCreature._element
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this._element
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          774
+        </td>
+        <td>
+          877
+          -
+          906
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.&lt;
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.currentLevel.&lt;(FireCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          779
+        </td>
+        <td>
+          874
+          -
+          874
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          773
+        </td>
+        <td>
+          892
+          -
+          906
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.FireCreature.creature_level
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.creature_level
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          778
+        </td>
+        <td>
+          874
+          -
+          874
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          777
+        </td>
+        <td>
+          915
+          -
+          944
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          776
+        </td>
+        <td>
+          915
+          -
+          944
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          775
+        </td>
+        <td>
+          930
+          -
+          944
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.FireCreature.creature_level
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.creature_level
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          780
+        </td>
+        <td>
+          950
+          -
+          962
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          781
+        </td>
+        <td>
+          1003
+          -
+          1014
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          783
+        </td>
+        <td>
+          1063
+          -
+          1092
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          782
+        </td>
+        <td>
+          1078
+          -
+          1092
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.FireCreature.creature_level
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.creature_level
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          784
+        </td>
+        <td>
+          1098
+          -
+          1109
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.FireCreature.setAttack
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          785
+        </td>
+        <td>
+          1148
+          -
+          1161
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.FireCreature.creature_name
+        </td>
+        <td style="background: #F0ADAD">
+          FireCreature.this.creature_name
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          786
+        </td>
+        <td>
+          1203
+          -
+          1209
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Creature.DRAGON
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ModelConfig.Creature.DRAGON
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

@@ -225,11 +225,11 @@
         <span class="name">createVillage</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a user village</p><div class="fullcomment"><div class="comment cmt"><p>Create a user village</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>successful or failed deletion</p></dd></dl></div>
+      <p class="shortcomment cmt">Create a user village</p><div class="fullcomment"><div class="comment cmt"><p>Create a user village</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>successful or failed creation</p></dd></dl></div>
     </li><li name="cml.services.village.VillageServiceVertx#deleteVillageAndUser" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="deleteVillageAndUser():scala.concurrent.Future[Unit]"></a><a id="deleteVillageAndUser():Future[Unit]"></a>
+      <a id="deleteVillageAndUser():scala.concurrent.Future[String]"></a><a id="deleteVillageAndUser():Future[String]"></a>
       <span class="permalink">
-      <a href="../../../cml/services/village/VillageServiceVertx.html#deleteVillageAndUser():scala.concurrent.Future[Unit]" title="Permalink">
+      <a href="../../../cml/services/village/VillageServiceVertx.html#deleteVillageAndUser():scala.concurrent.Future[String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -238,7 +238,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteVillageAndUser</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">deleteVillageAndUser</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
       <p class="shortcomment cmt">Delete the user's village</p><div class="fullcomment"><div class="comment cmt"><p>Delete the user's village</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>successful or failed deletion</p></dd></dl></div>
@@ -257,11 +257,11 @@
         <span class="name">enterVillage</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Enter the user's village</p><div class="fullcomment"><div class="comment cmt"><p>Enter the user's village</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>successful or failed deletion</p></dd></dl></div>
-    </li><li name="cml.services.village.VillageServiceVertx#updateVillage" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="updateVillage(update:play.api.libs.json.JsValue):scala.concurrent.Future[Unit]"></a><a id="updateVillage(JsValue):Future[Unit]"></a>
+      <p class="shortcomment cmt">Enter the user's village</p><div class="fullcomment"><div class="comment cmt"><p>Enter the user's village</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>successful or failed enter</p></dd></dl></div>
+    </li><li name="cml.services.village.VillageServiceVertx#setUpdateVillage" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="setUpdateVillage(update:play.api.libs.json.JsValue):scala.concurrent.Future[String]"></a><a id="setUpdateVillage(JsValue):Future[String]"></a>
       <span class="permalink">
-      <a href="../../../cml/services/village/VillageServiceVertx.html#updateVillage(update:play.api.libs.json.JsValue):scala.concurrent.Future[Unit]" title="Permalink">
+      <a href="../../../cml/services/village/VillageServiceVertx.html#setUpdateVillage(update:play.api.libs.json.JsValue):scala.concurrent.Future[String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -270,10 +270,26 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">updateVillage</span><span class="params">(<span name="update">update: <span class="extype" name="play.api.libs.json.JsValue">JsValue</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">setUpdateVillage</span><span class="params">(<span name="update">update: <span class="extype" name="play.api.libs.json.JsValue">JsValue</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Update the user's village</p><div class="fullcomment"><div class="comment cmt"><p>Update the user's village</p></div><dl class="paramcmts block"><dt class="param">update</dt><dd class="cmt"><p>what to update</p></dd><dt>returns</dt><dd class="cmt"><p>successful or failed deletion</p></dd></dl></div>
+      <p class="shortcomment cmt">Update existing items in the user's village</p><div class="fullcomment"><div class="comment cmt"><p>Update existing items in the user's village</p></div><dl class="paramcmts block"><dt class="param">update</dt><dd class="cmt"><p>values to update</p></dd><dt>returns</dt><dd class="cmt"><p>successful or failed update</p></dd></dl></div>
+    </li><li name="cml.services.village.VillageServiceVertx#updateVillage" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="updateVillage(update:play.api.libs.json.JsValue):scala.concurrent.Future[String]"></a><a id="updateVillage(JsValue):Future[String]"></a>
+      <span class="permalink">
+      <a href="../../../cml/services/village/VillageServiceVertx.html#updateVillage(update:play.api.libs.json.JsValue):scala.concurrent.Future[String]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">updateVillage</span><span class="params">(<span name="update">update: <span class="extype" name="play.api.libs.json.JsValue">JsValue</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Update the user's village</p><div class="fullcomment"><div class="comment cmt"><p>Update the user's village</p></div><dl class="paramcmts block"><dt class="param">update</dt><dd class="cmt"><p>what to update</p></dd><dt>returns</dt><dd class="cmt"><p>successful or failed update</p></dd></dl></div>
     </li></ol>
             </div>
 

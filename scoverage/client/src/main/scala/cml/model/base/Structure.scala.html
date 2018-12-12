@@ -25,105 +25,115 @@
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.base
 </span>2 <span style=''>
 </span>3 <span style=''>import cml.utils.ModelConfig.Resource._
-</span>4 <span style=''>
-</span>5 <span style=''>import scala.collection.mutable
-</span>6 <span style=''>
-</span>7 <span style=''>/**
-</span>8 <span style=''>  * This trait defines common operations over structures
-</span>9 <span style=''>  * @author Monica Gondolini
-</span>10 <span style=''>  */
-</span>11 <span style=''>trait Structure{
-</span>12 <span style=''>  /**
-</span>13 <span style=''>    * Increments Structure level
-</span>14 <span style=''>    */
-</span>15 <span style=''>  def levelUp(): Unit
-</span>16 <span style=''>
-</span>17 <span style=''>  /**
-</span>18 <span style=''>    * Get structure level
-</span>19 <span style=''>    */
-</span>20 <span style=''>  def level: Int
-</span>21 <span style=''>  /**
-</span>22 <span style=''>    * Get structure coordinates
-</span>23 <span style=''>    */
-</span>24 <span style=''>  def position: Position
-</span>25 <span style=''>
-</span>26 <span style=''>  /**
-</span>27 <span style=''>    * Get resource
-</span>28 <span style=''>    * @return resource type
-</span>29 <span style=''>    */
-</span>30 <span style=''>  def resource: Resource
-</span>31 <span style=''>
-</span>32 <span style=''>  def addCreature(creature: Creature): Unit
-</span>33 <span style=''>  def creatures: mutable.MutableList[Creature]
-</span>34 <span style=''>  def element: String
-</span>35 <span style=''>}
-</span>36 <span style=''>
-</span>37 <span style=''>/**
-</span>38 <span style=''>  * Implementation of building structure Farm
-</span>39 <span style=''>  * @param farmPosition coordinates of the building in the village
-</span>40 <span style=''>  * @param farmLevel level of the building
-</span>41 <span style=''>  */
-</span>42 <span style=''>case class Farm(farmPosition: Position, var farmLevel: Int) extends Structure {
-</span>43 <span style=''>  val food = </span><span style='background: #AEF1AE'>Food(INIT_VALUE)</span><span style=''>
-</span>44 <span style=''>  override def levelUp(): Unit = </span><span style='background: #AEF1AE'>farmLevel += 1</span><span style=''>
-</span>45 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>farmLevel</span><span style=''>
-</span>46 <span style=''>  override def position: Position = </span><span style='background: #AEF1AE'>farmPosition</span><span style=''>
-</span>47 <span style=''>  override def resource: Resource = </span><span style='background: #F0ADAD'>food</span><span style=''>
-</span>48 <span style=''>
-</span>49 <span style=''>  override def addCreature(creature: Creature): Unit = {
-</span>50 <span style=''>    if(</span><span style='background: #F0ADAD'>creature != null</span><span style=''>)
-</span>51 <span style=''>      </span><span style='background: #F0ADAD'>throw new NoSuchElementException</span><span style=''>
-</span>52 <span style=''>  }
-</span>53 <span style=''>  override def creatures: mutable.MutableList[Creature] = </span><span style='background: #F0ADAD'>null</span><span style=''>
-</span>54 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>&quot;Not an habitat&quot;</span><span style=''>
-</span>55 <span style=''>}
-</span>56 <span style=''>
-</span>57 <span style=''>/**
-</span>58 <span style=''>  * Implementation of building structure Cave
-</span>59 <span style=''>  * @param cavePosition coordinates of the building in the village
-</span>60 <span style=''>  * @param caveLevel level of the building
-</span>61 <span style=''>  */
-</span>62 <span style=''>case class Cave(cavePosition: Position, var caveLevel: Int) extends Structure {
-</span>63 <span style=''>  val money = </span><span style='background: #AEF1AE'>Money(INIT_VALUE)</span><span style=''>
-</span>64 <span style=''>  override def levelUp(): Unit = </span><span style='background: #AEF1AE'>caveLevel += 1</span><span style=''>
-</span>65 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>caveLevel</span><span style=''>
-</span>66 <span style=''>  override def position: Position = </span><span style='background: #AEF1AE'>cavePosition</span><span style=''>
-</span>67 <span style=''>  override def resource: Resource = </span><span style='background: #F0ADAD'>money</span><span style=''>
-</span>68 <span style=''>
-</span>69 <span style=''>  override def addCreature(creature: Creature): Unit = {
-</span>70 <span style=''>    if(</span><span style='background: #F0ADAD'>creature != null</span><span style=''>)
-</span>71 <span style=''>      </span><span style='background: #F0ADAD'>throw new NoSuchElementException</span><span style=''>
-</span>72 <span style=''>  }
-</span>73 <span style=''>  override def creatures: mutable.MutableList[Creature] = </span><span style='background: #F0ADAD'>null</span><span style=''>
-</span>74 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>&quot;Not an habitat&quot;</span><span style=''>
-</span>75 <span style=''>}
-</span>76 <span style=''>
-</span>77 <span style=''>
-</span>78 <span style=''>object Habitat {
-</span>79 <span style=''>
-</span>80 <span style=''>  def apply(habitatElement: String, habitatPosition: Position, habitatLevel: Int) : Habitat =
-</span>81 <span style=''>     </span><span style='background: #AEF1AE'>Habitat(habitatElement, habitatPosition, habitatLevel)</span><span style=''>
-</span>82 <span style=''>
-</span>83 <span style=''>  /**
-</span>84 <span style=''>    * Implementation of structure habitat
-</span>85 <span style=''>    * @param habitatElement         of the habitat
-</span>86 <span style=''>    * @param habitatPosition coordinates of the habitat in the village
-</span>87 <span style=''>    * @param habitatLevel    level of the habitat
-</span>88 <span style=''>    */
-</span>89 <span style=''>  case class Habitat(habitatElement: String, habitatPosition: Position, var habitatLevel: Int) extends Structure {
-</span>90 <span style=''>    var creatureList: mutable.MutableList[Creature] = </span><span style='background: #AEF1AE'>mutable.MutableList[Creature]()</span><span style=''>
-</span>91 <span style=''>    val money = </span><span style='background: #AEF1AE'>Money(INIT_VALUE)</span><span style=''> //crea piÃ¹ denaro in base al numero di creature  e al livello delle creature(?)
-</span>92 <span style=''>    override def levelUp(): Unit =</span><span style='background: #AEF1AE'> habitatLevel += </span><span style=''>1
-</span>93 <span style=''>    override def level: Int =</span><span style='background: #AEF1AE'> habitatLeve</span><span style=''>l
-</span>94 <span style=''>    override def position: Position =</span><span style='background: #AEF1AE'> habitatPositio</span><span style=''>n
-</span>95 <span style=''>    override def resource: Resource =</span><span style='background: #F0ADAD'> mone</span><span style=''>y
-</span>96 <span style=''>    override def addCreature(creature: Creature): Unit =</span><span style='background: #AEF1AE'> creatureList += creatur</span><span style=''>e
-</span>97 <span style=''>    override def creatures: mutable.MutableList[Creature] =</span><span style='background: #F0ADAD'> creatureLis</span><span style=''>t
-</span>98 <span style=''>    override def element: String =</span><span style='background: #F0ADAD'> habitatElemen</span><span style=''>t
-</span>99 <span style=''>  }
-</span>100 <span style=''>
-</span>101 <span style=''>}
-</span>102 <span style=''>
+</span>4 <span style=''>import play.api.libs.json.Json
+</span>5 <span style=''>
+</span>6 <span style=''>import scala.collection.mutable
+</span>7 <span style=''>
+</span>8 <span style=''>/**
+</span>9 <span style=''>  * This trait defines common operations over structures
+</span>10 <span style=''>  * @author Monica Gondolini, ecavina
+</span>11 <span style=''>  */
+</span>12 <span style=''>trait Structure{
+</span>13 <span style=''>  /**
+</span>14 <span style=''>    * Increments Structure level
+</span>15 <span style=''>    */
+</span>16 <span style=''>  def levelUp(): Unit
+</span>17 <span style=''>
+</span>18 <span style=''>  /**
+</span>19 <span style=''>    * Get structure level
+</span>20 <span style=''>    */
+</span>21 <span style=''>  def level: Int
+</span>22 <span style=''>  /**
+</span>23 <span style=''>    * Get structure coordinates
+</span>24 <span style=''>    */
+</span>25 <span style=''>  def position: Position
+</span>26 <span style=''>
+</span>27 <span style=''>  /**
+</span>28 <span style=''>    * Get resource
+</span>29 <span style=''>    * @return resource type
+</span>30 <span style=''>    */
+</span>31 <span style=''>  def resource: Resource
+</span>32 <span style=''>
+</span>33 <span style=''>  def addCreature(creature: Creature): Unit
+</span>34 <span style=''>  def creatures: mutable.MutableList[Creature]
+</span>35 <span style=''>  def habitatElement: String
+</span>36 <span style=''>}
+</span>37 <span style=''>
+</span>38 <span style=''>/**
+</span>39 <span style=''>  * Implementation of building structure Farm
+</span>40 <span style=''>  * @param building_pos coordinates of the building in the village
+</span>41 <span style=''>  * @param building_level level of the building
+</span>42 <span style=''>  */
+</span>43 <span style=''>case class Farm(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
+</span>44 <span style=''>  val food = </span><span style='background: #AEF1AE'>Food(INIT_VALUE)</span><span style=''>
+</span>45 <span style=''>  override def levelUp(): Unit = </span><span style='background: #AEF1AE'>building_level += 1</span><span style=''>
+</span>46 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>building_level</span><span style=''>
+</span>47 <span style=''>  override def position: Position = </span><span style='background: #AEF1AE'>building_pos</span><span style=''>
+</span>48 <span style=''>  override def resource: Resource = </span><span style='background: #F0ADAD'>food</span><span style=''>
+</span>49 <span style=''>
+</span>50 <span style=''>  override def addCreature(creature: Creature): Unit = {
+</span>51 <span style=''>    if(</span><span style='background: #F0ADAD'>creature != null</span><span style=''>)
+</span>52 <span style=''>      </span><span style='background: #F0ADAD'>throw new NoSuchElementException</span><span style=''>
+</span>53 <span style=''>  }
+</span>54 <span style=''>  override def creatures: mutable.MutableList[Creature] = </span><span style='background: #F0ADAD'>null</span><span style=''>
+</span>55 <span style=''>  override def habitatElement: String = </span><span style='background: #F0ADAD'>&quot;Not an habitat&quot;</span><span style=''>
+</span>56 <span style=''>}
+</span>57 <span style=''>
+</span>58 <span style=''>object Farm {
+</span>59 <span style=''>  implicit val farmReader = Json.format[Farm]
+</span>60 <span style=''>}
+</span>61 <span style=''>
+</span>62 <span style=''>/**
+</span>63 <span style=''>  * Implementation of building structure Cave
+</span>64 <span style=''>  * @param building_pos coordinates of the building in the village
+</span>65 <span style=''>  * @param building_level level of the building
+</span>66 <span style=''>  */
+</span>67 <span style=''>case class Cave(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
+</span>68 <span style=''>  val money = </span><span style='background: #AEF1AE'>Money(INIT_VALUE)</span><span style=''>
+</span>69 <span style=''>  override def levelUp(): Unit = </span><span style='background: #AEF1AE'>building_level += 1</span><span style=''>
+</span>70 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>building_level</span><span style=''>
+</span>71 <span style=''>  override def position: Position = </span><span style='background: #AEF1AE'>building_pos</span><span style=''>
+</span>72 <span style=''>  override def resource: Resource = </span><span style='background: #F0ADAD'>money</span><span style=''>
+</span>73 <span style=''>
+</span>74 <span style=''>  override def addCreature(creature: Creature): Unit = {
+</span>75 <span style=''>    if(</span><span style='background: #F0ADAD'>creature != null</span><span style=''>)
+</span>76 <span style=''>      </span><span style='background: #F0ADAD'>throw new NoSuchElementException</span><span style=''>
+</span>77 <span style=''>  }
+</span>78 <span style=''>  override def creatures: mutable.MutableList[Creature] = </span><span style='background: #F0ADAD'>null</span><span style=''>
+</span>79 <span style=''>  override def habitatElement: String = </span><span style='background: #F0ADAD'>&quot;Not an habitat&quot;</span><span style=''>
+</span>80 <span style=''>}
+</span>81 <span style=''>
+</span>82 <span style=''>object Cave {
+</span>83 <span style=''>  implicit val caveReader = Json.format[Cave]
+</span>84 <span style=''>}
+</span>85 <span style=''>
+</span>86 <span style=''>object Habitat {
+</span>87 <span style=''>
+</span>88 <span style=''>  def apply(habitatElement: String, habitatPosition: Position, habitatLevel: Int) : Habitat =
+</span>89 <span style=''>     </span><span style='background: #AEF1AE'>Habitat(habitatElement, habitatPosition, habitatLevel)</span><span style=''>
+</span>90 <span style=''>
+</span>91 <span style=''>  /**
+</span>92 <span style=''>    * Implementation of structure habitat
+</span>93 <span style=''>    * @param element         of the habitat
+</span>94 <span style=''>    * @param habitat_pos coordinates of the habitat in the village
+</span>95 <span style=''>    * @param habitat_level    level of the habitat
+</span>96 <span style=''>    */
+</span>97 <span style=''>  case class Habitat(element: String, habitat_pos: Position, var habitat_level: Int) extends Structure {
+</span>98 <span style=''>    var creatureList: mutable.MutableList[Creature] = </span><span style='background: #AEF1AE'>mutable.MutableList[Creature]()</span><span style=''>
+</span>99 <span style=''>    val money = </span><span style='background: #AEF1AE'>Money(INIT_VALUE)</span><span style=''> //crea piÃ¹ denaro in base al numero di creature  e al livello delle creature(?)
+</span>100 <span style=''>    override def levelUp(): Unit =</span><span style='background: #AEF1AE'> habitat_level += </span><span style=''>1
+</span>101 <span style=''>    override def level: Int =</span><span style='background: #AEF1AE'> habitat_leve</span><span style=''>l
+</span>102 <span style=''>    override def position: Position =</span><span style='background: #AEF1AE'> habitat_po</span><span style=''>s
+</span>103 <span style=''>    override def resource: Resource =</span><span style='background: #F0ADAD'> mone</span><span style=''>y
+</span>104 <span style=''>    override def addCreature(creature: Creature): Unit =</span><span style='background: #AEF1AE'> creatureList += creatur</span><span style=''>e
+</span>105 <span style=''>    override def creatures: mutable.MutableList[Creature] =</span><span style='background: #F0ADAD'> creatureLis</span><span style=''>t
+</span>106 <span style=''>    override def habitatElement: String =</span><span style='background: #F0ADAD'> elemen</span><span style=''>t
+</span>107 <span style=''>  }
+</span>108 <span style=''>
+</span>109 <span style=''>  implicit val habitatReader = Json.format[Habitat]
+</span>110 <span style=''>
+</span>111 <span style=''>}
+</span>112 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -137,15 +147,36 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          43
+          44
         </td>
         <td>
-          294
+          651
         </td>
         <td>
-          908
+          1049
           -
-          924
+          1059
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          652
+        </td>
+        <td>
+          1044
+          -
+          1060
         </td>
         <td>
           Apply
@@ -158,36 +189,36 @@
         </td>
       </tr><tr>
         <td>
-          43
+          45
         </td>
         <td>
-          293
+          654
         </td>
         <td>
-          913
+          1095
           -
-          923
+          1114
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.utils.ModelConfig.Resource.INIT_VALUE
+          cml.model.base.Farm.building_level_=
         </td>
         <td style="background: #AEF1AE">
-          cml.utils.ModelConfig.Resource.INIT_VALUE
+          Farm.this.building_level_=(Farm.this.building_level.+(1))
         </td>
       </tr><tr>
         <td>
-          44
+          45
         </td>
         <td>
-          295
+          653
         </td>
         <td>
-          959
+          1095
           -
-          973
+          1114
         </td>
         <td>
           Apply
@@ -196,82 +227,61 @@
           scala.Int.+
         </td>
         <td style="background: #AEF1AE">
-          Farm.this.farmLevel.+(1)
-        </td>
-      </tr><tr>
-        <td>
-          44
-        </td>
-        <td>
-          296
-        </td>
-        <td>
-          959
-          -
-          973
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Farm.farmLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          Farm.this.farmLevel_=(Farm.this.farmLevel.+(1))
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          297
-        </td>
-        <td>
-          1003
-          -
-          1012
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Farm.farmLevel
-        </td>
-        <td style="background: #F0ADAD">
-          Farm.this.farmLevel
+          Farm.this.building_level.+(1)
         </td>
       </tr><tr>
         <td>
           46
         </td>
         <td>
-          298
+          655
         </td>
         <td>
-          1050
+          1144
           -
-          1062
+          1158
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Farm.farmPosition
+          cml.model.base.Farm.building_level
         </td>
-        <td style="background: #AEF1AE">
-          Farm.this.farmPosition
+        <td style="background: #F0ADAD">
+          Farm.this.building_level
         </td>
       </tr><tr>
         <td>
           47
         </td>
         <td>
-          299
+          656
         </td>
         <td>
-          1100
+          1196
           -
-          1104
+          1208
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Farm.building_pos
+        </td>
+        <td style="background: #AEF1AE">
+          Farm.this.building_pos
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          657
+        </td>
+        <td>
+          1246
+          -
+          1250
         </td>
         <td>
           Select
@@ -284,15 +294,15 @@
         </td>
       </tr><tr>
         <td>
-          50
+          51
         </td>
         <td>
-          304
+          662
         </td>
         <td>
-          1170
+          1316
           -
-          1170
+          1316
         </td>
         <td>
           Block
@@ -305,15 +315,15 @@
         </td>
       </tr><tr>
         <td>
-          50
+          51
         </td>
         <td>
-          300
+          658
         </td>
         <td>
-          1173
+          1319
           -
-          1189
+          1335
         </td>
         <td>
           Apply
@@ -326,15 +336,15 @@
         </td>
       </tr><tr>
         <td>
-          50
+          51
         </td>
         <td>
-          303
+          661
         </td>
         <td>
-          1170
+          1316
           -
-          1170
+          1316
         </td>
         <td>
           Literal
@@ -347,36 +357,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          52
         </td>
         <td>
-          301
+          660
         </td>
         <td>
-          1198
+          1344
           -
-          1230
-        </td>
-        <td>
-          Throw
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          throw new scala.`package`.NoSuchElementException()
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          302
-        </td>
-        <td>
-          1198
-          -
-          1230
+          1376
         </td>
         <td>
           Block
@@ -389,15 +378,36 @@
         </td>
       </tr><tr>
         <td>
-          53
+          52
         </td>
         <td>
-          305
+          659
         </td>
         <td>
-          1295
+          1344
           -
-          1299
+          1376
+        </td>
+        <td>
+          Throw
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          throw new scala.`package`.NoSuchElementException()
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          663
+        </td>
+        <td>
+          1441
+          -
+          1445
         </td>
         <td>
           Literal
@@ -410,15 +420,15 @@
         </td>
       </tr><tr>
         <td>
-          54
+          55
         </td>
         <td>
-          306
+          664
         </td>
         <td>
-          1334
+          1487
           -
-          1350
+          1503
         </td>
         <td>
           Literal
@@ -431,36 +441,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          68
         </td>
         <td>
-          307
+          666
         </td>
         <td>
-          1628
+          1930
           -
-          1638
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.ModelConfig.Resource.INIT_VALUE
-        </td>
-        <td style="background: #AEF1AE">
-          cml.utils.ModelConfig.Resource.INIT_VALUE
-        </td>
-      </tr><tr>
-        <td>
-          63
-        </td>
-        <td>
-          308
-        </td>
-        <td>
-          1622
-          -
-          1639
+          1947
         </td>
         <td>
           Apply
@@ -473,36 +462,57 @@
         </td>
       </tr><tr>
         <td>
-          64
+          68
         </td>
         <td>
-          310
+          665
         </td>
         <td>
-          1674
+          1936
           -
-          1688
+          1946
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          668
+        </td>
+        <td>
+          1982
+          -
+          2001
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.model.base.Cave.caveLevel_=
+          cml.model.base.Cave.building_level_=
         </td>
         <td style="background: #AEF1AE">
-          Cave.this.caveLevel_=(Cave.this.caveLevel.+(1))
+          Cave.this.building_level_=(Cave.this.building_level.+(1))
         </td>
       </tr><tr>
         <td>
-          64
+          69
         </td>
         <td>
-          309
+          667
         </td>
         <td>
-          1674
+          1982
           -
-          1688
+          2001
         </td>
         <td>
           Apply
@@ -511,61 +521,61 @@
           scala.Int.+
         </td>
         <td style="background: #AEF1AE">
-          Cave.this.caveLevel.+(1)
+          Cave.this.building_level.+(1)
         </td>
       </tr><tr>
         <td>
-          65
+          70
         </td>
         <td>
-          311
+          669
         </td>
         <td>
-          1718
+          2031
           -
-          1727
+          2045
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Cave.caveLevel
+          cml.model.base.Cave.building_level
         </td>
         <td style="background: #F0ADAD">
-          Cave.this.caveLevel
+          Cave.this.building_level
         </td>
       </tr><tr>
         <td>
-          66
+          71
         </td>
         <td>
-          312
+          670
         </td>
         <td>
-          1765
+          2083
           -
-          1777
+          2095
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Cave.cavePosition
+          cml.model.base.Cave.building_pos
         </td>
         <td style="background: #AEF1AE">
-          Cave.this.cavePosition
+          Cave.this.building_pos
         </td>
       </tr><tr>
         <td>
-          67
+          72
         </td>
         <td>
-          313
+          671
         </td>
         <td>
-          1815
+          2133
           -
-          1820
+          2138
         </td>
         <td>
           Select
@@ -578,57 +588,15 @@
         </td>
       </tr><tr>
         <td>
-          70
+          75
         </td>
         <td>
-          318
+          672
         </td>
         <td>
-          1886
+          2207
           -
-          1886
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          70
-        </td>
-        <td>
-          317
-        </td>
-        <td>
-          1886
-          -
-          1886
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          70
-        </td>
-        <td>
-          314
-        </td>
-        <td>
-          1889
-          -
-          1905
+          2223
         </td>
         <td>
           Apply
@@ -641,15 +609,57 @@
         </td>
       </tr><tr>
         <td>
-          71
+          75
         </td>
         <td>
-          316
+          675
         </td>
         <td>
-          1914
+          2204
           -
-          1946
+          2204
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          676
+        </td>
+        <td>
+          2204
+          -
+          2204
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          674
+        </td>
+        <td>
+          2232
+          -
+          2264
         </td>
         <td>
           Block
@@ -662,15 +672,15 @@
         </td>
       </tr><tr>
         <td>
-          71
+          76
         </td>
         <td>
-          315
+          673
         </td>
         <td>
-          1914
+          2232
           -
-          1946
+          2264
         </td>
         <td>
           Throw
@@ -683,15 +693,15 @@
         </td>
       </tr><tr>
         <td>
-          73
+          78
         </td>
         <td>
-          319
+          677
         </td>
         <td>
-          2011
+          2329
           -
-          2015
+          2333
         </td>
         <td>
           Literal
@@ -704,15 +714,15 @@
         </td>
       </tr><tr>
         <td>
-          74
+          79
         </td>
         <td>
-          320
+          678
         </td>
         <td>
-          2050
+          2375
           -
-          2066
+          2391
         </td>
         <td>
           Literal
@@ -725,15 +735,15 @@
         </td>
       </tr><tr>
         <td>
-          81
+          89
         </td>
         <td>
-          321
+          679
         </td>
         <td>
-          2195
+          2585
           -
-          2249
+          2639
         </td>
         <td>
           Apply
@@ -746,15 +756,15 @@
         </td>
       </tr><tr>
         <td>
-          90
+          98
         </td>
         <td>
-          322
+          680
         </td>
         <td>
-          2656
+          3026
           -
-          2687
+          3057
         </td>
         <td>
           Apply
@@ -767,15 +777,36 @@
         </td>
       </tr><tr>
         <td>
-          91
+          99
         </td>
         <td>
-          324
+          681
         </td>
         <td>
-          2705
+          3081
           -
-          2722
+          3091
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Resource.INIT_VALUE
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          682
+        </td>
+        <td>
+          3075
+          -
+          3092
         </td>
         <td>
           Apply
@@ -788,36 +819,36 @@
         </td>
       </tr><tr>
         <td>
-          91
+          100
         </td>
         <td>
-          323
+          684
         </td>
         <td>
-          2711
+          3209
           -
-          2721
+          3227
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.utils.ModelConfig.Resource.INIT_VALUE
+          cml.model.base.Habitat.Habitat.habitat_level_=
         </td>
         <td style="background: #AEF1AE">
-          cml.utils.ModelConfig.Resource.INIT_VALUE
+          Habitat.this.habitat_level_=(Habitat.this.habitat_level.+(1))
         </td>
       </tr><tr>
         <td>
-          92
+          100
         </td>
         <td>
-          325
+          683
         </td>
         <td>
-          2839
+          3209
           -
-          2856
+          3227
         </td>
         <td>
           Apply
@@ -826,82 +857,61 @@
           scala.Int.+
         </td>
         <td style="background: #AEF1AE">
-          Habitat.this.habitatLevel.+(1)
+          Habitat.this.habitat_level.+(1)
         </td>
       </tr><tr>
         <td>
-          92
+          101
         </td>
         <td>
-          326
+          685
         </td>
         <td>
-          2839
+          3259
           -
-          2856
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Habitat.Habitat.habitatLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          Habitat.this.habitatLevel_=(Habitat.this.habitatLevel.+(1))
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          327
-        </td>
-        <td>
-          2888
-          -
-          2900
+          3272
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Habitat.Habitat.habitatLevel
+          cml.model.base.Habitat.Habitat.habitat_level
         </td>
         <td style="background: #AEF1AE">
-          Habitat.this.habitatLevel
+          Habitat.this.habitat_level
         </td>
       </tr><tr>
         <td>
-          94
+          102
         </td>
         <td>
-          328
+          686
         </td>
         <td>
-          2940
+          3312
           -
-          2955
+          3323
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Habitat.Habitat.habitatPosition
+          cml.model.base.Habitat.Habitat.habitat_pos
         </td>
         <td style="background: #AEF1AE">
-          Habitat.this.habitatPosition
+          Habitat.this.habitat_pos
         </td>
       </tr><tr>
         <td>
-          95
+          103
         </td>
         <td>
-          329
+          687
         </td>
         <td>
-          2995
+          3363
           -
-          3000
+          3368
         </td>
         <td>
           Select
@@ -914,15 +924,15 @@
         </td>
       </tr><tr>
         <td>
-          96
+          104
         </td>
         <td>
-          331
+          689
         </td>
         <td>
-          3072
+          3440
           -
-          3072
+          3440
         </td>
         <td>
           Literal
@@ -935,15 +945,15 @@
         </td>
       </tr><tr>
         <td>
-          96
+          104
         </td>
         <td>
-          330
+          688
         </td>
         <td>
-          3059
+          3427
           -
-          3083
+          3451
         </td>
         <td>
           Apply
@@ -956,15 +966,15 @@
         </td>
       </tr><tr>
         <td>
-          97
+          105
         </td>
         <td>
-          332
+          690
         </td>
         <td>
-          3145
+          3513
           -
-          3157
+          3525
         </td>
         <td>
           Select
@@ -977,24 +987,24 @@
         </td>
       </tr><tr>
         <td>
-          98
+          106
         </td>
         <td>
-          333
+          691
         </td>
         <td>
-          3194
+          3569
           -
-          3208
+          3576
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Habitat.Habitat.habitatElement
+          cml.model.base.Habitat.Habitat.element
         </td>
         <td style="background: #F0ADAD">
-          Habitat.this.habitatElement
+          Habitat.this.element
         </td>
       </tr>
     </table>

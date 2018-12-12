@@ -24,62 +24,63 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller.fx
 </span>2 <span style=''>
-</span>3 <span style=''>import akka.actor.{ActorRef, ActorSelection, Props}
-</span>4 <span style=''>import cml.controller.AuthenticationActor
-</span>5 <span style=''>import cml.controller.messages.AuthenticationRequest.{Login, Register}
-</span>6 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-</span>7 <span style=''>import cml.view.ViewSwitch
-</span>8 <span style=''>import cml.controller.actor.utils.InputControl._
-</span>9 <span style=''>import cml.utils.ViewConfig._
-</span>10 <span style=''>import javafx.fxml.FXML
-</span>11 <span style=''>import javafx.scene.control.{Button, Label, PasswordField, TextField}
-</span>12 <span style=''>
-</span>13 <span style=''>/**
-</span>14 <span style=''>  * Controller for the graphic user interface
-</span>15 <span style=''>  * @author Monica Gondolini, Filippo Portolani
-</span>16 <span style=''>  */
-</span>17 <span style=''>
-</span>18 <span style=''>class AuthenticationViewController {
-</span>19 <span style=''>
-</span>20 <span style=''>  @FXML var registrationUsernameField: TextField = _
-</span>21 <span style=''>  @FXML var registrationPasswordField: PasswordField = _
-</span>22 <span style=''>  @FXML var loginUsernameField: TextField = _
-</span>23 <span style=''>  @FXML var loginPasswordField: PasswordField = _
-</span>24 <span style=''>  @FXML var registerButton: Button = _
-</span>25 <span style=''>  @FXML var loginButton: Button = _
-</span>26 <span style=''>  @FXML var formMsgLabel: Label = _
-</span>27 <span style=''>  val AuthenticationActorPath = </span><span style='background: #F0ADAD'>&quot;/user/AuthenticationActor&quot;</span><span style=''>
-</span>28 <span style=''>
+</span>3 <span style=''>import akka.actor.ActorSelection
+</span>4 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
+</span>5 <span style=''>import cml.controller.actor.utils.InputControl._
+</span>6 <span style=''>import cml.controller.messages.AuthenticationRequest.{Login, Register, SetController}
+</span>7 <span style=''>import cml.utils.ViewConfig._
+</span>8 <span style=''>import cml.view.ViewSwitch
+</span>9 <span style=''>import javafx.fxml.FXML
+</span>10 <span style=''>import javafx.scene.control.{Button, Label, PasswordField, TextField}
+</span>11 <span style=''>
+</span>12 <span style=''>/**
+</span>13 <span style=''>  * Controller for the graphic user interface
+</span>14 <span style=''>  * @author Monica Gondolini, Filippo Portolani
+</span>15 <span style=''>  */
+</span>16 <span style=''>
+</span>17 <span style=''>class AuthenticationViewController {
+</span>18 <span style=''>
+</span>19 <span style=''>  @FXML var registrationUsernameField: TextField = _
+</span>20 <span style=''>  @FXML var registrationPasswordField: PasswordField = _
+</span>21 <span style=''>  @FXML var loginUsernameField: TextField = _
+</span>22 <span style=''>  @FXML var loginPasswordField: PasswordField = _
+</span>23 <span style=''>  @FXML var registerButton: Button = _
+</span>24 <span style=''>  @FXML var loginButton: Button = _
+</span>25 <span style=''>  @FXML var formMsgLabel: Label = _
+</span>26 <span style=''>  val AuthenticationActorPath = </span><span style='background: #F0ADAD'>&quot;/user/AuthenticationActor&quot;</span><span style=''>
+</span>27 <span style=''>
+</span>28 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection AuthenticationActorPath</span><span style=''>
 </span>29 <span style=''>
-</span>30 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection AuthenticationActorPath</span><span style=''>
-</span>31 <span style=''>
-</span>32 <span style=''>  def initialize(): Unit = {
-</span>33 <span style=''>    </span><span style='background: #F0ADAD'>registerButton setOnAction(_ =&gt; requestAuthentication(register, registrationUsernameField , registrationPasswordField))</span><span style=''>
-</span>34 <span style=''>    </span><span style='background: #F0ADAD'>loginButton setOnAction(_ =&gt; requestAuthentication(login, loginUsernameField, loginPasswordField))</span><span style=''>
-</span>35 <span style=''>  }
-</span>36 <span style=''>
-</span>37 <span style=''>  /**
-</span>38 <span style=''>    * Sends requests to the actor which manages the authentication
-</span>39 <span style=''>    * @param msg defines which message to send to the authentication actor
-</span>40 <span style=''>    */
-</span>41 <span style=''>  def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
-</span>42 <span style=''>    val username = </span><span style='background: #F0ADAD'>usernameField getText()</span><span style=''>
-</span>43 <span style=''>    val password = </span><span style='background: #F0ADAD'>passwordField getText()</span><span style=''>
-</span>44 <span style=''>
-</span>45 <span style=''>    if(</span><span style='background: #F0ADAD'>username.isEmpty || password.isEmpty</span><span style=''>) {
-</span>46 <span style=''>      </span><span style='background: #F0ADAD'>formMsgLabel setText emptyFields</span><span style=''>
-</span>47 <span style=''>    }
-</span>48 <span style=''>
-</span>49 <span style=''>    if(</span><span style='background: #F0ADAD'>username.matches(userExp) &amp;&amp; password.matches(pswExp)</span><span style=''>){
-</span>50 <span style=''>      </span><span style='background: #F0ADAD'>if(msg.equals(register)) authenticationActor ! Register(username, password)
-</span>51 <span style=''></span><span style='background: #F0ADAD'>      else if(msg.equals(login)) authenticationActor ! Login(username, password)</span><span style=''>
-</span>52 <span style=''>    }
-</span>53 <span style=''>  }
-</span>54 <span style=''>
-</span>55 <span style=''>  def openVillageView(): Unit = {
-</span>56 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, loginButton.getScene)</span><span style=''>
-</span>57 <span style=''>  }
-</span>58 <span style=''>}
+</span>30 <span style=''>  def initialize(): Unit = {
+</span>31 <span style=''>    </span><span style='background: #F0ADAD'>authenticationActor ! SetController(this)</span><span style=''>
+</span>32 <span style=''>  }
+</span>33 <span style=''>
+</span>34 <span style=''>  @FXML def onRegister(): Unit = </span><span style='background: #F0ADAD'>requestAuthentication(register, registrationUsernameField , registrationPasswordField)</span><span style=''>
+</span>35 <span style=''>
+</span>36 <span style=''>  @FXML def onLogin(): Unit = </span><span style='background: #F0ADAD'>requestAuthentication(login, loginUsernameField, loginPasswordField)</span><span style=''>
+</span>37 <span style=''>
+</span>38 <span style=''>  /**
+</span>39 <span style=''>    * Sends requests to the actor which manages the authentication
+</span>40 <span style=''>    * @param msg defines which message to send to the authentication actor
+</span>41 <span style=''>    */
+</span>42 <span style=''>  def requestAuthentication(msg: String, usernameField: TextField, passwordField: PasswordField): Unit ={
+</span>43 <span style=''>    val username = </span><span style='background: #F0ADAD'>usernameField getText()</span><span style=''>
+</span>44 <span style=''>    val password = </span><span style='background: #F0ADAD'>passwordField getText()</span><span style=''>
+</span>45 <span style=''>
+</span>46 <span style=''>    if(</span><span style='background: #F0ADAD'>username.isEmpty || password.isEmpty</span><span style=''>) {
+</span>47 <span style=''>      </span><span style='background: #F0ADAD'>formMsgLabel setText emptyFields</span><span style=''>
+</span>48 <span style=''>    }
+</span>49 <span style=''>
+</span>50 <span style=''>    if(</span><span style='background: #F0ADAD'>username.matches(userExp) &amp;&amp; password.matches(pswExp)</span><span style=''>){
+</span>51 <span style=''>      </span><span style='background: #F0ADAD'>if(msg.equals(register)) authenticationActor ! Register(username, password)
+</span>52 <span style=''></span><span style='background: #F0ADAD'>      else if(msg.equals(login)) authenticationActor ! Login(username, password)</span><span style=''>
+</span>53 <span style=''>    }
+</span>54 <span style=''>  }
+</span>55 <span style=''>
+</span>56 <span style=''>  def openVillageView(): Unit = {
+</span>57 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, loginButton.getScene)</span><span style=''>
+</span>58 <span style=''>  }
+</span>59 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -93,15 +94,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          27
+          26
         </td>
         <td>
-          161
+          327
         </td>
         <td>
-          973
+          926
           -
-          1000
+          953
         </td>
         <td>
           Literal
@@ -114,36 +115,15 @@
         </td>
       </tr><tr>
         <td>
-          30
+          28
         </td>
         <td>
-          163
+          328
         </td>
         <td>
-          1050
+          1023
           -
-          1095
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.actor.ActorRefFactory.actorSelection
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(AuthenticationViewController.this.AuthenticationActorPath)
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          162
-        </td>
-        <td>
-          1072
-          -
-          1095
+          1046
         </td>
         <td>
           Select
@@ -156,57 +136,141 @@
         </td>
       </tr><tr>
         <td>
-          33
+          28
         </td>
         <td>
-          164
+          329
         </td>
         <td>
-          1187
+          1001
           -
-          1195
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.actor.utils.InputControl.register
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.register
-        </td>
-      </tr><tr>
-        <td>
-          33
-        </td>
-        <td>
-          167
-        </td>
-        <td>
-          1165
-          -
-          1251
+          1046
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.controller.fx.AuthenticationViewController.requestAuthentication
+          akka.actor.ActorRefFactory.actorSelection
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationViewController.this.requestAuthentication(cml.controller.actor.utils.InputControl.register, AuthenticationViewController.this.registrationUsernameField, AuthenticationViewController.this.registrationPasswordField)
+          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(AuthenticationViewController.this.AuthenticationActorPath)
         </td>
       </tr><tr>
         <td>
-          33
+          31
         </td>
         <td>
-          166
+          331
         </td>
         <td>
-          1225
+          1084
           -
-          1250
+          1103
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor)
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          334
+        </td>
+        <td>
+          1084
+          -
+          1125
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!(x$1)(x$2)
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          330
+        </td>
+        <td>
+          1084
+          -
+          1103
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.AuthenticationViewController.authenticationActor
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.authenticationActor
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          333
+        </td>
+        <td>
+          1104
+          -
+          1104
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!$default$2(x$1)
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          332
+        </td>
+        <td>
+          1106
+          -
+          1125
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.AuthenticationRequest.SetController.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.AuthenticationRequest.SetController.apply(this)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          337
+        </td>
+        <td>
+          1227
+          -
+          1252
         </td>
         <td>
           Select
@@ -219,15 +283,15 @@
         </td>
       </tr><tr>
         <td>
-          33
+          34
         </td>
         <td>
-          165
+          336
         </td>
         <td>
-          1197
+          1199
           -
-          1222
+          1224
         </td>
         <td>
           Select
@@ -240,78 +304,36 @@
         </td>
       </tr><tr>
         <td>
-          33
-        </td>
-        <td>
-          168
-        </td>
-        <td>
-          1133
-          -
-          1252
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.ButtonBase.setOnAction
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.registerButton.setOnAction(((x$1: javafx.event.ActionEvent) =&gt; AuthenticationViewController.this.requestAuthentication(cml.controller.actor.utils.InputControl.register, AuthenticationViewController.this.registrationUsernameField, AuthenticationViewController.this.registrationPasswordField)))
-        </td>
-      </tr><tr>
-        <td>
           34
         </td>
         <td>
-          173
+          335
         </td>
         <td>
-          1258
+          1189
           -
-          1356
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.ButtonBase.setOnAction
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.loginButton.setOnAction(((x$2: javafx.event.ActionEvent) =&gt; AuthenticationViewController.this.requestAuthentication(cml.controller.actor.utils.InputControl.login, AuthenticationViewController.this.loginUsernameField, AuthenticationViewController.this.loginPasswordField)))
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          169
-        </td>
-        <td>
-          1309
-          -
-          1314
+          1197
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.controller.actor.utils.InputControl.login
+          cml.controller.actor.utils.InputControl.register
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.login
+          cml.controller.actor.utils.InputControl.register
         </td>
       </tr><tr>
         <td>
           34
         </td>
         <td>
-          172
+          338
         </td>
         <td>
-          1287
+          1167
           -
-          1355
+          1253
         </td>
         <td>
           Apply
@@ -320,35 +342,14 @@
           cml.controller.fx.AuthenticationViewController.requestAuthentication
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationViewController.this.requestAuthentication(cml.controller.actor.utils.InputControl.login, AuthenticationViewController.this.loginUsernameField, AuthenticationViewController.this.loginPasswordField)
+          AuthenticationViewController.this.requestAuthentication(cml.controller.actor.utils.InputControl.register, AuthenticationViewController.this.registrationUsernameField, AuthenticationViewController.this.registrationPasswordField)
         </td>
       </tr><tr>
         <td>
-          34
+          36
         </td>
         <td>
-          171
-        </td>
-        <td>
-          1336
-          -
-          1354
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.AuthenticationViewController.loginPasswordField
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.loginPasswordField
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          170
+          340
         </td>
         <td>
           1316
@@ -366,15 +367,78 @@
         </td>
       </tr><tr>
         <td>
-          42
+          36
         </td>
         <td>
-          174
+          339
         </td>
         <td>
-          1650
+          1309
           -
-          1673
+          1314
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.InputControl.login
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.InputControl.login
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          342
+        </td>
+        <td>
+          1287
+          -
+          1355
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.AuthenticationViewController.requestAuthentication
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.requestAuthentication(cml.controller.actor.utils.InputControl.login, AuthenticationViewController.this.loginUsernameField, AuthenticationViewController.this.loginPasswordField)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          341
+        </td>
+        <td>
+          1336
+          -
+          1354
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.AuthenticationViewController.loginPasswordField
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.loginPasswordField
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          343
+        </td>
+        <td>
+          1644
+          -
+          1667
         </td>
         <td>
           Apply
@@ -387,15 +451,15 @@
         </td>
       </tr><tr>
         <td>
-          43
+          44
         </td>
         <td>
-          175
+          344
         </td>
         <td>
-          1694
+          1688
           -
-          1717
+          1711
         </td>
         <td>
           Apply
@@ -408,78 +472,15 @@
         </td>
       </tr><tr>
         <td>
-          45
+          46
         </td>
         <td>
-          182
+          346
         </td>
         <td>
-          1725
+          1722
           -
-          1725
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          176
-        </td>
-        <td>
-          1748
-          -
-          1764
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.isEmpty
-        </td>
-        <td style="background: #F0ADAD">
-          password.isEmpty()
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          181
-        </td>
-        <td>
-          1725
-          -
-          1725
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          177
-        </td>
-        <td>
-          1728
-          -
-          1764
+          1758
         </td>
         <td>
           Apply
@@ -495,117 +496,33 @@
           46
         </td>
         <td>
-          178
+          345
         </td>
         <td>
-          1796
+          1742
           -
-          1807
+          1758
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.controller.actor.utils.InputControl.emptyFields
+          java.lang.String.isEmpty
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.emptyFields
+          password.isEmpty()
         </td>
       </tr><tr>
         <td>
           46
         </td>
         <td>
-          180
+          351
         </td>
         <td>
-          1775
+          1719
           -
-          1807
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          javafx.scene.control.Labeled.setText
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.formMsgLabel.setText(cml.controller.actor.utils.InputControl.emptyFields)
-        </td>
-      </tr><tr>
-        <td>
-          46
-        </td>
-        <td>
-          179
-        </td>
-        <td>
-          1775
-          -
-          1807
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Labeled.setText
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.formMsgLabel.setText(cml.controller.actor.utils.InputControl.emptyFields)
-        </td>
-      </tr><tr>
-        <td>
-          49
-        </td>
-        <td>
-          185
-        </td>
-        <td>
-          1854
-          -
-          1878
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.matches
-        </td>
-        <td style="background: #F0ADAD">
-          password.matches(cml.controller.actor.utils.InputControl.pswExp)
-        </td>
-      </tr><tr>
-        <td>
-          49
-        </td>
-        <td>
-          184
-        </td>
-        <td>
-          1871
-          -
-          1877
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.actor.utils.InputControl.pswExp
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.pswExp
-        </td>
-      </tr><tr>
-        <td>
-          49
-        </td>
-        <td>
-          208
-        </td>
-        <td>
-          1822
-          -
-          1822
+          1719
         </td>
         <td>
           Block
@@ -618,15 +535,15 @@
         </td>
       </tr><tr>
         <td>
-          49
+          46
         </td>
         <td>
-          207
+          350
         </td>
         <td>
-          1822
+          1719
           -
-          1822
+          1719
         </td>
         <td>
           Literal
@@ -639,36 +556,78 @@
         </td>
       </tr><tr>
         <td>
-          49
+          47
         </td>
         <td>
-          183
+          349
         </td>
         <td>
-          1842
+          1769
           -
-          1849
+          1801
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          javafx.scene.control.Labeled.setText
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.formMsgLabel.setText(cml.controller.actor.utils.InputControl.emptyFields)
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          348
+        </td>
+        <td>
+          1769
+          -
+          1801
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Labeled.setText
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.formMsgLabel.setText(cml.controller.actor.utils.InputControl.emptyFields)
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          347
+        </td>
+        <td>
+          1790
+          -
+          1801
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.controller.actor.utils.InputControl.userExp
+          cml.controller.actor.utils.InputControl.emptyFields
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.userExp
+          cml.controller.actor.utils.InputControl.emptyFields
         </td>
       </tr><tr>
         <td>
-          49
+          50
         </td>
         <td>
-          186
+          355
         </td>
         <td>
-          1825
+          1819
           -
-          1878
+          1872
         </td>
         <td>
           Apply
@@ -684,424 +643,12 @@
           50
         </td>
         <td>
-          191
+          376
         </td>
         <td>
-          1935
+          1816
           -
-          1963
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.messages.AuthenticationRequest.Register.apply
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.messages.AuthenticationRequest.Register.apply(username, password)
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          194
-        </td>
-        <td>
-          1913
-          -
-          1963
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          {
-  &lt;artifact&gt; val qual$1: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
-  &lt;artifact&gt; val x$3: cml.controller.messages.AuthenticationRequest.Register = cml.controller.messages.AuthenticationRequest.Register.apply(username, password);
-  &lt;artifact&gt; val x$4: akka.actor.ActorRef = qual$1.!$default$2(x$3);
-  qual$1.!(x$3)(x$4)
-}
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          193
-        </td>
-        <td>
-          1913
-          -
-          1963
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!
-        </td>
-        <td style="background: #F0ADAD">
-          qual$1.!(x$3)(x$4)
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          187
-        </td>
-        <td>
-          1902
-          -
-          1910
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.actor.utils.InputControl.register
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.register
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          190
-        </td>
-        <td>
-          1913
-          -
-          1932
-        </td>
-        <td>
-          ApplyImplicitView
-        </td>
-        <td>
-          akka.actor.ActorSelection.toScala
-        </td>
-        <td style="background: #F0ADAD">
-          actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor)
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          189
-        </td>
-        <td>
-          1913
-          -
-          1932
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.AuthenticationViewController.authenticationActor
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.authenticationActor
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          192
-        </td>
-        <td>
-          1933
-          -
-          1933
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          qual$1.!$default$2(x$3)
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          188
-        </td>
-        <td>
-          1891
-          -
-          1911
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.equals
-        </td>
-        <td style="background: #F0ADAD">
-          msg.equals(cml.controller.actor.utils.InputControl.register)
-        </td>
-      </tr><tr>
-        <td>
-          50
-        </td>
-        <td>
-          206
-        </td>
-        <td>
-          1888
-          -
-          2045
-        </td>
-        <td>
-          If
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          if (msg.equals(cml.controller.actor.utils.InputControl.register))
-  {
-    &lt;artifact&gt; val qual$1: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
-    &lt;artifact&gt; val x$3: cml.controller.messages.AuthenticationRequest.Register = cml.controller.messages.AuthenticationRequest.Register.apply(username, password);
-    &lt;artifact&gt; val x$4: akka.actor.ActorRef = qual$1.!$default$2(x$3);
-    qual$1.!(x$3)(x$4)
-  }
-else
-  if (msg.equals(cml.controller.actor.utils.InputControl.login))
-    {
-      &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
-      &lt;artifact&gt; val x$5: cml.controller.messages.AuthenticationRequest.Login = cml.controller.messages.AuthenticationRequest.Login.apply(username, password);
-      &lt;artifact&gt; val x$6: akka.actor.ActorRef = qual$2.!$default$2(x$5);
-      qual$2.!(x$5)(x$6)
-    }
-  else
-    ()
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          200
-        </td>
-        <td>
-          2018
-          -
-          2018
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!$default$2
-        </td>
-        <td style="background: #F0ADAD">
-          qual$2.!$default$2(x$5)
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          202
-        </td>
-        <td>
-          1998
-          -
-          2045
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          {
-  &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
-  &lt;artifact&gt; val x$5: cml.controller.messages.AuthenticationRequest.Login = cml.controller.messages.AuthenticationRequest.Login.apply(username, password);
-  &lt;artifact&gt; val x$6: akka.actor.ActorRef = qual$2.!$default$2(x$5);
-  qual$2.!(x$5)(x$6)
-}
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          205
-        </td>
-        <td>
-          1976
-          -
-          2045
-        </td>
-        <td>
-          If
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          if (msg.equals(cml.controller.actor.utils.InputControl.login))
-  {
-    &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
-    &lt;artifact&gt; val x$5: cml.controller.messages.AuthenticationRequest.Login = cml.controller.messages.AuthenticationRequest.Login.apply(username, password);
-    &lt;artifact&gt; val x$6: akka.actor.ActorRef = qual$2.!$default$2(x$5);
-    qual$2.!(x$5)(x$6)
-  }
-else
-  ()
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          196
-        </td>
-        <td>
-          1979
-          -
-          1996
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.equals
-        </td>
-        <td style="background: #F0ADAD">
-          msg.equals(cml.controller.actor.utils.InputControl.login)
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          199
-        </td>
-        <td>
-          2020
-          -
-          2045
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.messages.AuthenticationRequest.Login.apply
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.messages.AuthenticationRequest.Login.apply(username, password)
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          198
-        </td>
-        <td>
-          1998
-          -
-          2017
-        </td>
-        <td>
-          ApplyImplicitView
-        </td>
-        <td>
-          akka.actor.ActorSelection.toScala
-        </td>
-        <td style="background: #F0ADAD">
-          actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor)
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          201
-        </td>
-        <td>
-          1998
-          -
-          2045
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!
-        </td>
-        <td style="background: #F0ADAD">
-          qual$2.!(x$5)(x$6)
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          195
-        </td>
-        <td>
-          1990
-          -
-          1995
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.actor.utils.InputControl.login
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.actor.utils.InputControl.login
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          204
-        </td>
-        <td>
-          1976
-          -
-          1976
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          51
-        </td>
-        <td>
-          203
-        </td>
-        <td>
-          1976
-          -
-          1976
+          1816
         </td>
         <td>
           Literal
@@ -1114,15 +661,99 @@ else
         </td>
       </tr><tr>
         <td>
+          50
+        </td>
+        <td>
+          352
+        </td>
+        <td>
+          1836
+          -
+          1843
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.InputControl.userExp
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.InputControl.userExp
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          354
+        </td>
+        <td>
+          1848
+          -
+          1872
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.matches
+        </td>
+        <td style="background: #F0ADAD">
+          password.matches(cml.controller.actor.utils.InputControl.pswExp)
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          377
+        </td>
+        <td>
+          1816
+          -
+          1816
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          353
+        </td>
+        <td>
+          1865
+          -
+          1871
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.InputControl.pswExp
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.InputControl.pswExp
+        </td>
+      </tr><tr>
+        <td>
           51
         </td>
         <td>
-          197
+          358
         </td>
         <td>
-          1998
+          1907
           -
-          2017
+          1926
         </td>
         <td>
           Select
@@ -1135,15 +766,469 @@ else
         </td>
       </tr><tr>
         <td>
-          56
+          51
         </td>
         <td>
-          209
+          361
         </td>
         <td>
-          2120
+          1927
           -
-          2138
+          1927
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!$default$2(x$3)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          360
+        </td>
+        <td>
+          1929
+          -
+          1957
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.AuthenticationRequest.Register.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.AuthenticationRequest.Register.apply(username, password)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          363
+        </td>
+        <td>
+          1907
+          -
+          1957
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
+  &lt;artifact&gt; val x$3: cml.controller.messages.AuthenticationRequest.Register = cml.controller.messages.AuthenticationRequest.Register.apply(username, password);
+  &lt;artifact&gt; val x$4: akka.actor.ActorRef = qual$2.!$default$2(x$3);
+  qual$2.!(x$3)(x$4)
+}
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          357
+        </td>
+        <td>
+          1885
+          -
+          1905
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.equals
+        </td>
+        <td style="background: #F0ADAD">
+          msg.equals(cml.controller.actor.utils.InputControl.register)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          375
+        </td>
+        <td>
+          1882
+          -
+          2039
+        </td>
+        <td>
+          If
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          if (msg.equals(cml.controller.actor.utils.InputControl.register))
+  {
+    &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
+    &lt;artifact&gt; val x$3: cml.controller.messages.AuthenticationRequest.Register = cml.controller.messages.AuthenticationRequest.Register.apply(username, password);
+    &lt;artifact&gt; val x$4: akka.actor.ActorRef = qual$2.!$default$2(x$3);
+    qual$2.!(x$3)(x$4)
+  }
+else
+  if (msg.equals(cml.controller.actor.utils.InputControl.login))
+    {
+      &lt;artifact&gt; val qual$3: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
+      &lt;artifact&gt; val x$5: cml.controller.messages.AuthenticationRequest.Login = cml.controller.messages.AuthenticationRequest.Login.apply(username, password);
+      &lt;artifact&gt; val x$6: akka.actor.ActorRef = qual$3.!$default$2(x$5);
+      qual$3.!(x$5)(x$6)
+    }
+  else
+    ()
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          359
+        </td>
+        <td>
+          1907
+          -
+          1926
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          362
+        </td>
+        <td>
+          1907
+          -
+          1957
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!(x$3)(x$4)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          356
+        </td>
+        <td>
+          1896
+          -
+          1904
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.InputControl.register
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.InputControl.register
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          364
+        </td>
+        <td>
+          1984
+          -
+          1989
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.InputControl.login
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.InputControl.login
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          373
+        </td>
+        <td>
+          1970
+          -
+          1970
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          367
+        </td>
+        <td>
+          1992
+          -
+          2011
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          370
+        </td>
+        <td>
+          1992
+          -
+          2039
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!(x$5)(x$6)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          369
+        </td>
+        <td>
+          2012
+          -
+          2012
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!$default$2(x$5)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          372
+        </td>
+        <td>
+          1970
+          -
+          1970
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          366
+        </td>
+        <td>
+          1992
+          -
+          2011
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.AuthenticationViewController.authenticationActor
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.authenticationActor
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          368
+        </td>
+        <td>
+          2014
+          -
+          2039
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.AuthenticationRequest.Login.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.AuthenticationRequest.Login.apply(username, password)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          371
+        </td>
+        <td>
+          1992
+          -
+          2039
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  &lt;artifact&gt; val qual$3: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
+  &lt;artifact&gt; val x$5: cml.controller.messages.AuthenticationRequest.Login = cml.controller.messages.AuthenticationRequest.Login.apply(username, password);
+  &lt;artifact&gt; val x$6: akka.actor.ActorRef = qual$3.!$default$2(x$5);
+  qual$3.!(x$5)(x$6)
+}
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          374
+        </td>
+        <td>
+          1970
+          -
+          2039
+        </td>
+        <td>
+          If
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          if (msg.equals(cml.controller.actor.utils.InputControl.login))
+  {
+    &lt;artifact&gt; val qual$3: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(AuthenticationViewController.this.authenticationActor);
+    &lt;artifact&gt; val x$5: cml.controller.messages.AuthenticationRequest.Login = cml.controller.messages.AuthenticationRequest.Login.apply(username, password);
+    &lt;artifact&gt; val x$6: akka.actor.ActorRef = qual$3.!$default$2(x$5);
+    qual$3.!(x$5)(x$6)
+  }
+else
+  ()
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          365
+        </td>
+        <td>
+          1973
+          -
+          1990
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.equals
+        </td>
+        <td style="background: #F0ADAD">
+          msg.equals(cml.controller.actor.utils.InputControl.login)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          379
+        </td>
+        <td>
+          2134
+          -
+          2154
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationViewController.this.loginButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          378
+        </td>
+        <td>
+          2114
+          -
+          2132
         </td>
         <td>
           Select
@@ -1156,15 +1241,15 @@ else
         </td>
       </tr><tr>
         <td>
-          56
+          57
         </td>
         <td>
-          211
+          380
         </td>
         <td>
-          2100
+          2094
           -
-          2161
+          2155
         </td>
         <td>
           Apply
@@ -1174,27 +1259,6 @@ else
         </td>
         <td style="background: #F0ADAD">
           cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, AuthenticationViewController.this.loginButton.getScene())
-        </td>
-      </tr><tr>
-        <td>
-          56
-        </td>
-        <td>
-          210
-        </td>
-        <td>
-          2140
-          -
-          2160
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.Node.getScene
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationViewController.this.loginButton.getScene()
         </td>
       </tr>
     </table>

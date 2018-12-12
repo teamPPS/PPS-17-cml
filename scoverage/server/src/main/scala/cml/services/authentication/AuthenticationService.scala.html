@@ -82,46 +82,46 @@
 </span>58 <span style=''>  */
 </span>59 <span style=''>object AuthenticationService {
 </span>60 <span style=''>
-</span>61 <span style=''>  val collection: DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClient(DbConfig.usersColl)</span><span style=''>
+</span>61 <span style=''>  val userCollection: DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClient(DbConfig.usersColl)</span><span style=''>
 </span>62 <span style=''>
 </span>63 <span style=''>  def apply(): AuthenticationService = </span><span style='background: #AEF1AE'>AuthenticationServiceImpl()</span><span style=''>
 </span>64 <span style=''>
 </span>65 <span style=''>  case class AuthenticationServiceImpl() extends AuthenticationService with ObservableImplicits {
 </span>66 <span style=''>    var document: Document = _
 </span>67 <span style=''>
-</span>68 <span style=''>    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] ={
-</span>69 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME-&gt;username, PASSWORD-&gt;password)</span><span style=''>
+</span>68 <span style=''>    override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
+</span>69 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME -&gt; username, PASSWORD -&gt; password)</span><span style=''>
 </span>70 <span style=''>      </span><span style='background: #AEF1AE'>println(document)</span><span style=''>
-</span>71 <span style=''>      </span><span style='background: #AEF1AE'>collection.insert(document).map(_ =&gt; &quot;Insertion Completed&quot;)
-</span>72 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
+</span>71 <span style=''>      </span><span style='background: #AEF1AE'>userCollection.insert(document).map(_ =&gt; &quot;Insertion Completed&quot;)
+</span>72 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith { case e: Throwable =&gt;
 </span>73 <span style=''></span><span style='background: #AEF1AE'>          println(e)
 </span>74 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
 </span>75 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
 </span>76 <span style=''>    }
 </span>77 <span style=''>
-</span>78 <span style=''>    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] =  {
-</span>79 <span style=''>      </span><span style='background: #F0ADAD'>document = Document(USERNAME-&gt;username, PASSWORD-&gt;password)</span><span style=''>
-</span>80 <span style=''>      </span><span style='background: #F0ADAD'>println(document)</span><span style=''>
-</span>81 <span style=''>      </span><span style='background: #F0ADAD'>collection.find(document).map(doc =&gt; doc.size()&gt;0)
-</span>82 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith{case e: Throwable =&gt;
-</span>83 <span style=''></span><span style='background: #F0ADAD'>          println(e)
-</span>84 <span style=''></span><span style='background: #F0ADAD'>          Future.failed(e)
-</span>85 <span style=''></span><span style='background: #F0ADAD'>        }</span><span style=''>
+</span>78 <span style=''>    override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+</span>79 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME -&gt; username, PASSWORD -&gt; password)</span><span style=''>
+</span>80 <span style=''>      </span><span style='background: #AEF1AE'>println(document)</span><span style=''>
+</span>81 <span style=''>      </span><span style='background: #AEF1AE'>userCollection.find(document).map(doc =&gt; doc.size() &gt; 0)
+</span>82 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith { case e: Throwable =&gt;
+</span>83 <span style=''></span><span style='background: #AEF1AE'>          println(e)
+</span>84 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
+</span>85 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
 </span>86 <span style=''>    }
 </span>87 <span style=''>
 </span>88 <span style=''>    override def logout(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-</span>89 <span style=''>      </span><span style='background: #F0ADAD'>document = Document(USERNAME-&gt;username)</span><span style=''>
-</span>90 <span style=''>      </span><span style='background: #F0ADAD'>collection.delete(document).map(_ =&gt; {})
-</span>91 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith{case e: Throwable =&gt;
+</span>89 <span style=''>      </span><span style='background: #F0ADAD'>document = Document(USERNAME -&gt; username)</span><span style=''>
+</span>90 <span style=''>      </span><span style='background: #F0ADAD'>userCollection.delete(document).map(_ =&gt; {})
+</span>91 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith { case e: Throwable =&gt;
 </span>92 <span style=''></span><span style='background: #F0ADAD'>          println(e)
 </span>93 <span style=''></span><span style='background: #F0ADAD'>          Future.failed(e)
 </span>94 <span style=''></span><span style='background: #F0ADAD'>        }</span><span style=''>
 </span>95 <span style=''>    }
 </span>96 <span style=''>
 </span>97 <span style=''>    override def validationToken(username: String)(implicit ec: ExecutionContext): Future[Unit] = {
-</span>98 <span style=''>      </span><span style='background: #F0ADAD'>document = Document(USERNAME-&gt;username)</span><span style=''>
-</span>99 <span style=''>      </span><span style='background: #F0ADAD'>collection.find(document).map(_ =&gt; {})
-</span>100 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith{case e: Throwable =&gt;
+</span>98 <span style=''>      </span><span style='background: #F0ADAD'>document = Document(USERNAME -&gt; username)</span><span style=''>
+</span>99 <span style=''>      </span><span style='background: #F0ADAD'>userCollection.find(document).map(_ =&gt; {})
+</span>100 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith { case e: Throwable =&gt;
 </span>101 <span style=''></span><span style='background: #F0ADAD'>          println(e)
 </span>102 <span style=''></span><span style='background: #F0ADAD'>          Future.failed(e)
 </span>103 <span style=''></span><span style='background: #F0ADAD'>        }</span><span style=''>
@@ -145,12 +145,12 @@
           61
         </td>
         <td>
-          172
+          167
         </td>
         <td>
-          1922
+          1926
           -
-          1956
+          1960
         </td>
         <td>
           Apply
@@ -166,12 +166,12 @@
           61
         </td>
         <td>
-          171
+          166
         </td>
         <td>
-          1937
+          1941
           -
-          1955
+          1959
         </td>
         <td>
           Select
@@ -187,12 +187,12 @@
           63
         </td>
         <td>
-          173
+          168
         </td>
         <td>
-          1999
+          2003
           -
-          2026
+          2030
         </td>
         <td>
           Apply
@@ -208,75 +208,33 @@
           69
         </td>
         <td>
+          173
+        </td>
+        <td>
+          2338
+          -
+          2338
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformString
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
           176
         </td>
         <td>
-          2302
+          2287
           -
-          2320
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          175
-        </td>
-        <td>
-          2310
-          -
-          2310
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          178
-        </td>
-        <td>
-          2330
-          -
-          2330
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          181
-        </td>
-        <td>
-          2282
-          -
-          2341
+          2350
         </td>
         <td>
           Apply
@@ -292,12 +250,12 @@
           69
         </td>
         <td>
-          180
+          175
         </td>
         <td>
-          2293
+          2298
           -
-          2341
+          2350
         </td>
         <td>
           Apply
@@ -313,12 +271,12 @@
           69
         </td>
         <td>
-          174
+          169
         </td>
         <td>
-          2302
+          2307
           -
-          2320
+          2327
         </td>
         <td>
           Apply
@@ -334,12 +292,12 @@
           69
         </td>
         <td>
-          177
+          172
         </td>
         <td>
-          2322
+          2329
           -
-          2340
+          2349
         </td>
         <td>
           Apply
@@ -355,12 +313,12 @@
           69
         </td>
         <td>
-          179
+          174
         </td>
         <td>
-          2322
+          2329
           -
-          2340
+          2349
         </td>
         <td>
           ApplyToImplicitArgs
@@ -373,36 +331,57 @@
         </td>
       </tr><tr>
         <td>
-          70
+          69
         </td>
         <td>
-          182
+          171
         </td>
         <td>
-          2357
+          2307
           -
-          2365
+          2327
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          170
+        </td>
+        <td>
+          2316
+          -
+          2316
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.services.authentication.AuthenticationService.AuthenticationServiceImpl.document
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
         </td>
         <td style="background: #AEF1AE">
-          AuthenticationServiceImpl.this.document
+          bson.this.BsonTransformer.TransformString
         </td>
       </tr><tr>
         <td>
           70
         </td>
         <td>
-          183
+          178
         </td>
         <td>
-          2349
+          2358
           -
-          2366
+          2375
         </td>
         <td>
           Apply
@@ -415,15 +394,36 @@
         </td>
       </tr><tr>
         <td>
+          70
+        </td>
+        <td>
+          177
+        </td>
+        <td>
+          2366
+          -
+          2374
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.AuthenticationService.AuthenticationServiceImpl.document
+        </td>
+        <td style="background: #AEF1AE">
+          AuthenticationServiceImpl.this.document
+        </td>
+      </tr><tr>
+        <td>
           72
         </td>
         <td>
-          184
+          179
         </td>
         <td>
-          2374
+          2383
           -
-          2537
+          2552
         </td>
         <td>
           ApplyToImplicitArgs
@@ -432,7 +432,7 @@
           scala.concurrent.Future.recoverWith
         </td>
         <td style="background: #AEF1AE">
-          AuthenticationService.this.collection.insert(AuthenticationServiceImpl.this.document)(ec).map[String](((x$1: String) =&gt; &quot;Insertion Completed&quot;))(ec).recoverWith[String](({
+          AuthenticationService.this.userCollection.insert(AuthenticationServiceImpl.this.document)(ec).map[String](((x$1: String) =&gt; &quot;Insertion Completed&quot;))(ec).recoverWith[String](({
   @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[String]] with Serializable {
     def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[String]&gt; = {
       $anonfun.super.&lt;init&gt;();
@@ -458,21 +458,21 @@
           79
         </td>
         <td>
-          191
+          182
         </td>
         <td>
-          2678
+          2701
           -
-          2726
+          2721
         </td>
         <td>
-          Apply
+          ApplyToImplicitArgs
         </td>
         <td>
-          org.mongodb.scala.bson.collection.immutable.Document.apply
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
         </td>
-        <td style="background: #F0ADAD">
-          org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password))(bson.this.BsonTransformer.TransformString))
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
         </td>
       </tr><tr>
         <td>
@@ -482,18 +482,39 @@
           185
         </td>
         <td>
-          2687
+          2723
           -
-          2705
+          2743
         </td>
         <td>
-          Apply
+          ApplyToImplicitArgs
         </td>
         <td>
-          scala.Predef.ArrowAssoc.-&gt;
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
         </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username)
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password))(bson.this.BsonTransformer.TransformString)
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          184
+        </td>
+        <td>
+          2732
+          -
+          2732
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformString
         </td>
       </tr><tr>
         <td>
@@ -503,72 +524,9 @@
           187
         </td>
         <td>
-          2687
+          2681
           -
-          2705
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #F0ADAD">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          79
-        </td>
-        <td>
-          190
-        </td>
-        <td>
-          2707
-          -
-          2725
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #F0ADAD">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          79
-        </td>
-        <td>
-          189
-        </td>
-        <td>
-          2715
-          -
-          2715
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #F0ADAD">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          79
-        </td>
-        <td>
-          192
-        </td>
-        <td>
-          2667
-          -
-          2726
+          2744
         </td>
         <td>
           Apply
@@ -576,8 +534,71 @@
         <td>
           cml.services.authentication.AuthenticationService.AuthenticationServiceImpl.document_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password))(bson.this.BsonTransformer.TransformString)))
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          181
+        </td>
+        <td>
+          2710
+          -
+          2710
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformString
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          180
+        </td>
+        <td>
+          2701
+          -
+          2721
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.ArrowAssoc.-&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username)
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          183
+        </td>
+        <td>
+          2723
+          -
+          2743
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.ArrowAssoc.-&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password)
         </td>
       </tr><tr>
         <td>
@@ -587,51 +608,30 @@
           186
         </td>
         <td>
-          2695
+          2692
           -
-          2695
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #F0ADAD">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          79
-        </td>
-        <td>
-          188
-        </td>
-        <td>
-          2707
-          -
-          2725
+          2744
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.ArrowAssoc.-&gt;
+          org.mongodb.scala.bson.collection.immutable.Document.apply
         </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password)
+        <td style="background: #AEF1AE">
+          org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.PASSWORD).-&gt;[String](password))(bson.this.BsonTransformer.TransformString))
         </td>
       </tr><tr>
         <td>
           80
         </td>
         <td>
-          194
+          189
         </td>
         <td>
-          2734
+          2752
           -
-          2751
+          2769
         </td>
         <td>
           Apply
@@ -639,7 +639,7 @@
         <td>
           scala.Predef.println
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.println(AuthenticationServiceImpl.this.document)
         </td>
       </tr><tr>
@@ -647,12 +647,12 @@
           80
         </td>
         <td>
-          193
+          188
         </td>
         <td>
-          2742
+          2760
           -
-          2750
+          2768
         </td>
         <td>
           Select
@@ -660,7 +660,7 @@
         <td>
           cml.services.authentication.AuthenticationService.AuthenticationServiceImpl.document
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AuthenticationServiceImpl.this.document
         </td>
       </tr><tr>
@@ -668,12 +668,12 @@
           82
         </td>
         <td>
-          195
+          190
         </td>
         <td>
-          2759
+          2777
           -
-          2913
+          2939
         </td>
         <td>
           ApplyToImplicitArgs
@@ -681,8 +681,8 @@
         <td>
           scala.concurrent.Future.recoverWith
         </td>
-        <td style="background: #F0ADAD">
-          AuthenticationService.this.collection.find(AuthenticationServiceImpl.this.document)(ec).map[Boolean](((doc: org.mongodb.scala.Document) =&gt; scala.this.`package`.documentToUntypedDocument(doc).size().&gt;(0)))(ec).recoverWith[Boolean](({
+        <td style="background: #AEF1AE">
+          AuthenticationService.this.userCollection.find(AuthenticationServiceImpl.this.document)(ec).map[Boolean](((doc: org.mongodb.scala.Document) =&gt; scala.this.`package`.documentToUntypedDocument(doc).size().&gt;(0)))(ec).recoverWith[Boolean](({
   @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Boolean]] with Serializable {
     def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Boolean]&gt; = {
       $anonfun.super.&lt;init&gt;();
@@ -708,33 +708,12 @@
           89
         </td>
         <td>
-          200
+          191
         </td>
         <td>
-          3022
+          3068
           -
-          3061
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.services.authentication.AuthenticationService.AuthenticationServiceImpl.document_=
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)))
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          196
-        </td>
-        <td>
-          3042
-          -
-          3060
+          3088
         </td>
         <td>
           Apply
@@ -750,12 +729,12 @@
           89
         </td>
         <td>
-          199
+          194
         </td>
         <td>
-          3033
+          3059
           -
-          3061
+          3089
         </td>
         <td>
           Apply
@@ -771,12 +750,12 @@
           89
         </td>
         <td>
-          198
+          193
         </td>
         <td>
-          3042
+          3068
           -
-          3060
+          3088
         </td>
         <td>
           ApplyToImplicitArgs
@@ -792,12 +771,12 @@
           89
         </td>
         <td>
-          197
+          192
         </td>
         <td>
-          3050
+          3077
           -
-          3050
+          3077
         </td>
         <td>
           Select
@@ -810,15 +789,36 @@
         </td>
       </tr><tr>
         <td>
+          89
+        </td>
+        <td>
+          195
+        </td>
+        <td>
+          3048
+          -
+          3089
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.authentication.AuthenticationService.AuthenticationServiceImpl.document_=
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)))
+        </td>
+      </tr><tr>
+        <td>
           91
         </td>
         <td>
-          201
+          196
         </td>
         <td>
-          3069
+          3097
           -
-          3213
+          3247
         </td>
         <td>
           ApplyToImplicitArgs
@@ -827,7 +827,7 @@
           scala.concurrent.Future.recoverWith
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationService.this.collection.delete(AuthenticationServiceImpl.this.document)(ec).map[Unit](((x$2: Long) =&gt; ()))(ec).recoverWith[Unit](({
+          AuthenticationService.this.userCollection.delete(AuthenticationServiceImpl.this.document)(ec).map[Unit](((x$2: Long) =&gt; ()))(ec).recoverWith[Unit](({
   @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Unit]] with Serializable {
     def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Unit]&gt; = {
       $anonfun.super.&lt;init&gt;();
@@ -853,33 +853,12 @@
           98
         </td>
         <td>
-          202
+          200
         </td>
         <td>
-          3351
+          3376
           -
-          3369
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.ArrowAssoc.-&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username)
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          205
-        </td>
-        <td>
-          3342
-          -
-          3370
+          3406
         </td>
         <td>
           Apply
@@ -895,12 +874,12 @@
           98
         </td>
         <td>
-          204
+          199
         </td>
         <td>
-          3351
+          3385
           -
-          3369
+          3405
         </td>
         <td>
           ApplyToImplicitArgs
@@ -916,12 +895,12 @@
           98
         </td>
         <td>
-          203
+          198
         </td>
         <td>
-          3359
+          3394
           -
-          3359
+          3394
         </td>
         <td>
           Select
@@ -937,12 +916,12 @@
           98
         </td>
         <td>
-          206
+          201
         </td>
         <td>
-          3331
+          3365
           -
-          3370
+          3406
         </td>
         <td>
           Apply
@@ -955,15 +934,36 @@
         </td>
       </tr><tr>
         <td>
+          98
+        </td>
+        <td>
+          197
+        </td>
+        <td>
+          3385
+          -
+          3405
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.ArrowAssoc.-&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username)
+        </td>
+      </tr><tr>
+        <td>
           100
         </td>
         <td>
-          207
+          202
         </td>
         <td>
-          3378
+          3414
           -
-          3520
+          3562
         </td>
         <td>
           ApplyToImplicitArgs
@@ -972,7 +972,7 @@
           scala.concurrent.Future.recoverWith
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationService.this.collection.find(AuthenticationServiceImpl.this.document)(ec).map[Unit](((x$3: org.mongodb.scala.Document) =&gt; ()))(ec).recoverWith[Unit](({
+          AuthenticationService.this.userCollection.find(AuthenticationServiceImpl.this.document)(ec).map[Unit](((x$3: org.mongodb.scala.Document) =&gt; ()))(ec).recoverWith[Unit](({
   @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Unit]] with Serializable {
     def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Unit]&gt; = {
       $anonfun.super.&lt;init&gt;();

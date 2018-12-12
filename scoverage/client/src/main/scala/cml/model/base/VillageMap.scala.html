@@ -2,7 +2,7 @@
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title id="title">
-          src\main\scala\TestBC.scala.html
+          src\main\scala\cml\model\base\VillageMap.scala.html
         </title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
         $(document).ready(function() {$(".tablesorter").tablesorter();});
@@ -22,19 +22,35 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="codegrid">
-            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>object TestBC {
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.base
 </span>2 <span style=''>
-</span>3 <span style=''>  import java.security.Security
+</span>3 <span style=''>import scala.collection.mutable
 </span>4 <span style=''>
-</span>5 <span style=''>    def main(args: Array[String]): Unit = {
-</span>6 <span style=''>      import java.security.Security
-</span>7 <span style=''>      val providers = </span><span style='background: #F0ADAD'>Security.getProviders</span><span style=''>
-</span>8 <span style=''>      var i = </span><span style='background: #F0ADAD'>0</span><span style=''>
-</span>9 <span style=''>      while ( {</span><span style='background: #F0ADAD'>i &lt; providers.length</span><span style=''>}) </span><span style='background: #F0ADAD'>{
-</span>10 <span style=''></span><span style='background: #F0ADAD'>        println(providers(i).toString)
-</span>11 <span style=''></span><span style='background: #F0ADAD'>          i += 1; i - 1
-</span>12 <span style=''></span><span style='background: #F0ADAD'>        }</span><span style=''>
-</span>13 <span style=''> }}
+</span>5 <span style=''>/**
+</span>6 <span style=''>  * Case class representing the current state of the user's village
+</span>7 <span style=''>  * @author ecavina, Monica Gondolini
+</span>8 <span style=''>  * @param villageStructure
+</span>9 <span style=''>  * @param gold
+</span>10 <span style=''>  * @param food
+</span>11 <span style=''>  * @param username
+</span>12 <span style=''>  */
+</span>13 <span style=''>case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var username: String)
+</span>14 <span style=''>
+</span>15 <span style=''>object VillageMap {
+</span>16 <span style=''>
+</span>17 <span style=''>  private var _instance : Option[VillageMap] = </span><span style='background: #F0ADAD'>Option.empty</span><span style=''>
+</span>18 <span style=''>
+</span>19 <span style=''>  def initVillage(structures: mutable.MutableList[Structure], gold: Int, food: Int, user: String): Unit = {
+</span>20 <span style=''>    </span><span style='background: #F0ADAD'>_instance = Option(VillageMap(structures, gold, food, user))</span><span style=''>
+</span>21 <span style=''>  }
+</span>22 <span style=''>
+</span>23 <span style=''>  def instance(): Option[VillageMap] = {
+</span>24 <span style=''>    if (</span><span style='background: #F0ADAD'>_instance.isEmpty</span><span style=''>)
+</span>25 <span style=''>      </span><span style='background: #F0ADAD'>initVillage(mutable.MutableList[Structure](), 0, 0, &quot;default&quot;)</span><span style=''>
+</span>26 <span style=''>    </span><span style='background: #F0ADAD'>_instance</span><span style=''>
+</span>27 <span style=''>  }
+</span>28 <span style=''>
+</span>29 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -48,36 +64,162 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          7
+          17
         </td>
         <td>
-          1
+          692
         </td>
         <td>
-          158
+          462
           -
-          179
+          474
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.Option.empty
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Option.empty[Nothing]
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          693
+        </td>
+        <td>
+          610
+          -
+          650
         </td>
         <td>
           Apply
         </td>
         <td>
-          java.security.Security.getProviders
+          cml.model.base.VillageMap.apply
         </td>
         <td style="background: #F0ADAD">
-          java.security.Security.getProviders()
+          VillageMap.apply(structures, gold, food, user)
         </td>
       </tr><tr>
         <td>
-          8
+          20
         </td>
         <td>
-          2
+          695
         </td>
         <td>
-          195
+          591
           -
-          196
+          651
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.VillageMap._instance_=
+        </td>
+        <td style="background: #F0ADAD">
+          VillageMap.this._instance_=(scala.Option.apply[cml.model.base.VillageMap](VillageMap.apply(structures, gold, food, user)))
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          694
+        </td>
+        <td>
+          603
+          -
+          651
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.apply
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Option.apply[cml.model.base.VillageMap](VillageMap.apply(structures, gold, food, user))
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          696
+        </td>
+        <td>
+          710
+          -
+          727
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.isEmpty
+        </td>
+        <td style="background: #F0ADAD">
+          VillageMap.this._instance.isEmpty
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          704
+        </td>
+        <td>
+          706
+          -
+          706
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          703
+        </td>
+        <td>
+          706
+          -
+          706
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          699
+        </td>
+        <td>
+          785
+          -
+          786
         </td>
         <td>
           Literal
@@ -90,15 +232,57 @@
         </td>
       </tr><tr>
         <td>
-          9
+          25
         </td>
         <td>
-          11
+          702
         </td>
         <td>
-          204
+          736
           -
-          204
+          798
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.model.base.VillageMap.initVillage
+        </td>
+        <td style="background: #F0ADAD">
+          VillageMap.this.initVillage(scala.collection.mutable.MutableList.apply[cml.model.base.Structure](), 0, 0, &quot;default&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          701
+        </td>
+        <td>
+          736
+          -
+          798
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.VillageMap.initVillage
+        </td>
+        <td style="background: #F0ADAD">
+          VillageMap.this.initVillage(scala.collection.mutable.MutableList.apply[cml.model.base.Structure](), 0, 0, &quot;default&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          698
+        </td>
+        <td>
+          782
+          -
+          783
         </td>
         <td>
           Literal
@@ -107,203 +291,70 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          ()
+          0
         </td>
       </tr><tr>
         <td>
-          9
+          25
         </td>
         <td>
-          4
+          697
         </td>
         <td>
-          213
+          748
           -
-          233
+          780
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Int.&lt;
+          scala.collection.generic.GenericCompanion.apply
         </td>
         <td style="background: #F0ADAD">
-          i.&lt;(providers.length)
+          scala.collection.mutable.MutableList.apply[cml.model.base.Structure]()
         </td>
       </tr><tr>
         <td>
-          9
+          25
         </td>
         <td>
-          10
+          700
         </td>
         <td>
-          236
+          788
           -
-          313
+          797
         </td>
         <td>
-          Block
+          Literal
         </td>
         <td>
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          {
-  {
-    scala.Predef.println(providers.apply(i).toString());
-    i = i.+(1);
-    i.-(1)
-  };
-  while$1()
-}
+          &quot;default&quot;
         </td>
       </tr><tr>
         <td>
-          9
+          26
         </td>
         <td>
-          9
+          705
         </td>
         <td>
-          236
+          804
           -
-          236
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          TestBC.while$1
-        </td>
-        <td style="background: #F0ADAD">
-          while$1()
-        </td>
-      </tr><tr>
-        <td>
-          9
-        </td>
-        <td>
-          3
-        </td>
-        <td>
-          217
-          -
-          233
+          813
         </td>
         <td>
           Select
         </td>
         <td>
-          scala.Array.length
+          cml.model.base.VillageMap._instance
         </td>
         <td style="background: #F0ADAD">
-          providers.length
-        </td>
-      </tr><tr>
-        <td>
-          9
-        </td>
-        <td>
-          12
-        </td>
-        <td>
-          204
-          -
-          204
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          10
-        </td>
-        <td>
-          5
-        </td>
-        <td>
-          255
-          -
-          276
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.security.Provider.toString
-        </td>
-        <td style="background: #F0ADAD">
-          providers.apply(i).toString()
-        </td>
-      </tr><tr>
-        <td>
-          10
-        </td>
-        <td>
-          6
-        </td>
-        <td>
-          247
-          -
-          277
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(providers.apply(i).toString())
-        </td>
-      </tr><tr>
-        <td>
-          11
-        </td>
-        <td>
-          8
-        </td>
-        <td>
-          297
-          -
-          302
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.-
-        </td>
-        <td style="background: #F0ADAD">
-          i.-(1)
-        </td>
-      </tr><tr>
-        <td>
-          11
-        </td>
-        <td>
-          7
-        </td>
-        <td>
-          289
-          -
-          295
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.+
-        </td>
-        <td style="background: #F0ADAD">
-          i.+(1)
+          VillageMap.this._instance
         </td>
       </tr>
     </table>

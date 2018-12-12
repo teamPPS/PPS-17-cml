@@ -1,0 +1,555 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\controller\ArenaActor.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller
+</span>2 <span style=''>
+</span>3 <span style=''>import akka.actor.{Actor, ActorLogging, ActorRef}
+</span>4 <span style=''>import cml.controller.fx.ArenaViewController
+</span>5 <span style=''>import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, ControllerRefRequest, StopRequest}
+</span>6 <span style=''>import cml.controller.messages.ArenaResponse.AttackSuccess
+</span>7 <span style=''>import javafx.application.Platform
+</span>8 <span style=''>
+</span>9 <span style=''>/**
+</span>10 <span style=''>  *
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>class ArenaActor extends Actor with ActorLogging {
+</span>14 <span style=''>  private var battleActor: ActorRef = _
+</span>15 <span style=''>  private var _powerValue: Int = _
+</span>16 <span style=''>  private var controller: ArenaViewController = _
+</span>17 <span style=''>
+</span>18 <span style=''>  override def receive: Receive = {
+</span>19 <span style=''>    case ActorRefRequest(actor) =&gt; </span><span style='background: #F0ADAD'>battleActor = actor</span><span style=''>
+</span>20 <span style=''>    case AttackRequest(value) =&gt; </span><span style='background: #F0ADAD'>battleActor ! AttackRequest(value)</span><span style=''>
+</span>21 <span style=''>    case AttackSuccess(value) =&gt; </span><span style='background: #F0ADAD'>_powerValue = value</span><span style=''>
+</span>22 <span style=''>      </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; controller.userLifeBar_(_powerValue))</span><span style=''>
+</span>23 <span style=''>    case ControllerRefRequest(controllerValue) =&gt;
+</span>24 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;CONTROLLER -- &quot; + controllerValue + &quot;and ref is &quot; + controller)</span><span style=''>
+</span>25 <span style=''>      </span><span style='background: #F0ADAD'>controller = controllerValue</span><span style=''>
+</span>26 <span style=''>    case StopRequest() =&gt;
+</span>27 <span style=''>      </span><span style='background: #F0ADAD'>battleActor ! StopRequest()</span><span style=''>
+</span>28 <span style=''>      </span><span style='background: #F0ADAD'>context.stop(self)</span><span style=''>
+</span>29 <span style=''>  }
+</span>30 <span style=''>    def powerValue_(): Int = </span><span style='background: #F0ADAD'>_powerValue</span><span style=''>
+</span>31 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          22
+        </td>
+        <td>
+          568
+          -
+          568
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.ArenaActor.$anonfun.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anonfun()
+        </td>
+      </tr><tr>
+        <td>
+          19
+        </td>
+        <td>
+          1
+        </td>
+        <td>
+          606
+          -
+          625
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.ArenaActor.battleActor_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.battleActor_=(actor)
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          2
+        </td>
+        <td>
+          660
+          -
+          671
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.ArenaActor.battleActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.battleActor
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          5
+        </td>
+        <td>
+          660
+          -
+          694
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(ArenaActor.this.battleActor).!(cml.controller.messages.ArenaRequest.AttackRequest.apply(value))(ArenaActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          4
+        </td>
+        <td>
+          672
+          -
+          672
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          20
+        </td>
+        <td>
+          3
+        </td>
+        <td>
+          674
+          -
+          694
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.AttackRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.AttackRequest.apply(value)
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          6
+        </td>
+        <td>
+          729
+          -
+          748
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.ArenaActor._powerValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this._powerValue_=(value)
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          8
+        </td>
+        <td>
+          780
+          -
+          816
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userLifeBar_
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.controller.userLifeBar_(ArenaActor.this._powerValue)
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          7
+        </td>
+        <td>
+          804
+          -
+          815
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.ArenaActor._powerValue
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this._powerValue
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          9
+        </td>
+        <td>
+          756
+          -
+          817
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.application.Platform.runLater
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.application.Platform.runLater((() =&gt; ArenaActor.this.controller.userLifeBar_(ArenaActor.this._powerValue)))
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          11
+        </td>
+        <td>
+          922
+          -
+          935
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;and ref is &quot;
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          14
+        </td>
+        <td>
+          876
+          -
+          949
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.log.info(&quot;CONTROLLER -- &quot;.+(controllerValue).+(&quot;and ref is &quot;).+(ArenaActor.this.controller))
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          13
+        </td>
+        <td>
+          885
+          -
+          948
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;CONTROLLER -- &quot;.+(controllerValue).+(&quot;and ref is &quot;).+(ArenaActor.this.controller)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          10
+        </td>
+        <td>
+          885
+          -
+          901
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;CONTROLLER -- &quot;
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          12
+        </td>
+        <td>
+          938
+          -
+          948
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.ArenaActor.controller
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.controller
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          15
+        </td>
+        <td>
+          957
+          -
+          985
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.ArenaActor.controller_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.controller_=(controllerValue)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          17
+        </td>
+        <td>
+          1034
+          -
+          1047
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.StopRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.StopRequest.apply()
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          16
+        </td>
+        <td>
+          1020
+          -
+          1031
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.ArenaActor.battleActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.battleActor
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          19
+        </td>
+        <td>
+          1020
+          -
+          1047
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(ArenaActor.this.battleActor).!(cml.controller.messages.ArenaRequest.StopRequest.apply())(ArenaActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          18
+        </td>
+        <td>
+          1032
+          -
+          1032
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          20
+        </td>
+        <td>
+          1068
+          -
+          1072
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          21
+        </td>
+        <td>
+          1055
+          -
+          1073
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRefFactory.stop
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this.context.stop(ArenaActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          23
+        </td>
+        <td>
+          1109
+          -
+          1120
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.ArenaActor._powerValue
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaActor.this._powerValue
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

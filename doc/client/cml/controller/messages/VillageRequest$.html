@@ -123,8 +123,8 @@
                         <a href="ArenaRequest$.html" title="Arena request message">ArenaRequest</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="ArenaResponse$.html" title=""></a>
-                        <a href="ArenaResponse$.html" title="">ArenaResponse</a>
+                        <a class="object" href="ArenaResponse$.html" title="Arena response message"></a>
+                        <a href="ArenaResponse$.html" title="Arena response message">ArenaResponse</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="AuthenticationRequest$.html" title="Authentication request messages"></a>
@@ -259,7 +259,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Request to delete a village" href="VillageRequest$$DeleteVillage.html"><span class="name">DeleteVillage</span></a><span class="params">()</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="Request to delete a village" href="VillageRequest$$DeleteVillage.html"><span class="name">DeleteVillage</span></a><span class="params">(<span name="controller">controller: <a href="../fx/VillageViewController.html" class="extype" name="cml.controller.fx.VillageViewController">VillageViewController</a></span>)</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
       <p class="shortcomment cmt">Request to delete a village
@@ -293,10 +293,27 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="VillageRequest$$Logout.html"><span class="name">Logout</span></a><span class="params">()</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="Request to logout from the village" href="VillageRequest$$Logout.html"><span class="name">Logout</span></a><span class="params">()</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
+      <p class="shortcomment cmt">Request to logout from the village
+</p>
+    </li><li name="cml.controller.messages.VillageRequest.SetUpdateVillage" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SetUpdateVillageextendsVillageRequest.VillageRequestwithProductwithSerializable"></a><a id="SetUpdateVillage:SetUpdateVillage"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/VillageRequest$.html#SetUpdateVillageextendsVillageRequest.VillageRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Request to update something already existing in the village" href="VillageRequest$$SetUpdateVillage.html"><span class="name">SetUpdateVillage</span></a><span class="params">(<span name="update">update: <span class="extype" name="play.api.libs.json.JsValue">JsValue</span></span>)</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
       
+      <p class="shortcomment cmt">Request to update something already existing in the village</p><div class="fullcomment"><div class="comment cmt"><p>Request to update something already existing in the village</p></div><dl class="paramcmts block"><dt class="param">update</dt><dd class="cmt"><p>value to update</p></dd></dl></div>
     </li><li name="cml.controller.messages.VillageRequest.UpdateVillage" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="UpdateVillageextendsVillageRequest.VillageRequestwithProductwithSerializable"></a><a id="UpdateVillage:UpdateVillage"></a>
       <span class="permalink">
@@ -312,7 +329,7 @@
         <a title="Request to update a village" href="VillageRequest$$UpdateVillage.html"><span class="name">UpdateVillage</span></a><span class="params">(<span name="update">update: <span class="extype" name="play.api.libs.json.JsValue">JsValue</span></span>)</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
-      <p class="shortcomment cmt">Request to update a village</p><div class="fullcomment"><div class="comment cmt"><p>Request to update a village</p></div><dl class="paramcmts block"><dt class="param">update</dt><dd class="cmt"><p>village user</p></dd></dl></div>
+      <p class="shortcomment cmt">Request to update a village</p><div class="fullcomment"><div class="comment cmt"><p>Request to update a village</p></div><dl class="paramcmts block"><dt class="param">update</dt><dd class="cmt"><p>user village</p></dd></dl></div>
     </li><li name="cml.controller.messages.VillageRequest.VillageRequest" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="VillageRequestextendsAnyRef"></a><a id="VillageRequest:VillageRequest"></a>
       <span class="permalink">

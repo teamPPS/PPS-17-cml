@@ -24,26 +24,84 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller
 </span>2 <span style=''>
-</span>3 <span style=''>import akka.actor.Actor
-</span>4 <span style=''>import cml.controller.messages.ArenaResponse.ExitSuccess
-</span>5 <span style=''>import cml.controller.messages.BattleRequest._
-</span>6 <span style=''>import cml.controller.messages.BattleResponse.RequireChallengerSuccess
-</span>7 <span style=''>
-</span>8 <span style=''>class BattleActor extends Actor {
-</span>9 <span style=''>
-</span>10 <span style=''>  @throws[Exception](classOf[Exception])
-</span>11 <span style=''>  override def preStart(): Unit = {
-</span>12 <span style=''>    val remoteActor = </span><span style='background: #F0ADAD'>context.actorSelection(&quot;akka.tcp://CML@127.0.0.1:5150/user/RemoteActor&quot;)</span><span style=''>
-</span>13 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;contex -&gt; &quot; + context)</span><span style=''>
-</span>14 <span style=''>    </span><span style='background: #F0ADAD'>remoteActor ! RequireChallenger()</span><span style=''>
-</span>15 <span style=''>  }
-</span>16 <span style=''>
-</span>17 <span style=''>  override def receive: Receive = {
-</span>18 <span style=''>    case RequireChallengerSuccess() =&gt; </span><span style='background: #F0ADAD'>println(&quot;Your request is success delivery&quot;)</span><span style=''>
-</span>19 <span style=''>    case ExitSuccess() =&gt; </span><span style='background: #F0ADAD'>println(&quot;Exit success delivery&quot;)</span><span style=''>
-</span>20 <span style=''>  }
+</span>3 <span style=''>import cml.controller.messages.BattleRequest._
+</span>4 <span style=''>import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
+</span>5 <span style=''>import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
+</span>6 <span style=''>import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, RequireTurnRequest, StopRequest}
+</span>7 <span style=''>import cml.utils.ViewConfig.ArenaWindow
+</span>8 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+</span>9 <span style=''>import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
+</span>10 <span style=''>import cml.view.ViewSwitch
+</span>11 <span style=''>import javafx.application.Platform
+</span>12 <span style=''>import javafx.scene.Scene
+</span>13 <span style=''>
+</span>14 <span style=''>import scala.collection.mutable.ListBuffer
+</span>15 <span style=''>
+</span>16 <span style=''>/**
+</span>17 <span style=''>  * This class implements battle actor and managements user battle
+</span>18 <span style=''>  *
+</span>19 <span style=''>  * @author Chiara Volonnino
+</span>20 <span style=''>  */
 </span>21 <span style=''>
-</span>22 <span style=''>}
+</span>22 <span style=''>class BattleActor extends Actor with ActorLogging {
+</span>23 <span style=''>
+</span>24 <span style=''>  var remoteActor: ActorSelection = _
+</span>25 <span style=''>  var challenger: ActorRef = _
+</span>26 <span style=''>  var sceneContext: Scene = _
+</span>27 <span style=''>  var turn: Int = _
+</span>28 <span style=''>  var arenaActor: ActorRef = _
+</span>29 <span style=''>
+</span>30 <span style=''>  @throws[Exception](classOf[Exception])
+</span>31 <span style=''>  override def preStart(): Unit = {
+</span>32 <span style=''>    </span><span style='background: #F0ADAD'>remoteActor = context.actorSelection(&quot;akka.tcp://CML@127.0.0.1:5150/user/RemoteActor&quot;)</span><span style=''>
+</span>33 <span style=''>    </span><span style='background: #F0ADAD'>arenaActor = system.actorOf(Props(new ArenaActor()), &quot;ArenaActor&quot;)</span><span style=''>
+</span>34 <span style=''>    </span><span style='background: #F0ADAD'>remoteActor ! RequireEnterInArena()</span><span style=''>
+</span>35 <span style=''>  }
+</span>36 <span style=''>
+</span>37 <span style=''>  override def postStop(): Unit = {
+</span>38 <span style=''>    //TODO: remember actorSystem.shutdown? is correct even so (also sin stop clause )
+</span>39 <span style=''>    </span><span style='background: #F0ADAD'>log.info(&quot;Actor is stopped&quot;)</span><span style=''>
+</span>40 <span style=''>  }
+</span>41 <span style=''>
+</span>42 <span style=''>  override def receive: Receive = {
+</span>43 <span style=''>    case SceneInfo(scene) =&gt; </span><span style='background: #F0ADAD'>sceneContext = scene</span><span style=''>
+</span>44 <span style=''>    case RequireEnterInArenaSuccess() =&gt;
+</span>45 <span style=''>      </span><span style='background: #F0ADAD'>remoteActor ! ExistChallenger()</span><span style=''>
+</span>46 <span style=''>    case ExistChallengerSuccess(user) =&gt;
+</span>47 <span style=''>      </span><span style='background: #F0ADAD'>remoteActor ! ExitRequest()</span><span style=''>
+</span>48 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;User in list - &quot; + user)</span><span style=''>
+</span>49 <span style=''>      </span><span style='background: #F0ADAD'>myChallenge(user)</span><span style=''>
+</span>50 <span style=''>      </span><span style='background: #F0ADAD'>self ! SwitchInArenaRequest()</span><span style=''>
+</span>51 <span style=''>    case SwitchInArenaRequest() =&gt;
+</span>52 <span style=''>      </span><span style='background: #F0ADAD'>arenaActor ! ActorRefRequest(self)</span><span style=''>
+</span>53 <span style=''>      </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; switchInArena())</span><span style=''>
+</span>54 <span style=''>    case AttackRequest(attackPower) =&gt; </span><span style='background: #F0ADAD'>remoteActor ! RequireTurnRequest(attackPower, turn)</span><span style=''>
+</span>55 <span style=''>    case RequireTurnSuccess(attackPower, turnValue) =&gt;
+</span>56 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;Turn&quot; + turnValue)</span><span style=''>
+</span>57 <span style=''>      if(</span><span style='background: #F0ADAD'>turnValue equals turn</span><span style=''>) </span><span style='background: #F0ADAD'>challenger ! AttackSuccess(attackPower)</span><span style=''>
+</span>58 <span style=''>    case AttackSuccess(attackPower) =&gt;
+</span>59 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;Attack &quot; + attackPower)</span><span style=''>
+</span>60 <span style=''>      </span><span style='background: #F0ADAD'>arenaActor ! AttackSuccess(attackPower)</span><span style=''>
+</span>61 <span style=''>    case StopRequest() =&gt; </span><span style='background: #F0ADAD'>context.stop(self)</span><span style=''>
+</span>62 <span style=''>  }
+</span>63 <span style=''>
+</span>64 <span style=''>  private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
+</span>65 <span style=''>    </span><span style='background: #F0ADAD'>user.foreach(actor =&gt; if(!actor.equals(self)) challenger = actor)</span><span style=''>
+</span>66 <span style=''>    </span><span style='background: #F0ADAD'>log.info(&quot;Im user: &quot; + self + &quot; and my challenger is - &quot; + challenger)</span><span style=''>
+</span>67 <span style=''>    </span><span style='background: #F0ADAD'>_turn(user)</span><span style=''>
+</span>68 <span style=''>  }
+</span>69 <span style=''>
+</span>70 <span style=''>  private def _turn(user: ListBuffer[ActorRef]): Unit = {
+</span>71 <span style=''>    if(</span><span style='background: #F0ADAD'>user.head equals self</span><span style=''>) </span><span style='background: #F0ADAD'>turn = 0</span><span style=''>
+</span>72 <span style=''>    else </span><span style='background: #F0ADAD'>turn = 1</span><span style=''>
+</span>73 <span style=''>    </span><span style='background: #F0ADAD'>log.info(&quot;My turn is: &quot; + turn)</span><span style=''>
+</span>74 <span style=''>  }
+</span>75 <span style=''>
+</span>76 <span style=''>  private def switchInArena(): Unit ={
+</span>77 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(ArenaWindow.path, sceneContext)</span><span style=''>
+</span>78 <span style=''>  }
+</span>79 <span style=''>}
+</span>80 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -57,15 +115,36 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          12
+          32
         </td>
         <td>
-          56
+          85
         </td>
         <td>
-          369
+          1101
           -
-          441
+          1187
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor.remoteActor_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.remoteActor_=(BattleActor.this.context.actorSelection(&quot;akka.tcp://CML@127.0.0.1:5150/user/RemoteActor&quot;))
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          84
+        </td>
+        <td>
+          1115
+          -
+          1187
         </td>
         <td>
           Apply
@@ -78,78 +157,57 @@
         </td>
       </tr><tr>
         <td>
-          13
+          33
         </td>
         <td>
-          59
+          86
         </td>
         <td>
-          455
+          1227
           -
-          477
+          1243
         </td>
         <td>
           Apply
         </td>
         <td>
-          java.lang.String.+
+          cml.controller.ArenaActor.&lt;init&gt;
         </td>
         <td style="background: #F0ADAD">
-          &quot;contex -&gt; &quot;.+(BattleActor.this.context)
+          new ArenaActor()
         </td>
       </tr><tr>
         <td>
-          13
+          33
         </td>
         <td>
-          58
+          89
         </td>
         <td>
-          470
+          1206
           -
-          477
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          akka.actor.Actor.context
-        </td>
-        <td style="background: #F0ADAD">
-          BattleActor.this.context
-        </td>
-      </tr><tr>
-        <td>
-          13
-        </td>
-        <td>
-          60
-        </td>
-        <td>
-          447
-          -
-          478
+          1259
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.actor.ActorRefFactory.actorOf
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;contex -&gt; &quot;.+(BattleActor.this.context))
+          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorOf(akka.actor.Props.apply[cml.controller.ArenaActor](new ArenaActor())((ClassTag.apply[cml.controller.ArenaActor](classOf[cml.controller.ArenaActor]): scala.reflect.ClassTag[cml.controller.ArenaActor])), &quot;ArenaActor&quot;)
         </td>
       </tr><tr>
         <td>
-          13
+          33
         </td>
         <td>
-          57
+          88
         </td>
         <td>
-          455
+          1246
           -
-          467
+          1258
         </td>
         <td>
           Literal
@@ -158,19 +216,124 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          &quot;contex -&gt; &quot;
+          &quot;ArenaActor&quot;
         </td>
       </tr><tr>
         <td>
-          14
+          33
         </td>
         <td>
-          62
+          87
         </td>
         <td>
-          496
+          1221
           -
-          496
+          1244
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.Props.apply
+        </td>
+        <td style="background: #F0ADAD">
+          akka.actor.Props.apply[cml.controller.ArenaActor](new ArenaActor())((ClassTag.apply[cml.controller.ArenaActor](classOf[cml.controller.ArenaActor]): scala.reflect.ClassTag[cml.controller.ArenaActor]))
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          90
+        </td>
+        <td>
+          1193
+          -
+          1259
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor.arenaActor_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.arenaActor_=(cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorOf(akka.actor.Props.apply[cml.controller.ArenaActor](new ArenaActor())((ClassTag.apply[cml.controller.ArenaActor](classOf[cml.controller.ArenaActor]): scala.reflect.ClassTag[cml.controller.ArenaActor])), &quot;ArenaActor&quot;))
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          92
+        </td>
+        <td>
+          1279
+          -
+          1300
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.BattleRequest.RequireEnterInArena.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.BattleRequest.RequireEnterInArena.apply()
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          91
+        </td>
+        <td>
+          1265
+          -
+          1276
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.remoteActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.remoteActor
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          94
+        </td>
+        <td>
+          1265
+          -
+          1300
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(BattleActor.this.remoteActor).!(cml.controller.messages.BattleRequest.RequireEnterInArena.apply())(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          93
+        </td>
+        <td>
+          1277
+          -
+          1277
         </td>
         <td>
           Select
@@ -183,57 +346,36 @@
         </td>
       </tr><tr>
         <td>
-          14
+          39
         </td>
         <td>
-          61
+          95
         </td>
         <td>
-          498
+          1437
           -
-          517
+          1465
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.controller.messages.BattleRequest.RequireChallenger.apply
+          akka.event.LoggingAdapter.info
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.messages.BattleRequest.RequireChallenger.apply()
+          BattleActor.this.log.info(&quot;Actor is stopped&quot;)
         </td>
       </tr><tr>
         <td>
-          14
+          42
         </td>
         <td>
-          63
+          143
         </td>
         <td>
-          484
+          1508
           -
-          517
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!
-        </td>
-        <td style="background: #F0ADAD">
-          actor.this.ActorSelection.toScala(remoteActor).!(cml.controller.messages.BattleRequest.RequireChallenger.apply())(BattleActor.this.self)
-        </td>
-      </tr><tr>
-        <td>
-          17
-        </td>
-        <td>
-          66
-        </td>
-        <td>
-          560
-          -
-          560
+          1508
         </td>
         <td>
           Apply
@@ -246,45 +388,1560 @@
         </td>
       </tr><tr>
         <td>
-          18
+          43
         </td>
         <td>
-          64
+          96
         </td>
         <td>
-          602
+          1540
           -
-          645
+          1560
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          cml.controller.BattleActor.sceneContext_=
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Your request is success delivery&quot;)
+          BattleActor.this.sceneContext_=(scene)
         </td>
       </tr><tr>
         <td>
-          19
+          45
         </td>
+        <td>
+          98
+        </td>
+        <td>
+          1624
+          -
+          1641
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.BattleRequest.ExistChallenger.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.BattleRequest.ExistChallenger.apply()
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          100
+        </td>
+        <td>
+          1610
+          -
+          1641
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(BattleActor.this.remoteActor).!(cml.controller.messages.BattleRequest.ExistChallenger.apply())(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          97
+        </td>
+        <td>
+          1610
+          -
+          1621
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.remoteActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.remoteActor
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          99
+        </td>
+        <td>
+          1622
+          -
+          1622
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          101
+        </td>
+        <td>
+          1691
+          -
+          1702
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.remoteActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.remoteActor
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          104
+        </td>
+        <td>
+          1691
+          -
+          1718
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(BattleActor.this.remoteActor).!(cml.controller.messages.BattleRequest.ExitRequest.apply())(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          103
+        </td>
+        <td>
+          1703
+          -
+          1703
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          102
+        </td>
+        <td>
+          1705
+          -
+          1718
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.BattleRequest.ExitRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.BattleRequest.ExitRequest.apply()
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          106
+        </td>
+        <td>
+          1726
+          -
+          1760
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.log.info(&quot;User in list - &quot;.+(user))
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          105
+        </td>
+        <td>
+          1735
+          -
+          1759
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;User in list - &quot;.+(user)
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          107
+        </td>
+        <td>
+          1768
+          -
+          1785
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor.myChallenge
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.myChallenge(user)
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          110
+        </td>
+        <td>
+          1798
+          -
+          1798
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          109
+        </td>
+        <td>
+          1800
+          -
+          1822
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.BattleRequest.SwitchInArenaRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.BattleRequest.SwitchInArenaRequest.apply()
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          108
+        </td>
+        <td>
+          1793
+          -
+          1797
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          111
+        </td>
+        <td>
+          1793
+          -
+          1822
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(BattleActor.this.self).!(cml.controller.messages.BattleRequest.SwitchInArenaRequest.apply())(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          113
+        </td>
+        <td>
+          1895
+          -
+          1899
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          116
+        </td>
+        <td>
+          1866
+          -
+          1900
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(BattleActor.this.arenaActor).!(cml.controller.messages.ArenaRequest.ActorRefRequest.apply(BattleActor.this.self))(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          115
+        </td>
+        <td>
+          1877
+          -
+          1877
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          112
+        </td>
+        <td>
+          1866
+          -
+          1876
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          114
+        </td>
+        <td>
+          1879
+          -
+          1900
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.ActorRefRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.ActorRefRequest.apply(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          118
+        </td>
+        <td>
+          1908
+          -
+          1948
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.application.Platform.runLater
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.application.Platform.runLater((() =&gt; BattleActor.this.switchInArena()))
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          117
+        </td>
+        <td>
+          1932
+          -
+          1947
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor.switchInArena
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.switchInArena()
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          119
+        </td>
+        <td>
+          1989
+          -
+          2000
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.remoteActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.remoteActor
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          122
+        </td>
+        <td>
+          2001
+          -
+          2001
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          121
+        </td>
+        <td>
+          2003
+          -
+          2040
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.RequireTurnRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.RequireTurnRequest.apply(attackPower, BattleActor.this.turn)
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          120
+        </td>
+        <td>
+          2035
+          -
+          2039
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.turn
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          123
+        </td>
+        <td>
+          1989
+          -
+          2040
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(BattleActor.this.remoteActor).!(cml.controller.messages.ArenaRequest.RequireTurnRequest.apply(attackPower, BattleActor.this.turn))(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          125
+        </td>
+        <td>
+          2104
+          -
+          2132
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.log.info(&quot;Turn&quot;.+(turnValue))
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          124
+        </td>
+        <td>
+          2113
+          -
+          2131
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Turn&quot;.+(turnValue)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          128
+        </td>
+        <td>
+          2166
+          -
+          2176
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.challenger
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.challenger
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          131
+        </td>
+        <td>
+          2166
+          -
+          2205
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(BattleActor.this.challenger).!(cml.controller.messages.ArenaResponse.AttackSuccess.apply(attackPower))(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          134
+        </td>
+        <td>
+          2140
+          -
+          2140
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          133
+        </td>
+        <td>
+          2140
+          -
+          2140
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          127
+        </td>
+        <td>
+          2143
+          -
+          2164
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          turnValue.equals(BattleActor.this.turn)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          130
+        </td>
+        <td>
+          2177
+          -
+          2177
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          129
+        </td>
+        <td>
+          2179
+          -
+          2205
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaResponse.AttackSuccess.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaResponse.AttackSuccess.apply(attackPower)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          132
+        </td>
+        <td>
+          2166
+          -
+          2205
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(BattleActor.this.challenger).!(cml.controller.messages.ArenaResponse.AttackSuccess.apply(attackPower))(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          126
+        </td>
+        <td>
+          2160
+          -
+          2164
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.turn
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          136
+        </td>
+        <td>
+          2253
+          -
+          2286
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.log.info(&quot;Attack &quot;.+(attackPower))
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          135
+        </td>
+        <td>
+          2262
+          -
+          2285
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Attack &quot;.+(attackPower)
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          137
+        </td>
+        <td>
+          2294
+          -
+          2304
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          140
+        </td>
+        <td>
+          2294
+          -
+          2333
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(BattleActor.this.arenaActor).!(cml.controller.messages.ArenaResponse.AttackSuccess.apply(attackPower))(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          139
+        </td>
+        <td>
+          2305
+          -
+          2305
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          138
+        </td>
+        <td>
+          2307
+          -
+          2333
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaResponse.AttackSuccess.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaResponse.AttackSuccess.apply(attackPower)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          142
+        </td>
+        <td>
+          2361
+          -
+          2379
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRefFactory.stop
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.context.stop(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          141
+        </td>
+        <td>
+          2374
+          -
+          2378
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
         <td>
           65
         </td>
         <td>
-          673
+          146
+        </td>
+        <td>
+          2503
           -
-          705
+          2521
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          cml.controller.BattleActor.challenger_=
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Exit success delivery&quot;)
+          BattleActor.this.challenger_=(actor)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          149
+        </td>
+        <td>
+          2479
+          -
+          2479
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          145
+        </td>
+        <td>
+          2482
+          -
+          2501
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Boolean.unary_!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.equals(BattleActor.this.self).unary_!
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          148
+        </td>
+        <td>
+          2479
+          -
+          2479
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          147
+        </td>
+        <td>
+          2503
+          -
+          2521
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.controller.BattleActor.challenger_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.challenger_=(actor)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          150
+        </td>
+        <td>
+          2457
+          -
+          2522
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.generic.TraversableForwarder.foreach
+        </td>
+        <td style="background: #F0ADAD">
+          user.foreach[Unit](((actor: akka.actor.ActorRef) =&gt; if (actor.equals(BattleActor.this.self).unary_!)
+  BattleActor.this.challenger_=(actor)
+else
+  ()))
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          144
+        </td>
+        <td>
+          2496
+          -
+          2500
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          155
+        </td>
+        <td>
+          2537
+          -
+          2597
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Im user: &quot;.+(BattleActor.this.self).+(&quot; and my challenger is - &quot;).+(BattleActor.this.challenger)
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          151
+        </td>
+        <td>
+          2537
+          -
+          2548
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Im user: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          154
+        </td>
+        <td>
+          2587
+          -
+          2597
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.challenger
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.challenger
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          156
+        </td>
+        <td>
+          2528
+          -
+          2598
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.log.info(&quot;Im user: &quot;.+(BattleActor.this.self).+(&quot; and my challenger is - &quot;).+(BattleActor.this.challenger))
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          153
+        </td>
+        <td>
+          2558
+          -
+          2584
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot; and my challenger is - &quot;
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          152
+        </td>
+        <td>
+          2551
+          -
+          2555
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          67
+        </td>
+        <td>
+          157
+        </td>
+        <td>
+          2604
+          -
+          2615
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor._turn
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this._turn(user)
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          158
+        </td>
+        <td>
+          2707
+          -
+          2711
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          160
+        </td>
+        <td>
+          2713
+          -
+          2721
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor.turn_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn_=(0)
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          159
+        </td>
+        <td>
+          2690
+          -
+          2711
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRef.equals
+        </td>
+        <td style="background: #F0ADAD">
+          user.head.equals(BattleActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          161
+        </td>
+        <td>
+          2713
+          -
+          2721
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.controller.BattleActor.turn_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn_=(0)
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          163
+        </td>
+        <td>
+          2732
+          -
+          2740
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.controller.BattleActor.turn_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn_=(1)
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          162
+        </td>
+        <td>
+          2732
+          -
+          2740
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.BattleActor.turn_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn_=(1)
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          164
+        </td>
+        <td>
+          2755
+          -
+          2769
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;My turn is: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          167
+        </td>
+        <td>
+          2746
+          -
+          2777
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.log.info(&quot;My turn is: &quot;.+(BattleActor.this.turn))
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          166
+        </td>
+        <td>
+          2755
+          -
+          2776
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;My turn is: &quot;.+(BattleActor.this.turn)
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          165
+        </td>
+        <td>
+          2772
+          -
+          2776
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.turn
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.turn
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          169
+        </td>
+        <td>
+          2868
+          -
+          2880
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.BattleActor.sceneContext
+        </td>
+        <td style="background: #F0ADAD">
+          BattleActor.this.sceneContext
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          168
+        </td>
+        <td>
+          2850
+          -
+          2866
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ViewConfig.ArenaWindow.path
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ViewConfig.ArenaWindow.path
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          170
+        </td>
+        <td>
+          2830
+          -
+          2881
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.ArenaWindow.path, BattleActor.this.sceneContext)
         </td>
       </tr>
     </table>

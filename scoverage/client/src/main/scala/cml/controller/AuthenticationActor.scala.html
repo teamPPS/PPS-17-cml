@@ -25,11 +25,11 @@
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller
 </span>2 <span style=''>
 </span>3 <span style=''>import akka.actor.{Actor, ActorRef, Props}
-</span>4 <span style=''>import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage._
+</span>4 <span style=''>import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.{loginFailure, loginSuccess, registerFailure}
 </span>5 <span style=''>import cml.controller.fx.AuthenticationViewController
-</span>6 <span style=''>import cml.controller.messages.AuthenticationRequest.{Login, Register, Logout}
+</span>6 <span style=''>import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register, SetController}
 </span>7 <span style=''>import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
-</span>8 <span style=''>import cml.controller.messages.VillageRequest.{CreateVillage}
+</span>8 <span style=''>import cml.controller.messages.VillageRequest.CreateVillage
 </span>9 <span style=''>import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
 </span>10 <span style=''>import cml.services.authentication.AuthenticationServiceVertx.AuthenticationServiceVertxImpl
 </span>11 <span style=''>import cml.services.authentication.TokenStorage
@@ -50,82 +50,84 @@
 </span>26 <span style=''>
 </span>27 <span style=''>  val authenticationVertx = </span><span style='background: #F0ADAD'>AuthenticationServiceVertxImpl()</span><span style=''>
 </span>28 <span style=''>  val villageActor: ActorRef = </span><span style='background: #F0ADAD'>context.system.actorOf(Props(new VillageActor()), &quot;VillageActor&quot;)</span><span style=''>
-</span>29 <span style=''>
-</span>30 <span style=''>  override def receive: Receive = </span><span style='background: #F0ADAD'>authenticationBehaviour orElse villageBehaviour</span><span style=''>
-</span>31 <span style=''>
-</span>32 <span style=''>  /**
-</span>33 <span style=''>    * @return the authentication behaviour
-</span>34 <span style=''>    */
-</span>35 <span style=''>  private def authenticationBehaviour: Receive = {
-</span>36 <span style=''>    case Register(username, password) =&gt; </span><span style='background: #F0ADAD'>authenticationVertx.register(username, password)
-</span>37 <span style=''></span><span style='background: #F0ADAD'>      .onComplete {
-</span>38 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>39 <span style=''></span><span style='background: #F0ADAD'>          checkHttpResponse(httpResponse, loginSuccess, loginFailure)
-</span>40 <span style=''></span><span style='background: #F0ADAD'>          villageActor ! CreateVillage()
-</span>41 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt;
-</span>42 <span style=''></span><span style='background: #F0ADAD'>          RegisterFailure(exception.getMessage)
-</span>43 <span style=''></span><span style='background: #F0ADAD'>          displayMsg(registerFailure)
-</span>44 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>45 <span style=''>    case Login(username, password) =&gt; </span><span style='background: #F0ADAD'>authenticationVertx.login(username, password)
-</span>46 <span style=''></span><span style='background: #F0ADAD'>      .onComplete {
-</span>47 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>48 <span style=''></span><span style='background: #F0ADAD'>          if(checkHttpResponse(httpResponse, loginSuccess, loginFailure))
-</span>49 <span style=''></span><span style='background: #F0ADAD'>            loginSucceedOnGui()
-</span>50 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt;
-</span>51 <span style=''></span><span style='background: #F0ADAD'>          LoginFailure(exception.getMessage)
-</span>52 <span style=''></span><span style='background: #F0ADAD'>          displayMsg(loginFailure)
-</span>53 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>54 <span style=''>    case Logout() =&gt; </span><span style='background: #F0ADAD'>authenticationVertx.logout(TokenStorage.getUserJWTToken)</span><span style=''>
-</span>55 <span style=''>  }
-</span>56 <span style=''>
-</span>57 <span style=''>  /**
-</span>58 <span style=''>    * @return behaviour when creating and entering a village
-</span>59 <span style=''>    */
-</span>60 <span style=''>  private def villageBehaviour: Receive = {
-</span>61 <span style=''>    case CreateVillageSuccess() =&gt;
-</span>62 <span style=''>      </span><span style='background: #F0ADAD'>println(&quot;Village create success&quot;)</span><span style=''>
-</span>63 <span style=''>      </span><span style='background: #F0ADAD'>loginSucceedOnGui()</span><span style=''>
-</span>64 <span style=''>    case VillageFailure(m) =&gt; </span><span style='background: #F0ADAD'>displayMsg(m)</span><span style=''>
-</span>65 <span style=''>  }
-</span>66 <span style=''>
-</span>67 <span style=''>  /**
-</span>68 <span style=''>    * Displays text on the GUI through a label
-</span>69 <span style=''>    *
-</span>70 <span style=''>    * @param m message to show
-</span>71 <span style=''>    */
-</span>72 <span style=''>  def displayMsg(m: String): Unit = </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; controller.formMsgLabel.setText(m))</span><span style=''>
-</span>73 <span style=''>
-</span>74 <span style=''>  /**
-</span>75 <span style=''>    * Open Village View after login successful
-</span>76 <span style=''>    */
-</span>77 <span style=''>  def loginSucceedOnGui(): Unit = </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; controller.openVillageView())</span><span style=''>
-</span>78 <span style=''>
-</span>79 <span style=''>  def successAuthenticationCase(tokenValue: String): Unit = {
-</span>80 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;TOKEN: &quot; + tokenValue)</span><span style=''>
-</span>81 <span style=''>    </span><span style='background: #F0ADAD'>TokenStorage.setUserJWTToken(tokenValue)</span><span style=''>
-</span>82 <span style=''>  }
-</span>83 <span style=''>
-</span>84 <span style=''>  def checkHttpResponse(str: String, successMessage: String, failureMessage: String): Boolean = str match { //technical debt?
-</span>85 <span style=''>    case &quot;Not a valid request&quot; =&gt;
-</span>86 <span style=''>      </span><span style='background: #F0ADAD'>displayMsg(failureMessage)</span><span style=''>
-</span>87 <span style=''>      </span><span style='background: #F0ADAD'>false</span><span style=''>
-</span>88 <span style=''>    case _ =&gt;
-</span>89 <span style=''>      </span><span style='background: #F0ADAD'>successAuthenticationCase(str)</span><span style=''>
-</span>90 <span style=''>      </span><span style='background: #F0ADAD'>displayMsg(successMessage)</span><span style=''>
-</span>91 <span style=''>      </span><span style='background: #F0ADAD'>println(&quot;Success this is server response with the token: &quot; + str)</span><span style=''>
-</span>92 <span style=''>      </span><span style='background: #F0ADAD'>true</span><span style=''>
-</span>93 <span style=''>  }
-</span>94 <span style=''>
-</span>95 <span style=''>  /**
-</span>96 <span style=''>    * Switches on and off GUI buttons
-</span>97 <span style=''>    *
-</span>98 <span style=''>    * @param b boolean
-</span>99 <span style=''>    */
-</span>100 <span style=''>  def disableButtons(b: Boolean): Unit = {
-</span>101 <span style=''>    </span><span style='background: #F0ADAD'>controller.registerButton.setDisable(b)</span><span style=''>
-</span>102 <span style=''>    </span><span style='background: #F0ADAD'>controller.loginButton.setDisable(b)</span><span style=''>
-</span>103 <span style=''>  }
-</span>104 <span style=''>}
+</span>29 <span style=''>  var authController = </span><span style='background: #F0ADAD'>controller</span><span style=''>
+</span>30 <span style=''>
+</span>31 <span style=''>  override def receive: Receive = </span><span style='background: #F0ADAD'>authenticationBehaviour orElse villageBehaviour</span><span style=''>
+</span>32 <span style=''>
+</span>33 <span style=''>  /**
+</span>34 <span style=''>    * @return the authentication behaviour
+</span>35 <span style=''>    */
+</span>36 <span style=''>  private def authenticationBehaviour: Receive = {
+</span>37 <span style=''>    case Register(username, password) =&gt; </span><span style='background: #F0ADAD'>authenticationVertx.register(username, password)
+</span>38 <span style=''></span><span style='background: #F0ADAD'>      .onComplete {
+</span>39 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>40 <span style=''></span><span style='background: #F0ADAD'>          if(checkHttpResponse(httpResponse, loginSuccess, loginFailure))
+</span>41 <span style=''></span><span style='background: #F0ADAD'>            villageActor ! CreateVillage()
+</span>42 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt;
+</span>43 <span style=''></span><span style='background: #F0ADAD'>          RegisterFailure(exception.getMessage)
+</span>44 <span style=''></span><span style='background: #F0ADAD'>          displayMsg(registerFailure)
+</span>45 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>46 <span style=''>    case Login(username, password) =&gt; </span><span style='background: #F0ADAD'>authenticationVertx.login(username, password)
+</span>47 <span style=''></span><span style='background: #F0ADAD'>      .onComplete {
+</span>48 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>49 <span style=''></span><span style='background: #F0ADAD'>          if(checkHttpResponse(httpResponse, loginSuccess, loginFailure))
+</span>50 <span style=''></span><span style='background: #F0ADAD'>            loginSucceedOnGui()
+</span>51 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt;
+</span>52 <span style=''></span><span style='background: #F0ADAD'>          LoginFailure(exception.getMessage)
+</span>53 <span style=''></span><span style='background: #F0ADAD'>          displayMsg(loginFailure)
+</span>54 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>55 <span style=''>    case Logout() =&gt; </span><span style='background: #F0ADAD'>authenticationVertx.logout(TokenStorage.getUserJWTToken)</span><span style=''>
+</span>56 <span style=''>    case SetController(controller: AuthenticationViewController) =&gt;  </span><span style='background: #F0ADAD'>authController = controller</span><span style=''>
+</span>57 <span style=''>  }
+</span>58 <span style=''>
+</span>59 <span style=''>  /**
+</span>60 <span style=''>    * @return behaviour when creating and entering a village
+</span>61 <span style=''>    */
+</span>62 <span style=''>  private def villageBehaviour: Receive = {
+</span>63 <span style=''>    case CreateVillageSuccess() =&gt;
+</span>64 <span style=''>      </span><span style='background: #F0ADAD'>println(&quot;Village create success&quot;)</span><span style=''>
+</span>65 <span style=''>      </span><span style='background: #F0ADAD'>loginSucceedOnGui()</span><span style=''>
+</span>66 <span style=''>    case VillageFailure(m) =&gt; </span><span style='background: #F0ADAD'>displayMsg(m)</span><span style=''>
+</span>67 <span style=''>  }
+</span>68 <span style=''>
+</span>69 <span style=''>  /**
+</span>70 <span style=''>    * Displays text on the GUI through a label
+</span>71 <span style=''>    *
+</span>72 <span style=''>    * @param m message to show
+</span>73 <span style=''>    */
+</span>74 <span style=''>  def displayMsg(m: String): Unit = </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; authController.formMsgLabel.setText(m))</span><span style=''>
+</span>75 <span style=''>
+</span>76 <span style=''>  /**
+</span>77 <span style=''>    * Open Village View after login successful
+</span>78 <span style=''>    */
+</span>79 <span style=''>  def loginSucceedOnGui(): Unit = </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; authController.openVillageView())</span><span style=''>
+</span>80 <span style=''>
+</span>81 <span style=''>  def successAuthenticationCase(tokenValue: String): Unit = {
+</span>82 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;TOKEN: &quot; + tokenValue)</span><span style=''>
+</span>83 <span style=''>    </span><span style='background: #F0ADAD'>TokenStorage.setUserJWTToken(tokenValue)</span><span style=''>
+</span>84 <span style=''>  }
+</span>85 <span style=''>
+</span>86 <span style=''>  def checkHttpResponse(str: String, successMessage: String, failureMessage: String): Boolean = str match { //technical debt?
+</span>87 <span style=''>    case &quot;Not a valid request&quot; =&gt;
+</span>88 <span style=''>      </span><span style='background: #F0ADAD'>displayMsg(failureMessage)</span><span style=''>
+</span>89 <span style=''>      </span><span style='background: #F0ADAD'>false</span><span style=''>
+</span>90 <span style=''>    case _ =&gt;
+</span>91 <span style=''>      </span><span style='background: #F0ADAD'>successAuthenticationCase(str)</span><span style=''>
+</span>92 <span style=''>      </span><span style='background: #F0ADAD'>displayMsg(successMessage)</span><span style=''>
+</span>93 <span style=''>      </span><span style='background: #F0ADAD'>println(&quot;Success this is server response with the token: &quot; + str)</span><span style=''>
+</span>94 <span style=''>      </span><span style='background: #F0ADAD'>true</span><span style=''>
+</span>95 <span style=''>  }
+</span>96 <span style=''>
+</span>97 <span style=''>  /**
+</span>98 <span style=''>    * Switches on and off GUI buttons
+</span>99 <span style=''>    *
+</span>100 <span style=''>    * @param b boolean
+</span>101 <span style=''>    */
+</span>102 <span style=''>  def disableButtons(b: Boolean): Unit = {
+</span>103 <span style=''>    </span><span style='background: #F0ADAD'>authController.registerButton.setDisable(b)</span><span style=''>
+</span>104 <span style=''>    </span><span style='background: #F0ADAD'>authController.loginButton.setDisable(b)</span><span style=''>
+</span>105 <span style=''>  }
+</span>106 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -142,12 +144,12 @@
           27
         </td>
         <td>
-          1
+          24
         </td>
         <td>
-          1201
+          1258
           -
-          1233
+          1290
         </td>
         <td>
           Apply
@@ -163,12 +165,33 @@
           28
         </td>
         <td>
-          2
+          26
         </td>
         <td>
-          1295
+          1346
           -
-          1313
+          1371
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.Props.apply
+        </td>
+        <td style="background: #F0ADAD">
+          akka.actor.Props.apply[cml.controller.VillageActor](new VillageActor())((ClassTag.apply[cml.controller.VillageActor](classOf[cml.controller.VillageActor]): scala.reflect.ClassTag[cml.controller.VillageActor]))
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          25
+        </td>
+        <td>
+          1352
+          -
+          1370
         </td>
         <td>
           Apply
@@ -184,12 +207,12 @@
           28
         </td>
         <td>
-          5
+          28
         </td>
         <td>
-          1266
+          1323
           -
-          1331
+          1388
         </td>
         <td>
           Apply
@@ -205,12 +228,12 @@
           28
         </td>
         <td>
-          4
+          27
         </td>
         <td>
-          1316
+          1373
           -
-          1330
+          1387
         </td>
         <td>
           Literal
@@ -223,36 +246,36 @@
         </td>
       </tr><tr>
         <td>
-          28
+          29
         </td>
         <td>
-          3
+          29
         </td>
         <td>
-          1289
+          1413
           -
-          1314
+          1423
         </td>
         <td>
-          ApplyToImplicitArgs
+          Select
         </td>
         <td>
-          akka.actor.Props.apply
+          cml.controller.AuthenticationActor.controller
         </td>
         <td style="background: #F0ADAD">
-          akka.actor.Props.apply[cml.controller.VillageActor](new VillageActor())((ClassTag.apply[cml.controller.VillageActor](classOf[cml.controller.VillageActor]): scala.reflect.ClassTag[cml.controller.VillageActor]))
+          AuthenticationActor.this.controller
         </td>
       </tr><tr>
         <td>
-          30
+          31
         </td>
         <td>
-          7
+          31
         </td>
         <td>
-          1369
+          1461
           -
-          1416
+          1508
         </td>
         <td>
           Apply
@@ -265,15 +288,15 @@
         </td>
       </tr><tr>
         <td>
+          31
+        </td>
+        <td>
           30
         </td>
         <td>
-          6
-        </td>
-        <td>
-          1400
+          1492
           -
-          1416
+          1508
         </td>
         <td>
           Select
@@ -286,15 +309,15 @@
         </td>
       </tr><tr>
         <td>
-          35
+          36
         </td>
         <td>
-          35
+          63
         </td>
         <td>
-          1528
+          1620
           -
-          1528
+          1620
         </td>
         <td>
           Apply
@@ -307,15 +330,15 @@
         </td>
       </tr><tr>
         <td>
-          37
+          38
         </td>
         <td>
-          19
+          46
         </td>
         <td>
-          1572
+          1664
           -
-          1926
+          2024
         </td>
         <td>
           ApplyToImplicitArgs
@@ -325,10 +348,10 @@
         </td>
         <td style="background: #F0ADAD">
           AuthenticationActor.this.authenticationVertx.register(username, password).onComplete[Unit](((x0$1: scala.util.Try[String]) =&gt; x0$1 match {
-  case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; {
-    AuthenticationActor.this.checkHttpResponse(httpResponse, cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.loginSuccess, cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.loginFailure);
+  case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; if (AuthenticationActor.this.checkHttpResponse(httpResponse, cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.loginSuccess, cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.loginFailure))
     actor.this.`package`.actorRef2Scala(AuthenticationActor.this.villageActor).!(cml.controller.messages.VillageRequest.CreateVillage.apply())(AuthenticationActor.this.self)
-  }
+  else
+    ()
   case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; {
     cml.controller.messages.AuthenticationResponse.RegisterFailure.apply(exception.getMessage());
     AuthenticationActor.this.displayMsg(cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.registerFailure)
@@ -337,15 +360,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          40
         </td>
         <td>
-          8
+          32
         </td>
         <td>
-          1724
+          1819
           -
-          1736
+          1831
         </td>
         <td>
           Select
@@ -358,15 +381,57 @@
         </td>
       </tr><tr>
         <td>
-          39
+          40
         </td>
         <td>
-          10
+          41
         </td>
         <td>
-          1692
+          1784
           -
-          1751
+          1784
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          40
+        </td>
+        <td>
+          1784
+          -
+          1784
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          34
+        </td>
+        <td>
+          1787
+          -
+          1846
         </td>
         <td>
           Apply
@@ -379,15 +444,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          40
         </td>
         <td>
-          9
+          33
         </td>
         <td>
-          1738
+          1833
           -
-          1750
+          1845
         </td>
         <td>
           Select
@@ -400,15 +465,15 @@
         </td>
       </tr><tr>
         <td>
-          40
+          41
         </td>
         <td>
-          11
+          35
         </td>
         <td>
-          1763
+          1861
           -
-          1775
+          1873
         </td>
         <td>
           Select
@@ -421,15 +486,15 @@
         </td>
       </tr><tr>
         <td>
-          40
+          41
         </td>
         <td>
-          14
+          38
         </td>
         <td>
-          1763
+          1861
           -
-          1793
+          1891
         </td>
         <td>
           ApplyToImplicitArgs
@@ -442,15 +507,15 @@
         </td>
       </tr><tr>
         <td>
-          40
+          41
         </td>
         <td>
-          13
+          37
         </td>
         <td>
-          1776
+          1874
           -
-          1776
+          1874
         </td>
         <td>
           Select
@@ -463,15 +528,15 @@
         </td>
       </tr><tr>
         <td>
-          40
+          41
         </td>
         <td>
-          12
+          36
         </td>
         <td>
-          1778
+          1876
           -
-          1793
+          1891
         </td>
         <td>
           Apply
@@ -484,15 +549,36 @@
         </td>
       </tr><tr>
         <td>
-          42
+          41
         </td>
         <td>
-          16
+          39
         </td>
         <td>
-          1841
+          1861
           -
-          1878
+          1891
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(AuthenticationActor.this.villageActor).!(cml.controller.messages.VillageRequest.CreateVillage.apply())(AuthenticationActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          43
+        </td>
+        <td>
+          1939
+          -
+          1976
         </td>
         <td>
           Apply
@@ -505,15 +591,15 @@
         </td>
       </tr><tr>
         <td>
+          43
+        </td>
+        <td>
           42
         </td>
         <td>
-          15
-        </td>
-        <td>
-          1857
+          1955
           -
-          1877
+          1975
         </td>
         <td>
           Apply
@@ -526,15 +612,15 @@
         </td>
       </tr><tr>
         <td>
-          43
+          44
         </td>
         <td>
-          17
+          44
         </td>
         <td>
-          1901
+          1999
           -
-          1916
+          2014
         </td>
         <td>
           Select
@@ -547,15 +633,15 @@
         </td>
       </tr><tr>
         <td>
-          43
+          44
         </td>
         <td>
-          18
+          45
         </td>
         <td>
-          1890
+          1988
           -
-          1917
+          2015
         </td>
         <td>
           Apply
@@ -568,15 +654,15 @@
         </td>
       </tr><tr>
         <td>
-          46
+          47
         </td>
         <td>
-          31
+          58
         </td>
         <td>
-          1966
+          2064
           -
-          2306
+          2404
         </td>
         <td>
           ApplyToImplicitArgs
@@ -598,15 +684,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          26
+          53
         </td>
         <td>
-          2083
+          2181
           -
-          2083
+          2181
         </td>
         <td>
           Block
@@ -619,15 +705,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          20
+          47
         </td>
         <td>
-          2118
+          2216
           -
-          2130
+          2228
         </td>
         <td>
           Select
@@ -640,15 +726,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          22
+          49
         </td>
         <td>
-          2086
+          2184
           -
-          2145
+          2243
         </td>
         <td>
           Apply
@@ -661,15 +747,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          25
+          52
         </td>
         <td>
-          2083
+          2181
           -
-          2083
+          2181
         </td>
         <td>
           Literal
@@ -682,15 +768,15 @@
         </td>
       </tr><tr>
         <td>
+          49
+        </td>
+        <td>
           48
         </td>
         <td>
-          21
-        </td>
-        <td>
-          2132
+          2230
           -
-          2144
+          2242
         </td>
         <td>
           Select
@@ -703,15 +789,15 @@
         </td>
       </tr><tr>
         <td>
-          49
+          50
         </td>
         <td>
-          23
+          50
         </td>
         <td>
-          2160
+          2258
           -
-          2179
+          2277
         </td>
         <td>
           Apply
@@ -724,15 +810,15 @@
         </td>
       </tr><tr>
         <td>
-          49
+          50
         </td>
         <td>
-          24
+          51
         </td>
         <td>
-          2160
+          2258
           -
-          2179
+          2277
         </td>
         <td>
           Block
@@ -745,15 +831,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          52
         </td>
         <td>
-          28
+          55
         </td>
         <td>
-          2227
+          2325
           -
-          2261
+          2359
         </td>
         <td>
           Apply
@@ -766,15 +852,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          52
         </td>
         <td>
-          27
+          54
         </td>
         <td>
-          2240
+          2338
           -
-          2260
+          2358
         </td>
         <td>
           Apply
@@ -787,15 +873,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          53
         </td>
         <td>
-          29
+          56
         </td>
         <td>
-          2284
+          2382
           -
-          2296
+          2394
         </td>
         <td>
           Select
@@ -808,15 +894,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          53
         </td>
         <td>
-          30
+          57
         </td>
         <td>
-          2273
+          2371
           -
-          2297
+          2395
         </td>
         <td>
           Apply
@@ -829,15 +915,15 @@
         </td>
       </tr><tr>
         <td>
-          54
+          55
         </td>
         <td>
-          32
+          59
         </td>
         <td>
-          2356
+          2454
           -
-          2384
+          2482
         </td>
         <td>
           Select
@@ -850,15 +936,15 @@
         </td>
       </tr><tr>
         <td>
-          54
+          55
         </td>
         <td>
-          34
+          61
         </td>
         <td>
-          2355
+          2453
           -
-          2355
+          2453
         </td>
         <td>
           Literal
@@ -871,15 +957,15 @@
         </td>
       </tr><tr>
         <td>
-          54
+          55
         </td>
         <td>
-          33
+          60
         </td>
         <td>
-          2329
+          2427
           -
-          2385
+          2483
         </td>
         <td>
           Apply
@@ -892,15 +978,36 @@
         </td>
       </tr><tr>
         <td>
-          60
+          56
         </td>
         <td>
-          39
+          62
         </td>
         <td>
-          2513
+          2554
           -
-          2513
+          2581
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.AuthenticationActor.authController_=
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationActor.this.authController_=(controller)
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          67
+        </td>
+        <td>
+          2709
+          -
+          2709
         </td>
         <td>
           Apply
@@ -913,15 +1020,15 @@
         </td>
       </tr><tr>
         <td>
-          62
+          64
         </td>
         <td>
-          36
+          64
         </td>
         <td>
-          2558
+          2754
           -
-          2591
+          2787
         </td>
         <td>
           Apply
@@ -934,15 +1041,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          65
         </td>
         <td>
-          37
+          65
         </td>
         <td>
-          2599
+          2795
           -
-          2618
+          2814
         </td>
         <td>
           Apply
@@ -955,15 +1062,15 @@
         </td>
       </tr><tr>
         <td>
-          64
+          66
         </td>
         <td>
-          38
+          66
         </td>
         <td>
-          2650
+          2846
           -
-          2663
+          2859
         </td>
         <td>
           Apply
@@ -976,36 +1083,15 @@
         </td>
       </tr><tr>
         <td>
-          72
+          74
         </td>
         <td>
-          41
+          68
         </td>
         <td>
-          2810
+          3030
           -
-          2869
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.application.Platform.runLater
-        </td>
-        <td style="background: #F0ADAD">
-          javafx.application.Platform.runLater((() =&gt; AuthenticationActor.this.controller.formMsgLabel.setText(m)))
-        </td>
-      </tr><tr>
-        <td>
-          72
-        </td>
-        <td>
-          40
-        </td>
-        <td>
-          2834
-          -
-          2868
+          3068
         </td>
         <td>
           Apply
@@ -1014,19 +1100,19 @@
           javafx.scene.control.Labeled.setText
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationActor.this.controller.formMsgLabel.setText(m)
+          AuthenticationActor.this.authController.formMsgLabel.setText(m)
         </td>
       </tr><tr>
         <td>
-          77
+          74
         </td>
         <td>
-          43
+          69
         </td>
         <td>
-          2970
+          3006
           -
-          3023
+          3069
         </td>
         <td>
           Apply
@@ -1035,19 +1121,40 @@
           javafx.application.Platform.runLater
         </td>
         <td style="background: #F0ADAD">
-          javafx.application.Platform.runLater((() =&gt; AuthenticationActor.this.controller.openVillageView()))
+          javafx.application.Platform.runLater((() =&gt; AuthenticationActor.this.authController.formMsgLabel.setText(m)))
         </td>
       </tr><tr>
         <td>
-          77
+          79
         </td>
         <td>
-          42
+          71
         </td>
         <td>
-          2994
+          3170
           -
-          3022
+          3227
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.application.Platform.runLater
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.application.Platform.runLater((() =&gt; AuthenticationActor.this.authController.openVillageView()))
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          70
+        </td>
+        <td>
+          3194
+          -
+          3226
         </td>
         <td>
           Apply
@@ -1056,40 +1163,19 @@
           cml.controller.fx.AuthenticationViewController.openVillageView
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationActor.this.controller.openVillageView()
+          AuthenticationActor.this.authController.openVillageView()
         </td>
       </tr><tr>
         <td>
-          80
+          82
         </td>
         <td>
-          44
+          73
         </td>
         <td>
-          3102
+          3298
           -
-          3124
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.+
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;TOKEN: &quot;.+(tokenValue)
-        </td>
-      </tr><tr>
-        <td>
-          80
-        </td>
-        <td>
-          45
-        </td>
-        <td>
-          3094
-          -
-          3125
+          3329
         </td>
         <td>
           Apply
@@ -1102,15 +1188,36 @@
         </td>
       </tr><tr>
         <td>
-          81
+          82
         </td>
         <td>
-          46
+          72
         </td>
         <td>
-          3131
+          3306
           -
-          3171
+          3328
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;TOKEN: &quot;.+(tokenValue)
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          74
+        </td>
+        <td>
+          3335
+          -
+          3375
         </td>
         <td>
           Apply
@@ -1123,15 +1230,15 @@
         </td>
       </tr><tr>
         <td>
-          86
+          88
         </td>
         <td>
-          47
+          75
         </td>
         <td>
-          3348
+          3552
           -
-          3374
+          3578
         </td>
         <td>
           Apply
@@ -1144,15 +1251,15 @@
         </td>
       </tr><tr>
         <td>
-          87
+          89
         </td>
         <td>
-          48
+          76
         </td>
         <td>
-          3382
+          3586
           -
-          3387
+          3591
         </td>
         <td>
           Literal
@@ -1165,15 +1272,15 @@
         </td>
       </tr><tr>
         <td>
-          89
+          91
         </td>
         <td>
-          49
+          77
         </td>
         <td>
-          3410
+          3614
           -
-          3440
+          3644
         </td>
         <td>
           Apply
@@ -1186,15 +1293,15 @@
         </td>
       </tr><tr>
         <td>
-          90
+          92
         </td>
         <td>
-          50
+          78
         </td>
         <td>
-          3448
+          3652
           -
-          3474
+          3678
         </td>
         <td>
           Apply
@@ -1207,15 +1314,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          93
         </td>
         <td>
-          52
+          80
         </td>
         <td>
-          3482
+          3686
           -
-          3547
+          3751
         </td>
         <td>
           Apply
@@ -1228,15 +1335,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          93
         </td>
         <td>
-          51
+          79
         </td>
         <td>
-          3490
+          3694
           -
-          3546
+          3750
         </td>
         <td>
           Apply
@@ -1249,15 +1356,15 @@
         </td>
       </tr><tr>
         <td>
-          92
+          94
         </td>
         <td>
-          53
+          81
         </td>
         <td>
-          3555
+          3759
           -
-          3559
+          3763
         </td>
         <td>
           Literal
@@ -1270,15 +1377,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          103
         </td>
         <td>
-          54
+          82
         </td>
         <td>
-          3701
+          3905
           -
-          3740
+          3948
         </td>
         <td>
           Apply
@@ -1287,19 +1394,19 @@
           javafx.scene.Node.setDisable
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationActor.this.controller.registerButton.setDisable(b)
+          AuthenticationActor.this.authController.registerButton.setDisable(b)
         </td>
       </tr><tr>
         <td>
-          102
+          104
         </td>
         <td>
-          55
+          83
         </td>
         <td>
-          3746
+          3954
           -
-          3782
+          3994
         </td>
         <td>
           Apply
@@ -1308,7 +1415,7 @@
           javafx.scene.Node.setDisable
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationActor.this.controller.loginButton.setDisable(b)
+          AuthenticationActor.this.authController.loginButton.setDisable(b)
         </td>
       </tr>
     </table>

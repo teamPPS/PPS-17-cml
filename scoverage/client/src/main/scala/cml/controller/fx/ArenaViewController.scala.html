@@ -24,53 +24,127 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller.fx
 </span>2 <span style=''>
-</span>3 <span style=''>
-</span>4 <span style=''>import cml.controller.messages.ArenaRequest.ExitRequest
-</span>5 <span style=''>import cml.utils.ViewConfig._
-</span>6 <span style=''>import cml.view.ViewSwitch
-</span>7 <span style=''>import javafx.fxml.FXML
-</span>8 <span style=''>import javafx.scene.control.Alert.AlertType
-</span>9 <span style=''>import javafx.scene.control.{Alert, Button, ButtonType}
-</span>10 <span style=''>
-</span>11 <span style=''>/**
-</span>12 <span style=''>  * Controller class for graphic arena view
-</span>13 <span style=''>  *
-</span>14 <span style=''>  * @author Chiara Volonnino
-</span>15 <span style=''>  */
+</span>3 <span style=''>import akka.actor.ActorSelection
+</span>4 <span style=''>import cml.controller.ArenaActor
+</span>5 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+</span>6 <span style=''>import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
+</span>7 <span style=''>import cml.model.base.Creature
+</span>8 <span style=''>import cml.utils.ViewConfig._
+</span>9 <span style=''>import cml.view.BattleRule.BattleRulesImpl
+</span>10 <span style=''>import cml.view.ViewSwitch
+</span>11 <span style=''>import javafx.fxml.FXML
+</span>12 <span style=''>import javafx.scene.control.Alert.AlertType
+</span>13 <span style=''>import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
+</span>14 <span style=''>
+</span>15 <span style=''>
 </span>16 <span style=''>
-</span>17 <span style=''>class ArenaViewController {
-</span>18 <span style=''>
-</span>19 <span style=''>  @FXML var exitButton: Button = _
-</span>20 <span style=''>
-</span>21 <span style=''>  @FXML
-</span>22 <span style=''>  def pauseOption(): Unit = {
-</span>23 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.INFORMATION) {
-</span>24 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Information Dialog&quot;)</span><span style=''>
-</span>25 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;PAUSE&quot;)</span><span style=''>
-</span>26 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Resume?&quot;)</span><span style=''>
-</span>27 <span style=''>    }
-</span>28 <span style=''>    </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
-</span>29 <span style=''>  }
-</span>30 <span style=''>
-</span>31 <span style=''>  @FXML
-</span>32 <span style=''>  def exitOption(): Unit = {
-</span>33 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.CONFIRMATION) {
-</span>34 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Confirmation Dialog&quot;)</span><span style=''>
-</span>35 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;Exit&quot;)</span><span style=''>
-</span>36 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Are you sure to exit?&quot;)</span><span style=''>
-</span>37 <span style=''>    }
-</span>38 <span style=''>
-</span>39 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
-</span>40 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) {
-</span>41 <span style=''>      </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, exitButton.getScene)</span><span style=''>
-</span>42 <span style=''>    }
-</span>43 <span style=''>  }
-</span>44 <span style=''>
-</span>45 <span style=''>  @FXML
-</span>46 <span style=''>  def attackOption(): Unit = {
-</span>47 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Attack&quot;)</span><span style=''>
-</span>48 <span style=''>  }
-</span>49 <span style=''>}
+</span>17 <span style=''>/**
+</span>18 <span style=''>  * Controller class for graphic arena view
+</span>19 <span style=''>  *
+</span>20 <span style=''>  * @author Chiara Volonnino
+</span>21 <span style=''>  */
+</span>22 <span style=''>
+</span>23 <span style=''>class ArenaViewController {
+</span>24 <span style=''>
+</span>25 <span style=''>  @FXML var exitButton: Button = _
+</span>26 <span style=''>  @FXML var userLifeBar: ProgressBar = _
+</span>27 <span style=''>  @FXML var challengerLifeBar: ProgressBar = _
+</span>28 <span style=''>  @FXML var attackButton: Button = _
+</span>29 <span style=''>
+</span>30 <span style=''>  private val battleGame: BattleRulesImpl = </span><span style='background: #F0ADAD'>BattleRulesImpl()</span><span style=''>
+</span>31 <span style=''>  private val selectedCreature: Option[Creature] = </span><span style='background: #F0ADAD'>Creature.selectedCreature</span><span style=''>
+</span>32 <span style=''>  private var userPowerAttack: Int = _
+</span>33 <span style=''>  private var _creatureLife: Int = _
+</span>34 <span style=''>  private var _challengerLife: Int = _
+</span>35 <span style=''>
+</span>36 <span style=''>  private val arenaActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection &quot;/user/ArenaActor&quot;</span><span style=''>
+</span>37 <span style=''>
+</span>38 <span style=''>  def initialize(): Unit ={
+</span>39 <span style=''>    </span><span style='background: #F0ADAD'>arenaActor ! ControllerRefRequest(this)</span><span style=''>
+</span>40 <span style=''>    </span><span style='background: #F0ADAD'>battleGame.initialization()</span><span style=''>
+</span>41 <span style=''>    </span><span style='background: #F0ADAD'>attackButton.setDisable(true)</span><span style=''>
+</span>42 <span style=''>    </span><span style='background: #F0ADAD'>_creatureLife = battleGame.creatureLife()</span><span style=''>
+</span>43 <span style=''>    </span><span style='background: #F0ADAD'>userLifeBar.setProgress(_creatureLife)</span><span style=''>
+</span>44 <span style=''>    </span><span style='background: #F0ADAD'>_challengerLife = battleGame.creatureLife()</span><span style=''>
+</span>45 <span style=''>    </span><span style='background: #F0ADAD'>challengerLifeBar.setProgress(_challengerLife)</span><span style=''>
+</span>46 <span style=''>  }
+</span>47 <span style=''>
+</span>48 <span style=''>  @FXML
+</span>49 <span style=''>  def pauseOption(): Unit = {
+</span>50 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.INFORMATION) {
+</span>51 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Information Dialog&quot;)</span><span style=''>
+</span>52 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;PAUSE&quot;)</span><span style=''>
+</span>53 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Resume?&quot;)</span><span style=''>
+</span>54 <span style=''>    }
+</span>55 <span style=''>    </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
+</span>56 <span style=''>  }
+</span>57 <span style=''>
+</span>58 <span style=''>  @FXML
+</span>59 <span style=''>  def exitOption(): Unit = {
+</span>60 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.CONFIRMATION) {
+</span>61 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Confirmation Dialog&quot;)</span><span style=''>
+</span>62 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;Exit&quot;)</span><span style=''>
+</span>63 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Are you sure to exit?&quot;)</span><span style=''>
+</span>64 <span style=''>    }
+</span>65 <span style=''>
+</span>66 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
+</span>67 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) </span><span style='background: #F0ADAD'>{
+</span>68 <span style=''></span><span style='background: #F0ADAD'>      Creature.setSelectedCreature(None)
+</span>69 <span style=''></span><span style='background: #F0ADAD'>      arenaActor ! StopRequest()
+</span>70 <span style=''></span><span style='background: #F0ADAD'>      ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
+</span>71 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>72 <span style=''>  }
+</span>73 <span style=''>
+</span>74 <span style=''>  @FXML
+</span>75 <span style=''>  def attackOption(): Unit = {
+</span>76 <span style=''>    </span><span style='background: #F0ADAD'>battleGame.attack()</span><span style=''>
+</span>77 <span style=''>    if(</span><span style='background: #F0ADAD'>battleGame.attackPoint equals 0</span><span style=''>)  </span><span style='background: #F0ADAD'>attackButton.setDisable(true)</span><span style=''>
+</span>78 <span style=''>    </span><span style='background: #F0ADAD'>userPowerAttack = game()</span><span style=''>
+</span>79 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot; attack -- &gt; &quot; + userPowerAttack)</span><span style=''>
+</span>80 <span style=''>    </span><span style='background: #F0ADAD'>challengerLifeBar_()</span><span style=''>
+</span>81 <span style=''>    </span><span style='background: #F0ADAD'>arenaActor ! AttackRequest(userPowerAttack)</span><span style=''>
+</span>82 <span style=''>  }
+</span>83 <span style=''>
+</span>84 <span style=''>  @FXML
+</span>85 <span style=''>  def chargeOption(): Unit = {
+</span>86 <span style=''>    </span><span style='background: #F0ADAD'>attackButton.setDisable(false)</span><span style=''>
+</span>87 <span style=''>    </span><span style='background: #F0ADAD'>battleGame.charge()</span><span style=''>
+</span>88 <span style=''>    </span><span style='background: #F0ADAD'>userPowerAttack = game()</span><span style=''>
+</span>89 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;charge attack -- &gt; &quot; + userPowerAttack)</span><span style=''>
+</span>90 <span style=''>    </span><span style='background: #F0ADAD'>arenaActor ! AttackRequest(userPowerAttack)</span><span style=''>
+</span>91 <span style=''>    </span><span style='background: #F0ADAD'>battleGame.isCharge_()</span><span style=''>
+</span>92 <span style=''>  }
+</span>93 <span style=''>
+</span>94 <span style=''>  @FXML
+</span>95 <span style=''>  def protectionOption(): Unit = {
+</span>96 <span style=''>    </span><span style='background: #F0ADAD'>battleGame.protection()</span><span style=''>
+</span>97 <span style=''>    </span><span style='background: #F0ADAD'>userPowerAttack = game()</span><span style=''>
+</span>98 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;protection attack -- &gt; &quot; + userPowerAttack)</span><span style=''>
+</span>99 <span style=''>    </span><span style='background: #F0ADAD'>arenaActor ! AttackRequest(userPowerAttack)</span><span style=''>
+</span>100 <span style=''>    </span><span style='background: #F0ADAD'>battleGame.isProtect_()</span><span style=''>
+</span>101 <span style=''>  }
+</span>102 <span style=''>
+</span>103 <span style=''>  def userLifeBar_(challengerPowerAttack: Int): Unit = {
+</span>104 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;_challengerPowerAttack ---&gt; &quot; + challengerPowerAttack)</span><span style=''>
+</span>105 <span style=''>    </span><span style='background: #F0ADAD'>_creatureLife -= challengerPowerAttack</span><span style=''>
+</span>106 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;_challengerPowerAttack ---&gt; &quot; + _creatureLife)</span><span style=''>
+</span>107 <span style=''>    val progress: Double = </span><span style='background: #F0ADAD'>_creatureLife.toDouble / battleGame.creatureLife().toDouble</span><span style=''>
+</span>108 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;progress value --&gt; &quot; + progress)</span><span style=''>
+</span>109 <span style=''>    </span><span style='background: #F0ADAD'>userLifeBar.setProgress(progress)</span><span style=''>
+</span>110 <span style=''>  }
+</span>111 <span style=''>
+</span>112 <span style=''>  def challengerLifeBar_(): Unit = {
+</span>113 <span style=''>    </span><span style='background: #F0ADAD'>_challengerLife -= userPowerAttack</span><span style=''>
+</span>114 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;CHALLENGER LIFE BAR: &quot; + _challengerLife)</span><span style=''>
+</span>115 <span style=''>    val progress: Double = </span><span style='background: #F0ADAD'>_challengerLife.toDouble / battleGame.creatureLife().toDouble</span><span style=''>
+</span>116 <span style=''>    </span><span style='background: #F0ADAD'>challengerLifeBar.setProgress(progress)</span><span style=''>
+</span>117 <span style=''>  }
+</span>118 <span style=''>
+</span>119 <span style=''>  private def creatureAttackValue_(): Int = </span><span style='background: #F0ADAD'>selectedCreature.get.attackValue</span><span style=''>
+</span>120 <span style=''>
+</span>121 <span style=''>  private def game(): Int = </span><span style='background: #F0ADAD'>battleGame.gameEngine(creatureAttackValue_())</span><span style=''>
+</span>122 <span style=''>
+</span>123 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -84,15 +158,393 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          23
+          30
         </td>
         <td>
-          143
+          208
         </td>
         <td>
-          494
+          877
           -
-          497
+          894
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.BattleRule.BattleRulesImpl.apply()
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          209
+        </td>
+        <td>
+          947
+          -
+          972
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.selectedCreature
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.Creature.selectedCreature
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          210
+        </td>
+        <td>
+          1137
+          -
+          1177
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRefFactory.actorSelection
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(&quot;/user/ArenaActor&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          211
+        </td>
+        <td>
+          1214
+          -
+          1224
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          214
+        </td>
+        <td>
+          1225
+          -
+          1225
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!$default$2(x$1)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          213
+        </td>
+        <td>
+          1227
+          -
+          1253
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.ControllerRefRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.ControllerRefRequest.apply(this)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          212
+        </td>
+        <td>
+          1214
+          -
+          1224
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(ArenaViewController.this.arenaActor)
+        </td>
+      </tr><tr>
+        <td>
+          39
+        </td>
+        <td>
+          215
+        </td>
+        <td>
+          1214
+          -
+          1253
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!(x$1)(x$2)
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          216
+        </td>
+        <td>
+          1259
+          -
+          1286
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.initialization
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.initialization()
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          217
+        </td>
+        <td>
+          1292
+          -
+          1321
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.setDisable
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.attackButton.setDisable(true)
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          218
+        </td>
+        <td>
+          1343
+          -
+          1368
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.creatureLife
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.creatureLife()
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          219
+        </td>
+        <td>
+          1327
+          -
+          1368
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController._creatureLife_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._creatureLife_=(ArenaViewController.this.battleGame.creatureLife())
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          220
+        </td>
+        <td>
+          1398
+          -
+          1411
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Int.toDouble
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._creatureLife.toDouble
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          221
+        </td>
+        <td>
+          1374
+          -
+          1412
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.ProgressIndicator.setProgress
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userLifeBar.setProgress(ArenaViewController.this._creatureLife.toDouble)
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          223
+        </td>
+        <td>
+          1418
+          -
+          1461
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController._challengerLife_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._challengerLife_=(ArenaViewController.this.battleGame.creatureLife())
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          222
+        </td>
+        <td>
+          1436
+          -
+          1461
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.creatureLife
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.creatureLife()
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          225
+        </td>
+        <td>
+          1467
+          -
+          1513
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.ProgressIndicator.setProgress
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.challengerLifeBar.setProgress(ArenaViewController.this._challengerLife.toDouble)
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          224
+        </td>
+        <td>
+          1497
+          -
+          1512
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Int.toDouble
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._challengerLife.toDouble
+        </td>
+      </tr><tr>
+        <td>
+          50
+        </td>
+        <td>
+          229
+        </td>
+        <td>
+          1578
+          -
+          1581
         </td>
         <td>
           Apply
@@ -105,15 +557,15 @@
         </td>
       </tr><tr>
         <td>
-          24
+          51
         </td>
         <td>
-          140
+          226
         </td>
         <td>
-          536
+          1620
           -
-          566
+          1650
         </td>
         <td>
           Apply
@@ -126,15 +578,15 @@
         </td>
       </tr><tr>
         <td>
-          25
+          52
         </td>
         <td>
-          141
+          227
         </td>
         <td>
-          574
+          1658
           -
-          596
+          1680
         </td>
         <td>
           Apply
@@ -147,15 +599,15 @@
         </td>
       </tr><tr>
         <td>
-          26
+          53
         </td>
         <td>
-          142
+          228
         </td>
         <td>
-          604
+          1688
           -
-          629
+          1713
         </td>
         <td>
           Apply
@@ -168,15 +620,15 @@
         </td>
       </tr><tr>
         <td>
-          28
+          55
         </td>
         <td>
-          145
+          231
         </td>
         <td>
-          659
+          1743
           -
-          659
+          1743
         </td>
         <td>
           Literal
@@ -189,15 +641,15 @@
         </td>
       </tr><tr>
         <td>
-          28
+          55
         </td>
         <td>
-          144
+          230
         </td>
         <td>
-          642
+          1726
           -
-          661
+          1745
         </td>
         <td>
           Apply
@@ -210,15 +662,15 @@
         </td>
       </tr><tr>
         <td>
-          33
+          60
         </td>
         <td>
-          149
+          235
         </td>
         <td>
-          725
+          1809
           -
-          728
+          1812
         </td>
         <td>
           Apply
@@ -231,15 +683,15 @@
         </td>
       </tr><tr>
         <td>
-          34
+          61
         </td>
         <td>
-          146
+          232
         </td>
         <td>
-          768
+          1852
           -
-          799
+          1883
         </td>
         <td>
           Apply
@@ -252,15 +704,15 @@
         </td>
       </tr><tr>
         <td>
-          35
+          62
         </td>
         <td>
-          147
+          233
         </td>
         <td>
-          807
+          1891
           -
-          828
+          1912
         </td>
         <td>
           Apply
@@ -273,15 +725,15 @@
         </td>
       </tr><tr>
         <td>
-          36
+          63
         </td>
         <td>
-          148
+          234
         </td>
         <td>
-          836
+          1920
           -
-          875
+          1959
         </td>
         <td>
           Apply
@@ -294,15 +746,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          66
         </td>
         <td>
-          150
+          236
         </td>
         <td>
-          903
+          1987
           -
-          922
+          2006
         </td>
         <td>
           Apply
@@ -315,99 +767,15 @@
         </td>
       </tr><tr>
         <td>
-          40
+          67
         </td>
         <td>
-          158
+          238
         </td>
         <td>
-          928
+          2036
           -
-          928
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          40
-        </td>
-        <td>
-          151
-        </td>
-        <td>
-          968
-          -
-          981
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          javafx.scene.control.ButtonType.OK
-        </td>
-        <td style="background: #F0ADAD">
-          javafx.scene.control.ButtonType.OK
-        </td>
-      </tr><tr>
-        <td>
-          40
-        </td>
-        <td>
-          159
-        </td>
-        <td>
-          928
-          -
-          928
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          40
-        </td>
-        <td>
-          153
-        </td>
-        <td>
-          932
-          -
-          981
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Boolean.&amp;&amp;
-        </td>
-        <td style="background: #F0ADAD">
-          result.isPresent().&amp;&amp;(result.get().==(javafx.scene.control.ButtonType.OK))
-        </td>
-      </tr><tr>
-        <td>
-          40
-        </td>
-        <td>
-          152
-        </td>
-        <td>
-          952
-          -
-          981
+          2065
         </td>
         <td>
           Apply
@@ -420,36 +788,276 @@
         </td>
       </tr><tr>
         <td>
-          41
+          67
         </td>
         <td>
-          155
+          250
         </td>
         <td>
-          1032
+          2067
           -
-          1051
+          2219
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  cml.model.base.Creature.setSelectedCreature(scala.None);
+  {
+    &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(ArenaViewController.this.arenaActor);
+    &lt;artifact&gt; val x$3: cml.controller.messages.ArenaRequest.StopRequest = cml.controller.messages.ArenaRequest.StopRequest.apply();
+    &lt;artifact&gt; val x$4: akka.actor.ActorRef = qual$2.!$default$2(x$3);
+    qual$2.!(x$3)(x$4)
+  };
+  cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, ArenaViewController.this.exitButton.getScene())
+}
+        </td>
+      </tr><tr>
+        <td>
+          67
+        </td>
+        <td>
+          252
+        </td>
+        <td>
+          2012
+          -
+          2012
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          67
+        </td>
+        <td>
+          237
+        </td>
+        <td>
+          2052
+          -
+          2065
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          javafx.scene.control.ButtonType.OK
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.scene.control.ButtonType.OK
+        </td>
+      </tr><tr>
+        <td>
+          67
+        </td>
+        <td>
+          239
+        </td>
+        <td>
+          2016
+          -
+          2065
         </td>
         <td>
           Apply
         </td>
         <td>
-          javafx.scene.Node.getScene
+          scala.Boolean.&amp;&amp;
         </td>
         <td style="background: #F0ADAD">
-          ArenaViewController.this.exitButton.getScene()
+          result.isPresent().&amp;&amp;(result.get().==(javafx.scene.control.ButtonType.OK))
         </td>
       </tr><tr>
         <td>
-          41
+          67
         </td>
         <td>
-          154
+          251
         </td>
         <td>
-          1012
+          2012
           -
-          1030
+          2012
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          68
+        </td>
+        <td>
+          241
+        </td>
+        <td>
+          2076
+          -
+          2110
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.setSelectedCreature
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.Creature.setSelectedCreature(scala.None)
+        </td>
+      </tr><tr>
+        <td>
+          68
+        </td>
+        <td>
+          240
+        </td>
+        <td>
+          2105
+          -
+          2109
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          245
+        </td>
+        <td>
+          2129
+          -
+          2129
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!$default$2(x$3)
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          244
+        </td>
+        <td>
+          2131
+          -
+          2144
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.StopRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.StopRequest.apply()
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          243
+        </td>
+        <td>
+          2118
+          -
+          2128
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(ArenaViewController.this.arenaActor)
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          246
+        </td>
+        <td>
+          2118
+          -
+          2144
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!(x$3)(x$4)
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          242
+        </td>
+        <td>
+          2118
+          -
+          2128
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          247
+        </td>
+        <td>
+          2172
+          -
+          2190
         </td>
         <td>
           Select
@@ -462,36 +1070,15 @@
         </td>
       </tr><tr>
         <td>
-          41
+          70
         </td>
         <td>
-          157
+          249
         </td>
         <td>
-          992
+          2152
           -
-          1052
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          cml.view.ViewSwitch.activate
-        </td>
-        <td style="background: #F0ADAD">
-          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, ArenaViewController.this.exitButton.getScene())
-        </td>
-      </tr><tr>
-        <td>
-          41
-        </td>
-        <td>
-          156
-        </td>
-        <td>
-          992
-          -
-          1052
+          2212
         </td>
         <td>
           Apply
@@ -504,15 +1091,246 @@
         </td>
       </tr><tr>
         <td>
-          47
+          70
         </td>
         <td>
-          160
+          248
         </td>
         <td>
-          1113
+          2192
           -
-          1130
+          2211
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.exitButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          253
+        </td>
+        <td>
+          2273
+          -
+          2292
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.attack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.attack()
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          254
+        </td>
+        <td>
+          2301
+          -
+          2332
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.attackPoint.equals(0)
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          256
+        </td>
+        <td>
+          2335
+          -
+          2364
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          javafx.scene.Node.setDisable
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.attackButton.setDisable(true)
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          258
+        </td>
+        <td>
+          2298
+          -
+          2298
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          255
+        </td>
+        <td>
+          2335
+          -
+          2364
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.setDisable
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.attackButton.setDisable(true)
+        </td>
+      </tr><tr>
+        <td>
+          77
+        </td>
+        <td>
+          257
+        </td>
+        <td>
+          2298
+          -
+          2298
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          78
+        </td>
+        <td>
+          259
+        </td>
+        <td>
+          2388
+          -
+          2394
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.game
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.game()
+        </td>
+      </tr><tr>
+        <td>
+          78
+        </td>
+        <td>
+          260
+        </td>
+        <td>
+          2370
+          -
+          2394
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack_=(ArenaViewController.this.game())
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          262
+        </td>
+        <td>
+          2426
+          -
+          2441
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          261
+        </td>
+        <td>
+          2408
+          -
+          2423
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot; attack -- &gt; &quot;
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          264
+        </td>
+        <td>
+          2400
+          -
+          2442
         </td>
         <td>
           Apply
@@ -521,7 +1339,1330 @@
           scala.Predef.println
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Attack&quot;)
+          scala.Predef.println(&quot; attack -- &gt; &quot;.+(ArenaViewController.this.userPowerAttack))
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          263
+        </td>
+        <td>
+          2408
+          -
+          2441
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot; attack -- &gt; &quot;.+(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          80
+        </td>
+        <td>
+          265
+        </td>
+        <td>
+          2448
+          -
+          2468
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.challengerLifeBar_
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.challengerLifeBar_()
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          271
+        </td>
+        <td>
+          2474
+          -
+          2517
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!(x$5)(x$6)
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          268
+        </td>
+        <td>
+          2501
+          -
+          2516
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          267
+        </td>
+        <td>
+          2474
+          -
+          2484
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(ArenaViewController.this.arenaActor)
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          270
+        </td>
+        <td>
+          2485
+          -
+          2485
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!$default$2(x$5)
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          266
+        </td>
+        <td>
+          2474
+          -
+          2484
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          269
+        </td>
+        <td>
+          2487
+          -
+          2517
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.AttackRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.AttackRequest.apply(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          272
+        </td>
+        <td>
+          2571
+          -
+          2601
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.setDisable
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.attackButton.setDisable(false)
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          273
+        </td>
+        <td>
+          2607
+          -
+          2626
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.charge
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.charge()
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          274
+        </td>
+        <td>
+          2650
+          -
+          2656
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.game
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.game()
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          275
+        </td>
+        <td>
+          2632
+          -
+          2656
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack_=(ArenaViewController.this.game())
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          277
+        </td>
+        <td>
+          2694
+          -
+          2709
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          276
+        </td>
+        <td>
+          2670
+          -
+          2691
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;charge attack -- &gt; &quot;
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          279
+        </td>
+        <td>
+          2662
+          -
+          2710
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;charge attack -- &gt; &quot;.+(ArenaViewController.this.userPowerAttack))
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          278
+        </td>
+        <td>
+          2670
+          -
+          2709
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;charge attack -- &gt; &quot;.+(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          280
+        </td>
+        <td>
+          2716
+          -
+          2726
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          283
+        </td>
+        <td>
+          2729
+          -
+          2759
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.AttackRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.AttackRequest.apply(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          285
+        </td>
+        <td>
+          2716
+          -
+          2759
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$4.!(x$7)(x$8)
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          282
+        </td>
+        <td>
+          2743
+          -
+          2758
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          281
+        </td>
+        <td>
+          2716
+          -
+          2726
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(ArenaViewController.this.arenaActor)
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          284
+        </td>
+        <td>
+          2727
+          -
+          2727
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$4.!$default$2(x$7)
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          286
+        </td>
+        <td>
+          2765
+          -
+          2787
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isCharge_
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.isCharge_()
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          287
+        </td>
+        <td>
+          2845
+          -
+          2868
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.protection
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.protection()
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          289
+        </td>
+        <td>
+          2874
+          -
+          2898
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack_=(ArenaViewController.this.game())
+        </td>
+      </tr><tr>
+        <td>
+          97
+        </td>
+        <td>
+          288
+        </td>
+        <td>
+          2892
+          -
+          2898
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.game
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.game()
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          292
+        </td>
+        <td>
+          2912
+          -
+          2955
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;protection attack -- &gt; &quot;.+(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          291
+        </td>
+        <td>
+          2940
+          -
+          2955
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          290
+        </td>
+        <td>
+          2912
+          -
+          2937
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;protection attack -- &gt; &quot;
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          293
+        </td>
+        <td>
+          2904
+          -
+          2956
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;protection attack -- &gt; &quot;.+(ArenaViewController.this.userPowerAttack))
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          295
+        </td>
+        <td>
+          2962
+          -
+          2972
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(ArenaViewController.this.arenaActor)
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          298
+        </td>
+        <td>
+          2973
+          -
+          2973
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$5.!$default$2(x$9)
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          294
+        </td>
+        <td>
+          2962
+          -
+          2972
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.arenaActor
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.arenaActor
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          297
+        </td>
+        <td>
+          2975
+          -
+          3005
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaRequest.AttackRequest.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaRequest.AttackRequest.apply(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          299
+        </td>
+        <td>
+          2962
+          -
+          3005
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$5.!(x$9)(x$10)
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          296
+        </td>
+        <td>
+          2989
+          -
+          3004
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          100
+        </td>
+        <td>
+          300
+        </td>
+        <td>
+          3011
+          -
+          3034
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isProtect_
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.isProtect_()
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          301
+        </td>
+        <td>
+          3113
+          -
+          3167
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;_challengerPowerAttack ---&gt; &quot;.+(challengerPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          302
+        </td>
+        <td>
+          3105
+          -
+          3168
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;_challengerPowerAttack ---&gt; &quot;.+(challengerPowerAttack))
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          304
+        </td>
+        <td>
+          3174
+          -
+          3212
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController._creatureLife_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._creatureLife_=(ArenaViewController.this._creatureLife.-(challengerPowerAttack))
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          303
+        </td>
+        <td>
+          3174
+          -
+          3212
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._creatureLife.-(challengerPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          307
+        </td>
+        <td>
+          3226
+          -
+          3272
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;_challengerPowerAttack ---&gt; &quot;.+(ArenaViewController.this._creatureLife)
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          306
+        </td>
+        <td>
+          3259
+          -
+          3272
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController._creatureLife
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._creatureLife
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          308
+        </td>
+        <td>
+          3218
+          -
+          3273
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;_challengerPowerAttack ---&gt; &quot;.+(ArenaViewController.this._creatureLife))
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          305
+        </td>
+        <td>
+          3226
+          -
+          3256
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;_challengerPowerAttack ---&gt; &quot;
+        </td>
+      </tr><tr>
+        <td>
+          107
+        </td>
+        <td>
+          310
+        </td>
+        <td>
+          3302
+          -
+          3361
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Double./
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._creatureLife.toDouble./(ArenaViewController.this.battleGame.creatureLife().toDouble)
+        </td>
+      </tr><tr>
+        <td>
+          107
+        </td>
+        <td>
+          309
+        </td>
+        <td>
+          3327
+          -
+          3361
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Int.toDouble
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.creatureLife().toDouble
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          312
+        </td>
+        <td>
+          3367
+          -
+          3408
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;progress value --&gt; &quot;.+(progress))
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          311
+        </td>
+        <td>
+          3375
+          -
+          3407
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;progress value --&gt; &quot;.+(progress)
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          313
+        </td>
+        <td>
+          3414
+          -
+          3447
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.ProgressIndicator.setProgress
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userLifeBar.setProgress(progress)
+        </td>
+      </tr><tr>
+        <td>
+          113
+        </td>
+        <td>
+          316
+        </td>
+        <td>
+          3498
+          -
+          3532
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController._challengerLife_=
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._challengerLife_=(ArenaViewController.this._challengerLife.-(ArenaViewController.this.userPowerAttack))
+        </td>
+      </tr><tr>
+        <td>
+          113
+        </td>
+        <td>
+          315
+        </td>
+        <td>
+          3498
+          -
+          3532
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._challengerLife.-(ArenaViewController.this.userPowerAttack)
+        </td>
+      </tr><tr>
+        <td>
+          113
+        </td>
+        <td>
+          314
+        </td>
+        <td>
+          3517
+          -
+          3532
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.userPowerAttack
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.userPowerAttack
+        </td>
+      </tr><tr>
+        <td>
+          114
+        </td>
+        <td>
+          319
+        </td>
+        <td>
+          3546
+          -
+          3587
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;CHALLENGER LIFE BAR: &quot;.+(ArenaViewController.this._challengerLife)
+        </td>
+      </tr><tr>
+        <td>
+          114
+        </td>
+        <td>
+          318
+        </td>
+        <td>
+          3572
+          -
+          3587
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController._challengerLife
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._challengerLife
+        </td>
+      </tr><tr>
+        <td>
+          114
+        </td>
+        <td>
+          317
+        </td>
+        <td>
+          3546
+          -
+          3569
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;CHALLENGER LIFE BAR: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          114
+        </td>
+        <td>
+          320
+        </td>
+        <td>
+          3538
+          -
+          3588
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;CHALLENGER LIFE BAR: &quot;.+(ArenaViewController.this._challengerLife))
+        </td>
+      </tr><tr>
+        <td>
+          115
+        </td>
+        <td>
+          322
+        </td>
+        <td>
+          3617
+          -
+          3678
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Double./
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this._challengerLife.toDouble./(ArenaViewController.this.battleGame.creatureLife().toDouble)
+        </td>
+      </tr><tr>
+        <td>
+          115
+        </td>
+        <td>
+          321
+        </td>
+        <td>
+          3644
+          -
+          3678
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Int.toDouble
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.creatureLife().toDouble
+        </td>
+      </tr><tr>
+        <td>
+          116
+        </td>
+        <td>
+          323
+        </td>
+        <td>
+          3684
+          -
+          3723
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.ProgressIndicator.setProgress
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.challengerLifeBar.setProgress(progress)
+        </td>
+      </tr><tr>
+        <td>
+          119
+        </td>
+        <td>
+          324
+        </td>
+        <td>
+          3776
+          -
+          3808
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.selectedCreature.get.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          121
+        </td>
+        <td>
+          325
+        </td>
+        <td>
+          3862
+          -
+          3884
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.ArenaViewController.creatureAttackValue_
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.creatureAttackValue_()
+        </td>
+      </tr><tr>
+        <td>
+          121
+        </td>
+        <td>
+          326
+        </td>
+        <td>
+          3840
+          -
+          3885
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.gameEngine
+        </td>
+        <td style="background: #F0ADAD">
+          ArenaViewController.this.battleGame.gameEngine(ArenaViewController.this.creatureAttackValue_())
         </td>
       </tr>
     </table>

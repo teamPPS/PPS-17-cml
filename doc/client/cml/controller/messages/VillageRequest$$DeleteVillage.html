@@ -149,8 +149,12 @@
                         <a href="VillageRequest$$EnterVillage.html" title="Resuest to enter a village">EnterVillage</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="VillageRequest$$Logout.html" title=""></a>
-                        <a href="VillageRequest$$Logout.html" title="">Logout</a>
+                        <a class="class" href="VillageRequest$$Logout.html" title="Request to logout from the village"></a>
+                        <a href="VillageRequest$$Logout.html" title="Request to logout from the village">Logout</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="VillageRequest$$SetUpdateVillage.html" title="Request to update something already existing in the village"></a>
+                        <a href="VillageRequest$$SetUpdateVillage.html" title="Request to update something already existing in the village">SetUpdateVillage</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="VillageRequest$$UpdateVillage.html" title="Request to update a village"></a>
@@ -182,7 +186,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">DeleteVillage</span><span class="params">()</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">DeleteVillage</span><span class="params">(<span name="controller">controller: <a href="../fx/VillageViewController.html" class="extype" name="cml.controller.fx.VillageViewController">VillageViewController</a></span>)</span><span class="result"> extends <a href="VillageRequest$$VillageRequest.html" class="extype" name="cml.controller.messages.VillageRequest.VillageRequest">VillageRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -239,9 +243,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="cml.controller.messages.VillageRequest.DeleteVillage#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;():cml.controller.messages.VillageRequest.DeleteVillage"></a><a id="&lt;init&gt;:DeleteVillage"></a>
+      <a id="&lt;init&gt;(controller:cml.controller.fx.VillageViewController):cml.controller.messages.VillageRequest.DeleteVillage"></a><a id="&lt;init&gt;:DeleteVillage"></a>
       <span class="permalink">
-      <a href="../../../cml/controller/messages/VillageRequest$$DeleteVillage.html#&lt;init&gt;():cml.controller.messages.VillageRequest.DeleteVillage" title="Permalink">
+      <a href="../../../cml/controller/messages/VillageRequest$$DeleteVillage.html#&lt;init&gt;(controller:cml.controller.fx.VillageViewController):cml.controller.messages.VillageRequest.DeleteVillage" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -250,7 +254,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">DeleteVillage</span><span class="params">()</span>
+        <span class="name">DeleteVillage</span><span class="params">(<span name="controller">controller: <a href="../fx/VillageViewController.html" class="extype" name="cml.controller.fx.VillageViewController">VillageViewController</a></span>)</span>
       </span>
       
       
@@ -352,6 +356,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="cml.controller.messages.VillageRequest.DeleteVillage#controller" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="controller:cml.controller.fx.VillageViewController"></a><a id="controller:VillageViewController"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/VillageRequest$$DeleteVillage.html#controller:cml.controller.fx.VillageViewController" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">controller</span><span class="result">: <a href="../fx/VillageViewController.html" class="extype" name="cml.controller.fx.VillageViewController">VillageViewController</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

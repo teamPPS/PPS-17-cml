@@ -151,16 +151,16 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cml.controller">controller</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
+                        <a class="class" href="ArenaActor.html" title=""></a>
+                        <a href="ArenaActor.html" title="">ArenaActor</a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
                         <a class="class" href="AuthenticationActor.html" title="Class that implements the actor which manages the authentication process"></a>
                         <a href="AuthenticationActor.html" title="Class that implements the actor which manages the authentication process">AuthenticationActor</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">BattleActor</a>
-                      </li><li class="current-entities indented2">
-                        <a class="object" href="RemoteActor$.html" title=""></a>
-                        <a class="class" href="RemoteActor.html" title=""></a>
-                        <a href="RemoteActor.html" title="">RemoteActor</a>
+                        <a class="class" href="" title="This class implements battle actor and managements user battle"></a>
+                        <a href="" title="This class implements battle actor and managements user battle">BattleActor</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="class" href="VillageActor.html" title="Class that implements the actor which manages the village interaction with user"></a>
@@ -188,16 +188,17 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">BattleActor</span><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+        <span class="name">BattleActor</span><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <span class="extype" name="akka.actor.ActorLogging">ActorLogging</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>This class implements battle actor and managements user battle
+</p></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="akka.actor.Actor">Actor</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="akka.actor.ActorLogging">ActorLogging</span>, <span class="extype" name="akka.actor.Actor">Actor</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -223,7 +224,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="cml.controller.BattleActor"><span>BattleActor</span></li><li class="in" name="akka.actor.Actor"><span>Actor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="cml.controller.BattleActor"><span>BattleActor</span></li><li class="in" name="akka.actor.ActorLogging"><span>ActorLogging</span></li><li class="in" name="akka.actor.Actor"><span>Actor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -336,6 +337,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="cml.controller.BattleActor#arenaActor" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="arenaActor:akka.actor.ActorRef"></a><a id="arenaActor:ActorRef"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/BattleActor.html#arenaActor:akka.actor.ActorRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">arenaActor</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
+      </span>
+      
+      
     </li><li name="akka.actor.Actor#aroundPostRestart" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="aroundPostRestart(reason:Throwable):Unit"></a><a id="aroundPostRestart(Throwable):Unit"></a>
       <span class="permalink">
@@ -447,6 +464,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="cml.controller.BattleActor#challenger" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="challenger:akka.actor.ActorRef"></a><a id="challenger:ActorRef"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/BattleActor.html#challenger:akka.actor.ActorRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">challenger</span><span class="result">: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -595,6 +628,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="akka.actor.ActorLogging#log" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="log:akka.event.LoggingAdapter"></a><a id="log:LoggingAdapter"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/BattleActor.html#log:akka.event.LoggingAdapter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">log</span><span class="result">: <span class="extype" name="akka.event.LoggingAdapter">LoggingAdapter</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ActorLogging</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -671,7 +720,7 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="akka.actor.Actor#postStop" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="cml.controller.BattleActor#postStop" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="postStop():Unit"></a>
       <span class="permalink">
       <a href="../../cml/controller/BattleActor.html#postStop():Unit" title="Permalink">
@@ -686,13 +735,7 @@
         <span class="name">postStop</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd><dt>Annotations</dt><dd>
-                <span class="name">@throws</span><span class="args">(<span>
-      
-      <span class="symbol">classOf[java.lang.Exception]</span>
-    </span>)</span>
-              
-        </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.controller.BattleActor">BattleActor</a> → Actor</dd></dl></div>
     </li><li name="akka.actor.Actor#preRestart" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="preRestart(reason:Throwable,message:Option[Any]):Unit"></a><a id="preRestart(Throwable,Option[Any]):Unit"></a>
       <span class="permalink">
@@ -753,6 +796,38 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.controller.BattleActor">BattleActor</a> → Actor</dd></dl></div>
+    </li><li name="cml.controller.BattleActor#remoteActor" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="remoteActor:akka.actor.ActorSelection"></a><a id="remoteActor:ActorSelection"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/BattleActor.html#remoteActor:akka.actor.ActorSelection" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">remoteActor</span><span class="result">: <span class="extype" name="akka.actor.ActorSelection">ActorSelection</span></span>
+      </span>
+      
+      
+    </li><li name="cml.controller.BattleActor#sceneContext" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sceneContext:javafx.scene.Scene"></a><a id="sceneContext:Scene"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/BattleActor.html#sceneContext:javafx.scene.Scene" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sceneContext</span><span class="result">: <span class="extype" name="javafx.scene.Scene">Scene</span></span>
+      </span>
+      
+      
     </li><li name="akka.actor.Actor#self" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="self:akka.actor.ActorRef"></a><a id="self:ActorRef"></a>
       <span class="permalink">
@@ -833,6 +908,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="cml.controller.BattleActor#turn" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="turn:Int"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/BattleActor.html#turn:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">turn</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
     </li><li name="akka.actor.Actor#unhandled" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="unhandled(message:Any):Unit"></a><a id="unhandled(Any):Unit"></a>
       <span class="permalink">
@@ -927,7 +1018,9 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="akka.actor.Actor">
+        <div class="parent" name="akka.actor.ActorLogging">
+              <h3>Inherited from <span class="extype" name="akka.actor.ActorLogging">ActorLogging</span></h3>
+            </div><div class="parent" name="akka.actor.Actor">
               <h3>Inherited from <span class="extype" name="akka.actor.Actor">Actor</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>

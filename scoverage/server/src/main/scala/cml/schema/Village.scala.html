@@ -24,31 +24,33 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.schema
 </span>2 <span style=''>
-</span>3 <span style=''>import org.mongodb.scala.Document
-</span>4 <span style=''>
-</span>5 <span style=''>/**
-</span>6 <span style=''>  * Object with fields constants
-</span>7 <span style=''>  *
-</span>8 <span style=''>  * @author Eugenio Cavina
-</span>9 <span style=''>  */
-</span>10 <span style=''>object Village {
-</span>11 <span style=''>  val VILLAGE_NAME = </span><span style='background: #AEF1AE'>&quot;village_name&quot;</span><span style=''>
-</span>12 <span style=''>  val FOOD = </span><span style='background: #AEF1AE'>&quot;food&quot;</span><span style=''>
-</span>13 <span style=''>  val GOLD = </span><span style='background: #AEF1AE'>&quot;gold&quot;</span><span style=''>
-</span>14 <span style=''>  val BUILDINGS = </span><span style='background: #AEF1AE'>&quot;buildings&quot;</span><span style=''>
-</span>15 <span style=''>  val BUILDING_TYPE = </span><span style='background: #AEF1AE'>&quot;building_type&quot;</span><span style=''>
-</span>16 <span style=''>  val BUILDING_LEVEL = </span><span style='background: #AEF1AE'>&quot;building_level&quot;</span><span style=''>
-</span>17 <span style=''>  val HABITAT = </span><span style='background: #AEF1AE'>&quot;habitat&quot;</span><span style=''>
-</span>18 <span style=''>  val HABITAT_LEVEL = </span><span style='background: #AEF1AE'>&quot;habitat_level&quot;</span><span style=''>
-</span>19 <span style=''>  val NATURAL_ELEMENT = </span><span style='background: #AEF1AE'>&quot;element&quot;</span><span style=''>
-</span>20 <span style=''>  val CREATURES = </span><span style='background: #AEF1AE'>&quot;creatures&quot;</span><span style=''>
-</span>21 <span style=''>  val CREATURE_ID = </span><span style='background: #AEF1AE'>&quot;creature_id&quot;</span><span style=''>
-</span>22 <span style=''>  val CREATURE_NAME = </span><span style='background: #AEF1AE'>&quot;creature_name&quot;</span><span style=''>
-</span>23 <span style=''>  val CREATURE_LEVEL = </span><span style='background: #AEF1AE'>&quot;creature_level&quot;</span><span style=''>
-</span>24 <span style=''>
-</span>25 <span style=''>}
-</span>26 <span style=''>
-</span>27 <span style=''>
+</span>3 <span style=''>/**
+</span>4 <span style=''>  * Object with fields constants
+</span>5 <span style=''>  *
+</span>6 <span style=''>  * @author Eugenio Cavina
+</span>7 <span style=''>  */
+</span>8 <span style=''>object Village {
+</span>9 <span style=''>  val VILLAGE_NAME_FIELD = </span><span style='background: #AEF1AE'>&quot;village_name&quot;</span><span style=''>
+</span>10 <span style=''>  val FOOD_FIELD = </span><span style='background: #AEF1AE'>&quot;food&quot;</span><span style=''>
+</span>11 <span style=''>  val GOLD_FIELD = </span><span style='background: #AEF1AE'>&quot;gold&quot;</span><span style=''>
+</span>12 <span style=''>  val MULTIPLE_BUILDINGS_FIELD = </span><span style='background: #AEF1AE'>&quot;buildings&quot;</span><span style=''>
+</span>13 <span style=''>  val SINGLE_BUILDING_FIELD = </span><span style='background: #AEF1AE'>&quot;building&quot;</span><span style=''>
+</span>14 <span style=''>  val BUILDING_TYPE_FIELD = </span><span style='background: #AEF1AE'>&quot;building_type&quot;</span><span style=''>
+</span>15 <span style=''>  val BUILDING_LEVEL_FIELD = </span><span style='background: #AEF1AE'>&quot;building_level&quot;</span><span style=''>
+</span>16 <span style=''>  val BUILDING_POSITION_FIELD = </span><span style='background: #AEF1AE'>&quot;building_pos&quot;</span><span style=''>
+</span>17 <span style=''>  val MULTIPLE_HABITAT_FIELD = </span><span style='background: #AEF1AE'>&quot;habitats&quot;</span><span style=''>
+</span>18 <span style=''>  val SINGLE_HABITAT_FIELD = </span><span style='background: #AEF1AE'>&quot;habitat&quot;</span><span style=''>
+</span>19 <span style=''>  val HABITAT_LEVEL_FIELD = </span><span style='background: #AEF1AE'>&quot;habitat_level&quot;</span><span style=''>
+</span>20 <span style=''>  val HABITAT_POSITION_FIELD = </span><span style='background: #AEF1AE'>&quot;habitat_pos&quot;</span><span style=''>
+</span>21 <span style=''>  val NATURAL_ELEMENT_FIELD = </span><span style='background: #AEF1AE'>&quot;element&quot;</span><span style=''>
+</span>22 <span style=''>  val MULTIPLE_CREATURES_FIELD = </span><span style='background: #AEF1AE'>&quot;creatures&quot;</span><span style=''>
+</span>23 <span style=''>  val SINGLE_CREATURE_FIELD = </span><span style='background: #AEF1AE'>&quot;creature&quot;</span><span style=''>
+</span>24 <span style=''>  val CREATURE_NAME_FIELD = </span><span style='background: #AEF1AE'>&quot;creature_name&quot;</span><span style=''>
+</span>25 <span style=''>  val CREATURE_LEVEL_FIELD = </span><span style='background: #AEF1AE'>&quot;creature_level&quot;</span><span style=''>
+</span>26 <span style=''>  val CREATURE_TYPE_FIELD = </span><span style='background: #AEF1AE'>&quot;creature_type&quot;</span><span style=''>
+</span>27 <span style=''>}
+</span>28 <span style=''>
+</span>29 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -62,15 +64,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          11
+          9
         </td>
         <td>
-          158
+          148
         </td>
         <td>
-          176
+          145
           -
-          190
+          159
         </td>
         <td>
           Literal
@@ -83,15 +85,15 @@
         </td>
       </tr><tr>
         <td>
-          12
+          10
         </td>
         <td>
-          159
+          149
         </td>
         <td>
-          205
+          180
           -
-          211
+          186
         </td>
         <td>
           Literal
@@ -104,15 +106,15 @@
         </td>
       </tr><tr>
         <td>
-          13
+          11
         </td>
         <td>
-          160
+          150
         </td>
         <td>
-          226
+          207
           -
-          232
+          213
         </td>
         <td>
           Literal
@@ -125,15 +127,15 @@
         </td>
       </tr><tr>
         <td>
-          14
+          12
         </td>
         <td>
-          161
+          151
         </td>
         <td>
-          252
+          248
           -
-          263
+          259
         </td>
         <td>
           Literal
@@ -146,15 +148,36 @@
         </td>
       </tr><tr>
         <td>
-          15
+          13
         </td>
         <td>
-          162
+          152
         </td>
         <td>
-          287
+          291
           -
-          302
+          301
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;building&quot;
+        </td>
+      </tr><tr>
+        <td>
+          14
+        </td>
+        <td>
+          153
+        </td>
+        <td>
+          331
+          -
+          346
         </td>
         <td>
           Literal
@@ -167,15 +190,15 @@
         </td>
       </tr><tr>
         <td>
-          16
+          15
         </td>
         <td>
-          163
+          154
         </td>
         <td>
-          327
+          377
           -
-          343
+          393
         </td>
         <td>
           Literal
@@ -188,15 +211,57 @@
         </td>
       </tr><tr>
         <td>
+          16
+        </td>
+        <td>
+          155
+        </td>
+        <td>
+          427
+          -
+          441
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;building_pos&quot;
+        </td>
+      </tr><tr>
+        <td>
           17
         </td>
         <td>
-          164
+          156
         </td>
         <td>
-          361
+          474
           -
-          370
+          484
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;habitats&quot;
+        </td>
+      </tr><tr>
+        <td>
+          18
+        </td>
+        <td>
+          157
+        </td>
+        <td>
+          515
+          -
+          524
         </td>
         <td>
           Literal
@@ -209,15 +274,15 @@
         </td>
       </tr><tr>
         <td>
-          18
+          19
         </td>
         <td>
-          165
+          158
         </td>
         <td>
-          394
+          554
           -
-          409
+          569
         </td>
         <td>
           Literal
@@ -230,15 +295,36 @@
         </td>
       </tr><tr>
         <td>
-          19
+          20
         </td>
         <td>
-          166
+          159
         </td>
         <td>
-          435
+          602
           -
-          444
+          615
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;habitat_pos&quot;
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          160
+        </td>
+        <td>
+          647
+          -
+          656
         </td>
         <td>
           Literal
@@ -251,15 +337,15 @@
         </td>
       </tr><tr>
         <td>
-          20
+          22
         </td>
         <td>
-          167
+          161
         </td>
         <td>
-          464
+          691
           -
-          475
+          702
         </td>
         <td>
           Literal
@@ -272,15 +358,15 @@
         </td>
       </tr><tr>
         <td>
-          21
+          23
         </td>
         <td>
-          168
+          162
         </td>
         <td>
-          497
+          734
           -
-          510
+          744
         </td>
         <td>
           Literal
@@ -289,19 +375,19 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #AEF1AE">
-          &quot;creature_id&quot;
+          &quot;creature&quot;
         </td>
       </tr><tr>
         <td>
-          22
+          24
         </td>
         <td>
-          169
+          163
         </td>
         <td>
-          534
+          774
           -
-          549
+          789
         </td>
         <td>
           Literal
@@ -314,15 +400,15 @@
         </td>
       </tr><tr>
         <td>
-          23
+          25
         </td>
         <td>
-          170
+          164
         </td>
         <td>
-          574
+          820
           -
-          590
+          836
         </td>
         <td>
           Literal
@@ -332,6 +418,27 @@
         </td>
         <td style="background: #AEF1AE">
           &quot;creature_level&quot;
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          165
+        </td>
+        <td>
+          866
+          -
+          881
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;creature_type&quot;
         </td>
       </tr>
     </table>

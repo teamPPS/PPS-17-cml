@@ -1,0 +1,1171 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\view\BattleRule\BattleRulesImpl.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.view.BattleRule
+</span>2 <span style=''>
+</span>3 <span style=''>/**
+</span>4 <span style=''>  * This trait define basic battle rules
+</span>5 <span style=''>  *
+</span>6 <span style=''>  * @author Chiara Volonnino
+</span>7 <span style=''>  */
+</span>8 <span style=''>
+</span>9 <span style=''>trait BattleRule {
+</span>10 <span style=''>
+</span>11 <span style=''>  /**
+</span>12 <span style=''>    * Game initialization
+</span>13 <span style=''>    */
+</span>14 <span style=''>  def initialization()
+</span>15 <span style=''>
+</span>16 <span style=''>  /**
+</span>17 <span style=''>    * Define attack method
+</span>18 <span style=''>    */
+</span>19 <span style=''>  def attack()
+</span>20 <span style=''>
+</span>21 <span style=''>  /**
+</span>22 <span style=''>    * Define charge method
+</span>23 <span style=''>    */
+</span>24 <span style=''>  def charge()
+</span>25 <span style=''>
+</span>26 <span style=''>  /**
+</span>27 <span style=''>    * Define protection method
+</span>28 <span style=''>    */
+</span>29 <span style=''>  def protection()
+</span>30 <span style=''>
+</span>31 <span style=''>  /**
+</span>32 <span style=''>    * Define battle engine
+</span>33 <span style=''>    * @param powerAttackValue is power attack in base of method implemented
+</span>34 <span style=''>    * @return actual creature life
+</span>35 <span style=''>    */
+</span>36 <span style=''>  def gameEngine(powerAttackValue: Int): Int
+</span>37 <span style=''>
+</span>38 <span style=''>
+</span>39 <span style=''>}
+</span>40 <span style=''>
+</span>41 <span style=''>/**
+</span>42 <span style=''>  * This class implements BattleRule
+</span>43 <span style=''>  */
+</span>44 <span style=''>
+</span>45 <span style=''>case class BattleRulesImpl() extends BattleRule {
+</span>46 <span style=''>
+</span>47 <span style=''>  private var _creatureLife: Int = _
+</span>48 <span style=''>  private var _attackPoint: Int = _
+</span>49 <span style=''>  private var isProtect: Boolean = _
+</span>50 <span style=''>  private var isAttack: Boolean = _
+</span>51 <span style=''>  private var isCharge: Boolean = _
+</span>52 <span style=''>
+</span>53 <span style=''>  def initialization(): Unit = {
+</span>54 <span style=''>    </span><span style='background: #F0ADAD'>_creatureLife = 50</span><span style=''>
+</span>55 <span style=''>    </span><span style='background: #F0ADAD'>_attackPoint = 0</span><span style=''>
+</span>56 <span style=''>    </span><span style='background: #F0ADAD'>isProtect = false</span><span style=''>
+</span>57 <span style=''>    </span><span style='background: #F0ADAD'>isAttack = false</span><span style=''>
+</span>58 <span style=''>    </span><span style='background: #F0ADAD'>isCharge = false</span><span style=''>
+</span>59 <span style=''>  }
+</span>60 <span style=''>
+</span>61 <span style=''>  override def attack(): Unit = if(</span><span style='background: #F0ADAD'>isPossibleAttack</span><span style=''>) </span><span style='background: #F0ADAD'>decrementAttackPoint()</span><span style=''>; </span><span style='background: #F0ADAD'>println(&quot;AttackPoint --&gt; &quot; + attackPoint)</span><span style=''>
+</span>62 <span style=''>
+</span>63 <span style=''>  override def charge(): Unit = {
+</span>64 <span style=''>    </span><span style='background: #F0ADAD'>incrementAttackPoint()</span><span style=''>
+</span>65 <span style=''>    </span><span style='background: #F0ADAD'>isCharge = true</span><span style=''>
+</span>66 <span style=''>  }
+</span>67 <span style=''>
+</span>68 <span style=''>  override def protection(): Unit = </span><span style='background: #F0ADAD'>isProtect = true</span><span style=''>
+</span>69 <span style=''>
+</span>70 <span style=''>  override def gameEngine(powerAttackValue: Int): Int = {
+</span>71 <span style=''>    var powerAttack = </span><span style='background: #F0ADAD'>0</span><span style=''>
+</span>72 <span style=''>    if(</span><span style='background: #F0ADAD'>isProtect</span><span style=''>) </span><span style='background: #F0ADAD'>powerAttack = 0</span><span style=''>
+</span>73 <span style=''>    else </span><span style='background: #F0ADAD'>if(isCharge) powerAttack = 0
+</span>74 <span style=''></span><span style='background: #F0ADAD'>    else powerAttack = powerAttackValue</span><span style=''>
+</span>75 <span style=''>    powerAttack
+</span>76 <span style=''>  }
+</span>77 <span style=''>
+</span>78 <span style=''>  private def decrementAttackPoint(): Unit = {
+</span>79 <span style=''>    if(</span><span style='background: #F0ADAD'>attackPoint &gt; 0</span><span style=''>) </span><span style='background: #F0ADAD'>_attackPoint -= 1</span><span style=''>
+</span>80 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;AttackPoint --&gt; &quot; + attackPoint)</span><span style=''>
+</span>81 <span style=''>  }
+</span>82 <span style=''>
+</span>83 <span style=''>  private def incrementAttackPoint(): Unit = </span><span style='background: #F0ADAD'>_attackPoint += 1</span><span style=''>
+</span>84 <span style=''>
+</span>85 <span style=''>  private def isPossibleAttack: Boolean = {
+</span>86 <span style=''>    if(</span><span style='background: #F0ADAD'>attackPoint &gt; 0</span><span style=''>) </span><span style='background: #F0ADAD'>isAttack = true</span><span style=''>
+</span>87 <span style=''>    else </span><span style='background: #F0ADAD'>isAttack = false</span><span style=''>
+</span>88 <span style=''>    </span><span style='background: #F0ADAD'>isAttack</span><span style=''>
+</span>89 <span style=''>  }
+</span>90 <span style=''>
+</span>91 <span style=''>
+</span>92 <span style=''>  def creatureLife(): Int = </span><span style='background: #F0ADAD'>_creatureLife</span><span style=''>
+</span>93 <span style=''>  def attackPoint: Int = </span><span style='background: #F0ADAD'>_attackPoint</span><span style=''>
+</span>94 <span style=''>  def isProtect_(): Unit = </span><span style='background: #F0ADAD'>isProtect = false</span><span style=''>
+</span>95 <span style=''>  def isProtection: Boolean = </span><span style='background: #F0ADAD'>isProtect</span><span style=''>
+</span>96 <span style=''>  def isCharge_(): Unit = </span><span style='background: #F0ADAD'>isCharge = false</span><span style=''>
+</span>97 <span style=''>
+</span>98 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          1048
+        </td>
+        <td>
+          944
+          -
+          962
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._creatureLife_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._creatureLife_=(50)
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          1049
+        </td>
+        <td>
+          968
+          -
+          984
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._attackPoint_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint_=(0)
+        </td>
+      </tr><tr>
+        <td>
+          56
+        </td>
+        <td>
+          1050
+        </td>
+        <td>
+          990
+          -
+          1007
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isProtect_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isProtect_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          1051
+        </td>
+        <td>
+          1013
+          -
+          1029
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isAttack_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          58
+        </td>
+        <td>
+          1052
+        </td>
+        <td>
+          1035
+          -
+          1051
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isCharge_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isCharge_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1061
+        </td>
+        <td>
+          1137
+          -
+          1178
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;AttackPoint --&gt; &quot;.+(BattleRulesImpl.this.attackPoint))
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1055
+        </td>
+        <td>
+          1113
+          -
+          1135
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.decrementAttackPoint
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.decrementAttackPoint()
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1058
+        </td>
+        <td>
+          1145
+          -
+          1163
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;AttackPoint --&gt; &quot;
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1057
+        </td>
+        <td>
+          1092
+          -
+          1092
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1060
+        </td>
+        <td>
+          1145
+          -
+          1177
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;AttackPoint --&gt; &quot;.+(BattleRulesImpl.this.attackPoint)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1054
+        </td>
+        <td>
+          1113
+          -
+          1135
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.decrementAttackPoint
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.decrementAttackPoint()
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1056
+        </td>
+        <td>
+          1092
+          -
+          1092
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1059
+        </td>
+        <td>
+          1166
+          -
+          1177
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.attackPoint
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.attackPoint
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          1053
+        </td>
+        <td>
+          1095
+          -
+          1111
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isPossibleAttack
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isPossibleAttack
+        </td>
+      </tr><tr>
+        <td>
+          64
+        </td>
+        <td>
+          1062
+        </td>
+        <td>
+          1221
+          -
+          1243
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.incrementAttackPoint
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.incrementAttackPoint()
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          1063
+        </td>
+        <td>
+          1249
+          -
+          1264
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isCharge_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isCharge_=(true)
+        </td>
+      </tr><tr>
+        <td>
+          68
+        </td>
+        <td>
+          1064
+        </td>
+        <td>
+          1309
+          -
+          1325
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isProtect_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isProtect_=(true)
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          1065
+        </td>
+        <td>
+          1410
+          -
+          1411
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          1067
+        </td>
+        <td>
+          1445
+          -
+          1446
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          1066
+        </td>
+        <td>
+          1420
+          -
+          1429
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isProtect
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isProtect
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          1068
+        </td>
+        <td>
+          1431
+          -
+          1446
+        </td>
+        <td>
+          Assign
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          powerAttack = 0
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          1070
+        </td>
+        <td>
+          1484
+          -
+          1485
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          1073
+        </td>
+        <td>
+          1457
+          -
+          1526
+        </td>
+        <td>
+          If
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          if (BattleRulesImpl.this.isCharge)
+  powerAttack = 0
+else
+  powerAttack = powerAttackValue
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          1069
+        </td>
+        <td>
+          1460
+          -
+          1468
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isCharge
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isCharge
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          1071
+        </td>
+        <td>
+          1470
+          -
+          1485
+        </td>
+        <td>
+          Assign
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          powerAttack = 0
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          1072
+        </td>
+        <td>
+          1496
+          -
+          1526
+        </td>
+        <td>
+          Assign
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          powerAttack = powerAttackValue
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          1079
+        </td>
+        <td>
+          1604
+          -
+          1604
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          1076
+        </td>
+        <td>
+          1624
+          -
+          1641
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._attackPoint_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint_=(BattleRulesImpl.this._attackPoint.-(1))
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          1075
+        </td>
+        <td>
+          1624
+          -
+          1641
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint.-(1)
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          1078
+        </td>
+        <td>
+          1604
+          -
+          1604
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          1074
+        </td>
+        <td>
+          1607
+          -
+          1622
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.attackPoint.&gt;(0)
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          1077
+        </td>
+        <td>
+          1624
+          -
+          1641
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._attackPoint_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint_=(BattleRulesImpl.this._attackPoint.-(1))
+        </td>
+      </tr><tr>
+        <td>
+          80
+        </td>
+        <td>
+          1082
+        </td>
+        <td>
+          1655
+          -
+          1687
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;AttackPoint --&gt; &quot;.+(BattleRulesImpl.this.attackPoint)
+        </td>
+      </tr><tr>
+        <td>
+          80
+        </td>
+        <td>
+          1081
+        </td>
+        <td>
+          1676
+          -
+          1687
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.attackPoint
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.attackPoint
+        </td>
+      </tr><tr>
+        <td>
+          80
+        </td>
+        <td>
+          1080
+        </td>
+        <td>
+          1655
+          -
+          1673
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;AttackPoint --&gt; &quot;
+        </td>
+      </tr><tr>
+        <td>
+          80
+        </td>
+        <td>
+          1083
+        </td>
+        <td>
+          1647
+          -
+          1688
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(&quot;AttackPoint --&gt; &quot;.+(BattleRulesImpl.this.attackPoint))
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          1085
+        </td>
+        <td>
+          1742
+          -
+          1759
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._attackPoint_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint_=(BattleRulesImpl.this._attackPoint.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          1084
+        </td>
+        <td>
+          1742
+          -
+          1759
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          1088
+        </td>
+        <td>
+          1832
+          -
+          1847
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isAttack_=(true)
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          1087
+        </td>
+        <td>
+          1832
+          -
+          1847
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isAttack_=(true)
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          1086
+        </td>
+        <td>
+          1815
+          -
+          1830
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.attackPoint.&gt;(0)
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          1090
+        </td>
+        <td>
+          1858
+          -
+          1874
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isAttack_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          1089
+        </td>
+        <td>
+          1858
+          -
+          1874
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isAttack_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isAttack_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          1091
+        </td>
+        <td>
+          1880
+          -
+          1888
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isAttack
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isAttack
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          1092
+        </td>
+        <td>
+          1927
+          -
+          1940
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._creatureLife
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._creatureLife
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          1093
+        </td>
+        <td>
+          1967
+          -
+          1979
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl._attackPoint
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this._attackPoint
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          1094
+        </td>
+        <td>
+          2008
+          -
+          2025
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isProtect_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isProtect_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          95
+        </td>
+        <td>
+          1095
+        </td>
+        <td>
+          2057
+          -
+          2066
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isProtect
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isProtect
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          1096
+        </td>
+        <td>
+          2094
+          -
+          2110
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.BattleRulesImpl.isCharge_=
+        </td>
+        <td style="background: #F0ADAD">
+          BattleRulesImpl.this.isCharge_=(false)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

@@ -72,66 +72,84 @@
 </span>48 <span style=''>    * @return a future if header found
 </span>49 <span style=''>    */
 </span>50 <span style=''>  def validationToken(header: String): Future[Unit]
-</span>51 <span style=''>}
-</span>52 <span style=''>
-</span>53 <span style=''>/**
-</span>54 <span style=''>  * Companion object
-</span>55 <span style=''>  */
-</span>56 <span style=''>object AuthenticationServiceVertx{
-</span>57 <span style=''>
-</span>58 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
-</span>59 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
-</span>60 <span style=''>  val successfulRegisterResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
-</span>61 <span style=''>  val successfulLoginResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
-</span>62 <span style=''>
-</span>63 <span style=''>  def apply(): AuthenticationServiceVertx = </span><span style='background: #F0ADAD'>AuthenticationServiceVertxImpl()</span><span style=''>
-</span>64 <span style=''>
-</span>65 <span style=''>  /**
-</span>66 <span style=''>    * This class implements the Vertx Client
-</span>67 <span style=''>    */
-</span>68 <span style=''>  case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
+</span>51 <span style=''>
+</span>52 <span style=''>  /**
+</span>53 <span style=''>    * Deletion of a user from the system
+</span>54 <span style=''>    * @return success if deletion is completed
+</span>55 <span style=''>    */
+</span>56 <span style=''>  def delete(): Future[String]
+</span>57 <span style=''>}
+</span>58 <span style=''>
+</span>59 <span style=''>/**
+</span>60 <span style=''>  * Companion object
+</span>61 <span style=''>  */
+</span>62 <span style=''>object AuthenticationServiceVertx{
+</span>63 <span style=''>
+</span>64 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
+</span>65 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
+</span>66 <span style=''>  val successfulRegisterResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
+</span>67 <span style=''>  val successfulLoginResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
+</span>68 <span style=''>  val successfulDeletionResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
 </span>69 <span style=''>
-</span>70 <span style=''>    override def register(username: String, password: String): Future[String] = {
-</span>71 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending registration request from username:$username with password:$password&quot;)</span><span style=''>
-</span>72 <span style=''>      </span><span style='background: #F0ADAD'>client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
-</span>73 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
-</span>74 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>75 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { // technical debt?
-</span>76 <span style=''></span><span style='background: #F0ADAD'>          case `successfulRegisterResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>77 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
-</span>78 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>79 <span style=''>    }
-</span>80 <span style=''>
-</span>81 <span style=''>    override def login(username: String, password: String): Future[String] = {
-</span>82 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending login request from username:$username with password:$password&quot;)</span><span style=''> //debug
-</span>83 <span style=''>      </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
-</span>84 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
-</span>85 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>86 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { //technical debt?
-</span>87 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>88 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
-</span>89 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>90 <span style=''>    }
-</span>91 <span style=''>
-</span>92 <span style=''>    override def logout(token: String): Future[Unit] = {
-</span>93 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending logout request with token: $token&quot;)</span><span style=''>
-</span>94 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
-</span>95 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
-</span>96 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>97 <span style=''></span><span style='background: #F0ADAD'>        .map(_ =&gt; ())</span><span style=''>
-</span>98 <span style=''>    }
-</span>99 <span style=''>
-</span>100 <span style=''>    override def validationToken(header: String): Future[Unit] = {
-</span>101 <span style=''>      </span><span style='background: #F0ADAD'>client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
-</span>102 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
+</span>70 <span style=''>  def apply(): AuthenticationServiceVertx = </span><span style='background: #F0ADAD'>AuthenticationServiceVertxImpl()</span><span style=''>
+</span>71 <span style=''>
+</span>72 <span style=''>  /**
+</span>73 <span style=''>    * This class implements the Vertx Client
+</span>74 <span style=''>    */
+</span>75 <span style=''>  case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
+</span>76 <span style=''>
+</span>77 <span style=''>    override def register(username: String, password: String): Future[String] = {
+</span>78 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending registration request from username:$username with password:$password&quot;)</span><span style=''>
+</span>79 <span style=''>      </span><span style='background: #F0ADAD'>client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
+</span>80 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
+</span>81 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>82 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { // technical debt?
+</span>83 <span style=''></span><span style='background: #F0ADAD'>          case `successfulRegisterResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>84 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
+</span>85 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>86 <span style=''>    }
+</span>87 <span style=''>
+</span>88 <span style=''>    override def login(username: String, password: String): Future[String] = {
+</span>89 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending login request from username:$username with password:$password&quot;)</span><span style=''> //debug
+</span>90 <span style=''>      </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+</span>91 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
+</span>92 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>93 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { //technical debt?
+</span>94 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>95 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
+</span>96 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>97 <span style=''>    }
+</span>98 <span style=''>
+</span>99 <span style=''>    override def logout(token: String): Future[Unit] = {
+</span>100 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending logout request with token: $token&quot;)</span><span style=''>
+</span>101 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
+</span>102 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
 </span>103 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>104 <span style=''></span><span style='background: #F0ADAD'>        .map(response =&gt; response.statusCode match {
-</span>105 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; Future.successful(successfulLoginResponse)
-</span>106 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; Future.failed(new Exception)
-</span>107 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>108 <span style=''>    }
-</span>109 <span style=''>  }
-</span>110 <span style=''>}
+</span>104 <span style=''></span><span style='background: #F0ADAD'>        .map(_ =&gt; ())</span><span style=''>
+</span>105 <span style=''>    }
+</span>106 <span style=''>
+</span>107 <span style=''>    override def validationToken(header: String): Future[Unit] = {
+</span>108 <span style=''>      </span><span style='background: #F0ADAD'>client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
+</span>109 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
+</span>110 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>111 <span style=''></span><span style='background: #F0ADAD'>        .map(response =&gt; response.statusCode match {
+</span>112 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; Future.successful(successfulLoginResponse)
+</span>113 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; Future.failed(new Exception)
+</span>114 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>115 <span style=''>    }
+</span>116 <span style=''>
+</span>117 <span style=''>    override def delete(): Future[String] = {
+</span>118 <span style=''>    </span><span style='background: #F0ADAD'>println(s&quot;sending deletion request from username&quot;)</span><span style=''> //debug
+</span>119 <span style=''>    </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+</span>120 <span style=''></span><span style='background: #F0ADAD'>      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+</span>121 <span style=''></span><span style='background: #F0ADAD'>      .sendFuture
+</span>122 <span style=''></span><span style='background: #F0ADAD'>      .map(r =&gt; r.statusCode match { //technical debt?
+</span>123 <span style=''></span><span style='background: #F0ADAD'>        case `successfulDeletionResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>124 <span style=''></span><span style='background: #F0ADAD'>        case _ =&gt; &quot;Not a valid request&quot;
+</span>125 <span style=''></span><span style='background: #F0ADAD'>      })</span><span style=''>
+</span>126 <span style=''>  }
+</span>127 <span style=''>  }
+</span>128 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -145,15 +163,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          58
+          64
         </td>
         <td>
-          476
+          911
         </td>
         <td>
-          1766
+          1905
           -
-          1779
+          1918
         </td>
         <td>
           Apply
@@ -166,15 +184,15 @@
         </td>
       </tr><tr>
         <td>
-          59
+          65
         </td>
         <td>
-          478
+          913
         </td>
         <td>
-          1807
+          1946
           -
-          1830
+          1969
         </td>
         <td>
           Apply
@@ -187,15 +205,15 @@
         </td>
       </tr><tr>
         <td>
-          59
+          65
         </td>
         <td>
-          477
+          912
         </td>
         <td>
-          1824
+          1963
           -
-          1829
+          1968
         </td>
         <td>
           Select
@@ -208,15 +226,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          66
         </td>
         <td>
-          479
+          914
         </td>
         <td>
-          1872
+          2011
           -
-          1903
+          2042
         </td>
         <td>
           Apply
@@ -229,15 +247,15 @@
         </td>
       </tr><tr>
         <td>
-          61
+          67
         </td>
         <td>
-          480
+          915
         </td>
         <td>
-          1942
+          2081
           -
-          1968
+          2107
         </td>
         <td>
           Apply
@@ -250,15 +268,36 @@
         </td>
       </tr><tr>
         <td>
-          63
+          68
         </td>
         <td>
-          481
+          916
         </td>
         <td>
-          2016
+          2149
           -
-          2048
+          2175
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.handler.codec.http.HttpResponseStatus.code
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpResponseStatus.OK.code()
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          917
+        </td>
+        <td>
+          2223
+          -
+          2255
         </td>
         <td>
           Apply
@@ -271,15 +310,15 @@
         </td>
       </tr><tr>
         <td>
-          71
+          78
         </td>
         <td>
-          483
+          919
         </td>
         <td>
-          2288
+          2495
           -
-          2376
+          2583
         </td>
         <td>
           Apply
@@ -292,15 +331,15 @@
         </td>
       </tr><tr>
         <td>
-          71
+          78
         </td>
         <td>
-          482
+          918
         </td>
         <td>
-          2296
+          2503
           -
-          2375
+          2582
         </td>
         <td>
           Apply
@@ -313,57 +352,15 @@
         </td>
       </tr><tr>
         <td>
-          72
+          79
         </td>
         <td>
-          486
+          920
         </td>
         <td>
-          2446
+          2603
           -
-          2457
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.utils.AuthenticationUrl.RegisterApi
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.utils.AuthenticationUrl.RegisterApi
-        </td>
-      </tr><tr>
-        <td>
-          72
-        </td>
-        <td>
-          485
-        </td>
-        <td>
-          2423
-          -
-          2444
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-      </tr><tr>
-        <td>
-          72
-        </td>
-        <td>
-          484
-        </td>
-        <td>
-          2396
-          -
-          2421
+          2628
         </td>
         <td>
           Select
@@ -376,15 +373,57 @@
         </td>
       </tr><tr>
         <td>
-          73
+          79
         </td>
         <td>
-          487
+          922
         </td>
         <td>
-          2479
+          2653
           -
-          2519
+          2664
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.RegisterApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.RegisterApi
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          921
+        </td>
+        <td>
+          2630
+          -
+          2651
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          80
+        </td>
+        <td>
+          923
+        </td>
+        <td>
+          2686
+          -
+          2726
         </td>
         <td>
           Apply
@@ -397,15 +436,15 @@
         </td>
       </tr><tr>
         <td>
-          73
+          80
         </td>
         <td>
-          488
+          924
         </td>
         <td>
-          2521
+          2728
           -
-          2585
+          2792
         </td>
         <td>
           Select
@@ -418,15 +457,15 @@
         </td>
       </tr><tr>
         <td>
-          75
+          82
         </td>
         <td>
-          489
+          925
         </td>
         <td>
-          2627
+          2834
           -
-          2639
+          2846
         </td>
         <td>
           Apply
@@ -439,15 +478,15 @@
         </td>
       </tr><tr>
         <td>
-          75
+          82
         </td>
         <td>
-          492
+          928
         </td>
         <td>
-          2384
+          2591
           -
-          2800
+          3007
         </td>
         <td>
           ApplyToImplicitArgs
@@ -463,15 +502,15 @@
         </td>
       </tr><tr>
         <td>
-          76
+          83
         </td>
         <td>
-          490
+          926
         </td>
         <td>
-          2715
+          2922
           -
-          2745
+          2952
         </td>
         <td>
           Apply
@@ -484,15 +523,15 @@
         </td>
       </tr><tr>
         <td>
-          77
+          84
         </td>
         <td>
-          491
+          927
         </td>
         <td>
-          2767
+          2974
           -
-          2788
+          2995
         </td>
         <td>
           Literal
@@ -505,36 +544,15 @@
         </td>
       </tr><tr>
         <td>
-          82
+          89
         </td>
         <td>
-          494
+          929
         </td>
         <td>
-          2897
+          3112
           -
-          2978
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending login request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password))
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          493
-        </td>
-        <td>
-          2905
-          -
-          2977
+          3184
         </td>
         <td>
           Apply
@@ -547,15 +565,36 @@
         </td>
       </tr><tr>
         <td>
-          83
+          89
         </td>
         <td>
-          496
+          930
         </td>
         <td>
-          3032
+          3104
           -
-          3053
+          3185
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(scala.StringContext.apply(&quot;sending login request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password))
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          932
+        </td>
+        <td>
+          3239
+          -
+          3260
         </td>
         <td>
           Select
@@ -568,15 +607,15 @@
         </td>
       </tr><tr>
         <td>
-          83
+          90
         </td>
         <td>
-          495
+          931
         </td>
         <td>
-          3005
+          3212
           -
-          3030
+          3237
         </td>
         <td>
           Select
@@ -589,15 +628,15 @@
         </td>
       </tr><tr>
         <td>
-          83
+          90
         </td>
         <td>
-          497
+          933
         </td>
         <td>
-          3055
+          3262
           -
-          3063
+          3270
         </td>
         <td>
           Select
@@ -610,15 +649,15 @@
         </td>
       </tr><tr>
         <td>
-          84
+          91
         </td>
         <td>
-          499
+          935
         </td>
         <td>
-          3127
+          3334
           -
-          3191
+          3398
         </td>
         <td>
           Select
@@ -631,15 +670,15 @@
         </td>
       </tr><tr>
         <td>
-          84
+          91
         </td>
         <td>
-          498
+          934
         </td>
         <td>
-          3085
+          3292
           -
-          3125
+          3332
         </td>
         <td>
           Apply
@@ -652,15 +691,36 @@
         </td>
       </tr><tr>
         <td>
-          86
+          93
         </td>
         <td>
-          503
+          936
         </td>
         <td>
-          2994
+          3440
           -
-          3402
+          3452
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          939
+        </td>
+        <td>
+          3201
+          -
+          3609
         </td>
         <td>
           ApplyToImplicitArgs
@@ -676,36 +736,15 @@
         </td>
       </tr><tr>
         <td>
-          86
+          94
         </td>
         <td>
-          500
+          937
         </td>
         <td>
-          3233
+          3524
           -
-          3245
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusCode
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode()
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          501
-        </td>
-        <td>
-          3317
-          -
-          3347
+          3554
         </td>
         <td>
           Apply
@@ -718,15 +757,15 @@
         </td>
       </tr><tr>
         <td>
-          88
+          95
         </td>
         <td>
-          502
+          938
         </td>
         <td>
-          3369
+          3576
           -
-          3390
+          3597
         </td>
         <td>
           Literal
@@ -739,15 +778,15 @@
         </td>
       </tr><tr>
         <td>
-          93
+          100
         </td>
         <td>
-          505
+          941
         </td>
         <td>
-          3477
+          3684
           -
-          3530
+          3737
         </td>
         <td>
           Apply
@@ -760,15 +799,15 @@
         </td>
       </tr><tr>
         <td>
-          93
+          100
         </td>
         <td>
-          504
+          940
         </td>
         <td>
-          3485
+          3692
           -
-          3529
+          3736
         </td>
         <td>
           Apply
@@ -781,15 +820,15 @@
         </td>
       </tr><tr>
         <td>
-          94
+          101
         </td>
         <td>
-          508
+          944
         </td>
         <td>
-          3602
+          3809
           -
-          3611
+          3818
         </td>
         <td>
           Select
@@ -802,15 +841,15 @@
         </td>
       </tr><tr>
         <td>
-          94
+          101
         </td>
         <td>
-          507
+          943
         </td>
         <td>
-          3579
+          3786
           -
-          3600
+          3807
         </td>
         <td>
           Select
@@ -823,15 +862,15 @@
         </td>
       </tr><tr>
         <td>
-          94
+          101
         </td>
         <td>
-          506
+          942
         </td>
         <td>
-          3552
+          3759
           -
-          3577
+          3784
         </td>
         <td>
           Select
@@ -844,15 +883,15 @@
         </td>
       </tr><tr>
         <td>
-          95
+          102
         </td>
         <td>
-          510
+          946
         </td>
         <td>
-          3675
+          3882
           -
-          3725
+          3932
         </td>
         <td>
           Select
@@ -865,15 +904,15 @@
         </td>
       </tr><tr>
         <td>
-          95
+          102
         </td>
         <td>
-          509
+          945
         </td>
         <td>
-          3633
+          3840
           -
-          3673
+          3880
         </td>
         <td>
           Apply
@@ -886,36 +925,15 @@
         </td>
       </tr><tr>
         <td>
-          97
+          104
         </td>
         <td>
-          512
+          947
         </td>
         <td>
-          3538
+          3974
           -
-          3770
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.map
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LogoutApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.authenticationToken(token).get).sendFuture().map[Unit](((x$1: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; ()))(scala.concurrent.ExecutionContext.Implicits.global)
-        </td>
-      </tr><tr>
-        <td>
-          97
-        </td>
-        <td>
-          511
-        </td>
-        <td>
-          3767
-          -
-          3769
+          3976
         </td>
         <td>
           Literal
@@ -928,15 +946,36 @@
         </td>
       </tr><tr>
         <td>
-          101
+          104
         </td>
         <td>
-          514
+          948
         </td>
         <td>
-          3893
+          3745
           -
-          3914
+          3977
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LogoutApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.authenticationToken(token).get).sendFuture().map[Unit](((x$1: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; ()))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          108
+        </td>
+        <td>
+          950
+        </td>
+        <td>
+          4100
+          -
+          4121
         </td>
         <td>
           Select
@@ -949,15 +988,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          108
         </td>
         <td>
-          513
+          949
         </td>
         <td>
-          3866
+          4073
           -
-          3891
+          4098
         </td>
         <td>
           Select
@@ -970,15 +1009,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          108
         </td>
         <td>
-          515
+          951
         </td>
         <td>
-          3916
+          4123
           -
-          3934
+          4141
         </td>
         <td>
           Select
@@ -991,15 +1030,15 @@
         </td>
       </tr><tr>
         <td>
-          102
+          109
         </td>
         <td>
-          516
+          952
         </td>
         <td>
-          3956
+          4163
           -
-          3996
+          4203
         </td>
         <td>
           Apply
@@ -1012,15 +1051,15 @@
         </td>
       </tr><tr>
         <td>
-          104
+          111
         </td>
         <td>
-          517
+          953
         </td>
         <td>
-          4053
+          4260
           -
-          4072
+          4279
         </td>
         <td>
           Apply
@@ -1033,15 +1072,15 @@
         </td>
       </tr><tr>
         <td>
-          104
+          111
         </td>
         <td>
-          524
+          960
         </td>
         <td>
-          3855
+          4062
           -
-          4230
+          4437
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1063,15 +1102,36 @@
         </td>
       </tr><tr>
         <td>
-          105
+          112
         </td>
         <td>
-          519
+          956
         </td>
         <td>
-          4126
+          4350
           -
-          4168
+          4350
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          955
+        </td>
+        <td>
+          4333
+          -
+          4375
         </td>
         <td>
           Apply
@@ -1084,15 +1144,15 @@
         </td>
       </tr><tr>
         <td>
-          105
+          112
         </td>
         <td>
-          518
+          954
         </td>
         <td>
-          4144
+          4351
           -
-          4167
+          4374
         </td>
         <td>
           Select
@@ -1105,15 +1165,15 @@
         </td>
       </tr><tr>
         <td>
-          105
+          113
         </td>
         <td>
-          520
+          959
         </td>
         <td>
-          4143
+          4410
           -
-          4143
+          4410
         </td>
         <td>
           Literal
@@ -1126,36 +1186,15 @@
         </td>
       </tr><tr>
         <td>
-          106
+          113
         </td>
         <td>
-          523
+          958
         </td>
         <td>
-          4203
+          4397
           -
-          4203
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          106
-        </td>
-        <td>
-          522
-        </td>
-        <td>
-          4190
-          -
-          4218
+          4425
         </td>
         <td>
           Apply
@@ -1168,15 +1207,15 @@
         </td>
       </tr><tr>
         <td>
-          106
+          113
         </td>
         <td>
-          521
+          957
         </td>
         <td>
-          4204
+          4411
           -
-          4217
+          4424
         </td>
         <td>
           Apply
@@ -1186,6 +1225,240 @@
         </td>
         <td style="background: #F0ADAD">
           new scala.`package`.Exception()
+        </td>
+      </tr><tr>
+        <td>
+          118
+        </td>
+        <td>
+          962
+        </td>
+        <td>
+          4499
+          -
+          4549
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.println
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.println(scala.StringContext.apply(&quot;sending deletion request from username&quot;).s())
+        </td>
+      </tr><tr>
+        <td>
+          118
+        </td>
+        <td>
+          961
+        </td>
+        <td>
+          4507
+          -
+          4548
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #F0ADAD">
+          scala.StringContext.apply(&quot;sending deletion request from username&quot;).s()
+        </td>
+      </tr><tr>
+        <td>
+          119
+        </td>
+        <td>
+          965
+        </td>
+        <td>
+          4624
+          -
+          4632
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+      </tr><tr>
+        <td>
+          119
+        </td>
+        <td>
+          964
+        </td>
+        <td>
+          4601
+          -
+          4622
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          119
+        </td>
+        <td>
+          963
+        </td>
+        <td>
+          4574
+          -
+          4599
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          120
+        </td>
+        <td>
+          967
+        </td>
+        <td>
+          4694
+          -
+          4722
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+        <td style="background: #F0ADAD">
+          TokenStorage.getUserJWTToken
+        </td>
+      </tr><tr>
+        <td>
+          120
+        </td>
+        <td>
+          966
+        </td>
+        <td>
+          4652
+          -
+          4692
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          122
+        </td>
+        <td>
+          968
+        </td>
+        <td>
+          4760
+          -
+          4772
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          122
+        </td>
+        <td>
+          971
+        </td>
+        <td>
+          4563
+          -
+          4926
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LoginApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case AuthenticationServiceVertx.this.successfulDeletionResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; &quot;Not a valid request&quot;
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          123
+        </td>
+        <td>
+          969
+        </td>
+        <td>
+          4845
+          -
+          4875
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          r.bodyAsString().getOrElse[String](&quot;&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          124
+        </td>
+        <td>
+          970
+        </td>
+        <td>
+          4895
+          -
+          4916
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Not a valid request&quot;
         </td>
       </tr>
     </table>

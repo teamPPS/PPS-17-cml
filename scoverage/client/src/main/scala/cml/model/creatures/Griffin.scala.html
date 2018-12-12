@@ -26,47 +26,54 @@
 </span>2 <span style=''>
 </span>3 <span style=''>import cml.model.base.Creature
 </span>4 <span style=''>import cml.utils.ModelConfig.Elements.AIR
-</span>5 <span style=''>
-</span>6 <span style=''>/**
-</span>7 <span style=''>  * This class models a griffin
-</span>8 <span style=''>  * @param creatureName name of the griffin
-</span>9 <span style=''>  * @param creatureLevel set the griffin level
-</span>10 <span style=''>  * @author Filippo Portolani
-</span>11 <span style=''>  */
-</span>12 <span style=''>
-</span>13 <span style=''>case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
+</span>5 <span style=''>import cml.utils.ModelConfig.Creature.GRIFFIN
+</span>6 <span style=''>import play.api.libs.json.Json
+</span>7 <span style=''>
+</span>8 <span style=''>/**
+</span>9 <span style=''>  * This class models a griffin
+</span>10 <span style=''>  * @param creatureName name of the griffin
+</span>11 <span style=''>  * @param creatureLevel set the griffin level
+</span>12 <span style=''>  * @author Filippo Portolani
+</span>13 <span style=''>  */
 </span>14 <span style=''>
-</span>15 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>AIR</span><span style=''>
+</span>15 <span style=''>case class Griffin(creatureName: String, creatureLevel: Int) extends Creature {
 </span>16 <span style=''>
-</span>17 <span style=''>  override def levelUp(): Unit = {
-</span>18 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel += 1</span><span style=''>
-</span>19 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
-</span>20 <span style=''>  }
-</span>21 <span style=''>
-</span>22 <span style=''>  override def setAttack(): Unit = {
-</span>23 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
-</span>24 <span style=''>      case 10 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
-</span>25 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
-</span>26 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
-</span>27 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
-</span>28 <span style=''>    }
-</span>29 <span style=''>  }
-</span>30 <span style=''>
-</span>31 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>17 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>AIR</span><span style=''>
+</span>18 <span style=''>
+</span>19 <span style=''>  override def levelUp(): Unit = {
+</span>20 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel += 1</span><span style=''>
+</span>21 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>22 <span style=''>  }
+</span>23 <span style=''>
+</span>24 <span style=''>  override def setAttack(): Unit = {
+</span>25 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
+</span>26 <span style=''>      case 10 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>27 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>28 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>29 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
+</span>30 <span style=''>    }
+</span>31 <span style=''>  }
 </span>32 <span style=''>
-</span>33 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
+</span>33 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
 </span>34 <span style=''>
-</span>35 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>35 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
 </span>36 <span style=''>
-</span>37 <span style=''>  override def currentLevel_ : Unit = {
-</span>38 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
-</span>39 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
-</span>40 <span style=''>  }
-</span>41 <span style=''>
-</span>42 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>37 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>38 <span style=''>
+</span>39 <span style=''>  override def currentLevel_ : Unit = {
+</span>40 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
+</span>41 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>42 <span style=''>  }
 </span>43 <span style=''>
-</span>44 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>&quot;Griffin&quot;</span><span style=''>
-</span>45 <span style=''>}
+</span>44 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>45 <span style=''>
+</span>46 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>GRIFFIN</span><span style=''>
+</span>47 <span style=''>}
+</span>48 <span style=''>
+</span>49 <span style=''>object Griffin {
+</span>50 <span style=''>  implicit val reader = Json.format[Griffin]
+</span>51 <span style=''>}
+</span>52 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -80,15 +87,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          15
+          17
         </td>
         <td>
-          374
+          583
         </td>
         <td>
-          387
+          466
           -
-          390
+          469
         </td>
         <td>
           Select
@@ -101,15 +108,15 @@
         </td>
       </tr><tr>
         <td>
-          18
+          20
         </td>
         <td>
-          376
+          585
         </td>
         <td>
-          434
+          513
           -
-          451
+          530
         </td>
         <td>
           Apply
@@ -122,15 +129,15 @@
         </td>
       </tr><tr>
         <td>
-          18
+          20
         </td>
         <td>
-          375
+          584
         </td>
         <td>
-          434
+          513
           -
-          451
+          530
         </td>
         <td>
           Apply
@@ -143,15 +150,15 @@
         </td>
       </tr><tr>
         <td>
-          19
+          21
         </td>
         <td>
-          377
+          586
         </td>
         <td>
-          457
+          536
           -
-          468
+          547
         </td>
         <td>
           Apply
@@ -164,15 +171,15 @@
         </td>
       </tr><tr>
         <td>
-          23
+          25
         </td>
         <td>
-          378
+          587
         </td>
         <td>
-          519
+          598
           -
-          531
+          610
         </td>
         <td>
           Select
@@ -185,78 +192,15 @@
         </td>
       </tr><tr>
         <td>
-          24
+          26
         </td>
         <td>
-          379
+          588
         </td>
         <td>
-          558
+          637
           -
-          575
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.+
-        </td>
-        <td style="background: #F0ADAD">
-          Griffin.this.attackValue.+(10)
-        </td>
-      </tr><tr>
-        <td>
-          24
-        </td>
-        <td>
-          380
-        </td>
-        <td>
-          558
-          -
-          575
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.attackValue_=
-        </td>
-        <td style="background: #F0ADAD">
-          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
-        </td>
-      </tr><tr>
-        <td>
-          25
-        </td>
-        <td>
-          382
-        </td>
-        <td>
-          594
-          -
-          611
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.attackValue_=
-        </td>
-        <td style="background: #F0ADAD">
-          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
-        </td>
-      </tr><tr>
-        <td>
-          25
-        </td>
-        <td>
-          381
-        </td>
-        <td>
-          594
-          -
-          611
+          654
         </td>
         <td>
           Apply
@@ -272,12 +216,12 @@
           26
         </td>
         <td>
-          384
+          589
         </td>
         <td>
-          630
+          637
           -
-          647
+          654
         </td>
         <td>
           Apply
@@ -287,39 +231,102 @@
         </td>
         <td style="background: #F0ADAD">
           Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
-        </td>
-      </tr><tr>
-        <td>
-          26
-        </td>
-        <td>
-          383
-        </td>
-        <td>
-          630
-          -
-          647
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.+
-        </td>
-        <td style="background: #F0ADAD">
-          Griffin.this.attackValue.+(10)
         </td>
       </tr><tr>
         <td>
           27
         </td>
         <td>
-          385
+          591
         </td>
         <td>
-          662
+          673
           -
-          664
+          690
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          590
+        </td>
+        <td>
+          673
+          -
+          690
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          593
+        </td>
+        <td>
+          709
+          -
+          726
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue_=(Griffin.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          592
+        </td>
+        <td>
+          709
+          -
+          726
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Griffin.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          594
+        </td>
+        <td>
+          741
+          -
+          743
         </td>
         <td>
           Literal
@@ -332,15 +339,15 @@
         </td>
       </tr><tr>
         <td>
-          31
+          33
         </td>
         <td>
-          386
+          595
         </td>
         <td>
-          710
+          789
           -
-          722
+          801
         </td>
         <td>
           Select
@@ -353,15 +360,15 @@
         </td>
       </tr><tr>
         <td>
-          33
+          35
         </td>
         <td>
-          387
+          596
         </td>
         <td>
-          759
+          838
           -
-          767
+          846
         </td>
         <td>
           Select
@@ -374,15 +381,15 @@
         </td>
       </tr><tr>
         <td>
-          35
+          37
         </td>
         <td>
-          388
+          597
         </td>
         <td>
-          805
+          884
           -
-          816
+          895
         </td>
         <td>
           Select
@@ -395,15 +402,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          40
         </td>
         <td>
-          390
+          599
         </td>
         <td>
-          865
+          944
           -
-          893
+          972
         </td>
         <td>
           Apply
@@ -416,15 +423,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          40
         </td>
         <td>
-          389
+          598
         </td>
         <td>
-          880
+          959
           -
-          893
+          972
         </td>
         <td>
           Select
@@ -437,15 +444,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          41
         </td>
         <td>
-          391
+          600
         </td>
         <td>
-          899
+          978
           -
-          910
+          989
         </td>
         <td>
           Apply
@@ -458,15 +465,15 @@
         </td>
       </tr><tr>
         <td>
-          42
+          44
         </td>
         <td>
-          392
+          601
         </td>
         <td>
-          949
+          1028
           -
-          961
+          1040
         </td>
         <td>
           Select
@@ -479,24 +486,24 @@
         </td>
       </tr><tr>
         <td>
-          44
+          46
         </td>
         <td>
-          393
+          602
         </td>
         <td>
-          1003
+          1082
           -
-          1012
+          1089
         </td>
         <td>
-          Literal
+          Select
         </td>
         <td>
-          &lt;nosymbol&gt;
+          cml.utils.ModelConfig.Creature.GRIFFIN
         </td>
         <td style="background: #F0ADAD">
-          &quot;Griffin&quot;
+          cml.utils.ModelConfig.Creature.GRIFFIN
         </td>
       </tr>
     </table>

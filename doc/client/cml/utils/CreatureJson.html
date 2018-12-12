@@ -131,6 +131,10 @@
                         <a href="MoneyJson.html" title="This class creates a new json for Money resource by given fields">MoneyJson</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
+                        <a class="class" href="PositionJson.html" title=""></a>
+                        <a href="PositionJson.html" title="">PositionJson</a>
+                      </li><li class="current-entities indented2">
+                        <span class="separator"></span>
                         <a class="object" href="ViewConfig$.html" title=""></a>
                         <a href="ViewConfig$.html" title="">ViewConfig</a>
                       </li>
@@ -156,7 +160,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">CreatureJson</span><span class="params">(<span name="creatureName">creatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="creatureLevel">creatureLevel: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="JsonMaker.html" class="extype" name="cml.utils.JsonMaker">JsonMaker</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">CreatureJson</span><span class="params">(<span name="creatureName">creatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="creatureLevel">creatureLevel: <span class="extype" name="scala.Int">Int</span></span>, <span name="creatureType">creatureType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="s">s: <a href="../model/base/Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></span>)</span><span class="result"> extends <a href="JsonMaker.html" class="extype" name="cml.utils.JsonMaker">JsonMaker</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -212,9 +216,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="cml.utils.CreatureJson#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(creatureName:String,creatureLevel:Int):cml.utils.CreatureJson"></a><a id="&lt;init&gt;:CreatureJson"></a>
+      <a id="&lt;init&gt;(creatureName:String,creatureLevel:Int,creatureType:String,s:cml.model.base.Structure):cml.utils.CreatureJson"></a><a id="&lt;init&gt;:CreatureJson"></a>
       <span class="permalink">
-      <a href="../../cml/utils/CreatureJson.html#&lt;init&gt;(creatureName:String,creatureLevel:Int):cml.utils.CreatureJson" title="Permalink">
+      <a href="../../cml/utils/CreatureJson.html#&lt;init&gt;(creatureName:String,creatureLevel:Int,creatureType:String,s:cml.model.base.Structure):cml.utils.CreatureJson" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -223,7 +227,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">CreatureJson</span><span class="params">(<span name="creatureName">creatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="creatureLevel">creatureLevel: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">CreatureJson</span><span class="params">(<span name="creatureName">creatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="creatureLevel">creatureLevel: <span class="extype" name="scala.Int">Int</span></span>, <span name="creatureType">creatureType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="s">s: <a href="../model/base/Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></span>)</span>
       </span>
       
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">creatureName</dt><dd class="cmt"><p>type of creature</p></dd><dt class="param">creatureLevel</dt><dd class="cmt"><p>level of the creature</p></dd></dl></div>
@@ -354,6 +358,22 @@
       </span>
       <span class="symbol">
         <span class="name">creatureName</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      
+    </li><li name="cml.utils.CreatureJson#creatureType" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="creatureType:String"></a>
+      <span class="permalink">
+      <a href="../../cml/utils/CreatureJson.html#creatureType:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">creatureType</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       
       
@@ -500,6 +520,22 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="cml.utils.CreatureJson#s" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="s:cml.model.base.Structure"></a><a id="s:Structure"></a>
+      <span class="permalink">
+      <a href="../../cml/utils/CreatureJson.html#s:cml.model.base.Structure" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">s</span><span class="result">: <a href="../model/base/Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">

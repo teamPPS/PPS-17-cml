@@ -1,0 +1,522 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\model\creatures\WaterDemon.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.creatures
+</span>2 <span style=''>
+</span>3 <span style=''>import cml.model.base.Creature
+</span>4 <span style=''>import cml.utils.ModelConfig.Elements.WATER
+</span>5 <span style=''>import cml.utils.ModelConfig.Creature.WATERDEMON
+</span>6 <span style=''>import play.api.libs.json.Json
+</span>7 <span style=''>
+</span>8 <span style=''>/**
+</span>9 <span style=''>  * This class models a Water Demon
+</span>10 <span style=''>  * @param creatureName name of the Water Demon
+</span>11 <span style=''>  * @param creatureLevel set the Water Demon level
+</span>12 <span style=''>  * @author Filippo Portolani, (edited by) ecavina
+</span>13 <span style=''>  */
+</span>14 <span style=''>
+</span>15 <span style=''>case class WaterDemon(creatureName: String, creatureLevel: Int) extends Creature {
+</span>16 <span style=''>
+</span>17 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>WATER</span><span style=''>
+</span>18 <span style=''>
+</span>19 <span style=''>  /**
+</span>20 <span style=''>    * This method increases creature level by 1
+</span>21 <span style=''>    */
+</span>22 <span style=''>
+</span>23 <span style=''>  override def levelUp(): Unit = {
+</span>24 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel += 1</span><span style=''>
+</span>25 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>26 <span style=''>  }
+</span>27 <span style=''>
+</span>28 <span style=''>  /**
+</span>29 <span style=''>    * This method behaves differently based on the creature level
+</span>30 <span style=''>    */
+</span>31 <span style=''>
+</span>32 <span style=''>  override def setAttack() : Unit = {
+</span>33 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel</span><span style=''> match {
+</span>34 <span style=''>      case 10 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>35 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>36 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>37 <span style=''>      case _ </span><span style='background: #F0ADAD'>=&gt;</span><span style=''> ;
+</span>38 <span style=''>    }
+</span>39 <span style=''>  }
+</span>40 <span style=''>
+</span>41 <span style=''>  override def element: String = </span><span style='background: #AEF1AE'>_element</span><span style=''>
+</span>42 <span style=''>
+</span>43 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>44 <span style=''>
+</span>45 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
+</span>46 <span style=''>
+</span>47 <span style=''>  override def currentLevel_ : Unit = {
+</span>48 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel = creatureLevel</span><span style=''>
+</span>49 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>50 <span style=''>  }
+</span>51 <span style=''>
+</span>52 <span style=''>
+</span>53 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>54 <span style=''>
+</span>55 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>WATERDEMON</span><span style=''>
+</span>56 <span style=''>}
+</span>57 <span style=''>
+</span>58 <span style=''>object WaterDemon {
+</span>59 <span style=''>  implicit val reader = Json.format[WaterDemon]
+</span>60 <span style=''>}
+</span>61 <span style=''>
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          17
+        </td>
+        <td>
+          603
+        </td>
+        <td>
+          507
+          -
+          512
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Elements.WATER
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.Elements.WATER
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          605
+        </td>
+        <td>
+          622
+          -
+          639
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.currentLevel_=(WaterDemon.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          604
+        </td>
+        <td>
+          622
+          -
+          639
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.currentLevel.+(1)
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          606
+        </td>
+        <td>
+          645
+          -
+          656
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.WaterDemon.setAttack
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          607
+        </td>
+        <td>
+          792
+          -
+          804
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          609
+        </td>
+        <td>
+          831
+          -
+          848
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue_=(WaterDemon.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          608
+        </td>
+        <td>
+          831
+          -
+          848
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          611
+        </td>
+        <td>
+          867
+          -
+          884
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue_=(WaterDemon.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          610
+        </td>
+        <td>
+          867
+          -
+          884
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          612
+        </td>
+        <td>
+          903
+          -
+          920
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          613
+        </td>
+        <td>
+          903
+          -
+          920
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue_=(WaterDemon.this.attackValue.+(10))
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          614
+        </td>
+        <td>
+          935
+          -
+          937
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          615
+        </td>
+        <td>
+          988
+          -
+          996
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.WaterDemon._element
+        </td>
+        <td style="background: #AEF1AE">
+          WaterDemon.this._element
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          616
+        </td>
+        <td>
+          1028
+          -
+          1040
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          617
+        </td>
+        <td>
+          1078
+          -
+          1089
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.attackValue
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          618
+        </td>
+        <td>
+          1153
+          -
+          1166
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.WaterDemon.creatureLevel
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.creatureLevel
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          619
+        </td>
+        <td>
+          1138
+          -
+          1166
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.currentLevel_=(WaterDemon.this.creatureLevel)
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          620
+        </td>
+        <td>
+          1172
+          -
+          1183
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.creatures.WaterDemon.setAttack
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.setAttack()
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          621
+        </td>
+        <td>
+          1224
+          -
+          1236
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.WaterDemon.creatureName
+        </td>
+        <td style="background: #F0ADAD">
+          WaterDemon.this.creatureName
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          622
+        </td>
+        <td>
+          1278
+          -
+          1288
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.Creature.WATERDEMON
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ModelConfig.Creature.WATERDEMON
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

@@ -118,15 +118,15 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="cml.model">model</a></dd></dl></div>
     </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Cave$.html" title=""></a>
                         <a class="class" href="Cave.html" title="Implementation of building structure Cave"></a>
                         <a href="Cave.html" title="Implementation of building structure Cave">Cave</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Creature$.html" title=""></a>
                         <a class="trait" href="Creature.html" title="This trait defines a base creature"></a>
                         <a href="Creature.html" title="This trait defines a base creature">Creature</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Farm$.html" title=""></a>
                         <a class="class" href="Farm.html" title="Implementation of building structure Farm"></a>
                         <a href="Farm.html" title="Implementation of building structure Farm">Farm</a>
                       </li><li class="current-entities indented3">
@@ -142,7 +142,7 @@
                         <a class="class" href="Money.html" title="Implementation on resource money"></a>
                         <a href="Money.html" title="Implementation on resource money">Money</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Position$.html" title=""></a>
                         <a class="class" href="Position.html" title="Represents a position in the village grid"></a>
                         <a href="Position.html" title="Represents a position in the village grid">Position</a>
                       </li><li class="current-entities indented3">
@@ -154,9 +154,9 @@
                         <a class="trait" href="Structure.html" title="This trait defines common operations over structures"></a>
                         <a href="Structure.html" title="This trait defines common operations over structures">Structure</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="VillageMap.html" title="This class implements a VillageMap"></a>
-                        <a href="VillageMap.html" title="This class implements a VillageMap">VillageMap</a>
+                        <a class="object" href="VillageMap$.html" title=""></a>
+                        <a class="class" href="VillageMap.html" title="Case class representing the current state of the user's village"></a>
+                        <a href="VillageMap.html" title="Case class representing the current state of the user's village">VillageMap</a>
                       </li>
               </ul>
             </div>
@@ -249,10 +249,10 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Implementation of structure habitat" href="Habitat$$Habitat.html"><span class="name">Habitat</span></a><span class="params">(<span name="habitatElement">habitatElement: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="habitatPosition">habitatPosition: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>, <span name="habitatLevel">habitatLevel: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="Implementation of structure habitat" href="Habitat$$Habitat.html"><span class="name">Habitat</span></a><span class="params">(<span name="element">element: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="habitat_pos">habitat_pos: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>, <span name="habitat_level">habitat_level: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
-      <p class="shortcomment cmt">Implementation of structure habitat</p><div class="fullcomment"><div class="comment cmt"><p>Implementation of structure habitat</p></div><dl class="paramcmts block"><dt class="param">habitatElement</dt><dd class="cmt"><p>of the habitat</p></dd><dt class="param">habitatPosition</dt><dd class="cmt"><p>coordinates of the habitat in the village</p></dd><dt class="param">habitatLevel</dt><dd class="cmt"><p>level of the habitat</p></dd></dl></div>
+      <p class="shortcomment cmt">Implementation of structure habitat</p><div class="fullcomment"><div class="comment cmt"><p>Implementation of structure habitat</p></div><dl class="paramcmts block"><dt class="param">element</dt><dd class="cmt"><p>of the habitat</p></dd><dt class="param">habitat_pos</dt><dd class="cmt"><p>coordinates of the habitat in the village</p></dd><dt class="param">habitat_level</dt><dd class="cmt"><p>level of the habitat</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -438,6 +438,22 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="cml.model.base.Habitat#habitatReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="habitatReader:play.api.libs.json.OFormat[cml.model.base.Habitat.Habitat]"></a><a id="habitatReader:OFormat[Habitat]"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/Habitat$.html#habitatReader:play.api.libs.json.OFormat[cml.model.base.Habitat.Habitat]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">habitatReader</span><span class="result">: <span class="extype" name="play.api.libs.json.OFormat">OFormat</span>[<a href="Habitat$$Habitat.html" class="extype" name="cml.model.base.Habitat.Habitat">Habitat</a>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <span class="permalink">

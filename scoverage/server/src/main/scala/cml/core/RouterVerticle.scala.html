@@ -57,8 +57,8 @@
 </span>33 <span style=''></span><span style='background: #AEF1AE'>          server = startedServer
 </span>34 <span style=''></span><span style='background: #AEF1AE'>          promise.success(())
 </span>35 <span style=''></span><span style='background: #AEF1AE'>        case Failure(ex) =&gt;
-</span>36 <span style=''></span><span style='background: #AEF1AE'>          </span><span style='background: #F0ADAD'>println(s&quot;Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}&quot;)</span><span style='background: #AEF1AE'>
-</span>37 <span style=''></span><span style='background: #AEF1AE'>          </span><span style='background: #F0ADAD'>promise.failure(ex)</span><span style='background: #AEF1AE'>
+</span>36 <span style=''></span><span style='background: #AEF1AE'>          println(s&quot;Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}&quot;)
+</span>37 <span style=''></span><span style='background: #AEF1AE'>          promise.failure(ex)
 </span>38 <span style=''></span><span style='background: #AEF1AE'>      })</span><span style=''>
 </span>39 <span style=''>    </span><span style='background: #AEF1AE'>promise.future</span><span style=''>
 </span>40 <span style=''>  }
@@ -101,7 +101,7 @@
           23
         </td>
         <td>
-          13
+          1
         </td>
         <td>
           649
@@ -122,7 +122,7 @@
           24
         </td>
         <td>
-          14
+          2
         </td>
         <td>
           697
@@ -143,7 +143,7 @@
           24
         </td>
         <td>
-          15
+          3
         </td>
         <td>
           683
@@ -164,7 +164,7 @@
           25
         </td>
         <td>
-          16
+          4
         </td>
         <td>
           709
@@ -185,7 +185,7 @@
           26
         </td>
         <td>
-          17
+          5
         </td>
         <td>
           739
@@ -206,7 +206,7 @@
           28
         </td>
         <td>
-          18
+          6
         </td>
         <td>
           810
@@ -227,7 +227,7 @@
           29
         </td>
         <td>
-          20
+          8
         </td>
         <td>
           873
@@ -248,7 +248,7 @@
           29
         </td>
         <td>
-          19
+          7
         </td>
         <td>
           846
@@ -269,7 +269,7 @@
           30
         </td>
         <td>
-          37
+          25
         </td>
         <td>
           762
@@ -302,7 +302,7 @@
           30
         </td>
         <td>
-          36
+          24
         </td>
         <td>
           904
@@ -323,7 +323,7 @@
           32
         </td>
         <td>
-          23
+          11
         </td>
         <td>
           1006
@@ -344,28 +344,7 @@
           32
         </td>
         <td>
-          22
-        </td>
-        <td>
-          1031
-          -
-          1032
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;&quot;
-        </td>
-      </tr><tr>
-        <td>
-          32
-        </td>
-        <td>
-          25
+          13
         </td>
         <td>
           958
@@ -386,7 +365,28 @@
           32
         </td>
         <td>
-          21
+          10
+        </td>
+        <td>
+          1031
+          -
+          1032
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          9
         </td>
         <td>
           968
@@ -407,7 +407,7 @@
           32
         </td>
         <td>
-          24
+          12
         </td>
         <td>
           966
@@ -428,7 +428,7 @@
           33
         </td>
         <td>
-          26
+          14
         </td>
         <td>
           1045
@@ -449,7 +449,7 @@
           34
         </td>
         <td>
-          27
+          15
         </td>
         <td>
           1079
@@ -470,28 +470,7 @@
           36
         </td>
         <td>
-          32
-        </td>
-        <td>
-          1215
-          -
-          1226
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.Throwable.getCause
-        </td>
-        <td style="background: #F0ADAD">
-          ex.getCause()
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          29
+          17
         </td>
         <td>
           1207
@@ -504,7 +483,7 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           &quot;, b/c &quot;
         </td>
       </tr><tr>
@@ -512,28 +491,28 @@
           36
         </td>
         <td>
-          31
+          20
         </td>
         <td>
-          1182
+          1215
           -
-          1207
+          1226
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          java.lang.Throwable.getCause
         </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        <td style="background: #AEF1AE">
+          ex.getCause()
         </td>
       </tr><tr>
         <td>
           36
         </td>
         <td>
-          34
+          22
         </td>
         <td>
           1139
@@ -546,7 +525,7 @@
         <td>
           scala.Predef.println
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.println(scala.StringContext.apply(&quot;Server failed to start on port: &quot;, &quot;, b/c &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, ex.getCause()))
         </td>
       </tr><tr>
@@ -554,7 +533,7 @@
           36
         </td>
         <td>
-          28
+          16
         </td>
         <td>
           1149
@@ -567,7 +546,7 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           &quot;Server failed to start on port: &quot;
         </td>
       </tr><tr>
@@ -575,7 +554,28 @@
           36
         </td>
         <td>
-          30
+          19
+        </td>
+        <td>
+          1182
+          -
+          1207
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+        <td style="background: #AEF1AE">
+          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          18
         </td>
         <td>
           1227
@@ -588,7 +588,7 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           &quot;&quot;
         </td>
       </tr><tr>
@@ -596,7 +596,7 @@
           36
         </td>
         <td>
-          33
+          21
         </td>
         <td>
           1147
@@ -609,7 +609,7 @@
         <td>
           scala.StringContext.s
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.StringContext.apply(&quot;Server failed to start on port: &quot;, &quot;, b/c &quot;, &quot;&quot;).s(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, ex.getCause())
         </td>
       </tr><tr>
@@ -617,7 +617,7 @@
           37
         </td>
         <td>
-          35
+          23
         </td>
         <td>
           1241
@@ -630,7 +630,7 @@
         <td>
           scala.concurrent.Promise.failure
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           promise.failure(ex)
         </td>
       </tr><tr>
@@ -638,7 +638,7 @@
           39
         </td>
         <td>
-          38
+          26
         </td>
         <td>
           1276
@@ -659,7 +659,7 @@
           43
         </td>
         <td>
-          39
+          27
         </td>
         <td>
           1350
@@ -680,7 +680,7 @@
           45
         </td>
         <td>
-          44
+          32
         </td>
         <td>
           1390
@@ -701,7 +701,7 @@
           45
         </td>
         <td>
-          45
+          33
         </td>
         <td>
           1375
@@ -722,28 +722,7 @@
           46
         </td>
         <td>
-          40
-        </td>
-        <td>
-          1447
-          -
-          1464
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          io.vertx.lang.scala.ScalaVerticle.deploymentID
-        </td>
-        <td style="background: #F0ADAD">
-          this.deploymentID
-        </td>
-      </tr><tr>
-        <td>
-          46
-        </td>
-        <td>
-          43
+          31
         </td>
         <td>
           1421
@@ -764,7 +743,28 @@
           46
         </td>
         <td>
-          42
+          28
+        </td>
+        <td>
+          1447
+          -
+          1464
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          io.vertx.lang.scala.ScalaVerticle.deploymentID
+        </td>
+        <td style="background: #F0ADAD">
+          this.deploymentID
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          30
         </td>
         <td>
           1423
@@ -785,7 +785,7 @@
           47
         </td>
         <td>
-          41
+          29
         </td>
         <td>
           1479

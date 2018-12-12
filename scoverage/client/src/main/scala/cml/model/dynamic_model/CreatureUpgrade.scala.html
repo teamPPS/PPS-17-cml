@@ -24,30 +24,29 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.model.dynamic_model
 </span>2 <span style=''>
-</span>3 <span style=''>import cml.model.base.Creature
+</span>3 <span style=''>import cml.model.base.{Creature, Structure}
 </span>4 <span style=''>import cml.utils.CreatureJson
-</span>5 <span style=''>import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
-</span>6 <span style=''>import play.api.libs.json.JsValue
-</span>7 <span style=''>
-</span>8 <span style=''>/**
-</span>9 <span style=''>  * @author Monica Gondolini
-</span>10 <span style=''>  */
-</span>11 <span style=''>
-</span>12 <span style=''>trait UpgradeCreature {
-</span>13 <span style=''>  def creatureJson: JsValue
-</span>14 <span style=''>}
-</span>15 <span style=''>
-</span>16 <span style=''>/**
-</span>17 <span style=''>  * Upgrade a creature level
-</span>18 <span style=''>  * @param creature creature to model
-</span>19 <span style=''>  */
-</span>20 <span style=''>case class CreatureUpgrade(creature: Creature) extends UpgradeCreature {
-</span>21 <span style=''>
-</span>22 <span style=''>  </span><span style='background: #F0ADAD'>creature levelUp()</span><span style=''>
-</span>23 <span style=''>  private val json: JsValue = </span><span style='background: #F0ADAD'>CreatureJson(creature name, creature.currentLevel) json</span><span style=''>
-</span>24 <span style=''>
-</span>25 <span style=''>  override def creatureJson: JsValue = </span><span style='background: #F0ADAD'>json</span><span style=''>
-</span>26 <span style=''>}
+</span>5 <span style=''>import play.api.libs.json.JsValue
+</span>6 <span style=''>
+</span>7 <span style=''>/**
+</span>8 <span style=''>  * @author Monica Gondolini
+</span>9 <span style=''>  */
+</span>10 <span style=''>
+</span>11 <span style=''>trait UpgradeCreature {
+</span>12 <span style=''>  def creatureJson: JsValue
+</span>13 <span style=''>}
+</span>14 <span style=''>
+</span>15 <span style=''>/**
+</span>16 <span style=''>  * Upgrade a creature level
+</span>17 <span style=''>  * @param creature creature to model
+</span>18 <span style=''>  */
+</span>19 <span style=''>case class CreatureUpgrade(creature: Creature, habitat: Structure) extends UpgradeCreature {
+</span>20 <span style=''>
+</span>21 <span style=''>  </span><span style='background: #F0ADAD'>creature levelUp()</span><span style=''>
+</span>22 <span style=''>  private val json: JsValue = </span><span style='background: #F0ADAD'>CreatureJson(creature name, creature.currentLevel, creature.creatureType, habitat) json</span><span style=''>
+</span>23 <span style=''>
+</span>24 <span style=''>  override def creatureJson: JsValue = </span><span style='background: #F0ADAD'>json</span><span style=''>
+</span>25 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -61,15 +60,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          22
+          21
         </td>
         <td>
-          414
+          814
         </td>
         <td>
-          448
+          428
           -
-          466
+          446
         </td>
         <td>
           Apply
@@ -82,15 +81,36 @@
         </td>
       </tr><tr>
         <td>
-          23
+          22
         </td>
         <td>
-          415
+          819
         </td>
         <td>
-          511
+          478
           -
-          524
+          565
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.CreatureJson.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.CreatureJson.apply(CreatureUpgrade.this.creature.name, CreatureUpgrade.this.creature.currentLevel, CreatureUpgrade.this.creature.creatureType, CreatureUpgrade.this.habitat).json
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          815
+        </td>
+        <td>
+          491
+          -
+          504
         </td>
         <td>
           Select
@@ -103,36 +123,57 @@
         </td>
       </tr><tr>
         <td>
-          23
+          22
         </td>
         <td>
-          417
+          818
         </td>
         <td>
-          498
+          552
           -
-          553
+          559
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.utils.CreatureJson.json
+          cml.model.dynamic_model.CreatureUpgrade.habitat
         </td>
         <td style="background: #F0ADAD">
-          cml.utils.CreatureJson.apply(CreatureUpgrade.this.creature.name, CreatureUpgrade.this.creature.currentLevel).json
+          CreatureUpgrade.this.habitat
         </td>
       </tr><tr>
         <td>
-          23
+          22
         </td>
         <td>
-          416
+          817
         </td>
         <td>
-          526
+          529
           -
-          547
+          550
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.creatureType
+        </td>
+        <td style="background: #F0ADAD">
+          CreatureUpgrade.this.creature.creatureType
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          816
+        </td>
+        <td>
+          506
+          -
+          527
         </td>
         <td>
           Select
@@ -145,15 +186,15 @@
         </td>
       </tr><tr>
         <td>
-          25
+          24
         </td>
         <td>
-          418
+          820
         </td>
         <td>
-          596
+          608
           -
-          600
+          612
         </td>
         <td>
           Select

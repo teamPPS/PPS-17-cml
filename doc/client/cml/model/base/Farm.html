@@ -118,15 +118,15 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="cml.model">model</a></dd></dl></div>
     </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Cave$.html" title=""></a>
                         <a class="class" href="Cave.html" title="Implementation of building structure Cave"></a>
                         <a href="Cave.html" title="Implementation of building structure Cave">Cave</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Creature$.html" title=""></a>
                         <a class="trait" href="Creature.html" title="This trait defines a base creature"></a>
                         <a href="Creature.html" title="This trait defines a base creature">Creature</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Farm$.html" title=""></a>
                         <a class="class" href="" title="Implementation of building structure Farm"></a>
                         <a href="" title="Implementation of building structure Farm">Farm</a>
                       </li><li class="current-entities indented3">
@@ -142,7 +142,7 @@
                         <a class="class" href="Money.html" title="Implementation on resource money"></a>
                         <a href="Money.html" title="Implementation on resource money">Money</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
+                        <a class="object" href="Position$.html" title=""></a>
                         <a class="class" href="Position.html" title="Represents a position in the village grid"></a>
                         <a href="Position.html" title="Represents a position in the village grid">Position</a>
                       </li><li class="current-entities indented3">
@@ -154,9 +154,9 @@
                         <a class="trait" href="Structure.html" title="This trait defines common operations over structures"></a>
                         <a href="Structure.html" title="This trait defines common operations over structures">Structure</a>
                       </li><li class="current-entities indented3">
-                        <span class="separator"></span>
-                        <a class="class" href="VillageMap.html" title="This class implements a VillageMap"></a>
-                        <a href="VillageMap.html" title="This class implements a VillageMap">VillageMap</a>
+                        <a class="object" href="VillageMap$.html" title=""></a>
+                        <a class="class" href="VillageMap.html" title="Case class representing the current state of the user's village"></a>
+                        <a href="VillageMap.html" title="Case class representing the current state of the user's village">VillageMap</a>
                       </li>
               </ul>
             </div>
@@ -164,14 +164,16 @@
           <div id="content">
             <body class="class type">
       <div id="definition">
-        <div class="big-circle class">c</div>
+        <a href="Farm$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
         <p id="owner"><a href="../../index.html" class="extype" name="cml">cml</a>.<a href="../index.html" class="extype" name="cml.model">model</a>.<a href="index.html" class="extype" name="cml.model.base">base</a></p>
-        <h1>Farm<span class="permalink">
+        <h1><a href="Farm$.html" title="See companion object">Farm</a><span class="permalink">
       <a href="../../../cml/model/base/Farm.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
-        <h3><span class="morelinks"></span></h3>
+        <h3><span class="morelinks"><div>
+            Companion <a href="Farm$.html" title="See companion object">object Farm</a>
+          </div></span></h3>
       </div>
 
       <h4 id="signature" class="signature">
@@ -180,12 +182,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Farm</span><span class="params">(<span name="farmPosition">farmPosition: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>, <span name="farmLevel">farmLevel: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Farm</span><span class="params">(<span name="building_pos">building_pos: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>, <span name="building_level">building_level: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Implementation of building structure Farm</p></div><dl class="paramcmts block"><dt class="param">farmPosition</dt><dd class="cmt"><p>coordinates of the building in the village</p></dd><dt class="param">farmLevel</dt><dd class="cmt"><p>level of the building</p></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Implementation of building structure Farm</p></div><dl class="paramcmts block"><dt class="param">building_pos</dt><dd class="cmt"><p>coordinates of the building in the village</p></dd><dt class="param">building_level</dt><dd class="cmt"><p>level of the building</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -236,9 +238,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="cml.model.base.Farm#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(farmPosition:cml.model.base.Position,farmLevel:Int):cml.model.base.Farm"></a><a id="&lt;init&gt;:Farm"></a>
+      <a id="&lt;init&gt;(building_pos:cml.model.base.Position,building_level:Int):cml.model.base.Farm"></a><a id="&lt;init&gt;:Farm"></a>
       <span class="permalink">
-      <a href="../../../cml/model/base/Farm.html#&lt;init&gt;(farmPosition:cml.model.base.Position,farmLevel:Int):cml.model.base.Farm" title="Permalink">
+      <a href="../../../cml/model/base/Farm.html#&lt;init&gt;(building_pos:cml.model.base.Position,building_level:Int):cml.model.base.Farm" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -247,10 +249,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Farm</span><span class="params">(<span name="farmPosition">farmPosition: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>, <span name="farmLevel">farmLevel: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">Farm</span><span class="params">(<span name="building_pos">building_pos: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>, <span name="building_level">building_level: <span class="extype" name="scala.Int">Int</span></span>)</span>
       </span>
       
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">farmPosition</dt><dd class="cmt"><p>coordinates of the building in the village</p></dd><dt class="param">farmLevel</dt><dd class="cmt"><p>level of the building</p></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">building_pos</dt><dd class="cmt"><p>coordinates of the building in the village</p></dd><dt class="param">building_level</dt><dd class="cmt"><p>level of the building</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -341,6 +343,38 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="cml.model.base.Farm#building_level" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="building_level:Int"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/Farm.html#building_level:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">building_level</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
+    </li><li name="cml.model.base.Farm#building_pos" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="building_pos:cml.model.base.Position"></a><a id="building_pos:Position"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/Farm.html#building_pos:cml.model.base.Position" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">building_pos</span><span class="result">: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -381,22 +415,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.model.base.Farm">Farm</a> → <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></dd></dl></div>
-    </li><li name="cml.model.base.Farm#element" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="element:String"></a>
-      <span class="permalink">
-      <a href="../../../cml/model/base/Farm.html#element:String" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">element</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.model.base.Farm">Farm</a> → <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -413,38 +431,6 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="cml.model.base.Farm#farmLevel" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="farmLevel:Int"></a>
-      <span class="permalink">
-      <a href="../../../cml/model/base/Farm.html#farmLevel:Int" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">var</span>
-      </span>
-      <span class="symbol">
-        <span class="name">farmLevel</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      
-      
-    </li><li name="cml.model.base.Farm#farmPosition" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="farmPosition:cml.model.base.Position"></a><a id="farmPosition:Position"></a>
-      <span class="permalink">
-      <a href="../../../cml/model/base/Farm.html#farmPosition:cml.model.base.Position" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">farmPosition</span><span class="result">: <a href="Position.html" class="extype" name="cml.model.base.Position">Position</a></span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <span class="permalink">
@@ -502,6 +488,22 @@
                 <span class="name">@native</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="cml.model.base.Farm#habitatElement" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="habitatElement:String"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/Farm.html#habitatElement:String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">habitatElement</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.model.base.Farm">Farm</a> → <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">

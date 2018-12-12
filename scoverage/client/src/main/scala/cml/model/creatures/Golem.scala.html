@@ -26,51 +26,58 @@
 </span>2 <span style=''>
 </span>3 <span style=''>import cml.model.base.Creature
 </span>4 <span style=''>import cml.utils.ModelConfig.Elements.EARTH
-</span>5 <span style=''>
-</span>6 <span style=''>/**
-</span>7 <span style=''>  * This class models a golem
-</span>8 <span style=''>  * @param creatureName name of the golem
-</span>9 <span style=''>  * @param creatureLevel set the golem level
-</span>10 <span style=''>  * @author Filippo Portolani
-</span>11 <span style=''>  */
-</span>12 <span style=''>
-</span>13 <span style=''>case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
+</span>5 <span style=''>import cml.utils.ModelConfig.Creature.GOLEM
+</span>6 <span style=''>import play.api.libs.json.Json
+</span>7 <span style=''>
+</span>8 <span style=''>/**
+</span>9 <span style=''>  * This class models a golem
+</span>10 <span style=''>  * @param creatureName name of the golem
+</span>11 <span style=''>  * @param creatureLevel set the golem level
+</span>12 <span style=''>  * @author Filippo Portolani
+</span>13 <span style=''>  */
 </span>14 <span style=''>
-</span>15 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>EARTH</span><span style=''>
+</span>15 <span style=''>case class Golem(creatureName: String, creatureLevel: Int) extends Creature {
 </span>16 <span style=''>
-</span>17 <span style=''>  override def levelUp(): Unit = {
-</span>18 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel += 1</span><span style=''>
-</span>19 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
-</span>20 <span style=''>  }
-</span>21 <span style=''>
-</span>22 <span style=''>  /**
-</span>23 <span style=''>    * Golem earns 15 more damage instead of 10
-</span>24 <span style=''>    */
-</span>25 <span style=''>
-</span>26 <span style=''>  override def setAttack(): Unit = {
-</span>27 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
-</span>28 <span style=''>      case 10 =&gt; </span><span style='background: #AEF1AE'>attackValue += 15</span><span style=''>
-</span>29 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 15</span><span style=''>
-</span>30 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 15</span><span style=''>
-</span>31 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
-</span>32 <span style=''>    }
-</span>33 <span style=''>  }
-</span>34 <span style=''>
-</span>35 <span style=''>  override def element: String = </span><span style='background: #AEF1AE'>_element</span><span style=''>
+</span>17 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>EARTH</span><span style=''>
+</span>18 <span style=''>
+</span>19 <span style=''>  override def levelUp(): Unit = {
+</span>20 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel += 1</span><span style=''>
+</span>21 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>22 <span style=''>  }
+</span>23 <span style=''>
+</span>24 <span style=''>  /**
+</span>25 <span style=''>    * Golem earns 15 more damage instead of 10
+</span>26 <span style=''>    */
+</span>27 <span style=''>
+</span>28 <span style=''>  override def setAttack(): Unit = {
+</span>29 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
+</span>30 <span style=''>      case 10 =&gt; </span><span style='background: #AEF1AE'>attackValue += 15</span><span style=''>
+</span>31 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 15</span><span style=''>
+</span>32 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 15</span><span style=''>
+</span>33 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
+</span>34 <span style=''>    }
+</span>35 <span style=''>  }
 </span>36 <span style=''>
-</span>37 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>37 <span style=''>  override def element: String = </span><span style='background: #AEF1AE'>_element</span><span style=''>
 </span>38 <span style=''>
-</span>39 <span style=''>  override def attackPower: Int = </span><span style='background: #AEF1AE'>attackValue</span><span style=''>
+</span>39 <span style=''>  override def level: Int = </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
 </span>40 <span style=''>
-</span>41 <span style=''>  override def currentLevel_ : Unit = {
-</span>42 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
-</span>43 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
-</span>44 <span style=''>  }
-</span>45 <span style=''>
-</span>46 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>41 <span style=''>  override def attackPower: Int = </span><span style='background: #AEF1AE'>attackValue</span><span style=''>
+</span>42 <span style=''>
+</span>43 <span style=''>  override def currentLevel_ : Unit = {
+</span>44 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel = creatureLevel</span><span style=''>
+</span>45 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
+</span>46 <span style=''>  }
 </span>47 <span style=''>
-</span>48 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>&quot;Golem&quot;</span><span style=''>
-</span>49 <span style=''>}
+</span>48 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creatureName</span><span style=''>
+</span>49 <span style=''>
+</span>50 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>GOLEM</span><span style=''>
+</span>51 <span style=''>}
+</span>52 <span style=''>
+</span>53 <span style=''>object Golem {
+</span>54 <span style=''>  implicit val reader = Json.format[Golem]
+</span>55 <span style=''>}
+</span>56 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -84,15 +91,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          15
+          17
         </td>
         <td>
-          354
+          563
         </td>
         <td>
-          381
+          458
           -
-          386
+          463
         </td>
         <td>
           Select
@@ -105,15 +112,15 @@
         </td>
       </tr><tr>
         <td>
-          18
+          20
         </td>
         <td>
-          355
+          564
         </td>
         <td>
-          430
+          507
           -
-          447
+          524
         </td>
         <td>
           Apply
@@ -126,15 +133,15 @@
         </td>
       </tr><tr>
         <td>
-          18
+          20
         </td>
         <td>
-          356
+          565
         </td>
         <td>
-          430
+          507
           -
-          447
+          524
         </td>
         <td>
           Apply
@@ -147,15 +154,15 @@
         </td>
       </tr><tr>
         <td>
-          19
+          21
         </td>
         <td>
-          357
+          566
         </td>
         <td>
-          453
+          530
           -
-          464
+          541
         </td>
         <td>
           Apply
@@ -168,15 +175,15 @@
         </td>
       </tr><tr>
         <td>
-          27
+          29
         </td>
         <td>
-          358
+          567
         </td>
         <td>
-          580
+          657
           -
-          592
+          669
         </td>
         <td>
           Select
@@ -189,36 +196,15 @@
         </td>
       </tr><tr>
         <td>
-          28
+          30
         </td>
         <td>
-          360
+          568
         </td>
         <td>
-          619
+          696
           -
-          636
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.attackValue_=
-        </td>
-        <td style="background: #AEF1AE">
-          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
-        </td>
-      </tr><tr>
-        <td>
-          28
-        </td>
-        <td>
-          359
-        </td>
-        <td>
-          619
-          -
-          636
+          713
         </td>
         <td>
           Apply
@@ -231,36 +217,15 @@
         </td>
       </tr><tr>
         <td>
-          29
+          30
         </td>
         <td>
-          361
+          569
         </td>
         <td>
-          655
+          696
           -
-          672
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.+
-        </td>
-        <td style="background: #F0ADAD">
-          Golem.this.attackValue.+(15)
-        </td>
-      </tr><tr>
-        <td>
-          29
-        </td>
-        <td>
-          362
-        </td>
-        <td>
-          655
-          -
-          672
+          713
         </td>
         <td>
           Apply
@@ -268,41 +233,20 @@
         <td>
           cml.model.base.Creature.attackValue_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           Golem.this.attackValue_=(Golem.this.attackValue.+(15))
         </td>
       </tr><tr>
         <td>
-          30
+          31
         </td>
         <td>
-          364
+          570
         </td>
         <td>
-          691
+          732
           -
-          708
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.attackValue_=
-        </td>
-        <td style="background: #F0ADAD">
-          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          363
-        </td>
-        <td>
-          691
-          -
-          708
+          749
         </td>
         <td>
           Apply
@@ -318,12 +262,75 @@
           31
         </td>
         <td>
-          365
+          571
         </td>
         <td>
-          723
+          732
           -
-          725
+          749
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          573
+        </td>
+        <td>
+          768
+          -
+          785
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.attackValue_=
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue_=(Golem.this.attackValue.+(15))
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          572
+        </td>
+        <td>
+          768
+          -
+          785
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #F0ADAD">
+          Golem.this.attackValue.+(15)
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          574
+        </td>
+        <td>
+          800
+          -
+          802
         </td>
         <td>
           Literal
@@ -336,15 +343,15 @@
         </td>
       </tr><tr>
         <td>
-          35
+          37
         </td>
         <td>
-          366
+          575
         </td>
         <td>
-          776
+          853
           -
-          784
+          861
         </td>
         <td>
           Select
@@ -357,15 +364,15 @@
         </td>
       </tr><tr>
         <td>
-          37
+          39
         </td>
         <td>
-          367
+          576
         </td>
         <td>
-          816
+          893
           -
-          828
+          905
         </td>
         <td>
           Select
@@ -378,15 +385,15 @@
         </td>
       </tr><tr>
         <td>
-          39
+          41
         </td>
         <td>
-          368
+          577
         </td>
         <td>
-          866
+          943
           -
-          877
+          954
         </td>
         <td>
           Select
@@ -399,15 +406,15 @@
         </td>
       </tr><tr>
         <td>
-          42
+          44
         </td>
         <td>
-          370
+          579
         </td>
         <td>
-          926
+          1003
           -
-          954
+          1031
         </td>
         <td>
           Apply
@@ -420,15 +427,15 @@
         </td>
       </tr><tr>
         <td>
-          42
+          44
         </td>
         <td>
-          369
+          578
         </td>
         <td>
-          941
+          1018
           -
-          954
+          1031
         </td>
         <td>
           Select
@@ -441,15 +448,15 @@
         </td>
       </tr><tr>
         <td>
-          43
+          45
         </td>
         <td>
-          371
+          580
         </td>
         <td>
-          960
+          1037
           -
-          971
+          1048
         </td>
         <td>
           Apply
@@ -462,15 +469,15 @@
         </td>
       </tr><tr>
         <td>
-          46
+          48
         </td>
         <td>
-          372
+          581
         </td>
         <td>
-          1010
+          1087
           -
-          1022
+          1099
         </td>
         <td>
           Select
@@ -483,24 +490,24 @@
         </td>
       </tr><tr>
         <td>
-          48
+          50
         </td>
         <td>
-          373
+          582
         </td>
         <td>
-          1064
+          1141
           -
-          1071
+          1146
         </td>
         <td>
-          Literal
+          Select
         </td>
         <td>
-          &lt;nosymbol&gt;
+          cml.utils.ModelConfig.Creature.GOLEM
         </td>
         <td style="background: #F0ADAD">
-          &quot;Golem&quot;
+          cml.utils.ModelConfig.Creature.GOLEM
         </td>
       </tr>
     </table>

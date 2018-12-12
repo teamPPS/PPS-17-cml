@@ -2,7 +2,7 @@
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title id="title">
-          src\main\scala\cml\controller\RemoteActor.scala.html
+          src\main\scala\cml\controller\cml.controller.cml.cml.RemoteActor.scala.html
         </title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
         $(document).ready(function() {$(".tablesorter").tablesorter();});
@@ -26,66 +26,91 @@
 </span>2 <span style=''>
 </span>3 <span style=''>import java.io.File
 </span>4 <span style=''>
-</span>5 <span style=''>import akka.actor.{Actor, ActorSystem, Props}
-</span>6 <span style=''>import cml.controller.messages.ArenaRequest.ExitRequest
-</span>7 <span style=''>import cml.controller.messages.ArenaResponse.ExitSuccess
-</span>8 <span style=''>import cml.controller.messages.BattleRequest.RequireChallenger
-</span>9 <span style=''>import cml.controller.messages.BattleResponse.RequireChallengerSuccess
-</span>10 <span style=''>import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
+</span>5 <span style=''>import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+</span>6 <span style=''>import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
+</span>7 <span style=''>import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
+</span>8 <span style=''>import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
+</span>9 <span style=''>import cml.controller.messages.ArenaRequest.RequireTurnRequest
+</span>10 <span style=''>import cml.controller.messages.ArenaResponse.RequireTurnSuccess
 </span>11 <span style=''>import com.typesafe.config.ConfigFactory
 </span>12 <span style=''>
 </span>13 <span style=''>import scala.collection.mutable.ListBuffer
 </span>14 <span style=''>
 </span>15 <span style=''>/**
-</span>16 <span style=''>  * @author Chiara Volonnino
-</span>17 <span style=''>  */
-</span>18 <span style=''>
+</span>16 <span style=''>  * This class implements remote actor utils for battle managements
+</span>17 <span style=''>  * @author Chiara Volonnino
+</span>18 <span style=''>  */
 </span>19 <span style=''>
-</span>20 <span style=''>// potenzialmente da spostare in server
-</span>21 <span style=''>class RemoteActor extends Actor{
-</span>22 <span style=''>
-</span>23 <span style=''>  var battleUserList = </span><span style='background: #F0ADAD'>new ListBuffer[Int]</span><span style=''> // sarebbe figo fare una lista di user
+</span>20 <span style=''>class cml.controller.cml.cml.RemoteActor extends Actor with ActorLogging {
+</span>21 <span style=''>  val DefaultMessage: String = </span><span style='background: #F0ADAD'>&quot;WARNING: cml.controller.cml.cml.RemoteActor has not receive anything&quot;</span><span style=''>
+</span>22 <span style=''>  var actorInList = </span><span style='background: #F0ADAD'>new ListBuffer[ActorRef]</span><span style=''>
+</span>23 <span style=''>  var isFirst: Boolean = </span><span style='background: #F0ADAD'>true</span><span style=''>
 </span>24 <span style=''>
 </span>25 <span style=''>  override def receive: Receive = {
-</span>26 <span style=''>    case msg:String =&gt;
-</span>27 <span style=''>      </span><span style='background: #F0ADAD'>println(&quot;RemoteActor receive &quot; + msg + &quot;from &quot;)</span><span style=''>
-</span>28 <span style=''>    case RequireChallenger() =&gt;
-</span>29 <span style=''>      </span><span style='background: #F0ADAD'>addIntoBattleUserList(sender.hashCode)</span><span style=''>
-</span>30 <span style=''>      </span><span style='background: #F0ADAD'>sender ! RequireChallengerSuccess()</span><span style=''>
-</span>31 <span style=''>    case ExitRequest() =&gt;
-</span>32 <span style=''>      </span><span style='background: #F0ADAD'>removeIntoBattleUserList(sender.hashCode)</span><span style=''>
-</span>33 <span style=''>      </span><span style='background: #F0ADAD'>println(&quot;receive exit request by actor --&gt; &quot; + sender().hashCode())</span><span style=''>
-</span>34 <span style=''>      </span><span style='background: #F0ADAD'>sender ! ExitSuccess()</span><span style=''>
-</span>35 <span style=''>    case _ =&gt; </span><span style='background: #F0ADAD'>println(&quot;WARNING: RemoteActor has not receive anything&quot;)</span><span style=''>
-</span>36 <span style=''>  }
-</span>37 <span style=''>
-</span>38 <span style=''>  private def addIntoBattleUserList(actorIdentity: Int){
-</span>39 <span style=''>    </span><span style='background: #F0ADAD'>battleUserList += actorIdentity</span><span style=''>
-</span>40 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;LIST add --&gt; &quot; + battleUserList )</span><span style=''>
-</span>41 <span style=''>  }
-</span>42 <span style=''>
-</span>43 <span style=''>  private def removeIntoBattleUserList(actorIdentity: Int) {
-</span>44 <span style=''>    </span><span style='background: #F0ADAD'>battleUserList -= actorIdentity</span><span style=''>
-</span>45 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;LIST remove --&gt; &quot; + battleUserList)</span><span style=''>
-</span>46 <span style=''>  }
-</span>47 <span style=''>
-</span>48 <span style=''>  private def existChallenger(): Boolean = {
-</span>49 <span style=''>    if (</span><span style='background: #F0ADAD'>battleUserList.isEmpty</span><span style=''>) </span><span style='background: #F0ADAD'>false</span><span style=''>
-</span>50 <span style=''>    else </span><span style='background: #F0ADAD'>true</span><span style=''>
-</span>51 <span style=''>  }
-</span>52 <span style=''>}
-</span>53 <span style=''>
-</span>54 <span style=''>
-</span>55 <span style=''>object RemoteActor {
-</span>56 <span style=''>
-</span>57 <span style=''>  def main(args: Array[String])  {
-</span>58 <span style=''>    val configFile = </span><span style='background: #F0ADAD'>getClass.getClassLoader.getResource(Path).getFile</span><span style=''>
-</span>59 <span style=''>    val config = </span><span style='background: #F0ADAD'>ConfigFactory.parseFile(new File(configFile))</span><span style=''>
-</span>60 <span style=''>    val system = </span><span style='background: #F0ADAD'>ActorSystem(Context, config)</span><span style=''>
-</span>61 <span style=''>    val remoteActor = </span><span style='background: #F0ADAD'>system.actorOf(Props[RemoteActor], name=Name)</span><span style=''>
-</span>62 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;------ RemoteActor is ready&quot;)</span><span style=''>
+</span>26 <span style=''>    case RequireEnterInArena() =&gt;
+</span>27 <span style=''>      </span><span style='background: #F0ADAD'>addIntoBattleUserList(sender)</span><span style=''>
+</span>28 <span style=''>      </span><span style='background: #F0ADAD'>sender ! RequireEnterInArenaSuccess()</span><span style=''>
+</span>29 <span style=''>    case ExistChallenger() =&gt;
+</span>30 <span style=''>      val exist = </span><span style='background: #F0ADAD'>existChallenger()</span><span style=''>
+</span>31 <span style=''>      if (exist) </span><span style='background: #F0ADAD'>actorInList.foreach(actor =&gt; actor ! ExistChallengerSuccess(actorInList))</span><span style=''>
+</span>32 <span style=''>    case ExitRequest() =&gt;
+</span>33 <span style=''>      </span><span style='background: #F0ADAD'>removeIntoBattleUserList(sender)</span><span style=''>
+</span>34 <span style=''>    case RequireTurnRequest(attackPower, turn) =&gt;
+</span>35 <span style=''>      </span><span style='background: #F0ADAD'>turnManagement(turn)</span><span style=''>
+</span>36 <span style=''>      </span><span style='background: #F0ADAD'>sender ! RequireTurnSuccess(attackPower, turn)</span><span style=''>
+</span>37 <span style=''>    case _ =&gt; </span><span style='background: #F0ADAD'>log.info(DefaultMessage)</span><span style=''>
+</span>38 <span style=''>  }
+</span>39 <span style=''>
+</span>40 <span style=''>  private def addIntoBattleUserList(actorIdentity: ActorRef){
+</span>41 <span style=''>    </span><span style='background: #F0ADAD'>actorInList += actorIdentity</span><span style=''>
+</span>42 <span style=''>    </span><span style='background: #F0ADAD'>log.info(&quot;LIST add --&gt; &quot; + userList_ )</span><span style=''>
+</span>43 <span style=''>  }
+</span>44 <span style=''>
+</span>45 <span style=''>  private def removeIntoBattleUserList(actorIdentity: ActorRef) {
+</span>46 <span style=''>    </span><span style='background: #F0ADAD'>actorInList -= actorIdentity</span><span style=''>
+</span>47 <span style=''>    </span><span style='background: #F0ADAD'>log.info(&quot;LIST remove --&gt; &quot; + userList_)</span><span style=''>
+</span>48 <span style=''>  }
+</span>49 <span style=''>
+</span>50 <span style=''>  //todo: technical debit
+</span>51 <span style=''>  private def existChallenger(): Boolean = {
+</span>52 <span style=''>    if (</span><span style='background: #F0ADAD'>userList_().length.equals(2)</span><span style=''>) </span><span style='background: #F0ADAD'>true</span><span style=''>
+</span>53 <span style=''>    else </span><span style='background: #F0ADAD'>false</span><span style=''>
+</span>54 <span style=''>  }
+</span>55 <span style=''>
+</span>56 <span style=''>  private def userList_(): ListBuffer[ActorRef] ={
+</span>57 <span style=''>    </span><span style='background: #F0ADAD'>actorInList</span><span style=''>
+</span>58 <span style=''>  }
+</span>59 <span style=''>
+</span>60 <span style=''>  private def turnManagement(turn: Int): Unit = {
+</span>61 <span style=''>    if(</span><span style='background: #F0ADAD'>isFirst &amp;&amp; initializeTurn(turn)</span><span style=''>) </span><span style='background: #F0ADAD'>isFirst = false</span><span style=''>
+</span>62 <span style=''>    </span><span style='background: #F0ADAD'>changeTurn(turn)</span><span style=''>
 </span>63 <span style=''>  }
-</span>64 <span style=''>}
+</span>64 <span style=''>
+</span>65 <span style=''>  val First: Int = </span><span style='background: #F0ADAD'>0</span><span style=''>
+</span>66 <span style=''>  val Second: Int = </span><span style='background: #F0ADAD'>1</span><span style=''>
+</span>67 <span style=''>
+</span>68 <span style=''>  private def initializeTurn(turn: Int): Boolean = {
+</span>69 <span style=''>    </span><span style='background: #F0ADAD'>turn.equals(First)</span><span style=''>
+</span>70 <span style=''>  }
+</span>71 <span style=''>
+</span>72 <span style=''>  private def changeTurn(turn: Int): Int = {
+</span>73 <span style=''>    var turn_ : Int = </span><span style='background: #F0ADAD'>First</span><span style=''>
+</span>74 <span style=''>    if (</span><span style='background: #F0ADAD'>turn equals First</span><span style=''>) </span><span style='background: #F0ADAD'>turn_ = Second</span><span style=''>
+</span>75 <span style=''>    else </span><span style='background: #F0ADAD'>turn_ = First</span><span style=''>
+</span>76 <span style=''>    turn_
+</span>77 <span style=''>  }
+</span>78 <span style=''>}
+</span>79 <span style=''>
+</span>80 <span style=''>object cml.controller.cml.cml.RemoteActor {
+</span>81 <span style=''>// TODO: shift this main in server side (server main) if its possible add another service-like (its't really service)
+</span>82 <span style=''>  def main(args: Array[String])  {
+</span>83 <span style=''>    val configFile = </span><span style='background: #F0ADAD'>getClass.getClassLoader.getResource(Configuration).getFile</span><span style=''>
+</span>84 <span style=''>    val config = </span><span style='background: #F0ADAD'>ConfigFactory.parseFile(new File(configFile))</span><span style=''>
+</span>85 <span style=''>    val system = </span><span style='background: #F0ADAD'>ActorSystem(Context, config)</span><span style=''>
+</span>86 <span style=''>    val remoteActor = </span><span style='background: #F0ADAD'>system.actorOf(Props[cml.controller.cml.cml.RemoteActor], name=Name)</span><span style=''>
+</span>87 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;------ cml.controller.cml.cml.RemoteActor is ready&quot;)</span><span style=''>
+</span>88 <span style=''>  }
+</span>89 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -99,15 +124,36 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          23
+          21
         </td>
         <td>
-          67
+          171
         </td>
         <td>
-          646
+          797
           -
-          665
+          844
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;WARNING: cml.controller.cml.cml.RemoteActor has not receive anything&quot;
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          172
+        </td>
+        <td>
+          866
+          -
+          890
         </td>
         <td>
           Apply
@@ -116,25 +162,46 @@
           scala.collection.mutable.ListBuffer.&lt;init&gt;
         </td>
         <td style="background: #F0ADAD">
-          new scala.collection.mutable.ListBuffer[Int]()
+          new scala.collection.mutable.ListBuffer[akka.actor.ActorRef]()
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          173
+        </td>
+        <td>
+          917
+          -
+          921
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          true
         </td>
       </tr><tr>
         <td>
           25
         </td>
         <td>
-          87
+          198
         </td>
         <td>
-          742
+          959
           -
-          742
+          959
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.controller.RemoteActor.$anonfun.&lt;init&gt;
+          cml.controller.cml.cml.RemoteActor.$anonfun.&lt;init&gt;
         </td>
         <td style="background: #F0ADAD">
           new $anonfun()
@@ -144,138 +211,33 @@
           27
         </td>
         <td>
-          68
+          175
         </td>
         <td>
-          783
+          1003
           -
-          821
+          1032
         </td>
         <td>
           Apply
         </td>
         <td>
-          java.lang.String.+
+          cml.controller.cml.cml.RemoteActor.addIntoBattleUserList
         </td>
         <td style="background: #F0ADAD">
-          &quot;RemoteActor receive &quot;.+(msg).+(&quot;from &quot;)
+          cml.controller.cml.cml.RemoteActor.this.addIntoBattleUserList(cml.controller.cml.cml.RemoteActor.this.sender())
         </td>
       </tr><tr>
         <td>
           27
         </td>
         <td>
-          69
+          174
         </td>
         <td>
-          775
+          1025
           -
-          822
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;RemoteActor receive &quot;.+(msg).+(&quot;from &quot;))
-        </td>
-      </tr><tr>
-        <td>
-          29
-        </td>
-        <td>
-          71
-        </td>
-        <td>
-          863
-          -
-          901
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.RemoteActor.addIntoBattleUserList
-        </td>
-        <td style="background: #F0ADAD">
-          RemoteActor.this.addIntoBattleUserList(RemoteActor.this.sender().hashCode())
-        </td>
-      </tr><tr>
-        <td>
-          29
-        </td>
-        <td>
-          70
-        </td>
-        <td>
-          885
-          -
-          900
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.actor.ActorRef.hashCode
-        </td>
-        <td style="background: #F0ADAD">
-          RemoteActor.this.sender().hashCode()
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          74
-        </td>
-        <td>
-          916
-          -
-          916
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          akka.actor.Actor.self
-        </td>
-        <td style="background: #F0ADAD">
-          RemoteActor.this.self
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          73
-        </td>
-        <td>
-          918
-          -
-          944
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.messages.BattleResponse.RequireChallengerSuccess.apply
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.messages.BattleResponse.RequireChallengerSuccess.apply()
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          72
-        </td>
-        <td>
-          909
-          -
-          915
+          1031
         </td>
         <td>
           Apply
@@ -284,19 +246,82 @@
           akka.actor.Actor.sender
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.sender()
+          cml.controller.cml.cml.RemoteActor.this.sender()
         </td>
       </tr><tr>
         <td>
-          30
+          28
         </td>
         <td>
-          75
+          176
         </td>
         <td>
-          909
+          1040
           -
-          944
+          1046
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.Actor.sender
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.sender()
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          178
+        </td>
+        <td>
+          1047
+          -
+          1047
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          177
+        </td>
+        <td>
+          1049
+          -
+          1077
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.BattleResponse.RequireEnterInArenaSuccess.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.BattleResponse.RequireEnterInArenaSuccess.apply()
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          179
+        </td>
+        <td>
+          1040
+          -
+          1077
         </td>
         <td>
           ApplyToImplicitArgs
@@ -305,103 +330,103 @@
           akka.actor.ScalaActorRef.!
         </td>
         <td style="background: #F0ADAD">
-          actor.this.`package`.actorRef2Scala(RemoteActor.this.sender()).!(cml.controller.messages.BattleResponse.RequireChallengerSuccess.apply())(RemoteActor.this.self)
+          actor.this.`package`.actorRef2Scala(cml.controller.cml.cml.RemoteActor.this.sender()).!(cml.controller.messages.BattleResponse.RequireEnterInArenaSuccess.apply())(cml.controller.cml.cml.RemoteActor.this.self)
         </td>
       </tr><tr>
         <td>
-          32
+          30
         </td>
         <td>
-          77
+          180
         </td>
         <td>
-          979
+          1128
           -
-          1020
+          1145
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.controller.RemoteActor.removeIntoBattleUserList
+          cml.controller.cml.cml.RemoteActor.existChallenger
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.removeIntoBattleUserList(RemoteActor.this.sender().hashCode())
+          cml.controller.cml.cml.RemoteActor.this.existChallenger()
         </td>
       </tr><tr>
         <td>
-          32
+          31
         </td>
         <td>
-          76
+          182
         </td>
         <td>
-          1004
+          1201
           -
-          1019
+          1236
         </td>
         <td>
           Apply
         </td>
         <td>
-          akka.actor.ActorRef.hashCode
+          cml.controller.messages.BattleResponse.ExistChallengerSuccess.apply
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.sender().hashCode()
+          cml.controller.messages.BattleResponse.ExistChallengerSuccess.apply(cml.controller.cml.cml.RemoteActor.this.actorInList)
         </td>
       </tr><tr>
         <td>
-          33
+          31
         </td>
         <td>
-          80
+          185
         </td>
         <td>
-          1036
+          1164
           -
-          1094
+          1237
         </td>
         <td>
           Apply
         </td>
         <td>
-          java.lang.String.+
+          scala.collection.generic.TraversableForwarder.foreach
         </td>
         <td style="background: #F0ADAD">
-          &quot;receive exit request by actor --&gt; &quot;.+(RemoteActor.this.sender().hashCode())
+          cml.controller.cml.cml.RemoteActor.this.actorInList.foreach[Unit](((actor: akka.actor.ActorRef) =&gt; actor.this.`package`.actorRef2Scala(actor).!(cml.controller.messages.BattleResponse.ExistChallengerSuccess.apply(cml.controller.cml.cml.RemoteActor.this.actorInList))(cml.controller.cml.cml.RemoteActor.this.self)))
         </td>
       </tr><tr>
         <td>
-          33
+          31
         </td>
         <td>
-          79
+          184
         </td>
         <td>
-          1075
+          1193
           -
-          1094
+          1236
         </td>
         <td>
-          Apply
+          ApplyToImplicitArgs
         </td>
         <td>
-          akka.actor.ActorRef.hashCode
+          akka.actor.ScalaActorRef.!
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.sender().hashCode()
+          actor.this.`package`.actorRef2Scala(actor).!(cml.controller.messages.BattleResponse.ExistChallengerSuccess.apply(cml.controller.cml.cml.RemoteActor.this.actorInList))(cml.controller.cml.cml.RemoteActor.this.self)
         </td>
       </tr><tr>
         <td>
-          33
+          31
         </td>
         <td>
-          78
+          187
         </td>
         <td>
-          1036
+          1153
           -
-          1072
+          1153
         </td>
         <td>
           Literal
@@ -410,103 +435,40 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          &quot;receive exit request by actor --&gt; &quot;
+          ()
         </td>
       </tr><tr>
         <td>
-          33
+          31
         </td>
         <td>
-          81
+          181
         </td>
         <td>
-          1028
+          1224
           -
-          1095
+          1235
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          scala.Predef.println
+          cml.controller.cml.cml.RemoteActor.actorInList
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;receive exit request by actor --&gt; &quot;.+(RemoteActor.this.sender().hashCode()))
+          cml.controller.cml.cml.RemoteActor.this.actorInList
         </td>
       </tr><tr>
         <td>
-          34
+          31
         </td>
         <td>
-          83
+          183
         </td>
         <td>
-          1112
+          1199
           -
-          1125
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.messages.ArenaResponse.ExitSuccess.apply
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.messages.ArenaResponse.ExitSuccess.apply()
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          82
-        </td>
-        <td>
-          1103
-          -
-          1109
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.actor.Actor.sender
-        </td>
-        <td style="background: #F0ADAD">
-          RemoteActor.this.sender()
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          85
-        </td>
-        <td>
-          1103
-          -
-          1125
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorRef.!
-        </td>
-        <td style="background: #F0ADAD">
-          actor.this.`package`.actorRef2Scala(RemoteActor.this.sender()).!(cml.controller.messages.ArenaResponse.ExitSuccess.apply())(RemoteActor.this.self)
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          84
-        </td>
-        <td>
-          1110
-          -
-          1110
+          1199
         </td>
         <td>
           Select
@@ -515,40 +477,250 @@
           akka.actor.Actor.self
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.self
+          cml.controller.cml.cml.RemoteActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          186
+        </td>
+        <td>
+          1164
+          -
+          1237
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          scala.collection.generic.TraversableForwarder.foreach
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.actorInList.foreach[Unit](((actor: akka.actor.ActorRef) =&gt; actor.this.`package`.actorRef2Scala(actor).!(cml.controller.messages.BattleResponse.ExistChallengerSuccess.apply(cml.controller.cml.cml.RemoteActor.this.actorInList))(cml.controller.cml.cml.RemoteActor.this.self)))
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          188
+        </td>
+        <td>
+          1153
+          -
+          1153
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          190
+        </td>
+        <td>
+          1272
+          -
+          1304
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.removeIntoBattleUserList
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.removeIntoBattleUserList(cml.controller.cml.cml.RemoteActor.this.sender())
+        </td>
+      </tr><tr>
+        <td>
+          33
+        </td>
+        <td>
+          189
+        </td>
+        <td>
+          1297
+          -
+          1303
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.Actor.sender
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.sender()
         </td>
       </tr><tr>
         <td>
           35
         </td>
         <td>
-          86
+          191
         </td>
         <td>
-          1141
+          1363
           -
-          1197
+          1383
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          cml.controller.cml.cml.RemoteActor.turnManagement
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;WARNING: RemoteActor has not receive anything&quot;)
+          cml.controller.cml.cml.RemoteActor.this.turnManagement(turn)
         </td>
       </tr><tr>
         <td>
-          39
+          36
         </td>
         <td>
-          88
+          194
         </td>
         <td>
-          1268
+          1398
           -
-          1299
+          1398
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          193
+        </td>
+        <td>
+          1400
+          -
+          1437
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.ArenaResponse.RequireTurnSuccess.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.ArenaResponse.RequireTurnSuccess.apply(attackPower, turn)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          192
+        </td>
+        <td>
+          1391
+          -
+          1397
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.Actor.sender
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.sender()
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          195
+        </td>
+        <td>
+          1391
+          -
+          1437
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.`package`.actorRef2Scala(cml.controller.cml.cml.RemoteActor.this.sender()).!(cml.controller.messages.ArenaResponse.RequireTurnSuccess.apply(attackPower, turn))(cml.controller.cml.cml.RemoteActor.this.self)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          196
+        </td>
+        <td>
+          1462
+          -
+          1476
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.DefaultMessage
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.DefaultMessage
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          197
+        </td>
+        <td>
+          1453
+          -
+          1477
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.log.info(cml.controller.cml.cml.RemoteActor.this.DefaultMessage)
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          199
+        </td>
+        <td>
+          1553
+          -
+          1581
         </td>
         <td>
           Apply
@@ -557,40 +729,19 @@
           scala.collection.mutable.ListBuffer.+=
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.battleUserList.+=(actorIdentity)
+          cml.controller.cml.cml.RemoteActor.this.actorInList.+=(actorIdentity)
         </td>
       </tr><tr>
         <td>
-          40
+          42
         </td>
         <td>
-          92
+          200
         </td>
         <td>
-          1305
+          1596
           -
-          1347
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;LIST add --&gt; &quot;.+(RemoteActor.this.battleUserList))
-        </td>
-      </tr><tr>
-        <td>
-          40
-        </td>
-        <td>
-          89
-        </td>
-        <td>
-          1313
-          -
-          1328
+          1611
         </td>
         <td>
           Literal
@@ -603,15 +754,15 @@
         </td>
       </tr><tr>
         <td>
-          40
+          42
         </td>
         <td>
-          91
+          202
         </td>
         <td>
-          1313
+          1596
           -
-          1345
+          1623
         </td>
         <td>
           Apply
@@ -620,40 +771,61 @@
           java.lang.String.+
         </td>
         <td style="background: #F0ADAD">
-          &quot;LIST add --&gt; &quot;.+(RemoteActor.this.battleUserList)
+          &quot;LIST add --&gt; &quot;.+(cml.controller.cml.cml.RemoteActor.this.userList_())
         </td>
       </tr><tr>
         <td>
-          40
+          42
         </td>
         <td>
-          90
+          201
         </td>
         <td>
-          1331
+          1614
           -
-          1345
+          1623
         </td>
         <td>
-          Select
+          Apply
         </td>
         <td>
-          cml.controller.RemoteActor.battleUserList
+          cml.controller.cml.cml.RemoteActor.userList_
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.battleUserList
+          cml.controller.cml.cml.RemoteActor.this.userList_()
         </td>
       </tr><tr>
         <td>
-          44
+          42
         </td>
         <td>
-          93
+          203
         </td>
         <td>
-          1422
+          1587
           -
-          1453
+          1625
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.log.info(&quot;LIST add --&gt; &quot;.+(cml.controller.cml.cml.RemoteActor.this.userList_()))
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          204
+        </td>
+        <td>
+          1705
+          -
+          1733
         </td>
         <td>
           Apply
@@ -662,40 +834,19 @@
           scala.collection.mutable.ListBuffer.-=
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.battleUserList.-=(actorIdentity)
+          cml.controller.cml.cml.RemoteActor.this.actorInList.-=(actorIdentity)
         </td>
       </tr><tr>
         <td>
-          45
+          47
         </td>
         <td>
-          95
+          205
         </td>
         <td>
-          1488
+          1748
           -
-          1502
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.RemoteActor.battleUserList
-        </td>
-        <td style="background: #F0ADAD">
-          RemoteActor.this.battleUserList
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          94
-        </td>
-        <td>
-          1467
-          -
-          1485
+          1766
         </td>
         <td>
           Literal
@@ -708,36 +859,36 @@
         </td>
       </tr><tr>
         <td>
-          45
+          47
         </td>
         <td>
-          97
+          208
         </td>
         <td>
-          1459
+          1739
           -
-          1503
+          1779
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;LIST remove --&gt; &quot;.+(RemoteActor.this.battleUserList))
+          cml.controller.cml.cml.RemoteActor.this.log.info(&quot;LIST remove --&gt; &quot;.+(cml.controller.cml.cml.RemoteActor.this.userList_()))
         </td>
       </tr><tr>
         <td>
-          45
+          47
         </td>
         <td>
-          96
+          207
         </td>
         <td>
-          1467
+          1748
           -
-          1502
+          1778
         </td>
         <td>
           Apply
@@ -746,40 +897,187 @@
           java.lang.String.+
         </td>
         <td style="background: #F0ADAD">
-          &quot;LIST remove --&gt; &quot;.+(RemoteActor.this.battleUserList)
+          &quot;LIST remove --&gt; &quot;.+(cml.controller.cml.cml.RemoteActor.this.userList_())
         </td>
       </tr><tr>
         <td>
-          49
+          47
         </td>
         <td>
-          98
+          206
         </td>
         <td>
-          1566
+          1769
           -
-          1588
+          1778
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.userList_
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.userList_()
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          209
+        </td>
+        <td>
+          1869
+          -
+          1897
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.userList_().length.equals(2)
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          211
+        </td>
+        <td>
+          1899
+          -
+          1903
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          true
+        </td>
+      </tr><tr>
+        <td>
+          52
+        </td>
+        <td>
+          210
+        </td>
+        <td>
+          1899
+          -
+          1903
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          true
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          213
+        </td>
+        <td>
+          1914
+          -
+          1919
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          false
+        </td>
+      </tr><tr>
+        <td>
+          53
+        </td>
+        <td>
+          212
+        </td>
+        <td>
+          1914
+          -
+          1919
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          false
+        </td>
+      </tr><tr>
+        <td>
+          57
+        </td>
+        <td>
+          214
+        </td>
+        <td>
+          1984
+          -
+          1995
         </td>
         <td>
           Select
         </td>
         <td>
-          scala.collection.mutable.ListBuffer.isEmpty
+          cml.controller.cml.cml.RemoteActor.actorInList
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.battleUserList.isEmpty
+          cml.controller.cml.cml.RemoteActor.this.actorInList
         </td>
       </tr><tr>
         <td>
-          49
+          61
         </td>
         <td>
-          100
+          218
         </td>
         <td>
-          1590
+          2095
           -
-          1595
+          2110
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.isFirst_=
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.isFirst_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          220
+        </td>
+        <td>
+          2059
+          -
+          2059
         </td>
         <td>
           Block
@@ -788,19 +1086,61 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          false
+          ()
         </td>
       </tr><tr>
         <td>
-          49
+          61
         </td>
         <td>
-          99
+          217
         </td>
         <td>
-          1590
+          2095
           -
-          1595
+          2110
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.isFirst_=
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.isFirst_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          216
+        </td>
+        <td>
+          2062
+          -
+          2093
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Boolean.&amp;&amp;
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.isFirst.&amp;&amp;(cml.controller.cml.cml.RemoteActor.this.initializeTurn(turn))
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          219
+        </td>
+        <td>
+          2059
+          -
+          2059
         </td>
         <td>
           Literal
@@ -809,19 +1149,40 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          false
+          ()
         </td>
       </tr><tr>
         <td>
-          50
+          61
         </td>
         <td>
-          101
+          215
         </td>
         <td>
-          1606
+          2073
           -
-          1610
+          2093
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.initializeTurn
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.initializeTurn(turn)
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          222
+        </td>
+        <td>
+          2126
+          -
+          2126
         </td>
         <td>
           Literal
@@ -830,40 +1191,271 @@
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          true
+          ()
         </td>
       </tr><tr>
         <td>
-          50
+          62
         </td>
         <td>
-          102
+          221
         </td>
         <td>
-          1606
+          2116
           -
-          1610
+          2132
         </td>
         <td>
-          Block
+          Apply
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.changeTurn
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.changeTurn(turn)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          223
+        </td>
+        <td>
+          2160
+          -
+          2161
+        </td>
+        <td>
+          Literal
         </td>
         <td>
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          true
+          0
         </td>
       </tr><tr>
         <td>
-          58
+          66
         </td>
         <td>
-          103
+          224
         </td>
         <td>
-          1705
+          2183
           -
-          1754
+          2184
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          1
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          226
+        </td>
+        <td>
+          2246
+          -
+          2264
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          turn.equals(cml.controller.cml.cml.RemoteActor.this.First)
+        </td>
+      </tr><tr>
+        <td>
+          69
+        </td>
+        <td>
+          225
+        </td>
+        <td>
+          2258
+          -
+          2263
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.First
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.First
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          227
+        </td>
+        <td>
+          2341
+          -
+          2346
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.First
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.First
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          229
+        </td>
+        <td>
+          2356
+          -
+          2373
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          turn.equals(cml.controller.cml.cml.RemoteActor.this.First)
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          228
+        </td>
+        <td>
+          2368
+          -
+          2373
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.First
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.First
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          231
+        </td>
+        <td>
+          2375
+          -
+          2389
+        </td>
+        <td>
+          Assign
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          turn_ = cml.controller.cml.cml.RemoteActor.this.Second
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          230
+        </td>
+        <td>
+          2383
+          -
+          2389
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.Second
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.Second
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          232
+        </td>
+        <td>
+          2408
+          -
+          2413
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.cml.cml.RemoteActor.First
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.cml.cml.RemoteActor.this.First
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          233
+        </td>
+        <td>
+          2400
+          -
+          2413
+        </td>
+        <td>
+          Assign
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          turn_ = cml.controller.cml.cml.RemoteActor.this.First
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          234
+        </td>
+        <td>
+          2634
+          -
+          2692
         </td>
         <td>
           Apply
@@ -872,40 +1464,19 @@
           java.net.URL.getFile
         </td>
         <td style="background: #F0ADAD">
-          RemoteActor.this.getClass().getClassLoader().getResource(cml.controller.actor.utils.ActorUtils.RemoteActorInfo.Path).getFile()
+          cml.controller.cml.cml.RemoteActor.this.getClass().getClassLoader().getResource(cml.controller.actor.utils.ActorUtils.RemoteActorInfo.Configuration).getFile()
         </td>
       </tr><tr>
         <td>
-          59
+          84
         </td>
         <td>
-          104
+          236
         </td>
         <td>
-          1797
+          2711
           -
-          1817
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.io.File.&lt;init&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          new java.io.File(configFile)
-        </td>
-      </tr><tr>
-        <td>
-          59
-        </td>
-        <td>
-          105
-        </td>
-        <td>
-          1773
-          -
-          1818
+          2756
         </td>
         <td>
           Apply
@@ -918,15 +1489,36 @@
         </td>
       </tr><tr>
         <td>
-          60
+          84
         </td>
         <td>
-          107
+          235
         </td>
         <td>
-          1837
+          2735
           -
-          1865
+          2755
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.io.File.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new java.io.File(configFile)
+        </td>
+      </tr><tr>
+        <td>
+          85
+        </td>
+        <td>
+          238
+        </td>
+        <td>
+          2775
+          -
+          2803
         </td>
         <td>
           Apply
@@ -939,15 +1531,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          85
         </td>
         <td>
-          106
+          237
         </td>
         <td>
-          1849
+          2787
           -
-          1856
+          2794
         </td>
         <td>
           Select
@@ -960,15 +1552,15 @@
         </td>
       </tr><tr>
         <td>
-          61
+          86
         </td>
         <td>
-          110
+          241
         </td>
         <td>
-          1889
+          2827
           -
-          1934
+          2872
         </td>
         <td>
           Apply
@@ -977,19 +1569,19 @@
           akka.actor.ActorRefFactory.actorOf
         </td>
         <td style="background: #F0ADAD">
-          system.actorOf(akka.actor.Props.apply[cml.controller.RemoteActor]()((ClassTag.apply[cml.controller.RemoteActor](classOf[cml.controller.RemoteActor]): scala.reflect.ClassTag[cml.controller.RemoteActor])), cml.controller.actor.utils.ActorUtils.RemoteActorInfo.Name)
+          system.actorOf(akka.actor.Props.apply[cml.controller.cml.cml.RemoteActor]()((ClassTag.apply[cml.controller.cml.cml.RemoteActor](classOf[cml.controller.cml.cml.RemoteActor]): scala.reflect.ClassTag[cml.controller.cml.cml.RemoteActor])), cml.controller.actor.utils.ActorUtils.RemoteActorInfo.Name)
         </td>
       </tr><tr>
         <td>
-          61
+          86
         </td>
         <td>
-          109
+          240
         </td>
         <td>
-          1929
+          2867
           -
-          1933
+          2871
         </td>
         <td>
           Select
@@ -1002,15 +1594,15 @@
         </td>
       </tr><tr>
         <td>
-          61
+          86
         </td>
         <td>
-          108
+          239
         </td>
         <td>
-          1904
+          2842
           -
-          1922
+          2860
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1019,19 +1611,19 @@
           akka.actor.Props.apply
         </td>
         <td style="background: #F0ADAD">
-          akka.actor.Props.apply[cml.controller.RemoteActor]()((ClassTag.apply[cml.controller.RemoteActor](classOf[cml.controller.RemoteActor]): scala.reflect.ClassTag[cml.controller.RemoteActor]))
+          akka.actor.Props.apply[cml.controller.cml.cml.RemoteActor]()((ClassTag.apply[cml.controller.cml.cml.RemoteActor](classOf[cml.controller.cml.cml.RemoteActor]): scala.reflect.ClassTag[cml.controller.cml.cml.RemoteActor]))
         </td>
       </tr><tr>
         <td>
-          62
+          87
         </td>
         <td>
-          111
+          242
         </td>
         <td>
-          1940
+          2878
           -
-          1978
+          2916
         </td>
         <td>
           Apply
@@ -1040,7 +1632,7 @@
           scala.Predef.println
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;------ RemoteActor is ready&quot;)
+          scala.Predef.println(&quot;------ cml.controller.cml.cml.RemoteActor is ready&quot;)
         </td>
       </tr>
     </table>

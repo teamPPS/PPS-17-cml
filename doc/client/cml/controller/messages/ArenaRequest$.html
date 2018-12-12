@@ -123,8 +123,8 @@
                         <a href="" title="Arena request message">ArenaRequest</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="ArenaResponse$.html" title=""></a>
-                        <a href="ArenaResponse$.html" title="">ArenaResponse</a>
+                        <a class="object" href="ArenaResponse$.html" title="Arena response message"></a>
+                        <a href="ArenaResponse$.html" title="Arena response message">ArenaResponse</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="object" href="AuthenticationRequest$.html" title="Authentication request messages"></a>
@@ -230,7 +230,23 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="cml.controller.messages.ArenaRequest.ArenaRequest" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+              <ol><li name="cml.controller.messages.ArenaRequest.ActorRefRequest" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ActorRefRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable"></a><a id="ActorRefRequest:ActorRefRequest"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$.html#ActorRefRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Request for know the remote actor" href="ArenaRequest$$ActorRefRequest.html"><span class="name">ActorRefRequest</span></a><span class="params">(<span name="actor">actor: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>)</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Request for know the remote actor</p><div class="fullcomment"><div class="comment cmt"><p>Request for know the remote actor</p></div><dl class="paramcmts block"><dt class="param">actor</dt><dd class="cmt"><p>is actor battle ref</p></dd></dl></div>
+    </li><li name="cml.controller.messages.ArenaRequest.ArenaRequest" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ArenaRequestextendsAnyRef"></a><a id="ArenaRequest:ArenaRequest"></a>
       <span class="permalink">
       <a href="../../../cml/controller/messages/ArenaRequest$.html#ArenaRequestextendsAnyRef" title="Permalink">
@@ -246,10 +262,10 @@
       </span>
       
       
-    </li><li name="cml.controller.messages.ArenaRequest.ExitRequest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ExitRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable"></a><a id="ExitRequest:ExitRequest"></a>
+    </li><li name="cml.controller.messages.ArenaRequest.AttackRequest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AttackRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable"></a><a id="AttackRequest:AttackRequest"></a>
       <span class="permalink">
-      <a href="../../../cml/controller/messages/ArenaRequest$.html#ExitRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable" title="Permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$.html#AttackRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -258,10 +274,60 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="ArenaRequest$$ExitRequest.html"><span class="name">ExitRequest</span></a><span class="params">()</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="Request for attack the challenger" href="ArenaRequest$$AttackRequest.html"><span class="name">AttackRequest</span></a><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Request for attack the challenger
+</p>
+    </li><li name="cml.controller.messages.ArenaRequest.ControllerRefRequest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ControllerRefRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable"></a><a id="ControllerRefRequest:ControllerRefRequest"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$.html#ControllerRefRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ArenaRequest$$ControllerRefRequest.html"><span class="name">ControllerRefRequest</span></a><span class="params">(<span name="controller">controller: <a href="../fx/ArenaViewController.html" class="extype" name="cml.controller.fx.ArenaViewController">ArenaViewController</a></span>)</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
       
+    </li><li name="cml.controller.messages.ArenaRequest.RequireTurnRequest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RequireTurnRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable"></a><a id="RequireTurnRequest:RequireTurnRequest"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$.html#RequireTurnRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="ArenaRequest$$RequireTurnRequest.html"><span class="name">RequireTurnRequest</span></a><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="turn">turn: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      
+    </li><li name="cml.controller.messages.ArenaRequest.StopRequest" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StopRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable"></a><a id="StopRequest:StopRequest"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$.html#StopRequestextendsArenaRequest.ArenaRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Request for stopping Actor" href="ArenaRequest$$StopRequest.html"><span class="name">StopRequest</span></a><span class="params">()</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Request for stopping Actor
+</p>
     </li></ol>
             </div>
 
