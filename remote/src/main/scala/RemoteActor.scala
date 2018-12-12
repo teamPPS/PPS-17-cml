@@ -20,21 +20,21 @@ class RemoteActor extends Actor with ActorLogging {
   val DefaultMessage: String = "WARNING: RemoteActor has not receive anything"
   var actorInList = new ListBuffer[ActorRef]
   var creatureInList = new ListBuffer[Option[Creature]]
-  var mapActorCreature: Map[ActorRef, Creature] = Map[ActorRef, Creature]()
+  var mapActorCreature: Map[ActorRef,  Option[Creature]] = Map[ActorRef,  Option[Creature]]()
   var isFirst: Boolean = true
 
   override def receive: Receive = {
     case RequireEnterInArena(selectedCreature) =>
       println(selectedCreature.get)
-      addIntoBattleUserList(sender, selectedCreature.get)
+      addIntoBattleUserList(sender, selectedCreature)
       sender ! RequireEnterInArenaSuccess()
     case ExistChallenger() =>
       println("ExistChallenger")
       val exist = existChallenger()
-      if (exist) mapActorCreature.foreach{case (actor, _) => {
+      if (exist) mapActorCreature.foreach{case (actor, _) =>
         println("send map")
         actor ! ExistChallengerSuccess(mapActorCreature)
-      }}
+      }
     case ExitRequest() =>
       println("ExitReq")
       removeIntoBattleUserList(sender)
@@ -44,10 +44,8 @@ class RemoteActor extends Actor with ActorLogging {
     case _ => log.info(DefaultMessage)
   }
 
-  private def addIntoBattleUserList(actorIdentity: ActorRef, creature: Creature){
-//    actorInList += actorIdentity
+  private def addIntoBattleUserList(actorIdentity: ActorRef, creature:  Option[Creature]){
     mapActorCreature += (actorIdentity -> creature)
-//    log.info("LIST add --> " + userList_ )
     log.info("MAP add --> " + mapActorCreature)
   }
 
@@ -63,12 +61,8 @@ class RemoteActor extends Actor with ActorLogging {
     else false
   }
 
-  private def mapActorCreature_():  Map[ActorRef, Creature]  = {
+  private def mapActorCreature_():  Map[ActorRef,  Option[Creature]]  = {
     mapActorCreature
-  }
-
-  private def userList_(): ListBuffer[ActorRef] = {
-    actorInList
   }
 
   private def turnManagement(turn: Int): Unit = {

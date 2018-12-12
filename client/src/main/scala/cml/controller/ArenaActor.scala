@@ -10,22 +10,22 @@ import cml.utils.ModelConfig.CreatureImage.{griffinImage, golemImage, dragonImag
 import javafx.application.Platform
 
 /**
-  *
+  *@author Chiara Volonnino
   */
 
 class ArenaActor extends Actor with ActorLogging {
   private var battleActor: ActorRef = _
   private var _powerValue: Int = _
   private var controller: ArenaViewController = _
-  private var challengerCreature: Creature = _
+  private var challengerCreature:  Option[Creature] = _
 
 
   override def receive: Receive = {
     case ActorRefRequest(actor) => battleActor = actor
     case ChallengerCreature(creature) => {
       challengerCreature = creature
-      println("challengerCreature"+challengerCreature)
-      Platform.runLater(() => setChallengerCreatureImage(challengerCreature, controller))
+      println("challengerCreature"+challengerCreature.get)
+      Platform.runLater(() => setChallengerCreatureImage(challengerCreature.get, controller))
     }
     case AttackRequest(value) => battleActor ! AttackRequest(value)
     case AttackSuccess(value) => _powerValue = value

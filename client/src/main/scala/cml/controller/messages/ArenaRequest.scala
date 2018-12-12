@@ -33,6 +33,6 @@ object ArenaRequest {
 
   case class ControllerRefRequest(controller: ArenaViewController) extends ArenaRequest
 
-  case class  ChallengerCreature(creature: Creature) extends ArenaRequest
+  case class  ChallengerCreature(creature:  Option[Creature]) extends ArenaRequest
 
 }

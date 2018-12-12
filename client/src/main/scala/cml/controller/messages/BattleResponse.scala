@@ -3,8 +3,6 @@ package cml.controller.messages
 import akka.actor.ActorRef
 import cml.model.base.Creature
 
-import scala.collection.mutable.ListBuffer
-
 /**
   * Battle response message
   *
@@ -28,7 +26,7 @@ object BattleResponse {
     *
     * @param user user list for battle
     */
-  case class ExistChallengerSuccess(userAndCreature: Map[ActorRef, Creature]) extends BattleResponse
+  case class ExistChallengerSuccess(userAndCreature: Map[ActorRef,  Option[Creature]]) extends BattleResponse
 
   /**
     * Success response for delete user into a list of wait challenger

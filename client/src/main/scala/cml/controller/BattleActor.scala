@@ -1,18 +1,16 @@
 package cml.controller
 
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.messages.ArenaRequest._
+import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.controller.messages.BattleRequest._
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
-import cml.controller.messages.ArenaRequest._
-import cml.utils.ViewConfig.ArenaWindow
-import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
-import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.model.base.Creature
+import cml.utils.ViewConfig.ArenaWindow
 import cml.view.ViewSwitch
 import javafx.application.Platform
 import javafx.scene.Scene
-
-import scala.collection.mutable.ListBuffer
 
 /**
   * This class implements battle actor and managements user battle
@@ -27,7 +25,7 @@ class BattleActor extends Actor with ActorLogging {
   var sceneContext: Scene = _
   var turn: Int = _
   var arenaActor: ActorRef = _
-  var challengerCreature: Creature = _
+  var challengerCreature:  Option[Creature] = _
 
   private val selectedCreature: Option[Creature] = Creature.selectedCreature
 
@@ -69,17 +67,19 @@ class BattleActor extends Actor with ActorLogging {
     case StopRequest() => context.stop(self)
   }
 
-  private def myChallenge(userAndCreature: Map[ActorRef, Creature]): Unit = {
-    userAndCreature.foreach{ case (actor, creature) => if(!actor.equals(self)) {
-      challenger = actor
-      challengerCreature = creature
+  private def myChallenge(userAndCreature: Map[ActorRef,  Option[Creature]]): Unit = {
+    userAndCreature.foreach{ case (actor, creature) =>
+        if(!actor.equals(self)) {
+          challenger = actor
+          challengerCreature = creature
+        }
     }
-    }
-    log.info("Im user: " + self + " and my challenger is - " + challenger)
+    log.info("Im user: " + self + " and my challenger is - " + challenger+ "\n"
+      + "My creature is: " + selectedCreature.get + " and my challenger's creature is - " + challengerCreature.get)
     _turn(userAndCreature)
   }
 
-  private def _turn(userAndCreature:  Map[ActorRef, Creature]): Unit = {
+  private def _turn(userAndCreature:  Map[ActorRef,  Option[Creature]]): Unit = {
     if(userAndCreature.head._1 equals self) turn = 0
     else turn = 1
     log.info("My turn is: " + turn)
