@@ -1,7 +1,6 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
-import cml.controller.ArenaActor
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
 import cml.model.base.Creature
@@ -31,9 +30,7 @@ class ArenaViewController {
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
   private var _isProtected: Boolean = _
-
-  private var dd: Boolean = _
-
+  private var _challengerIsProtected: Boolean = _
   private val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
 
   def initialize(): Unit ={
@@ -101,7 +98,7 @@ class ArenaViewController {
   }
 
   def userLifeBar_(challengerPowerAttack: Int, challengerP: Boolean): Unit = {
-    dd=challengerP
+    _challengerIsProtected=challengerP
     if(_isProtected)  {
       _creatureLife -= 0
       isProtected_
@@ -113,7 +110,7 @@ class ArenaViewController {
   }
 
   def challengerLifeBar_(): Unit = {
-    if(dd) userPowerAttack = 0
+    if(_challengerIsProtected) userPowerAttack = 0
     _challengerLife -= userPowerAttack
     println("CHALLENGER LIFE BAR: " + _challengerLife)
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
