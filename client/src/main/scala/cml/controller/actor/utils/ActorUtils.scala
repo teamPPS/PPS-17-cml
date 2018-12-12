@@ -21,4 +21,9 @@ object ActorUtils {
     val Name = "BattleActor"
   }
 
+
+  object ActorPath {
+
+  }
+
 }
