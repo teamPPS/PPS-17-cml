@@ -44,13 +44,10 @@ class BattleActor extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case SceneInfo(scene) => sceneContext = scene
-    case RequireEnterInArenaSuccess() =>
-      println("RequireEnterInArenaSuccess")
-      remoteActor ! ExistChallenger()
+    case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
     case ExistChallengerSuccess(userAndCreature) =>
-      println("ExistChallengerSuccess"+userAndCreature)
       remoteActor ! ExitRequest()
-      log.info("User in list - " + userAndCreature)
+      log.info("Map user and creature - " + userAndCreature)
       myChallenge(userAndCreature)
       self ! SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
@@ -74,7 +71,7 @@ class BattleActor extends Actor with ActorLogging {
           challengerCreature = creature
         }
     }
-    log.info("Im user: " + self + " and my challenger is - " + challenger+ "\n"
+    log.info("Im user: " + self + " and my challenger is - " + challenger + "\n"
       + "My creature is: " + selectedCreature.get + " and my challenger's creature is - " + challengerCreature.get)
     _turn(userAndCreature)
   }

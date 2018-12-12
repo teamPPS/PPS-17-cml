@@ -15,16 +15,19 @@ object BattleResponse {
 
 
   /**
-    * Success response to add user into a list for require enter in battle arena
+    * Success response to add user into a list to require enter in battle arena
     */
   case class RequireEnterInArenaSuccess() extends BattleResponse
 
+  /**
+    *  Failure response to wait for a challenger()
+    */
   case class RequireChallengerFailure() extends BattleResponse
 
   /**
     * Success response for require challenger
     *
-    * @param user user list for battle
+    * @param userAndCreature user and creature map for the battle
     */
   case class ExistChallengerSuccess(userAndCreature: Map[ActorRef,  Option[Creature]]) extends BattleResponse
 

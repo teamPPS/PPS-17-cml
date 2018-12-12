@@ -1,42 +1,33 @@
 import java.io.File
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import cml.controller.messages.ArenaRequest.RequireTurnRequest
 import cml.controller.messages.ArenaResponse.RequireTurnSuccess
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
-import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import cml.model.base.Creature
 import com.typesafe.config.ConfigFactory
-
-import scala.collection.mutable.ListBuffer
 
 /**
   * This class implements remote actor utils for battle managements
   * @author Chiara Volonnino
+  * @author (edited by) Monica Gondolini
   */
 
 class RemoteActor extends Actor with ActorLogging {
   val DefaultMessage: String = "WARNING: RemoteActor has not receive anything"
-  var actorInList = new ListBuffer[ActorRef]
-  var creatureInList = new ListBuffer[Option[Creature]]
   var mapActorCreature: Map[ActorRef,  Option[Creature]] = Map[ActorRef,  Option[Creature]]()
   var isFirst: Boolean = true
 
   override def receive: Receive = {
     case RequireEnterInArena(selectedCreature) =>
-      println(selectedCreature.get)
       addIntoBattleUserList(sender, selectedCreature)
       sender ! RequireEnterInArenaSuccess()
     case ExistChallenger() =>
-      println("ExistChallenger")
       val exist = existChallenger()
-      if (exist) mapActorCreature.foreach{case (actor, _) =>
-        println("send map")
-        actor ! ExistChallengerSuccess(mapActorCreature)
-      }
+      if (exist) mapActorCreature.foreach{ case (actor, _) => actor ! ExistChallengerSuccess(mapActorCreature) }
     case ExitRequest() =>
-      println("ExitReq")
       removeIntoBattleUserList(sender)
     case RequireTurnRequest(attackPower, turn) =>
       turnManagement(turn)
@@ -50,7 +41,6 @@ class RemoteActor extends Actor with ActorLogging {
   }
 
   private def removeIntoBattleUserList(actorIdentity: ActorRef) {
-    actorInList -= actorIdentity
     mapActorCreature -= actorIdentity
     log.info("LIST remove --> " + mapActorCreature_)
   }
