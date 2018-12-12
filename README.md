@@ -5,10 +5,15 @@
 ## Documentation 
 - Client:
   - [Scala](/PPS-17-cml/doc/client/)
-- Server: 
+- Server:
+  - [Scala](/PPS-17-cml/doc/server/)
 - Remote:
+  - [Scala](/PPS-17-cml/doc/remote/)
 
 ## Reports
 - Client:
+  - [Scala](/PPS-17-cml/scoverage/client/)
 - Server:
+  - [Scala](/PPS-17-cml/scoverage/server/)
 - Remote:
+  - [Scala](/PPS-17-cml/scoverage/remote/)
