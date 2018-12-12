@@ -12,8 +12,6 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
 
-
-
 /**
   * Controller class for graphic arena view
   *
@@ -32,6 +30,9 @@ class ArenaViewController {
   private var userPowerAttack: Int = _
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
+  private var _isProtected: Boolean = _
+
+  private var dd: Boolean = _
 
   private val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
 
@@ -43,6 +44,7 @@ class ArenaViewController {
     userLifeBar.setProgress(_creatureLife)
     _challengerLife = battleGame.creatureLife()
     challengerLifeBar.setProgress(_challengerLife)
+    _isProtected = false
   }
 
   @FXML
@@ -76,9 +78,8 @@ class ArenaViewController {
     battleGame.attack()
     if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
     userPowerAttack = game()
-    println(" attack -- > " + userPowerAttack)
+    arenaActor ! AttackRequest(userPowerAttack, _isProtected)
     challengerLifeBar_()
-    arenaActor ! AttackRequest(userPowerAttack)
   }
 
   @FXML
@@ -86,30 +87,33 @@ class ArenaViewController {
     attackButton.setDisable(false)
     battleGame.charge()
     userPowerAttack = game()
-    println("charge attack -- > " + userPowerAttack)
-    arenaActor ! AttackRequest(userPowerAttack)
-    battleGame.isCharge_()
+    arenaActor ! AttackRequest(userPowerAttack, _isProtected)
+    challengerLifeBar_()
   }
 
   @FXML
   def protectionOption(): Unit = {
     battleGame.protection()
     userPowerAttack = game()
-    println("protection attack -- > " + userPowerAttack)
-    arenaActor ! AttackRequest(userPowerAttack)
-    battleGame.isProtect_()
+    _isProtected = true
+    arenaActor ! AttackRequest(userPowerAttack, _isProtected)
+    challengerLifeBar_()
   }
 
-  def userLifeBar_(challengerPowerAttack: Int): Unit = {
-    println("_challengerPowerAttack ---> " + challengerPowerAttack)
-    _creatureLife -= challengerPowerAttack
-    println("_challengerPowerAttack ---> " + _creatureLife)
+  def userLifeBar_(challengerPowerAttack: Int, challengerP: Boolean): Unit = {
+    dd=challengerP
+    if(_isProtected)  {
+      _creatureLife -= 0
+      isProtected_
+    }
+    else _creatureLife -= challengerPowerAttack
+    println("USER LIFE BAR: " + _challengerLife)
     val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
-    println("progress value --> " + progress)
     userLifeBar.setProgress(progress)
   }
 
   def challengerLifeBar_(): Unit = {
+    if(dd) userPowerAttack = 0
     _challengerLife -= userPowerAttack
     println("CHALLENGER LIFE BAR: " + _challengerLife)
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
@@ -119,5 +123,9 @@ class ArenaViewController {
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
 
   private def game(): Int = battleGame.gameEngine(creatureAttackValue_())
+
+  private def isProtected_ : Unit = {
+    _isProtected = false
+  }
 
 }

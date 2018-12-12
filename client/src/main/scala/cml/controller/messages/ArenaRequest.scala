@@ -26,9 +26,9 @@ object ArenaRequest {
   /**
     * Request for attack the challenger
     */
-  case class AttackRequest(attackPower: Int) extends ArenaRequest
+  case class AttackRequest(attackPower: Int, isProtected: Boolean) extends ArenaRequest
 
-  case class RequireTurnRequest(attackPower: Int, turn: Int) extends ArenaRequest
+  case class RequireTurnRequest(attackPower: Int, isProtected: Boolean, turn: Int) extends ArenaRequest
 
   case class ControllerRefRequest(controller: ArenaViewController) extends ArenaRequest
 

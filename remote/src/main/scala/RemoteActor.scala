@@ -29,9 +29,9 @@ class RemoteActor extends Actor with ActorLogging {
       if (exist) actorInList.foreach(actor => actor ! ExistChallengerSuccess(actorInList))
     case ExitRequest() =>
       removeIntoBattleUserList(sender)
-    case RequireTurnRequest(attackPower, turn) =>
+    case RequireTurnRequest(attackPower, isProtected, turn) =>
       turnManagement(turn)
-      sender ! RequireTurnSuccess(attackPower, turn)
+      sender ! RequireTurnSuccess(attackPower, isProtected, turn)
     case _ => log.info(DefaultMessage)
   }
 
