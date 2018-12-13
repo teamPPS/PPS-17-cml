@@ -71,7 +71,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     ) yield {
       villageService.enterVillage(username).onComplete {
         case Success(document) =>
-          log.info(Json.parse(document).toString())
+          log.info(Json.parse(document).toString(), None)
           getResponse.putHeader("content-type", "application/json; charset=utf-8")
             .setStatusCode(HttpResponseStatus.OK.code())
             .end(Json.parse(document).toString())
