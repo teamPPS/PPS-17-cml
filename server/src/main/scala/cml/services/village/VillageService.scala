@@ -4,6 +4,7 @@ import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
 import cml.schema.User.USERNAME
 import cml.schema.Village.{FOOD_FIELD, GOLD_FIELD, VILLAGE_NAME_FIELD}
+import io.vertx.core.logging.{Logger, LoggerFactory}
 import org.mongodb.scala.Document
 import play.api.libs.json.Json
 
@@ -57,6 +58,8 @@ sealed trait VillageService {
 
 object VillageService {
 
+  private val log: Logger = LoggerFactory.getLogger("Village Service")
+
   def apply(databaseClient: DatabaseClient = DatabaseClient(DbConfig.villageColl)): VillageService =
     VillageServiceImpl(databaseClient)
 
@@ -73,7 +76,7 @@ object VillageService {
       )
       villageCollection.insert(document).map(_ => "Completed")
         .recoverWith{case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
@@ -83,7 +86,7 @@ object VillageService {
       villageCollection.find(document)
         .map(doc => if(doc.isEmpty) "Village not found" else doc.toJson())
         .recoverWith{case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
@@ -93,7 +96,7 @@ object VillageService {
       villageCollection.update(queryDocument, Document(Json.parse(update).toString()))
         .map(modifiedDocument => modifiedDocument>0)
         .recoverWith{case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
@@ -103,7 +106,7 @@ object VillageService {
       villageCollection.setUpdate(userDoc, Document(Json.parse(update).toString()))
         .map(modifiedDocument => modifiedDocument>0)
         .recoverWith{case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
@@ -114,13 +117,13 @@ object VillageService {
       userCollection.delete(document)
         .map(deletedDocument => deletedDocument>0)
         .recoverWith { case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
       villageCollection.delete(document)
         .map(deletedDocument => deletedDocument>0)
         .recoverWith{case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }

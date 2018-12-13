@@ -31,6 +31,7 @@ subprojects {
         implementation 'io.vertx:vertx-web-client:3.5.4'
         implementation 'io.vertx:vertx-web-client-scala_2.12:3.5.4'
 
+
         // ScalaTest testing framework
         testImplementation 'junit:junit:4.12'
         testImplementation "org.scalatest:scalatest_2.12:3.0.1"

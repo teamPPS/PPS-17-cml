@@ -57,7 +57,7 @@ case class BattleRulesImpl() extends BattleRule {
     isCharge = false
   }
 
-  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint(); println("AttackPoint --> " + attackPoint)
+  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint()
 
   override def charge(): Unit = {
     incrementAttackPoint()
@@ -82,7 +82,6 @@ case class BattleRulesImpl() extends BattleRule {
 
   private def decrementAttackPoint(): Unit = {
     if(attackPoint > 0) _attackPoint -= 1
-    println("AttackPoint --> " + attackPoint)
   }
 
   private def incrementAttackPoint(): Unit = _attackPoint += 1

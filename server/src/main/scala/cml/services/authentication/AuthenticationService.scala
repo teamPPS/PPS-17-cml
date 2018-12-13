@@ -2,7 +2,8 @@ package cml.services.authentication
 
 import cml.database.DatabaseClient
 import cml.database.utils.Configuration.DbConfig
-import cml.schema.User.{USERNAME, PASSWORD}
+import cml.schema.User.{PASSWORD, USERNAME}
+import io.vertx.core.logging.{Logger, LoggerFactory}
 import org.mongodb.scala.{Document, ObservableImplicits}
 
 import scala.concurrent._
@@ -58,7 +59,9 @@ trait AuthenticationService {
   */
 object AuthenticationService {
 
-  val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
+  private val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
+
+  private val log: Logger = LoggerFactory.getLogger("Authentication Service")
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
 
@@ -67,20 +70,18 @@ object AuthenticationService {
 
     override def register(username: String, password: String)(implicit ec: ExecutionContext): Future[String] = {
       document = Document(USERNAME -> username, PASSWORD -> password)
-      println(document)
       userCollection.insert(document).map(_ => "Insertion Completed")
         .recoverWith { case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
 
     override def login(username: String, password: String)(implicit ec: ExecutionContext): Future[Boolean] = {
       document = Document(USERNAME -> username, PASSWORD -> password)
-      println(document)
       userCollection.find(document).map(doc => doc.size() > 0)
         .recoverWith { case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
@@ -89,7 +90,7 @@ object AuthenticationService {
       document = Document(USERNAME -> username)
       userCollection.delete(document).map(_ => {})
         .recoverWith { case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }
@@ -98,7 +99,7 @@ object AuthenticationService {
       document = Document(USERNAME -> username)
       userCollection.find(document).map(_ => {})
         .recoverWith { case e: Throwable =>
-          println(e)
+          log.error("error", e)
           Future.failed(e)
         }
     }

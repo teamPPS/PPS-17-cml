@@ -8,6 +8,7 @@ import cml.services.village.utils.VillageUrl._
 import cml.services.authentication.utils.AuthenticationUrl._
 import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST
+import io.vertx.core.logging.{Logger, LoggerFactory}
 import io.vertx.scala.ext.web.handler.BodyHandler
 import play.api.libs.json.Json
 
@@ -21,6 +22,8 @@ import scala.util.{Failure, Success}
 case class VillageVerticle() extends RouterVerticle with RoutingOperation {
 
   private var villageService: VillageService = _
+
+  private val log: Logger = LoggerFactory.getLogger("Village Verticle")
 
   /**
     * Initialize router
@@ -43,7 +46,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def create: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to create village")
+    log.info("Request to create village", None)
     (for(
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
@@ -60,7 +63,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
 }
 
   private def enter: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to enter village")
+    log.info("Request to enter village", None)
     (for(
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
@@ -68,7 +71,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     ) yield {
       villageService.enterVillage(username).onComplete {
         case Success(document) =>
-          println(Json.parse(document).toString())
+          log.info(Json.parse(document).toString(), None)
           getResponse.putHeader("content-type", "application/json; charset=utf-8")
             .setStatusCode(HttpResponseStatus.OK.code())
             .end(Json.parse(document).toString())
@@ -78,7 +81,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def update: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to update village")
+    log.info("Request to update village", None)
     (for(
       headerAuthorization <- getRequestAndHeader;
       body <- getRequestAndBody;
@@ -100,7 +103,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def setUpdate: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to set update village")
+    log.info("Request to set update village", None)
     (for(
       headerAuthorization <- getRequestAndHeader;
       body <- getRequestAndBody;
@@ -122,7 +125,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def delete: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to delete village")
+    log.info("Request to delete village", None)
     (for(
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
@@ -140,7 +143,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
   }
 
   private def exit: Handler[RoutingContext] = implicit routingContext => {
-    println("Request to exit village ", routingContext request())
+    log.info("Request to exit village ", routingContext request())
   }
 
 }

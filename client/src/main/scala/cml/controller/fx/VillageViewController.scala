@@ -2,12 +2,12 @@ package cml.controller.fx
 
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-import cml.controller.actor.utils.ActorUtils.ActorPath.{AuthenticationActorPath,VillageActorPath}
+import cml.controller.actor.utils.ActorUtils.ActorPath.{AuthenticationActorPath, VillageActorPath}
 import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
 import cml.model.base.Habitat.Habitat
 import cml.model.base.{Cave, Farm, Structure, VillageMap}
-import cml.model.creatures.{FireCreature, EarthCreature, AirCreature, WaterCreature}
+import cml.model.creatures.{AirCreature, EarthCreature, FireCreature, WaterCreature}
 import cml.schema.Village
 import cml.utils.ModelConfig
 import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
@@ -44,6 +44,7 @@ class VillageViewController {
   val villageActor: ActorSelection = system actorSelection VillageActorPath
   val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
   var updateResourcesTimer: AnimationTimer = _
+
 
   def initialize(): Unit = {
     villageActor ! EnterVillage(this)
@@ -89,7 +90,6 @@ class VillageViewController {
         case ModelConfig.StructureType.FARM => building.as[Farm]
       }
     ) yield VillageMap.instance().get.villageStructure += specificStructure
-    println("Buildings ricevute dal server: " + VillageMap.instance().get.villageStructure)
 
     val habitats = (json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])
     //TODO unire questi for comprehnsion ???
@@ -116,7 +116,6 @@ class VillageViewController {
       VillageMap.instance().get.villageStructure += specificHabitat
     }
 
-    println("Buildings e Habitat ricevuti dal server: " + VillageMap.instance().get.villageStructure)
 
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
@@ -151,8 +150,6 @@ class VillageViewController {
     updateResourcesTimer.stop()
     authenticationActor ! Logout()
     ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)
-//        System.exit(0)
-//        println("Bye!")
   }
 
 }
