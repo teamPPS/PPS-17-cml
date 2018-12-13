@@ -10,6 +10,7 @@ import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImag
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
 import cml.view.ViewSwitch
+import com.typesafe.scalalogging.Logger
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
@@ -38,10 +39,10 @@ class ArenaViewController {
   private var userPowerAttack: Int = _
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
-
+  
   private val arenaActor: ActorSelection = system actorSelection ArenaActorPath
 
-  def initialize(): Unit ={
+  def initialize(): Unit = {
     arenaActor ! ControllerRefRequest(this)
     battleGame.initialization()
     attackButton.setDisable(true)
