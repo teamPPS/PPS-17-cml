@@ -12,7 +12,7 @@ import scala.util.{Failure, Success}
 /**
   * This trait utils for test. Deploy all verticle preset in a set and undeploy this with terminated test.
   *
-  * @author Chiara Volonnino
+  * @author Chiara Volonnino, ecavina
   */
 trait VerticleTest {
   this: VertxTest =>

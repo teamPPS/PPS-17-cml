@@ -74,7 +74,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
 //        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
 //      }
       sendResponse(OK, username)
-    }).getOrElse(sendResponse(BAD_REQUEST, BAD_REQUEST.toString))
+    }).getOrElse(sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString))
   }
 
   private def validationToken: Handler[RoutingContext] = implicit routingContext => {

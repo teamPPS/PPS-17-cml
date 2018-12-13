@@ -6,7 +6,7 @@ import org.scalatest._
 /**
   * This trait is utils for services test. In this trait deploy all service to require for test, and the undeploy this.
   *
-  * @author Chiara Volonnino
+  * @author Chiara Volonnino, ecavina
   */
 
 trait BeforeAndAfterTest extends VerticleTest with BeforeAndAfterAll {
