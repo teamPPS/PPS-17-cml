@@ -113,7 +113,6 @@ class ArenaViewController {
       isProtected_
     }
     else _creatureLife -= challengerPowerAttack
-    println("USER LIFE BAR: " + _challengerLife)
     val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
     userLifeBar.setProgress(progress)
   }
@@ -121,7 +120,6 @@ class ArenaViewController {
   def challengerLifeBar_(): Unit = {
     if(_challengerIsProtected) userPowerAttack = 0
     _challengerLife -= userPowerAttack
-    println("CHALLENGER LIFE BAR: " + _challengerLife)
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
     challengerLifeBar.setProgress(progress)
   }
