@@ -12,7 +12,6 @@ import cml.schema.Village
 import cml.utils.ModelConfig
 import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
-import com.typesafe.scalalogging.Logger
 import javafx.animation.AnimationTimer
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
@@ -46,7 +45,6 @@ class VillageViewController {
   val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
   var updateResourcesTimer: AnimationTimer = _
 
-  private val log: Logger = Logger(classOf[VillageViewController])
 
   def initialize(): Unit = {
     villageActor ! EnterVillage(this)
@@ -92,7 +90,6 @@ class VillageViewController {
         case ModelConfig.StructureType.FARM => building.as[Farm]
       }
     ) yield VillageMap.instance().get.villageStructure += specificStructure
-    log.info("Buildings ricevute dal server: " + VillageMap.instance().get.villageStructure)
 
     val habitats = (json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])
     //TODO unire questi for comprehnsion ???
@@ -119,7 +116,6 @@ class VillageViewController {
       VillageMap.instance().get.villageStructure += specificHabitat
     }
 
-    log.info("Buildings e Habitat ricevuti dal server: " + VillageMap.instance().get.villageStructure)
 
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)

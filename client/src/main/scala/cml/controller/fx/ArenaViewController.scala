@@ -1,8 +1,8 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
-import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.actor.utils.ActorUtils.ActorPath.ArenaActorPath
+import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
@@ -10,7 +10,6 @@ import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImag
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
 import cml.view.ViewSwitch
-import com.typesafe.scalalogging.Logger
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
@@ -39,8 +38,6 @@ class ArenaViewController {
   private var userPowerAttack: Int = _
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
-
-  private val log: Logger = Logger(classOf[ArenaViewController])
 
   private val arenaActor: ActorSelection = system actorSelection ArenaActorPath
 
@@ -87,7 +84,7 @@ class ArenaViewController {
     battleGame.attack()
     if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
     userPowerAttack = game()
-    log.info(" attack -- > " + userPowerAttack)
+    println(" attack -- > " + userPowerAttack)
     challengerLifeBar_()
     arenaActor ! AttackRequest(userPowerAttack)
   }
@@ -97,7 +94,7 @@ class ArenaViewController {
     attackButton.setDisable(false)
     battleGame.charge()
     userPowerAttack = game()
-    log.info("charge attack -- > " + userPowerAttack)
+    println("charge attack -- > " + userPowerAttack)
     arenaActor ! AttackRequest(userPowerAttack)
     battleGame.isCharge_()
   }
@@ -106,23 +103,23 @@ class ArenaViewController {
   def protectionOption(): Unit = {
     battleGame.protection()
     userPowerAttack = game()
-    log.info("protection attack -- > " + userPowerAttack)
+    println("protection attack -- > " + userPowerAttack)
     arenaActor ! AttackRequest(userPowerAttack)
     battleGame.isProtect_()
   }
 
   def userLifeBar_(challengerPowerAttack: Int): Unit = {
-    log.info("_challengerPowerAttack ---> " + challengerPowerAttack)
+    println("_challengerPowerAttack ---> " + challengerPowerAttack)
     _creatureLife -= challengerPowerAttack
-    log.info("_challengerPowerAttack ---> " + _creatureLife)
+    println("_challengerPowerAttack ---> " + _creatureLife)
     val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
-    log.info("progress value --> " + progress)
+    println("progress value --> " + progress)
     userLifeBar.setProgress(progress)
   }
 
   def challengerLifeBar_(): Unit = {
     _challengerLife -= userPowerAttack
-    log.info("CHALLENGER LIFE BAR: " + _challengerLife)
+    println("CHALLENGER LIFE BAR: " + _challengerLife)
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
     challengerLifeBar.setProgress(progress)
   }

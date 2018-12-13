@@ -73,7 +73,7 @@ object VillageServiceVertx{
   case class VillageServiceVertxImpl() extends VillageServiceVertx{
 
     override def createVillage(): Future[String] = {
-      log.info("sending create village request")
+      log.info("sending create village request", None)
       client.post(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture
@@ -84,7 +84,7 @@ object VillageServiceVertx{
     }
 
     override def enterVillage(): Future[String] = {
-      log.info("sending enter village request")
+      log.info("sending enter village request", None)
       client.get(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture
@@ -95,7 +95,7 @@ object VillageServiceVertx{
     }
 
     override def updateVillage(update: JsValue): Future[String] = {
-      log.info("sending update village request")
+      log.info("sending update village request", None)
       val updateJsonObj = new JsonObject(update.toString())
       client.put(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
@@ -107,7 +107,7 @@ object VillageServiceVertx{
     }
 
     override def setUpdateVillage(update: JsValue): Future[String] = {
-      log.info("sending set update village request")
+      log.info("sending set update village request", None)
       val updateJsonObj = new JsonObject(update.toString())
       client.put(AuthenticationServicePort, ServiceHostForRequest, SetUpdateAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
@@ -119,7 +119,7 @@ object VillageServiceVertx{
     }
 
     override def deleteVillageAndUser(): Future[String] = {
-      log.info("sending village and account deletion request")
+      log.info("sending village and account deletion request", None)
       client.delete(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
         .sendFuture

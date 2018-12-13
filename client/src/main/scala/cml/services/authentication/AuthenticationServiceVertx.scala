@@ -78,7 +78,7 @@ object AuthenticationServiceVertx{
   case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
 
     override def register(username: String, password: String): Future[String] = {
-      log.info("sending registration request from username: %s", username)
+      log.info(s"sending registration request from username: $username", username)
       client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
@@ -89,7 +89,7 @@ object AuthenticationServiceVertx{
     }
 
     override def login(username: String, password: String): Future[String] = {
-      log.info("sending login request from username: %s", username)
+      log.info(s"sending login request from username: $username", username)
       client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
@@ -100,7 +100,7 @@ object AuthenticationServiceVertx{
     }
 
     override def logout(token: String): Future[Unit] = {
-      log.info("sending logout request with token: %s", token)
+      log.info(s"sending logout request with token: $token", token)
       client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
         .sendFuture
@@ -118,7 +118,7 @@ object AuthenticationServiceVertx{
     }
 
     override def delete(): Future[String] = {
-    log.info("sending deletion request")
+    log.info("sending deletion request", None)
     client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
       .sendFuture

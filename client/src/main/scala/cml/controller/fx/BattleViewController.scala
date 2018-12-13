@@ -108,7 +108,6 @@ class BattleViewController {
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem("LocalContext", config)
     battleActor = system.actorOf(Props[BattleActor], name=Name)
-    println("------ BattleActor is ready")
   }
 
   private def displayText(name: String, creatureType: String, level: Int, attackValue: Int): String = {

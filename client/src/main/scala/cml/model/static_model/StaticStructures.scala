@@ -56,7 +56,6 @@ case class StaticStructure(t: Tile, x: Int, y: Int) extends  StaticStructures {
     case _ => throw new NoSuchElementException
   }
 
-  println("jsonStructure"+jsonStructure)
 
   override def json: JsValue = jsonStructure
   override def getStructure: Structure = structure
