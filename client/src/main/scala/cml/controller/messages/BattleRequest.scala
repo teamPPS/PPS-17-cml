@@ -1,5 +1,6 @@
 package cml.controller.messages
 
+import cml.model.base.Creature
 import javafx.scene.Scene
 
 /**
@@ -20,9 +21,10 @@ object BattleRequest {
   case class SceneInfo(scene: Scene) extends BattleRequest
 
   /**
-    * Request to add user into a list for require enter in battle arena
+    * Request to add user into a list to require enter in battle arena
+    * @param creature we want to fight with
     */
-  case class RequireEnterInArena() extends BattleRequest
+  case class RequireEnterInArena(creature: Option[Creature]) extends BattleRequest
 
   /**
     * Request to exist challenger
@@ -34,6 +36,9 @@ object BattleRequest {
     */
   case class ExitRequest() extends BattleRequest
 
+  /**
+    * Request to switch to Arena View
+    */
   case class SwitchInArenaRequest() extends BattleRequest
 
 }

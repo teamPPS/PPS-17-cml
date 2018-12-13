@@ -1,32 +1,32 @@
 import java.io.File
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import cml.controller.messages.ArenaRequest.RequireTurnRequest
 import cml.controller.messages.ArenaResponse.RequireTurnSuccess
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
-import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
+import cml.model.base.Creature
 import com.typesafe.config.ConfigFactory
-
-import scala.collection.mutable.ListBuffer
 
 /**
   * This class implements remote actor utils for battle managements
   * @author Chiara Volonnino
+  * @author (edited by) Monica Gondolini
   */
 
 class RemoteActor extends Actor with ActorLogging {
   val DefaultMessage: String = "WARNING: RemoteActor has not receive anything"
-  var actorInList = new ListBuffer[ActorRef]
+  var mapActorCreature: Map[ActorRef,  Option[Creature]] = Map[ActorRef,  Option[Creature]]()
   var isFirst: Boolean = true
 
   override def receive: Receive = {
-    case RequireEnterInArena() =>
-      addIntoBattleUserList(sender)
+    case RequireEnterInArena(selectedCreature) =>
+      addIntoBattleUserList(sender, selectedCreature)
       sender ! RequireEnterInArenaSuccess()
     case ExistChallenger() =>
       val exist = existChallenger()
-      if (exist) actorInList.foreach(actor => actor ! ExistChallengerSuccess(actorInList))
+      if (exist) mapActorCreature.foreach{ case (actor, _) => actor ! ExistChallengerSuccess(mapActorCreature) }
     case ExitRequest() =>
       removeIntoBattleUserList(sender)
     case RequireTurnRequest(attackPower, turn) =>
@@ -35,24 +35,24 @@ class RemoteActor extends Actor with ActorLogging {
     case _ => log.info(DefaultMessage)
   }
 
-  private def addIntoBattleUserList(actorIdentity: ActorRef){
-    actorInList += actorIdentity
-    log.info("LIST add --> " + userList_ )
+  private def addIntoBattleUserList(actorIdentity: ActorRef, creature:  Option[Creature]){
+    mapActorCreature += (actorIdentity -> creature)
+    log.info("MAP add --> " + mapActorCreature)
   }
 
   private def removeIntoBattleUserList(actorIdentity: ActorRef) {
-    actorInList -= actorIdentity
-    log.info("LIST remove --> " + userList_)
+    mapActorCreature -= actorIdentity
+    log.info("LIST remove --> " + mapActorCreature_)
   }
 
   //todo: technical debit
   private def existChallenger(): Boolean = {
-    if (userList_().length.equals(2)) true
+    if (mapActorCreature_().size.equals(2)) true
     else false
   }
 
-  private def userList_(): ListBuffer[ActorRef] ={
-    actorInList
+  private def mapActorCreature_():  Map[ActorRef,  Option[Creature]]  = {
+    mapActorCreature
   }
 
   private def turnManagement(turn: Int): Unit = {

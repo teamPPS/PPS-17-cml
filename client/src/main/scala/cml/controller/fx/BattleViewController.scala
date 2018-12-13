@@ -2,9 +2,10 @@ package cml.controller.fx
 
 import java.io.File
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import cml.controller.BattleActor
 import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
+import cml.controller.messages.BattleRequest.SceneInfo
 import cml.model.base.{Creature, VillageMap}
 import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
 import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
@@ -12,8 +13,6 @@ import cml.utils.ViewConfig._
 import cml.view.ViewSwitch
 import com.typesafe.config.ConfigFactory
 import javafx.collections.{FXCollections, ObservableList}
-import akka.actor.{ActorRef, ActorSystem, Props}
-import cml.controller.messages.BattleRequest.SceneInfo
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ListView, _}

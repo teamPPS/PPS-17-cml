@@ -25,7 +25,7 @@ import scala.util.{Failure, Success}
 class AuthenticationActor(controller: AuthenticationViewController) extends Actor {
 
   val authenticationVertx = AuthenticationServiceVertxImpl()
-  val villageActor: ActorRef = context.system.actorOf(Props(new VillageActor()), "VillageActor")
+  val villageActor: ActorRef = context.system.actorOf(Props[VillageActor], "VillageActor")
   var authController = controller
 
   override def receive: Receive = authenticationBehaviour orElse villageBehaviour

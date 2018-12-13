@@ -1,16 +1,19 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
-import cml.controller.ArenaActor
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.actor.utils.ActorUtils.ActorPath.ArenaActorPath
 import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
 import cml.model.base.Creature
+import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
+import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
 import cml.view.ViewSwitch
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
+import javafx.scene.image.ImageView
 
 
 
@@ -26,6 +29,9 @@ class ArenaViewController {
   @FXML var userLifeBar: ProgressBar = _
   @FXML var challengerLifeBar: ProgressBar = _
   @FXML var attackButton: Button = _
+  @FXML var yourCreature: ImageView = _
+  @FXML var enemyCreature: ImageView = _
+
 
   private val battleGame: BattleRulesImpl = BattleRulesImpl()
   private val selectedCreature: Option[Creature] = Creature.selectedCreature
@@ -33,7 +39,7 @@ class ArenaViewController {
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
 
-  private val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
+  private val arenaActor: ActorSelection = system actorSelection ArenaActorPath
 
   def initialize(): Unit ={
     arenaActor ! ControllerRefRequest(this)
@@ -43,6 +49,8 @@ class ArenaViewController {
     userLifeBar.setProgress(_creatureLife)
     _challengerLife = battleGame.creatureLife()
     challengerLifeBar.setProgress(_challengerLife)
+
+    setCreatureImage(selectedCreature.get)
   }
 
   @FXML
@@ -119,5 +127,14 @@ class ArenaViewController {
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
 
   private def game(): Int = battleGame.gameEngine(creatureAttackValue_())
+
+  private def setCreatureImage(selection: Creature): Unit = {
+    selection.creatureType match {
+      case DRAGON => yourCreature setImage dragonImage
+      case GOLEM => yourCreature setImage golemImage
+      case GRIFFIN => yourCreature setImage griffinImage
+      case WATERDEMON => yourCreature setImage waterdemonImage
+    }
+  }
 
 }
