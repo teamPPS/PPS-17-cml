@@ -1,7 +1,7 @@
 package cml.controller
 
-import akka.actor.{Actor, ActorRef, Props}
-import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.{loginFailure, loginSuccess, registerFailure}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import cml.controller.actor.utils.ViewMessage.ViewAuthenticationMessage.{loginFailure, loginSuccess, registerFailure, registerSuccess}
 import cml.controller.fx.AuthenticationViewController
 import cml.controller.messages.AuthenticationRequest.{Login, Logout, Register, SetController}
 import cml.controller.messages.AuthenticationResponse.{LoginFailure, RegisterFailure}
@@ -22,11 +22,11 @@ import scala.util.{Failure, Success}
   * @author (edited by) Chiara Volonnino, Filippo Portolani
   * @param controller controller of the authentication view
   */
-class AuthenticationActor(controller: AuthenticationViewController) extends Actor {
+class AuthenticationActor(controller: AuthenticationViewController) extends Actor with ActorLogging{
 
   val authenticationVertx = AuthenticationServiceVertxImpl()
   val villageActor: ActorRef = context.system.actorOf(Props[VillageActor], "VillageActor")
-  var authController = controller
+  var authController: AuthenticationViewController = controller
 
   override def receive: Receive = authenticationBehaviour orElse villageBehaviour
 
@@ -37,7 +37,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case Register(username, password) => authenticationVertx.register(username, password)
       .onComplete {
         case Success(httpResponse) =>
-          if(checkHttpResponse(httpResponse, loginSuccess, loginFailure))
+          if(checkHttpResponse(httpResponse, registerSuccess, registerFailure))
             villageActor ! CreateVillage()
         case Failure(exception) =>
           RegisterFailure(exception.getMessage)
@@ -61,7 +61,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     */
   private def villageBehaviour: Receive = {
     case CreateVillageSuccess() =>
-      println("Village create success")
+      log.info("Village created with success")
       loginSucceedOnGui()
     case VillageFailure(m) => displayMsg(m)
   }
@@ -79,7 +79,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
   def loginSucceedOnGui(): Unit = Platform.runLater(() => authController.openVillageView())
 
   def successAuthenticationCase(tokenValue: String): Unit = {
-    println("TOKEN: " + tokenValue)
+    log.info("TOKEN: " + tokenValue)
     TokenStorage.setUserJWTToken(tokenValue)
   }
 
@@ -90,7 +90,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case _ =>
       successAuthenticationCase(str)
       displayMsg(successMessage)
-      println("Success this is server response with the token: " + str)
+      log.info("Success this is server response with the token: " + str)
       true
   }
 
