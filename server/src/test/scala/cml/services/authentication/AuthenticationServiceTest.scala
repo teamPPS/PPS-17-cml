@@ -8,5 +8,4 @@ abstract class AuthenticationServiceTest extends VertxTest with BeforeAndAfterTe
 
   private val vertx = Vertx.vertx()
   override protected val serviceList: List[ScalaVerticle] = List(AuthenticationVerticle())
-  override protected val  verticleToUse: Unit = vertx.deployVerticle(ScalaVerticle.nameForVerticle[AuthenticationVerticle])
 }

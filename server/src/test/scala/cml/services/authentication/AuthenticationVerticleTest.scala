@@ -14,7 +14,6 @@ import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
 import scala.language.implicitConversions
-import scala.util.{Failure, Random, Success}
 
 class AuthenticationVerticleTest extends AuthenticationServiceTest {
 

@@ -3,6 +3,8 @@ package cml.core
 
 import io.vertx.lang.scala.ScalaVerticle
 import io.vertx.scala.core.Vertx
+
+import scala.collection.mutable
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
@@ -16,8 +18,7 @@ trait VerticleTest {
   this: VertxTest =>
 
   private val vertx = Vertx.vertx()
-  private var servicesIdentifier: Set[String] = _
-  private var verticleMain: Unit = _
+  private var servicesIdentifier: mutable.Set[String] = _
 
   /**
     * Deploys all the services passed as parameter.
@@ -25,8 +26,11 @@ trait VerticleTest {
     * @param services the list of services to deploy
     * @param atMost the maximum time we can wait for start services
     */
-  def deploy(services: Traversable[ScalaVerticle]): Unit = {
-    servicesIdentifier = Set()
+  def deploy(services: List[ScalaVerticle]): Unit = {
+    services.foreach(s => {
+      vertx.deployVerticle(s)
+    })
+    servicesIdentifier = vertx.deploymentIDs()
   }
 
   /**
@@ -42,13 +46,4 @@ trait VerticleTest {
         case Failure(error) => throw new RuntimeException(error)
       }, atMost))
   }
-
-  /**
-    * Initialized verticle main for deploy
-    * @param verticleToUse is the server verticle
-    */
-  def verticleToUse(verticleToUse: Unit): Unit = {
-    verticleMain = verticleToUse
-  }
-
 }
