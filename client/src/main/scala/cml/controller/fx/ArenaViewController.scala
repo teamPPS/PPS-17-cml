@@ -39,7 +39,9 @@ class ArenaViewController {
   private var userPowerAttack: Int = _
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
-  
+
+  private val log: Logger = Logger(classOf[ArenaViewController])
+
   private val arenaActor: ActorSelection = system actorSelection ArenaActorPath
 
   def initialize(): Unit = {
@@ -85,7 +87,7 @@ class ArenaViewController {
     battleGame.attack()
     if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
     userPowerAttack = game()
-    println(" attack -- > " + userPowerAttack)
+    log.info(" attack -- > " + userPowerAttack)
     challengerLifeBar_()
     arenaActor ! AttackRequest(userPowerAttack)
   }
@@ -95,7 +97,7 @@ class ArenaViewController {
     attackButton.setDisable(false)
     battleGame.charge()
     userPowerAttack = game()
-    println("charge attack -- > " + userPowerAttack)
+    log.info("charge attack -- > " + userPowerAttack)
     arenaActor ! AttackRequest(userPowerAttack)
     battleGame.isCharge_()
   }
@@ -104,23 +106,23 @@ class ArenaViewController {
   def protectionOption(): Unit = {
     battleGame.protection()
     userPowerAttack = game()
-    println("protection attack -- > " + userPowerAttack)
+    log.info("protection attack -- > " + userPowerAttack)
     arenaActor ! AttackRequest(userPowerAttack)
     battleGame.isProtect_()
   }
 
   def userLifeBar_(challengerPowerAttack: Int): Unit = {
-    println("_challengerPowerAttack ---> " + challengerPowerAttack)
+    log.info("_challengerPowerAttack ---> " + challengerPowerAttack)
     _creatureLife -= challengerPowerAttack
-    println("_challengerPowerAttack ---> " + _creatureLife)
+    log.info("_challengerPowerAttack ---> " + _creatureLife)
     val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
-    println("progress value --> " + progress)
+    log.info("progress value --> " + progress)
     userLifeBar.setProgress(progress)
   }
 
   def challengerLifeBar_(): Unit = {
     _challengerLife -= userPowerAttack
-    println("CHALLENGER LIFE BAR: " + _challengerLife)
+    log.info("CHALLENGER LIFE BAR: " + _challengerLife)
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
     challengerLifeBar.setProgress(progress)
   }
