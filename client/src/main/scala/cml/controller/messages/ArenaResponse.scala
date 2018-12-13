@@ -10,10 +10,10 @@ object ArenaResponse {
 
   case class HelloChallengerSuccess() extends ArenaResponse
 
+  case class RequireTurnSuccess(attackPower: Int, isProtection:Boolean, turn: Int) extends ArenaResponse
+
   /**
     * Success response to receive attack
     */
-  case class AttackSuccess(attackPower: Int) extends ArenaResponse
-
-  case class RequireTurnSuccess(attackPower: Int, turn: Int) extends ArenaResponse
+  case class AttackSuccess(attackPower: Int, isProtected: Boolean) extends ArenaResponse
 }

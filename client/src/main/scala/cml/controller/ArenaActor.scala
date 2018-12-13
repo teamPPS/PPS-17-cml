@@ -15,7 +15,6 @@ import javafx.application.Platform
 
 class ArenaActor extends Actor with ActorLogging {
   private var battleActor: ActorRef = _
-  private var _powerValue: Int = _
   private var controller: ArenaViewController = _
   private var challengerCreature:  Option[Creature] = _
 
@@ -25,17 +24,17 @@ class ArenaActor extends Actor with ActorLogging {
     case ChallengerCreature(creature) =>
       challengerCreature = creature
       Platform.runLater(() => setChallengerCreatureImage(challengerCreature.get, controller))
-    case AttackRequest(value) => battleActor ! AttackRequest(value)
-    case AttackSuccess(value) => _powerValue = value
-      Platform.runLater(() => controller.userLifeBar_(_powerValue))
     case ControllerRefRequest(controllerValue) =>
       log.info("CONTROLLER -- " + controllerValue + "and ref is " + controller)
       controller = controllerValue
+    case AttackRequest(value, protection) => battleActor ! AttackRequest(value, protection)
+    case AttackSuccess(value, isProtected) =>
+      Platform.runLater(() => controller.userLifeBar_(value, isProtected))
+    case ControllerRefRequest(controllerValue) => controller = controllerValue
     case StopRequest() =>
       battleActor ! StopRequest()
       context.stop(self)
   }
-    def powerValue_(): Int = _powerValue
 
   private def setChallengerCreatureImage(creature: Creature, controller: ArenaViewController): Unit = {
     creature.creatureType match {
