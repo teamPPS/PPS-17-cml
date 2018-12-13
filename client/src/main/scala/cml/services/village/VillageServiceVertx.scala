@@ -79,7 +79,7 @@ object VillageServiceVertx{
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulCreationResponse` => r.bodyAsString().getOrElse("")
-          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+          case _ => log.error(r.statusCode() + r.statusMessage(), None);"Not a valid request"
         })
     }
 
@@ -90,7 +90,7 @@ object VillageServiceVertx{
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulResponse` => r.bodyAsString().getOrElse("")
-          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+          case _ => log.error(r.statusCode() + r.statusMessage(), None);"Not a valid request"
         })
     }
 
@@ -102,7 +102,7 @@ object VillageServiceVertx{
         .sendJsonFuture(updateJsonObj)
         .map(r => r.statusCode() match {
           case `successfulResponse` => r.bodyAsString().getOrElse("")
-          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+          case _ => log.error(r.statusCode() + r.statusMessage(), None);"Not a valid request"
         })
     }
 
@@ -114,7 +114,7 @@ object VillageServiceVertx{
         .sendJsonFuture(updateJsonObj)
         .map(r => r.statusCode() match {
           case `successfulResponse` => r.bodyAsString().getOrElse("")
-          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+          case _ => log.error(r.statusCode() + r.statusMessage(), None);"Not a valid request"
         })
     }
 
@@ -125,7 +125,7 @@ object VillageServiceVertx{
         .sendFuture
         .map(r => r.statusCode match {
           case `successfulResponse` => r.bodyAsString().getOrElse("")
-          case _ => println(r.statusCode() + r.statusMessage());"Not a valid request"
+          case _ => log.error(r.statusCode() + r.statusMessage(), None);"Not a valid request"
         })
     }
   }
