@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.{Actor, ActorRef, ActorSelection}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection}
 import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
 import cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
 import cml.controller.fx.VillageViewController
@@ -18,7 +18,7 @@ import scala.util.{Failure, Success}
   * Class that implements the actor which manages the village interaction with user
   * @author Monica Gondolini
   */
-class VillageActor() extends Actor{
+class VillageActor() extends Actor with ActorLogging{
 
   val villageVertx = VillageServiceVertxImpl()
   val authenticationActor: ActorSelection = context actorSelection AuthenticationActorPath
@@ -33,7 +33,7 @@ class VillageActor() extends Actor{
       villageVertx.createVillage().onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => println("Failure create village")
+            case "Not a valid request" => log.info("Failure create village")
             case _ => senderActor ! CreateVillageSuccess()
           }
         case Failure(exception) => senderActor ! VillageFailure(createFailure)
@@ -43,7 +43,7 @@ class VillageActor() extends Actor{
       villageVertx.enterVillage().onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => println("Failure entering in village")
+            case "Not a valid request" => log.info("Failure entering in village")
             case _ => Platform.runLater(() => controller.setGridAndHandlers(httpResponse))
           }
         case Failure(exception) => authenticationActor ! VillageFailure(enterFailure)
@@ -53,31 +53,31 @@ class VillageActor() extends Actor{
       villageVertx.updateVillage(update).onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => println("Failure to update village")
-            case _ => println("Update Done")
+            case "Not a valid request" => log.info("Failure to update village")
+            case _ => log.info("Update Done")
           }
-        case Failure(exception) => println(exception)
+        case Failure(exception) => log.error("exception", exception)
       }
 
     case SetUpdateVillage(update) =>
       villageVertx.setUpdateVillage(update).onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => println("Failure to set update village")
-            case _ => println("Update Set Done")
+            case "Not a valid request" => log.info("Failure to set update village")
+            case _ => log.info("Update Set Done")
           }
-        case Failure(exception) => println(exception)
+        case Failure(exception) => log.error("exception", exception)
       }
 
     case DeleteVillage(controller) =>
       villageVertx.deleteVillageAndUser().onComplete {
         case Success(httpResponse) =>
           httpResponse match {
-            case "Not a valid request" => println("Failure to delete village")
-            case _ => deleteSucceedOnGui(controller)
-              println("Deletion Done")
+            case "Not a valid request" => log.info("Failure to delete village")
+            case _ => log.info("Deletion Done")
+              deleteSucceedOnGui(controller)
           }
-        case Failure(exception) => println(exception)
+        case Failure(exception) => log.error("exception", exception)
       }
   }
 

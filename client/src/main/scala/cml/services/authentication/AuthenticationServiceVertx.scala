@@ -78,7 +78,7 @@ object AuthenticationServiceVertx{
   case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
 
     override def register(username: String, password: String): Future[String] = {
-      log.info("sending registration request from username:%s", username)
+      log.info("sending registration request from username: %s", username)
       client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
@@ -89,7 +89,7 @@ object AuthenticationServiceVertx{
     }
 
     override def login(username: String, password: String): Future[String] = {
-      log.info("sending login request from username:%s", username)
+      log.info("sending login request from username: %s", username)
       client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
