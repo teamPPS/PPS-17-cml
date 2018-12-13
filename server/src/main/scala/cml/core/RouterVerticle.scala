@@ -19,7 +19,7 @@ abstract class RouterVerticle extends ScalaVerticle {
 
   var server: HttpServer = _
 
-  val log: Logger = LoggerFactory.getLogger("Router Verticle")
+  private val log: Logger = LoggerFactory.getLogger("Router Verticle")
 
   override def startFuture(): Future[Unit] = {
 
@@ -32,18 +32,18 @@ abstract class RouterVerticle extends ScalaVerticle {
       .listenFuture(AuthenticationServicePort, ServiceHost)
       .onComplete({
         case Success(startedServer) =>
-          log.info(s"Server successfully started on port: $AuthenticationServicePort")
+          log.info(s"Server successfully started on port: $AuthenticationServicePort", AuthenticationServicePort)
           server = startedServer
           promise.success(())
         case Failure(ex) =>
-          log.info(s"Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}")
+          log.info(s"Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}", AuthenticationServicePort)
           promise.failure(ex)
       })
     promise.future
   }
 
   override def stopFuture(): Future[Unit] = {
-    log.info("Stopping")
+    log.info("Stopping", None)
     for {
       _ <- server.closeFuture()
       _ <- vertx.undeployFuture(this.deploymentID)

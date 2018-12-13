@@ -23,7 +23,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
 
   private var villageService: VillageService = _
 
-  val log: Logger = LoggerFactory.getLogger("Village Verticle")
+  private val log: Logger = LoggerFactory.getLogger("Village Verticle")
 
   /**
     * Initialize router

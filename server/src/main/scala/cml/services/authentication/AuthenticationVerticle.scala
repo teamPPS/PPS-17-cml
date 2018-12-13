@@ -8,6 +8,7 @@ import io.vertx.scala.ext.web.{Router, RoutingContext}
 
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
+import io.vertx.core.logging.{Logger, LoggerFactory}
 import io.vertx.scala.ext.web.handler.BodyHandler
 
 /**
@@ -19,6 +20,8 @@ import io.vertx.scala.ext.web.handler.BodyHandler
 case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation {
 
   private var authenticationService: AuthenticationService = _
+
+  private val log: Logger = LoggerFactory.getLogger("Authentication Verticle")
 
   override def initializeRouter(router: Router): Unit = {
     router.route.handler(BodyHandler.create())
@@ -33,7 +36,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   }
 
   private def register: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive register request")
+    log.info("Receive register request", None)
     (for(
       request <- getRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(request)
@@ -47,7 +50,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   }
 
   private def login: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive login request")
+    log.info("Receive login request", None)
     (for (
       headerAuthorization <- getRequestAndHeader;
       (username, password) <- TokenAuthentication.checkBase64Authentication(headerAuthorization)
@@ -63,7 +66,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   }
 
   private def logout: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive logout request") // delete only token da valutare, così non va bene! o salviamo il token nel db o non soS
+    log.info("Receive logout request", None) // TODO delete only token da valutare, così non va bene! o salviamo il token nel db o non soS
     (for (
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
@@ -78,7 +81,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   }
 
   private def validationToken: Handler[RoutingContext] = implicit routingContext => {
-    println("Receive validationToken request")
+    log.info("Receive validationToken request", None)
     (for (
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);

@@ -58,7 +58,7 @@ sealed trait VillageService {
 
 object VillageService {
 
-  val log: Logger = LoggerFactory.getLogger("Village Service")
+  private val log: Logger = LoggerFactory.getLogger("Village Service")
 
   def apply(databaseClient: DatabaseClient = DatabaseClient(DbConfig.villageColl)): VillageService =
     VillageServiceImpl(databaseClient)
