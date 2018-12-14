@@ -18,7 +18,6 @@ import scala.language.implicitConversions
 
 class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
-  private val vertx: Vertx = Vertx.vertx()
   private val client: WebClient = WebClient.create(vertx)
 
   private val inputTest: String = "test"

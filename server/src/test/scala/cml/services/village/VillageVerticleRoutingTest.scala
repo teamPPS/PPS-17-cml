@@ -6,7 +6,6 @@ import io.vertx.scala.core.Vertx
 
 class VillageVerticleRoutingTest extends VertxTest with BeforeAndAfterTest{
 
-  private val vertx = Vertx.vertx()
   override protected val serviceList: List[ScalaVerticle] = List(VillageVerticle())
 
 }

@@ -50,6 +50,14 @@ subprojects {
         excludedPackages = ["cml.services.village.utils", "cml", "cml.view.utils", "cml.controller.actor.utils",  "cml.model.static_model", "cml.utils"  ]
     }
 
+    testScoverage {
+        maxParallelForks = 1
+    }
+
+    test {
+        maxParallelForks = 1
+    }
+
     scalaStyle {
         configLocation = "config/scalastyle/scalastyle_config.xml"
         includeTestSourceDirectory = true

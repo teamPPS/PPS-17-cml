@@ -15,7 +15,6 @@ import cml.services.village.utils.VillageUrl._
 
 class VillageVerticleTest extends VillageVerticleRoutingTest {
 
-  private var vertx: Vertx = Vertx.vertx()
   private var client: WebClient = WebClient.create(vertx)
 
   private val username: String = "test"
