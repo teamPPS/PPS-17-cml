@@ -35,6 +35,14 @@ class AirCreatureTest extends FunSuite {
     assert(griffin._element.equals("air"))
   }
 
-  
+  test("Name test"){
+    //name is correct
+    assert(griffin.name.equals("Cerulea"))
+
+    //name is wrong
+    assert(griffin.name != "Astaroth")
+  }
+
+
 
 }
