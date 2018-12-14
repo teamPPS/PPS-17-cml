@@ -50,7 +50,7 @@ class ArenaViewController {
     userLifeBar.setProgress(_creatureLife)
     _challengerLife = battleGame.creatureLife()
     challengerLifeBar.setProgress(_challengerLife)
-    setCreatureImage(selectedCreature.get)
+    myCreature(selectedCreature.get)
     _isProtected = false
   }
 
@@ -126,13 +126,21 @@ class ArenaViewController {
 
   private def game(): Int = battleGame.gameEngine(creatureAttackValue_())
 
-  private def setCreatureImage(selection: Creature): Unit = {
+  private def setCreatureImage(selection: Creature, image: ImageView): Unit = {
     selection.creatureType match {
-      case DRAGON => yourCreature setImage dragonImage
-      case GOLEM => yourCreature setImage golemImage
-      case GRIFFIN => yourCreature setImage griffinImage
-      case WATERDEMON => yourCreature setImage waterdemonImage
+      case DRAGON => image setImage dragonImage
+      case GOLEM => image setImage golemImage
+      case GRIFFIN => image setImage griffinImage
+      case WATERDEMON => image setImage waterdemonImage
     }
+  }
+
+  private def myCreature(selection: Creature): Unit = {
+    setCreatureImage(selection, yourCreature)
+  }
+
+  def challengeCreature(selection: Creature): Unit ={
+    setCreatureImage(selection, enemyCreature)
   }
 
   private def isProtected_ : Unit = {
