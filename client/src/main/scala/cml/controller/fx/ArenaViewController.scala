@@ -4,12 +4,13 @@ import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.actor.utils.ActorUtils.ActorPath.ArenaActorPath
 import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
+import cml.controller.messages.BattleRequest.SceneInfo
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
 import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
 import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
-import cml.view.ViewSwitch
+import cml.view.{DialogPaneUtils, ViewSwitch}
 import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
@@ -55,23 +56,18 @@ class ArenaViewController {
 
   @FXML
   def pauseOption(): Unit = {
-    val alert = new Alert(AlertType.INFORMATION) {
-      setTitle("Information Dialog")
-      setHeaderText("PAUSE")
-      setContentText("Resume?")
-    }
-    alert.showAndWait()
+    val headerText = "PAUSE"
+    val alert = DialogPaneUtils()
+    alert.crateInformationPane(headerText)
+    alert.showPane()
   }
 
   @FXML
   def exitOption(): Unit = {
-    val alert = new Alert(AlertType.CONFIRMATION) {
-      setTitle("Confirmation Dialog")
-      setHeaderText("Exit")
-      setContentText("Are you sure to exit?")
-    }
-
-    val result = alert.showAndWait()
+    val headerText = "Exit"
+    val alert = DialogPaneUtils()
+    alert.createConfirmationPane(headerText)
+    val result = alert.showPane()
     if (result.isPresent && result.get() == ButtonType.OK) {
       Creature.setSelectedCreature(None)
       arenaActor ! StopRequest()

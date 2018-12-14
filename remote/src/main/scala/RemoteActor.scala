@@ -1,6 +1,6 @@
 import java.io.File
 
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Stash}
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import cml.controller.messages.ArenaRequest.RequireTurnRequest
 import cml.controller.messages.ArenaResponse.RequireTurnSuccess
@@ -15,8 +15,8 @@ import com.typesafe.config.ConfigFactory
   * @author (edited by) Monica Gondolini
   */
 
-class RemoteActor extends Actor with ActorLogging {
-  val DefaultMessage: String = "WARNING: RemoteActor has not receive anything"
+class RemoteActor extends Actor with Stash with ActorLogging {
+  
   var mapActorCreature: Map[ActorRef,  Option[Creature]] = Map[ActorRef,  Option[Creature]]()
   var isFirst: Boolean = true
 
@@ -32,7 +32,7 @@ class RemoteActor extends Actor with ActorLogging {
     case RequireTurnRequest(attackPower, isProtected, turn) =>
       turnManagement(turn)
       sender ! RequireTurnSuccess(attackPower, isProtected, turn)
-    case _ => log.info(DefaultMessage)
+    case _ => stash()
   }
 
   private def addIntoBattleUserList(actorIdentity: ActorRef, creature:  Option[Creature]){
@@ -43,6 +43,7 @@ class RemoteActor extends Actor with ActorLogging {
   private def removeIntoBattleUserList(actorIdentity: ActorRef) {
     mapActorCreature -= actorIdentity
     log.info("LIST remove --> " + mapActorCreature_)
+    unstashAll()
   }
 
   //todo: technical debit
@@ -76,7 +77,6 @@ class RemoteActor extends Actor with ActorLogging {
 }
 
 object RemoteActor {
-// TODO: shift this main in server side (server main) if its possible add another service-like (its't really service)
   def main(args: Array[String])  {
     val configFile = getClass.getClassLoader.getResource(Configuration).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
