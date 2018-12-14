@@ -59,6 +59,7 @@ class DatabaseClientTest extends AsyncFunSuite with BeforeAndAfter {
 
   test("testing add new user with village to database and then clean") {
     for {
+      res <- userCollection.delete(userDoc)
       res1 <- userCollection.insert(userDoc)
       res2 <- villageCollection.insert(villageDoc)
       res3 <- userCollection.delete(userDoc)
