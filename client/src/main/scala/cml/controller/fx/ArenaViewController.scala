@@ -3,8 +3,7 @@ package cml.controller.fx
 import akka.actor.ActorSelection
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.actor.utils.ActorUtils.ActorPath.ArenaActorPath
-import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
-import cml.controller.messages.BattleRequest.SceneInfo
+import cml.controller.messages.ArenaRequest.{AttackRequest, ChallengerCreatureRequire, ControllerRefRequest, StopRequest}
 import cml.model.base.Creature
 import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
 import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
@@ -12,8 +11,7 @@ import cml.utils.ViewConfig._
 import cml.view.BattleRule.BattleRulesImpl
 import cml.view.{DialogPaneUtils, ViewSwitch}
 import javafx.fxml.FXML
-import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
+import javafx.scene.control.{Button, ButtonType, ProgressBar}
 import javafx.scene.image.ImageView
 
 /**
@@ -137,10 +135,11 @@ class ArenaViewController {
 
   private def myCreature(selection: Creature): Unit = {
     setCreatureImage(selection, yourCreature)
+    arenaActor ! ChallengerCreatureRequire()
   }
 
-  def challengeCreature(selection: Creature): Unit ={
-    setCreatureImage(selection, enemyCreature)
+  def challengeCreature(selection: Option[Creature]): Unit ={
+    setCreatureImage(selection.get, enemyCreature)
   }
 
   private def isProtected_ : Unit = {

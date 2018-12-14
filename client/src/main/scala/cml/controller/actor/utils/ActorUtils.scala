@@ -12,7 +12,7 @@ object ActorUtils {
     val Configuration = "remote_actor.conf"
     val Context = "CML"
     val Name = "RemoteActor"
-    val Path = "akka.tcp://CML@127.0.0.1:5150/user/RemoteActor"
+    val Path = "akka.tcp://CML@127.0.0.1:5051/user/RemoteActor"
   }
 
   object BattleActorInfo{

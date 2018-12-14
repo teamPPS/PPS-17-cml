@@ -17,7 +17,7 @@ object ArenaRequest {
     * Request for know the remote actor
     * @param actor is actor battle ref
     */
-  case class ActorRefRequest(actor: ActorRef) extends ArenaRequest
+  case class ActorRefRequest(actor: ActorRef, challengeCreature: Option[Creature]) extends ArenaRequest
 
   /**
     * Request for stopping Actor
@@ -33,6 +33,6 @@ object ArenaRequest {
 
   case class ControllerRefRequest(controller: ArenaViewController) extends ArenaRequest
 
-  case class  ChallengerCreature(creature:  Option[Creature]) extends ArenaRequest
+  case class ChallengerCreatureRequire() extends ArenaRequest
 
 }

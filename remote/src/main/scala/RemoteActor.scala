@@ -6,27 +6,27 @@ import cml.controller.messages.ArenaRequest.RequireTurnRequest
 import cml.controller.messages.ArenaResponse.RequireTurnSuccess
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
-import cml.model.base.Creature
 import com.typesafe.config.ConfigFactory
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * This class implements remote actor utils for battle managements
   * @author Chiara Volonnino
-  * @author (edited by) Monica Gondolini
   */
 
 class RemoteActor extends Actor with Stash with ActorLogging {
   
-  var mapActorCreature: Map[ActorRef,  Option[Creature]] = Map[ActorRef,  Option[Creature]]()
+  var actorList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
   var isFirst: Boolean = true
 
   override def receive: Receive = {
-    case RequireEnterInArena(selectedCreature) =>
-      addIntoBattleUserList(sender, selectedCreature)
+    case RequireEnterInArena() =>
+      addIntoBattleUserList(sender)
       sender ! RequireEnterInArenaSuccess()
     case ExistChallenger() =>
       val exist = existChallenger()
-      if (exist) mapActorCreature.foreach{ case (actor, _) => actor ! ExistChallengerSuccess(mapActorCreature) }
+      if (exist) actorList.foreach{ actor => actor ! ExistChallengerSuccess(actorList) }
     case ExitRequest() =>
       removeIntoBattleUserList(sender)
     case RequireTurnRequest(attackPower, isProtected, turn) =>
@@ -35,27 +35,28 @@ class RemoteActor extends Actor with Stash with ActorLogging {
     case _ => stash()
   }
 
-  private def addIntoBattleUserList(actorIdentity: ActorRef, creature:  Option[Creature]){
-    mapActorCreature += (actorIdentity -> creature)
-    log.info("MAP add --> " + mapActorCreature)
+  private def addIntoBattleUserList(actorIdentity: ActorRef){
+    actorList += actorIdentity
+    log.info("User in list (add option) -> " + userList_())
   }
 
   private def removeIntoBattleUserList(actorIdentity: ActorRef) {
-    mapActorCreature -= actorIdentity
-    log.info("LIST remove --> " + mapActorCreature_)
+    actorList -= actorIdentity
+    log.info("User in list (remove option) -> " + userList_)
     unstashAll()
   }
 
   //todo: technical debit
   private def existChallenger(): Boolean = {
-    if (mapActorCreature_().size.equals(2)) true
+    if (userList_().size.equals(2)) true
     else false
   }
 
-  private def mapActorCreature_():  Map[ActorRef,  Option[Creature]]  = {
-    mapActorCreature
+  private def userList_():  ListBuffer[ActorRef]  = {
+    actorList
   }
 
+  //todo: switch in actorArena all turn management
   private def turnManagement(turn: Int): Unit = {
     if(isFirst && initializeTurn(turn)) isFirst = false
     changeTurn(turn)
@@ -81,7 +82,7 @@ object RemoteActor {
     val configFile = getClass.getClassLoader.getResource(Configuration).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem(Context, config)
-    val remoteActor = system.actorOf(Props[RemoteActor], name=Name)
+    system.actorOf(Props[RemoteActor], name=Name)
     println("------ RemoteActor is ready")
   }
 }

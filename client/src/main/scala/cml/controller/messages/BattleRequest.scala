@@ -22,9 +22,8 @@ object BattleRequest {
 
   /**
     * Request to add user into a list to require enter in battle arena
-    * @param creature we want to fight with
     */
-  case class RequireEnterInArena(creature: Option[Creature]) extends BattleRequest
+  case class RequireEnterInArena() extends BattleRequest
 
   /**
     * Request to exist challenger
@@ -40,5 +39,7 @@ object BattleRequest {
     * Request to switch to Arena View
     */
   case class SwitchInArenaRequest() extends BattleRequest
+
+  case class CreatureRequire(creature: Option[Creature]) extends BattleRequest
 
 }

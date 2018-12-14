@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props, Stash}
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo
 import cml.controller.messages.ArenaRequest._
@@ -12,6 +12,8 @@ import cml.utils.ViewConfig.ArenaWindow
 import cml.view.ViewSwitch
 import javafx.application.Platform
 import javafx.scene.Scene
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * This class implements battle actor and managements user battle
@@ -26,7 +28,7 @@ class BattleActor extends Actor with ActorLogging {
   var sceneContext: Scene = _
   var turn: Int = _
   var arenaActor: ActorRef = _
-  var challengerCreature:  Option[Creature] = _
+  var challengerCreature: Option[Creature] = _
 
   private val selectedCreature: Option[Creature] = Creature.selectedCreature
 
@@ -34,7 +36,7 @@ class BattleActor extends Actor with ActorLogging {
   override def preStart(): Unit = {
     remoteActor = context.actorSelection(RemoteActorInfo.Path)
     arenaActor = system.actorOf(Props(new ArenaActor()), "ArenaActor")
-    remoteActor ! RequireEnterInArena(selectedCreature)
+    remoteActor ! RequireEnterInArena()
   }
 
   override def postStop(): Unit = {
@@ -47,13 +49,14 @@ class BattleActor extends Actor with ActorLogging {
     case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
     case ExistChallengerSuccess(userAndCreature) =>
       remoteActor ! ExitRequest()
-      log.info("Map user and creature - " + userAndCreature)
       myChallenge(userAndCreature)
+    case CreatureRequire(creature) =>
+      challengerCreature = creature
       self ! SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
-      arenaActor ! ActorRefRequest(self)
-      arenaActor ! ChallengerCreature(challengerCreature)
+      arenaActor ! ActorRefRequest(self, challengerCreature)
       Platform.runLater(() => switchInArena())
+      // todo: switch in arenaActor
     case AttackRequest(attackPower, protection) => remoteActor ! RequireTurnRequest(attackPower, protection, turn)
     case RequireTurnSuccess(attackPower, protection, turnValue) =>
       log.info("Turn" + turnValue)
@@ -62,22 +65,18 @@ class BattleActor extends Actor with ActorLogging {
       log.info("Attack " + attackPower + " is protected " + isProtected)
       arenaActor ! AttackSuccess(attackPower, isProtected)
     case StopRequest() => context.stop(self)
+    case _ =>
   }
 
-  private def myChallenge(userAndCreature: Map[ActorRef,  Option[Creature]]): Unit = {
-    userAndCreature.foreach{ case (actor, creature) =>
-        if(!actor.equals(self)) {
-          challenger = actor
-          challengerCreature = creature
-        }
-    }
-    log.info("Im user: " + self + " and my challenger is - " + challenger + "\n"
-      + "My creature is: " + selectedCreature.get + " and my challenger's creature is - " + challengerCreature.get)
-    _turn(userAndCreature)
+  private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
+    user.foreach{ actor => if(!actor.equals(self)) challenger = actor}
+    challenger ! CreatureRequire(selectedCreature)
+    log.info("Im user: " + self + " and my challenger is - " + challenger)
+    _turn(user)
   }
 
-  private def _turn(userAndCreature:  Map[ActorRef,  Option[Creature]]): Unit = {
-    if(userAndCreature.head._1 equals self) turn = 0
+  private def _turn(user:  ListBuffer[ActorRef]): Unit = {
+    if(user.head equals self) turn = 0
     else turn = 1
     log.info("My turn is: " + turn)
   }
