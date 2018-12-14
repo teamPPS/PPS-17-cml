@@ -40,6 +40,10 @@ object BattleRequest {
     */
   case class SwitchInArenaRequest() extends BattleRequest
 
+  /**
+    * Require creature image for sent of your challenger
+    * @param creature Option[Creature]
+    */
   case class CreatureRequire(creature: Option[Creature]) extends BattleRequest
 
 }

@@ -1,11 +1,11 @@
 import java.io.File
-
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Stash}
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import cml.controller.messages.ArenaRequest.RequireTurnRequest
 import cml.controller.messages.ArenaResponse.RequireTurnSuccess
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
+import cml.view.BattleRule.{TurnManagement, TurnManagementImpl}
 import com.typesafe.config.ConfigFactory
 
 import scala.collection.mutable.ListBuffer
@@ -18,7 +18,11 @@ import scala.collection.mutable.ListBuffer
 class RemoteActor extends Actor with Stash with ActorLogging {
   
   var actorList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
-  var isFirst: Boolean = true
+  val turnManagement: TurnManagement = TurnManagementImpl()
+
+  override def preStart(): Unit = {
+    turnManagement.initialization()
+  }
 
   override def receive: Receive = {
     case RequireEnterInArena() =>
@@ -30,8 +34,7 @@ class RemoteActor extends Actor with Stash with ActorLogging {
     case ExitRequest() =>
       removeIntoBattleUserList(sender)
     case RequireTurnRequest(attackPower, isProtected, turn) =>
-      turnManagement(turn)
-      sender ! RequireTurnSuccess(attackPower, isProtected, turn)
+      sender ! RequireTurnSuccess(attackPower, isProtected, turnManagement.changeTurn(turn))
     case _ => stash()
   }
 
@@ -46,7 +49,6 @@ class RemoteActor extends Actor with Stash with ActorLogging {
     unstashAll()
   }
 
-  //todo: technical debit
   private def existChallenger(): Boolean = {
     if (userList_().size.equals(2)) true
     else false
@@ -54,26 +56,6 @@ class RemoteActor extends Actor with Stash with ActorLogging {
 
   private def userList_():  ListBuffer[ActorRef]  = {
     actorList
-  }
-
-  //todo: switch in actorArena all turn management
-  private def turnManagement(turn: Int): Unit = {
-    if(isFirst && initializeTurn(turn)) isFirst = false
-    changeTurn(turn)
-  }
-
-  val First: Int = 0
-  val Second: Int = 1
-
-  private def initializeTurn(turn: Int): Boolean = {
-    turn.equals(First)
-  }
-
-  private def changeTurn(turn: Int): Int = {
-    var turn_ : Int = First
-    if (turn equals First) turn_ = Second
-    else turn_ = First
-    turn_
   }
 }
 

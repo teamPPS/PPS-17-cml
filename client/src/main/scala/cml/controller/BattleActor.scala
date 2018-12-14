@@ -1,6 +1,6 @@
 package cml.controller
 
-import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props, Stash}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo
 import cml.controller.messages.ArenaRequest._
@@ -54,16 +54,15 @@ class BattleActor extends Actor with ActorLogging {
       challengerCreature = creature
       self ! SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
-      arenaActor ! ActorRefRequest(self, challengerCreature)
+      arenaActor ! ActorRefRequest(self, challengerCreature, turn)
       Platform.runLater(() => switchInArena())
-      // todo: switch in arenaActor
     case AttackRequest(attackPower, protection) => remoteActor ! RequireTurnRequest(attackPower, protection, turn)
     case RequireTurnSuccess(attackPower, protection, turnValue) =>
       log.info("Turn" + turnValue)
-      if(turnValue equals turn) challenger ! AttackSuccess(attackPower, protection)
-    case AttackSuccess(attackPower, isProtected) =>
+      challenger ! AttackSuccess(attackPower, protection, turnValue)
+    case AttackSuccess(attackPower, isProtected, turnValue) =>
       log.info("Attack " + attackPower + " is protected " + isProtected)
-      arenaActor ! AttackSuccess(attackPower, isProtected)
+      arenaActor ! AttackSuccess(attackPower, isProtected, turnValue)
     case StopRequest() => context.stop(self)
     case _ =>
   }

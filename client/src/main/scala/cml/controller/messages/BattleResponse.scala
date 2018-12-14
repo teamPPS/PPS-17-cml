@@ -1,7 +1,6 @@
 package cml.controller.messages
 
 import akka.actor.ActorRef
-import cml.model.base.Creature
 
 import scala.collection.mutable.ListBuffer
 
