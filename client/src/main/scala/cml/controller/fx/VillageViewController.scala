@@ -24,7 +24,7 @@ import scala.collection.mutable
 /**
   * FX Controller for Village View
   *
-  * @author ecavina, Monica Gondolini
+  * @author ecavina
   */
 class VillageViewController {
 
@@ -74,24 +74,23 @@ class VillageViewController {
 
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
-    val json: JsValue = Json.parse(jsonUserVillage)
-    val gold: JsValue = (json \ Village.GOLD_FIELD).get
-    val food: JsValue = (json \ Village.FOOD_FIELD).get
-    val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
+    val jsonVillage: JsValue = Json.parse(jsonUserVillage)
+    val gold: JsValue = (jsonVillage \ Village.GOLD_FIELD).get
+    val food: JsValue = (jsonVillage \ Village.FOOD_FIELD).get
+    val villageName = (jsonVillage \ Village.VILLAGE_NAME_FIELD).get
 
-    playerLevelLabel.setText(villageName)
+    playerLevelLabel.setText(villageName.toString())
     goldLabel.setText(gold.toString())
     foodLabel.setText(food.toString())
     VillageMap.initVillage(
       structures = mutable.MutableList[Structure](),
       gold = gold.toString().toInt,
       food = food.toString().toInt,
-      user = villageName
+      user = villageName.toString()
     )
 
-    val buildings = (json \\ Village.SINGLE_BUILDING_FIELD).map(_.as[JsObject])
     for (
-      building <- buildings;
+      building <- jsonVillage \\ Village.SINGLE_BUILDING_FIELD;
       buildType <- building \\ Village.BUILDING_TYPE_FIELD;
       specificStructure = buildType.as[String] match {
         case ModelConfig.StructureType.CAVE => building.as[Cave]
@@ -99,12 +98,11 @@ class VillageViewController {
       }
     ) yield VillageMap.instance().get.villageStructure += specificStructure
 
-    val habitats = (json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])
-    //TODO unire questi for comprehnsion ???
+    val habitats = jsonVillage \\ Village.SINGLE_HABITAT_FIELD
     for (
       habitat <- habitats;
       specificHabitat = habitat.as[Habitat];
-      creature <- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]);
+      creature <- habitat \\ Village.SINGLE_CREATURE_FIELD;
       creatureType <- creature \\ Village.CREATURE_TYPE_FIELD;
       specificCreature = creatureType.as[String] match {
         case ModelConfig.Creature.DRAGON => creature.as[FireCreature]
@@ -116,9 +114,10 @@ class VillageViewController {
       specificHabitat.creatureList += specificCreature
       VillageMap.instance().get.villageStructure += specificHabitat
     }
+
     for (
       habitat <- habitats
-      if (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]).isEmpty;
+      if (habitat \\ Village.SINGLE_CREATURE_FIELD).isEmpty;
       specificHabitat = habitat.as[Habitat]
     ) yield {
       VillageMap.instance().get.villageStructure += specificHabitat
@@ -146,7 +145,8 @@ class VillageViewController {
     updateResourcesTimer.start()
   }
 
-  def openAuthenticationView(): Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)
+  def openAuthenticationView(): Unit =
+    ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)
 
   def logoutSystem(): Unit = {
     updateResourcesTimer.stop()
