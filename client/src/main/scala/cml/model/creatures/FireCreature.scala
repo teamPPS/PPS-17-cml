@@ -7,8 +7,8 @@ import play.api.libs.json.Json
 
 /**
   * This class models a dragon
-  * @param creatureName name of the dragon
-  * @param creatureLevel set the dragon level
+  * @param creature_name name of the dragon
+  * @param creature_level set the dragon level
   *
   * @author Filippo Portolani, (edited by) ecavina
   */

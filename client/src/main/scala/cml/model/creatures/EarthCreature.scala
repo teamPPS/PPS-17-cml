@@ -7,8 +7,8 @@ import play.api.libs.json.Json
 
 /**
   * This class models a golem
-  * @param creatureName name of the golem
-  * @param creatureLevel set the golem level
+  * @param creature_name name of the golem
+  * @param creature_level set the golem level
   * @author Filippo Portolani
   */
 case class EarthCreature(creature_name: String, creature_level: Int) extends Creature {
