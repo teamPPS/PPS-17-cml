@@ -3,7 +3,7 @@ package cml.services.authentication
 /**
   * This test class matches if AuthenticationVerticle class is correct
   *
-  * @author Chiara Volonnino
+  * @author Chiara Volonnino, ecavina
   */
 
 import cml.core.TokenAuthentication
@@ -13,12 +13,11 @@ import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
+
 import scala.language.implicitConversions
-import scala.util.{Failure, Random, Success}
 
 class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
-  private val vertx: Vertx = Vertx.vertx()
   private val client: WebClient = WebClient.create(vertx)
 
   private val inputTest: String = "test"
@@ -88,35 +87,19 @@ class AuthenticationVerticleTest extends AuthenticationServiceTest {
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
 
-    /* Stessa storia find non giusta? DA RIGUARDARE*
     println("Response ok because token success delete")
-    client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+    client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), base64Test(inputForTokenReturn, inputForTokenReturn))
       .sendFuture
-      .onComplete{
-        case Success(tokenValue) =>
-          token = tokenValue.bodyAsString().get
-          println("token------------------------------- " + token + "token value " + tokenValue.bodyAsString().get)
-        case Failure(exception) => exception.getCause
-      }
+      .map(response => assert(response.statusCode().equals(BAD_REQUEST.code())))
 
-    println("tokennnnnnnnnwnsjdhkjGDUI gkag au gfdusa f a     " + token )
-    client.delete(AuthenticationServicePort, ServiceHost, LogoutApi)
-      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), tokenTest(token))
-      .sendFuture
-      .map(response => {
-        println("Response: "  + response.statusCode().toString)
-        println("..................................................................................." + OK.code().toString)
-        println("tokennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn" + token)
-        assert(response.statusCode().toString equals OK.code().toString)})*/
-  }
-
-    /* Da provare
     println("Response bad request because token is invalid")
-    client.delete(AuthenticationServicePort, ServiceHost, LogoutApi)
+    client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), tokenTest(invalidToken))
       .sendFuture
-      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))*/
+      .map(response => assert(response.statusCode().toString equals UNAUTHORIZED.code().toString))
+
+  }
 
   test("Validation token test") {
     println("Response bad request because handler is empty")
