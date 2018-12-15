@@ -21,6 +21,11 @@ import play.api.libs.json._
 
 import scala.collection.mutable
 
+/**
+  * FX Controller for Village View
+  *
+  * @author ecavina, Monica Gondolini
+  */
 class VillageViewController {
 
   @FXML var playerLevelLabel: Label = _
@@ -40,29 +45,28 @@ class VillageViewController {
   @FXML var menuButton: MenuButton = _
   var villageMap: GridPane = _
   var buildingsMenu: GridPane = _
-
   val villageActor: ActorSelection = system actorSelection VillageActorPath
   val authenticationActor: ActorSelection = system actorSelection AuthenticationActorPath
   var updateResourcesTimer: AnimationTimer = _
 
+  val timeToUpdate: (Long, Long) => Boolean =
+    (now: Long, lastUpdate: Long) => (now - lastUpdate) / 1000000 > 10000
 
   def initialize(): Unit = {
     villageActor ! EnterVillage(this)
   }
-
 
   @FXML def goToBattle(): Unit = ViewSwitch.activate(BattleWindow.path, battleButton.getScene)
 
   @FXML def logout(): Unit =  logoutSystem()
 
   @FXML def deleteAccount(): Unit = {
-    val alert = new Alert(AlertType.CONFIRMATION) {
+    val result = new Alert(AlertType.CONFIRMATION) {
       setTitle("Confirmation Dialog")
       setHeaderText("Delete Account")
       setContentText("Are you sure want to confirm?")
-    }
+    }.showAndWait()
 
-    val result = alert.showAndWait()
     if (result.isPresent && result.get() == ButtonType.OK) {
       villageActor ! DeleteVillage(this)
     }
@@ -70,18 +74,22 @@ class VillageViewController {
 
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
-    val json: JsValue = Json.parse(jsonUserVillage) //TODO tutto dentro a JsonMaker o  comunque utils?
-    val gold = (json \ Village.GOLD_FIELD).get.toString()
-    val food = (json \ Village.FOOD_FIELD).get.toString()
+    val json: JsValue = Json.parse(jsonUserVillage)
+    val gold: JsValue = (json \ Village.GOLD_FIELD).get
+    val food: JsValue = (json \ Village.FOOD_FIELD).get
     val villageName = (json \ Village.VILLAGE_NAME_FIELD).get.toString()
 
     playerLevelLabel.setText(villageName)
-    goldLabel.setText(gold)
-    foodLabel.setText(food)
-
+    goldLabel.setText(gold.toString())
+    foodLabel.setText(food.toString())
+    VillageMap.initVillage(
+      structures = mutable.MutableList[Structure](),
+      gold = gold.toString().toInt,
+      food = food.toString().toInt,
+      user = villageName
+    )
 
     val buildings = (json \\ Village.SINGLE_BUILDING_FIELD).map(_.as[JsObject])
-    VillageMap.initVillage(mutable.MutableList[Structure](), gold.toInt, food.toInt, villageName)
     for (
       building <- buildings;
       buildType <- building \\ Village.BUILDING_TYPE_FIELD;
@@ -109,19 +117,16 @@ class VillageViewController {
       VillageMap.instance().get.villageStructure += specificHabitat
     }
     for (
-      habitat <- habitats;
+      habitat <- habitats
       if (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]).isEmpty;
       specificHabitat = habitat.as[Habitat]
     ) yield {
       VillageMap.instance().get.villageStructure += specificHabitat
     }
 
-
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
     villagePane setContent villageMap
-
-
     ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)
 
     buildingsMenu = new GridPane
@@ -130,13 +135,10 @@ class VillageViewController {
     ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)
 
     updateResourcesTimer = new AnimationTimer() {
-
       var lastUpdate = 0L
-
       override def handle(now: Long): Unit = {
-        if((now - lastUpdate) / 1000000 > 2000) {
-          val villageStructures = VillageMap.instance().get.villageStructure
-          villageStructures.foreach(s => s.resource.inc(s.level))
+        if(timeToUpdate(now, lastUpdate)) {
+          VillageMap.instance().get.villageStructure.foreach(s => s.resource.inc(s.level))
           lastUpdate = now
         }
       }
@@ -144,7 +146,7 @@ class VillageViewController {
     updateResourcesTimer.start()
   }
 
-  def openAuthenticationView():Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)
+  def openAuthenticationView(): Unit = ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)
 
   def logoutSystem(): Unit = {
     updateResourcesTimer.stop()
