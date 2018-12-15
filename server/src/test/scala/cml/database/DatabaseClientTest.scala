@@ -74,6 +74,7 @@ class DatabaseClientTest extends AsyncFunSuite with BeforeAndAfter {
 
   test("testing update existent village and then clean") {
     for {
+      res <- villageCollection.delete(villageDoc)
       res1 <- villageCollection.insert(villageDoc)
       res2 <- villageCollection.setUpdate(villageDoc, updatedVillageDoc)
       res3 <- villageCollection.find(userDocID)
@@ -85,8 +86,9 @@ class DatabaseClientTest extends AsyncFunSuite with BeforeAndAfter {
 
   test("testing add new element to existent village") {
     for {
+      res <- villageCollection.delete(userDocID)
       res1 <- villageCollection.insert(villageDoc)
-      res2 <- villageCollection.update(villageDoc, newVillageElement)
+      res2 <- villageCollection.update(userDocID, newVillageElement)
       res3 <- villageCollection.find(userDocID)
       res4 <- villageCollection.delete(userDocID)
     } yield assert(
