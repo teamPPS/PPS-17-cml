@@ -1,5 +1,6 @@
 package cml.model.dynamic_model
 
+import java.util.{Timer, TimerTask}
 import cml.model.base.{Cave, Farm, Habitat, Position}
 import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import cml.utils.ModelConfig.Habitat.H_INIT_LEVEL
@@ -7,6 +8,7 @@ import org.scalatest.FunSuite
 import cml.utils.ModelConfig.Elements.WATER
 
 /**
+  * This is the test class for RetrieveResource
   * @author Filippo Portolani
   */
 
@@ -50,6 +52,24 @@ class RetrieveResourceTest extends FunSuite {
     habitat.resource.inc(2)
     RetrieveResource(habitat)
     assert(habitat.resource.amount.equals(habitatInitialMoneyValue))
+  }
+
+  test("Retrieving resources over time test"){
+    val timer = new Timer()
+    val task = new TimerTask {
+      def run(): Unit = {
+        farm.resource.inc(1)
+        cave.resource.inc(1)
+        habitat.resource.inc(1)
+      }
+    }
+    val delay = 0
+    val period = 1000L
+    val millis = 3000
+    timer.schedule(task, delay, period)
+    Thread.sleep(millis)
+
+    assert(farm.resource.amount > initialFoodValue && cave.resource.amount > initialMoneyValue && habitat.resource.amount > initialMoneyValue)
   }
 
 

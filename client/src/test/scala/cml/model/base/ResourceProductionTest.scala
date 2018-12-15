@@ -38,7 +38,7 @@ class ResourceProductionTest extends FunSuite{
     }
     val delay = 0
     val period = 1000L
-    val millis = 10000
+    val millis = 3000
     timer.schedule(task, delay, period)
     Thread.sleep(millis)
 
