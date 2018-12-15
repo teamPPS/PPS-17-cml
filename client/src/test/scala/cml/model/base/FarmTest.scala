@@ -4,11 +4,15 @@ import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import cml.utils.ModelConfig.ModelClass.FOOD_CLASS
 import org.scalatest.FunSuite
 
+/**
+  * @author Monica Gondolini
+  */
+
 class FarmTest extends FunSuite{
 
-  val x1 = 10
-  val y1 = 10
-  val pos = Position(x1, y1)
+  val x = 10
+  val y = 10
+  val pos = Position(x, y)
   val farm: Farm = Farm(pos, B_INIT_LEVEL)
   val amount = farm.food.amount
 

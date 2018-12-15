@@ -4,11 +4,15 @@ import cml.utils.ModelConfig.Building.B_INIT_LEVEL
 import cml.utils.ModelConfig.ModelClass.MONEY_CLASS
 import org.scalatest.FunSuite
 
+/**
+  * @author Monica Gondolini
+  */
+
 class CaveTest extends FunSuite{
 
-  val x1 = 10
-  val y1 = 10
-  val pos = Position(x1, y1)
+  val x = 10
+  val y = 10
+  val pos = Position(x, y)
   val cave: Cave = Cave(pos, B_INIT_LEVEL)
   val amount = cave.money.amount
 
