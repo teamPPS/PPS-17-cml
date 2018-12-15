@@ -1,6 +1,5 @@
 package cml.model.base
 
-import cml.model.base.Habitat.Habitat
 import cml.model.creatures.{AirCreature, EarthCreature, FireCreature, WaterCreature}
 import cml.schema.Village
 import cml.utils.ModelConfig
@@ -41,7 +40,7 @@ object PopulateVillageMapStrategy {
     val habitats = recursiveReadJsonField(parsedJsonVillage, Village.SINGLE_HABITAT_FIELD)
     for (
       habitat <- habitats;
-      specificHabitat = habitat.as[Habitat];
+      specificHabitat = habitat.as[Habitat.Habitat];
       creature <- recursiveReadJsonField(habitat, Village.SINGLE_CREATURE_FIELD);
       creatureType <- recursiveReadJsonField(creature, Village.CREATURE_TYPE_FIELD);
       specificCreature = creatureType.as[String] match {
@@ -58,7 +57,7 @@ object PopulateVillageMapStrategy {
     for (
       habitat <- habitats
       if !jsonFieldExist(habitat, Village.SINGLE_CREATURE_FIELD);
-      specificHabitat = habitat.as[Habitat]
+      specificHabitat = habitat.as[Habitat.Habitat]
     ) yield {
       VillageMap.instance().get.villageStructure += specificHabitat
     }
