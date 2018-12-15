@@ -20,10 +20,12 @@ object ModelConfig {
 
   object Building {
     val B_INIT_LEVEL: Int = 1
+    val BUILDING: String = "BUILDING"
   }
 
   object Habitat{
     val H_INIT_LEVEL: Int = 1
+    val HABITAT: String = "HABITAT"
   }
 
   object Resource {

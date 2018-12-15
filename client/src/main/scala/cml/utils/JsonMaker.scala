@@ -2,6 +2,8 @@ package cml.utils
 
 import cml.model.base.{Position, Structure}
 import cml.schema.Village._
+import cml.utils.ModelConfig.Building.BUILDING
+import cml.utils.ModelConfig.Habitat.HABITAT
 import play.api.libs.json.{JsValue, Json}
 
 /**
@@ -103,13 +105,13 @@ case class PositionJson(structType: String, x: Int, y: Int) extends JsonMaker {
 
   private var structJson: JsValue = _
   structType match{
-    case "BUILDING" => structJson = Json.obj(
+    case BUILDING => structJson = Json.obj(
       BUILDING_POSITION_FIELD -> Json.obj(
         "x" -> x,
         "y" -> y
       )
     )
-    case "HABITAT" => structJson = Json.obj(
+    case HABITAT => structJson = Json.obj(
       HABITAT_POSITION_FIELD -> Json.obj(
       "x" -> x,
       "y" -> y
