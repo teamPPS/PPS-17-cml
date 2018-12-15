@@ -5,11 +5,7 @@ import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
 import cml.controller.actor.utils.ActorUtils.ActorPath.{AuthenticationActorPath, VillageActorPath}
 import cml.controller.messages.AuthenticationRequest.Logout
 import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
-import cml.model.base.Habitat.Habitat
-import cml.model.base.{Cave, Farm, Structure, VillageMap}
-import cml.model.creatures.{AirCreature, EarthCreature, FireCreature, WaterCreature}
-import cml.schema.Village
-import cml.utils.ModelConfig
+import cml.model.base._
 import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
 import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
 import javafx.animation.AnimationTimer
@@ -17,9 +13,6 @@ import javafx.fxml.FXML
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.control._
 import javafx.scene.layout.{GridPane, Pane}
-import play.api.libs.json._
-
-import scala.collection.mutable
 
 /**
   * FX Controller for Village View
@@ -74,54 +67,11 @@ class VillageViewController {
 
   def setGridAndHandlers(jsonUserVillage: String): Unit = {
 
-    val jsonVillage: JsValue = Json.parse(jsonUserVillage)
-    val gold: JsValue = (jsonVillage \ Village.GOLD_FIELD).get
-    val food: JsValue = (jsonVillage \ Village.FOOD_FIELD).get
-    val villageName = (jsonVillage \ Village.VILLAGE_NAME_FIELD).get
+    VillageMap.createVillage(PopulateVillageMapStrategy.populateVillageFromJson)(jsonUserVillage)
 
-    playerLevelLabel.setText(villageName.toString())
-    goldLabel.setText(gold.toString())
-    foodLabel.setText(food.toString())
-    VillageMap.initVillage(
-      structures = mutable.MutableList[Structure](),
-      gold = gold.toString().toInt,
-      food = food.toString().toInt,
-      user = villageName.toString()
-    )
-
-    for (
-      building <- jsonVillage \\ Village.SINGLE_BUILDING_FIELD;
-      buildType <- building \\ Village.BUILDING_TYPE_FIELD;
-      specificStructure = buildType.as[String] match {
-        case ModelConfig.StructureType.CAVE => building.as[Cave]
-        case ModelConfig.StructureType.FARM => building.as[Farm]
-      }
-    ) yield VillageMap.instance().get.villageStructure += specificStructure
-
-    val habitats = jsonVillage \\ Village.SINGLE_HABITAT_FIELD
-    for (
-      habitat <- habitats;
-      specificHabitat = habitat.as[Habitat];
-      creature <- habitat \\ Village.SINGLE_CREATURE_FIELD;
-      creatureType <- creature \\ Village.CREATURE_TYPE_FIELD;
-      specificCreature = creatureType.as[String] match {
-        case ModelConfig.Creature.DRAGON => creature.as[FireCreature]
-        case ModelConfig.Creature.GOLEM => creature.as[EarthCreature]
-        case ModelConfig.Creature.GRIFFIN => creature.as[AirCreature]
-        case ModelConfig.Creature.WATERDEMON => creature.as[WaterCreature]
-      }
-    ) yield {
-      specificHabitat.creatureList += specificCreature
-      VillageMap.instance().get.villageStructure += specificHabitat
-    }
-
-    for (
-      habitat <- habitats
-      if (habitat \\ Village.SINGLE_CREATURE_FIELD).isEmpty;
-      specificHabitat = habitat.as[Habitat]
-    ) yield {
-      VillageMap.instance().get.villageStructure += specificHabitat
-    }
+    playerLevelLabel.setText(VillageMap.instance().get.villageName)
+    goldLabel.setText(VillageMap.instance().get.gold.toString)
+    foodLabel.setText(VillageMap.instance().get.food.toString)
 
     villageMap = new GridPane
     BaseGridInitializer.initializeVillage(villageMap)
