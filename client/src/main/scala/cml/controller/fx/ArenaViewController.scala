@@ -54,15 +54,6 @@ class ArenaViewController {
   }
 
   @FXML
-  def pauseOption(): Unit = {
-    val headerText = "PAUSE"
-    val contentTest = "Resume?"
-    val alert = DialogPaneUtils()
-    alert.crateInformationPane(headerText, contentTest)
-    alert.showPane()
-  }
-
-  @FXML
   def exitOption(): Unit = {
     val headerText = "Exit"
     val contentTest = ""

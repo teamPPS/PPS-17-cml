@@ -37,6 +37,9 @@ object BattleResponse {
     */
   case class ExitSuccess() extends BattleResponse
 
+  /**
+    * Success response for notified the challenger that you came out of the battle
+    */
   case class NotifierExitSuccess() extends BattleResponse
 
 }

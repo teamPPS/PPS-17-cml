@@ -39,7 +39,6 @@ class BattleActor extends Actor with ActorLogging {
   }
 
   override def postStop(): Unit = {
-    //TODO: remember actorSystem.shutdown? is correct even so (also sin stop clause )
     log.info("Actor is stopped")
   }
 

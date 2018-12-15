@@ -1,3 +1,5 @@
+package cml
+
 import java.io.File
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Stash}
@@ -15,7 +17,6 @@ import scala.collection.mutable.ListBuffer
   * This class implements remote actor utils for battle managements
   * @author Chiara Volonnino
   */
-
 class RemoteActor extends Actor with Stash with ActorLogging {
   
   var actorList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
@@ -74,6 +75,6 @@ object RemoteActor {
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem(Context, config)
     system.actorOf(Props[RemoteActor], name=Name)
-    println("------ RemoteActor is ready")
+    println("------ cml.RemoteActor is ready")
   }
 }

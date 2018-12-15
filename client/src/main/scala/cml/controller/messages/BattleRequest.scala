@@ -1,7 +1,6 @@
 package cml.controller.messages
 
 import akka.actor.ActorRef
-import cml.controller.messages.ArenaRequest.ArenaRequest
 import cml.model.base.Creature
 import javafx.scene.Scene
 
@@ -48,5 +47,9 @@ object BattleRequest {
     */
   case class CreatureRequire(creature: Option[Creature]) extends BattleRequest
 
+  /**
+    * Require notify that the actor has left to the arena view
+    * @param actor actor identifier
+    */
   case class NotifierExit(actor: ActorRef) extends BattleRequest
 }
