@@ -1,5 +1,7 @@
 package cml.controller.messages
 
+import akka.actor.ActorRef
+import cml.controller.messages.ArenaRequest.ArenaRequest
 import cml.model.base.Creature
 import javafx.scene.Scene
 
@@ -46,4 +48,5 @@ object BattleRequest {
     */
   case class CreatureRequire(creature: Option[Creature]) extends BattleRequest
 
+  case class NotifierExit(actor: ActorRef) extends BattleRequest
 }

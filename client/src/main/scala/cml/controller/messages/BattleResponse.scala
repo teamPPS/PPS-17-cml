@@ -37,4 +37,6 @@ object BattleResponse {
     */
   case class ExitSuccess() extends BattleResponse
 
+  case class NotifierExitSuccess() extends BattleResponse
+
 }

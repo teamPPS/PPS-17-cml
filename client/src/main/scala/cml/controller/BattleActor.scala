@@ -6,7 +6,7 @@ import cml.controller.actor.utils.ActorUtils.RemoteActorInfo
 import cml.controller.messages.ArenaRequest._
 import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.controller.messages.BattleRequest._
-import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
+import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, NotifierExitSuccess, RequireEnterInArenaSuccess}
 import cml.model.base.Creature
 import cml.utils.ViewConfig.{ArenaWindow, VillageWindow}
 import cml.view.ViewSwitch
@@ -63,8 +63,10 @@ class BattleActor extends Actor with ActorLogging {
       log.info("Attack " + attackPower + " is protected " + isProtected)
       arenaActor ! AttackSuccess(attackPower, isProtected, turnValue)
     case StopRequest(scene) =>
+      remoteActor ! NotifierExit(self)
       Platform.runLater(() => ViewSwitch.activate(VillageWindow.path, scene))
       context.stop(self)
+    case NotifierExitSuccess() => arenaActor ! NotifierExitSuccess()
     case _ =>
   }
 

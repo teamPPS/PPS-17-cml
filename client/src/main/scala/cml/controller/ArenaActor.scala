@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef}
 import cml.controller.fx.ArenaViewController
 import cml.controller.messages.ArenaRequest._
 import cml.controller.messages.ArenaResponse.AttackSuccess
+import cml.controller.messages.BattleResponse.NotifierExitSuccess
 import cml.model.base.Creature
 import javafx.application.Platform
 
@@ -32,6 +33,8 @@ class ArenaActor extends Actor with ActorLogging {
     case AttackRequest(value, protection) => battleActor ! AttackRequest(value, protection)
     case AttackSuccess(value, isProtected, turnValue) =>
       Platform.runLater(() => controller.userLifeBar_(value, isProtected, turnValue))
+    case NotifierExitSuccess() =>
+      Platform.runLater(() => controller.exitOption())
     case StopRequest(scene) =>
       battleActor ! StopRequest(scene)
       context.stop(self)

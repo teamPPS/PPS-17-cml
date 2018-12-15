@@ -119,7 +119,6 @@ class ArenaViewController {
     val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
     userLifeBar.setProgress(progress)
     currentTurn = turnValue
-    println("chreature life --> " +  _creatureLife )
     winOption()
   }
 
@@ -128,7 +127,6 @@ class ArenaViewController {
     _challengerLife -= userPowerAttack
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
     challengerLifeBar.setProgress(progress)
-    println("challenger life --> " +  _challengerLife)
   }
 
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
