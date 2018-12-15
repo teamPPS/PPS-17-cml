@@ -2,6 +2,9 @@
 Project for the course of "Paradigmi di Programmazione e Sviluppo - 
 Programming and Development Paradigms" AA.2017/2018
 
+## Continuous integration 
+[![Build Status](https://travis-ci.org/teamPPS/PPS-17-cml.svg?branch=master)](https://travis-ci.org/teamPPS/PPS-17-cml)
+
 ## Getting started
 ### Prerequisites
 Java 1.8 https://www.java.com/it/download/faq/java8.xmln
