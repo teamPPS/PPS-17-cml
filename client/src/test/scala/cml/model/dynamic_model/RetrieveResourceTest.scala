@@ -25,6 +25,7 @@ class RetrieveResourceTest extends FunSuite {
 
 
   test("Retrieve farm food test"){
+    farm.resource.inc(2)
     RetrieveResource(farm)
     farm.resource.inc(1)
     assert(farm.resource.amount > initialFoodValue)
@@ -35,6 +36,7 @@ class RetrieveResourceTest extends FunSuite {
   }
 
   test("Retrieve cave money test"){
+    cave.resource.inc(2)
     RetrieveResource(cave)
     cave.resource.inc(1)
     assert(initialMoneyValue < cave.resource.amount)
