@@ -16,7 +16,6 @@ case class DialogPaneUtils() {
   val ConfirmationDialogTitle = "Confirmation Dialog"
   val ConfirmationDialogContentTest = "Are you sure want to confirm?"
   val InformationDialogTitle = "Information Dialog"
-  val InformationDialogContentTest = "Resume?"
   var alert: Alert = _
 
   def createConfirmationPane(headerText: String): Unit = {
@@ -27,11 +26,11 @@ case class DialogPaneUtils() {
     }
   }
 
-  def crateInformationPane(headerText: String): Unit = {
+  def crateInformationPane(headerText: String, contentTest: String): Unit = {
     alert = new Alert(AlertType.INFORMATION) {
       setTitle(InformationDialogTitle)
       setHeaderText(headerText)
-      setContentText(InformationDialogContentTest)
+      setContentText(contentTest)
     }
   }
 

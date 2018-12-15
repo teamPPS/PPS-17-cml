@@ -56,16 +56,18 @@ class ArenaViewController {
   @FXML
   def pauseOption(): Unit = {
     val headerText = "PAUSE"
+    val contentTest = "Resume?"
     val alert = DialogPaneUtils()
-    alert.crateInformationPane(headerText)
+    alert.crateInformationPane(headerText, contentTest)
     alert.showPane()
   }
 
   @FXML
   def exitOption(): Unit = {
     val headerText = "Exit"
+    val contentTest = ""
     val alert = DialogPaneUtils()
-    alert.createConfirmationPane(headerText)
+    alert.crateInformationPane(headerText, contentTest)
     val result = alert.showPane()
     if (result.isPresent && result.get() == ButtonType.OK) {
       Creature.setSelectedCreature(None)
@@ -129,6 +131,18 @@ class ArenaViewController {
     challengerLifeBar.setProgress(progress)
   }
 
+  def challengeCreature(selection: Option[Creature]): Unit ={
+    setCreatureImage(selection.get, enemyCreature)
+  }
+
+  def turn_(turnValue: Int): Unit = {
+    _turn = turnValue
+  }
+
+  def closeOption(): Unit = {
+    arenaActor ! StopRequest(exitButton.getScene)
+  }
+
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
 
   private def game(): Int = battleGame.gameEngine(creatureAttackValue_())
@@ -145,18 +159,6 @@ class ArenaViewController {
   private def myCreature(selection: Creature): Unit = {
     setCreatureImage(selection, yourCreature)
     arenaActor ! ChallengerCreatureRequire()
-  }
-
-  def challengeCreature(selection: Option[Creature]): Unit ={
-    setCreatureImage(selection.get, enemyCreature)
-  }
-
-  def turn_(turnValue: Int): Unit = {
-    _turn = turnValue
-  }
-
-  def closeOption(): Unit = {
-    arenaActor ! StopRequest(exitButton.getScene)
   }
 
   private def isTurn: Boolean = {

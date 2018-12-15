@@ -43,7 +43,6 @@ class RemoteActor extends Actor with Stash with ActorLogging {
         actor ! NotifierExitSuccess()
         tmpUserList -= actor
       })
-
     case _ => stash()
   }
 
