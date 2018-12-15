@@ -2,11 +2,10 @@
 Project for the course of "Paradigmi di Programmazione e Sviluppo - 
 Programming and Development Paradigms" AA.2017/2018
 
-## Requisiti 
-
 ## Getting started
 ### Prerequisites
-Java 1.8 https://www.java.com/it/download/faq/java8.xmln 
+Java 1.8 https://www.java.com/it/download/faq/java8.xmln
+
 Scala 2.12 https://www.scala-lang.org/ 
 
 ## Build
