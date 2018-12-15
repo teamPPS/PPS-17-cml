@@ -26,10 +26,10 @@ trait TurnManagement {
   */
 case class TurnManagementImpl() extends TurnManagement {
 
-  val First: Int = 0
-  val Second: Int = 1
-  var turn_ : Int = _
-  var isFirst: Boolean = _
+  private val First: Int = 0
+  private val Second: Int = 1
+  private var turn_ : Int = _
+  private var isFirst: Boolean = _
 
   override def initialization(): Unit = {
     turn_ = 0

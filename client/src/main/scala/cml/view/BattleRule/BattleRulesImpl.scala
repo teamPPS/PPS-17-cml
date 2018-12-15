@@ -44,7 +44,7 @@ trait BattleRule {
 
 case class BattleRulesImpl() extends BattleRule {
 
-  private var _creatureLife: Int = 50
+  private val _creatureLife: Int = 50
   private var _attackPoint: Int = _
   private var isProtect: Boolean = _
   private var isAttack: Boolean = _

@@ -17,11 +17,11 @@ import scala.collection.mutable.ListBuffer
   * This class implements remote actor utils for battle managements
   * @author Chiara Volonnino
   */
-class RemoteActor extends Actor with Stash with ActorLogging {
+class BattleConnection extends Actor with Stash with ActorLogging {
   
-  var actorList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
-  var tmpUserList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
-  val turnManagement: TurnManagement = TurnManagementImpl()
+  private var actorList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
+  private var tmpUserList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
+  private val turnManagement: TurnManagement = TurnManagementImpl()
 
   override def preStart(): Unit = {
     turnManagement.initialization()
@@ -69,12 +69,12 @@ class RemoteActor extends Actor with Stash with ActorLogging {
   }
 }
 
-object RemoteActor {
+object BattleConnection {
   def main(args: Array[String])  {
     val configFile = getClass.getClassLoader.getResource(Configuration).getFile
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem(Context, config)
-    system.actorOf(Props[RemoteActor], name=Name)
+    system.actorOf(Props[BattleConnection], name=Name)
     println("------ cml.RemoteActor is ready")
   }
 }
