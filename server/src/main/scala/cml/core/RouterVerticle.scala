@@ -15,7 +15,7 @@ import io.vertx.core.logging.{Logger, LoggerFactory}
   * @author Chiara Volonnino
   */
 
-abstract class RouterVerticle extends ScalaVerticle {
+abstract class RouterVerticle extends ScalaVerticle with RoutingOperation {
 
   var server: HttpServer = _
 
@@ -26,7 +26,7 @@ abstract class RouterVerticle extends ScalaVerticle {
     val promise = Promise[Unit]()
     val router = Router.router(vertx)
     initializeRouter(router)
-    initializeService
+    initializeService()
     vertx.createHttpServer()
       .requestHandler(router.accept)
       .listenFuture(AuthenticationServicePort, ServiceHost)
@@ -49,6 +49,7 @@ abstract class RouterVerticle extends ScalaVerticle {
       _ <- vertx.undeployFuture(this.deploymentID)
     } yield ()
   }
+
   /**
     * Initialize router
     *
@@ -58,9 +59,7 @@ abstract class RouterVerticle extends ScalaVerticle {
 
   /**
     * Initializes the services
-    *
-    * @return
     */
-  def initializeService: Unit
+  def initializeService(): Unit
 
 }

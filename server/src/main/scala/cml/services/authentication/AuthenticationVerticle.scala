@@ -17,7 +17,7 @@ import io.vertx.scala.ext.web.handler.BodyHandler
   * @author Chiara Volonnino
   */
 
-case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation {
+case class AuthenticationVerticle() extends RouterVerticle {
 
   private var authenticationService: AuthenticationService = _
 
@@ -31,7 +31,7 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
     router get ValidationTokenApi handler validationToken
   }
 
-  override def initializeService: Unit = {
+  override def initializeService(): Unit = {
     authenticationService = AuthenticationService()
   }
 
@@ -66,16 +66,12 @@ case class AuthenticationVerticle() extends RouterVerticle with RoutingOperation
   }
 
   private def logout: Handler[RoutingContext] = implicit routingContext => {
-    log.info("Receive logout request", None) // TODO delete only token da valutare, così non va bene! o salviamo il token nel db o non soS
+    log.info("Receive logout request", None)
     (for (
       headerAuthorization <- getRequestAndHeader;
       token <- TokenAuthentication.checkAuthenticationToken(headerAuthorization);
       username <- JWTAuthentication.decodeUsernameToken(token)
     ) yield {
-//      authenticationService.logout(username).onComplete {
-//        case Success(_) => sendResponse(OK, username)
-//        case Failure(_) => sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString)
-//      }
       sendResponse(OK, username)
     }).getOrElse(sendResponse(UNAUTHORIZED, UNAUTHORIZED.toString))
   }

@@ -162,7 +162,7 @@ class ArenaViewController {
   }
 
   private def winOption(): Unit ={
-    if(_creatureLife == 0 || _challengerLife == 0) {
+    if(_creatureLife <= 0 || _challengerLife <= 0) {
       arenaActor ! StopRequest(exitButton.getScene)
     }
   }

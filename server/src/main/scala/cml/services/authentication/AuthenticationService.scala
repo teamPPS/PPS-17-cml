@@ -60,7 +60,7 @@ trait AuthenticationService {
 object AuthenticationService {
 
   private val userCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
-
+  private val errorMessage = "error"
   private val log: Logger = LoggerFactory.getLogger("Authentication Service")
 
   def apply(): AuthenticationService = AuthenticationServiceImpl()
@@ -72,7 +72,7 @@ object AuthenticationService {
       document = Document(USERNAME -> username, PASSWORD -> password)
       userCollection.insert(document).map(_ => "Insertion Completed")
         .recoverWith { case e: Throwable =>
-          log.error("error", e)
+          log.error(errorMessage, e)
           Future.failed(e)
         }
     }
@@ -81,7 +81,7 @@ object AuthenticationService {
       document = Document(USERNAME -> username, PASSWORD -> password)
       userCollection.find(document).map(doc => doc.size() > 0)
         .recoverWith { case e: Throwable =>
-          log.error("error", e)
+          log.error(errorMessage, e)
           Future.failed(e)
         }
     }
@@ -90,7 +90,7 @@ object AuthenticationService {
       document = Document(USERNAME -> username)
       userCollection.delete(document).map(_ => {})
         .recoverWith { case e: Throwable =>
-          log.error("error", e)
+          log.error(errorMessage, e)
           Future.failed(e)
         }
     }
@@ -99,7 +99,7 @@ object AuthenticationService {
       document = Document(USERNAME -> username)
       userCollection.find(document).map(_ => {})
         .recoverWith { case e: Throwable =>
-          log.error("error", e)
+          log.error(errorMessage, e)
           Future.failed(e)
         }
     }

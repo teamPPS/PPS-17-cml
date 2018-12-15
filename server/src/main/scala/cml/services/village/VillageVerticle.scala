@@ -19,17 +19,11 @@ import scala.util.{Failure, Success}
   *
   * @author ecavina
   */
-case class VillageVerticle() extends RouterVerticle with RoutingOperation {
+case class VillageVerticle() extends RouterVerticle {
 
   private var villageService: VillageService = _
 
   private val log: Logger = LoggerFactory.getLogger("Village Verticle")
-
-  /**
-    * Initialize router
-    *
-    * @param router is router to initialize
-    */
 
   override def initializeRouter(router: Router): Unit = {
     router.route.handler(BodyHandler.create())
@@ -41,7 +35,7 @@ case class VillageVerticle() extends RouterVerticle with RoutingOperation {
     router put LogoutApi handler exit
   }
 
-  override def initializeService: Unit = {
+  override def initializeService(): Unit = {
     villageService =  VillageService()
   }
 
