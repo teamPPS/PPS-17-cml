@@ -2,7 +2,6 @@ package cml.model.base
 
 import cml.utils.ModelConfig.Resource._
 import play.api.libs.json.Json
-
 import scala.collection.mutable
 
 /**
