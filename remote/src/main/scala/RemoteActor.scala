@@ -1,12 +1,16 @@
 import java.io.File
+
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Stash}
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
-import cml.controller.messages.ArenaRequest.RequireTurnRequest
+import cml.controller.messages.ArenaRequest.{RequireTurnRequest, StopRequest}
 import cml.controller.messages.ArenaResponse.RequireTurnSuccess
 import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, RequireEnterInArena}
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
+import cml.utils.ViewConfig.VillageWindow
 import cml.view.BattleRule.{TurnManagement, TurnManagementImpl}
+import cml.view.ViewSwitch
 import com.typesafe.config.ConfigFactory
+import javafx.application.Platform
 
 import scala.collection.mutable.ListBuffer
 
@@ -18,6 +22,7 @@ import scala.collection.mutable.ListBuffer
 class RemoteActor extends Actor with Stash with ActorLogging {
   
   var actorList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
+  var tmpUserList: ListBuffer[ActorRef] = new ListBuffer[ActorRef]
   val turnManagement: TurnManagement = TurnManagementImpl()
 
   override def preStart(): Unit = {
@@ -40,6 +45,7 @@ class RemoteActor extends Actor with Stash with ActorLogging {
 
   private def addIntoBattleUserList(actorIdentity: ActorRef){
     actorList += actorIdentity
+    tmpUserList += actorIdentity
     log.info("User in list (add option) -> " + userList_())
   }
 

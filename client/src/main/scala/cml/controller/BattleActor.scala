@@ -8,7 +8,7 @@ import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
 import cml.controller.messages.BattleRequest._
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import cml.model.base.Creature
-import cml.utils.ViewConfig.ArenaWindow
+import cml.utils.ViewConfig.{ArenaWindow, VillageWindow}
 import cml.view.ViewSwitch
 import javafx.application.Platform
 import javafx.scene.Scene
@@ -23,13 +23,12 @@ import scala.collection.mutable.ListBuffer
 
 class BattleActor extends Actor with ActorLogging {
 
-  var remoteActor: ActorSelection = _
-  var challenger: ActorRef = _
-  var sceneContext: Scene = _
-  var turn: Int = _
-  var arenaActor: ActorRef = _
-  var challengerCreature: Option[Creature] = _
-
+  private var remoteActor: ActorSelection = _
+  private var challenger: ActorRef = _
+  private var sceneContext: Scene = _
+  private var turn: Int = _
+  private var arenaActor: ActorRef = _
+  private var challengerCreature: Option[Creature] = _
   private val selectedCreature: Option[Creature] = Creature.selectedCreature
 
   @throws[Exception](classOf[Exception])
@@ -47,9 +46,9 @@ class BattleActor extends Actor with ActorLogging {
   override def receive: Receive = {
     case SceneInfo(scene) => sceneContext = scene
     case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
-    case ExistChallengerSuccess(userAndCreature) =>
+    case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
-      myChallenge(userAndCreature)
+      myChallenge(user)
     case CreatureRequire(creature) =>
       challengerCreature = creature
       self ! SwitchInArenaRequest()
@@ -63,7 +62,9 @@ class BattleActor extends Actor with ActorLogging {
     case AttackSuccess(attackPower, isProtected, turnValue) =>
       log.info("Attack " + attackPower + " is protected " + isProtected)
       arenaActor ! AttackSuccess(attackPower, isProtected, turnValue)
-    case StopRequest() => context.stop(self)
+    case StopRequest(scene) =>
+      Platform.runLater(() => ViewSwitch.activate(VillageWindow.path, scene))
+      context.stop(self)
     case _ =>
   }
 

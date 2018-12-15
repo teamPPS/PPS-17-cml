@@ -3,6 +3,7 @@ package cml.controller.messages
 import akka.actor.ActorRef
 import cml.controller.fx.ArenaViewController
 import cml.model.base.Creature
+import javafx.scene.Scene
 
 /**
   * Arena request message
@@ -48,7 +49,8 @@ object ArenaRequest {
 
   /**
     * Request for stopping Actor
+    * @param scene scene to close
     */
-  case class StopRequest() extends ArenaRequest
+  case class StopRequest(scene: Scene) extends ArenaRequest
 
 }

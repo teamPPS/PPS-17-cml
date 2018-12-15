@@ -32,8 +32,8 @@ class ArenaActor extends Actor with ActorLogging {
     case AttackRequest(value, protection) => battleActor ! AttackRequest(value, protection)
     case AttackSuccess(value, isProtected, turnValue) =>
       Platform.runLater(() => controller.userLifeBar_(value, isProtected, turnValue))
-    case StopRequest() =>
-      battleActor ! StopRequest()
+    case StopRequest(scene) =>
+      battleActor ! StopRequest(scene)
       context.stop(self)
   }
 }
