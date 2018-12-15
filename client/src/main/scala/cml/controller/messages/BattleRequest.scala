@@ -1,5 +1,6 @@
 package cml.controller.messages
 
+import akka.actor.ActorRef
 import cml.model.base.Creature
 import javafx.scene.Scene
 
@@ -22,9 +23,8 @@ object BattleRequest {
 
   /**
     * Request to add user into a list to require enter in battle arena
-    * @param creature we want to fight with
     */
-  case class RequireEnterInArena(creature: Option[Creature]) extends BattleRequest
+  case class RequireEnterInArena() extends BattleRequest
 
   /**
     * Request to exist challenger
@@ -41,4 +41,15 @@ object BattleRequest {
     */
   case class SwitchInArenaRequest() extends BattleRequest
 
+  /**
+    * Require creature image for sent of your challenger
+    * @param creature Option[Creature]
+    */
+  case class CreatureRequire(creature: Option[Creature]) extends BattleRequest
+
+  /**
+    * Require notify that the actor has left to the arena view
+    * @param actor actor identifier
+    */
+  case class NotifierExit(actor: ActorRef) extends BattleRequest
 }
