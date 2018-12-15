@@ -7,7 +7,7 @@ import cml.utils.ModelConfig.Creature._
   * @author Filippo Portolani
   */
 
-trait Creature {
+trait   Creature {
 
   var currentLevel: Int = INITIAL_LEVEL
   val initialHp: Int = HEALTH_POINT

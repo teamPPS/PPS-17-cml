@@ -71,4 +71,9 @@ class CreatureTest extends FunSuite {
     assert(habitat.creatureList.head.equals(dragon))
   }
 
+  test("Set selected creature"){
+    Creature.setSelectedCreature(Option(dragon))
+    assert(Creature.selectedCreature.nonEmpty)
+  }
+
 }
