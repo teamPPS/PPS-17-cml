@@ -14,8 +14,7 @@ trait RoutingOperation {
 
   /**
     * Get the header of the request
-    *
-    * @param routingContext is implicit routing context
+    * @param routingContext implicit routing context
     * @return A Optional with the header or None
     */
   def getRequestAndHeader(implicit routingContext: RoutingContext): Option[String] = {
@@ -33,9 +32,8 @@ trait RoutingOperation {
 
   /**
     * Get a response
-    *
-    * @param routingContext routing context
-    * @return the response
+    * @param routingContext implicit routing context
+    * @return the server response
     */
   def getResponse(implicit routingContext: RoutingContext): HttpServerResponse = {
     routingContext.response
@@ -43,19 +41,20 @@ trait RoutingOperation {
 
   /**
     * Send a response to client
-    *
     * @param httpCode http code response
     * @param message to send to the client
+    * @param routingContext implicit routing context
     */
   def sendResponse(httpCode: HttpResponseStatus, message: String)(implicit routingContext: RoutingContext): Unit = {
     val code = httpCode.code()
     getResponse.setStatusCode(code).end(message)
   }
 
-
-  //TODO abstract def validate(input: String): Future[String]  ---> da spostare in altra classe
-
-  //TODO da implementare in VillageVerticle per controllo user - sicuro da modificare
+  /**
+    * Check if the handler is correct
+    * @param routingContext implicit routing context
+    * @return handler
+    */
   def checkAuthenticationHandler(implicit routingContext: RoutingContext): Future[String] =
     getRequestAndHeader match {
       case Some(authenticationHeader) => Future.successful(authenticationHeader)
