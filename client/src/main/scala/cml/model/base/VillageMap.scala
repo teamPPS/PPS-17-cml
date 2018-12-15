@@ -5,10 +5,10 @@ import scala.collection.mutable
 /**
   * Case class representing the current state of the user's village
   * @author ecavina, Monica Gondolini
-  * @param villageStructure
-  * @param gold
-  * @param food
-  * @param username
+  * @param villageStructure list of structures componing the village
+  * @param gold amount of user's gold resource
+  * @param food amount of user's food resource
+  * @param username user's username
   */
 case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var username: String)
 

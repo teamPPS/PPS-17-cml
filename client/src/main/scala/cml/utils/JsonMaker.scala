@@ -2,6 +2,8 @@ package cml.utils
 
 import cml.model.base.{Position, Structure}
 import cml.schema.Village._
+import cml.utils.ModelConfig.Building.BUILDING
+import cml.utils.ModelConfig.Habitat.HABITAT
 import play.api.libs.json.{JsValue, Json}
 
 /**
@@ -56,6 +58,8 @@ case class HabitatJson(habitatElem: String, habitatLevel: Int, habitatPosition: 
   * This class creates a new json for a Creature by given fields
   * @param creatureName type of creature
   * @param creatureLevel level of the creature
+  * @param creatureType: type of the creature
+  * @param s structure the creature is living in
   */
 case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: String, s: Structure) extends  JsonMaker {
   override def json: JsValue = Json.obj(
@@ -99,17 +103,24 @@ case class MoneyJson(amount: Int) extends JsonMaker {
   )
 }
 
+/**
+  * This class creates a new json for Money resource by given fields
+  * @param structType building or habitat
+  * @param x coordinate x of the structure in the village map
+  * @param y coordinate y of the structure in the village map
+  */
+
 case class PositionJson(structType: String, x: Int, y: Int) extends JsonMaker {
 
   private var structJson: JsValue = _
   structType match{
-    case "BUILDING" => structJson = Json.obj(
+    case BUILDING => structJson = Json.obj(
       BUILDING_POSITION_FIELD -> Json.obj(
         "x" -> x,
         "y" -> y
       )
     )
-    case "HABITAT" => structJson = Json.obj(
+    case HABITAT => structJson = Json.obj(
       HABITAT_POSITION_FIELD -> Json.obj(
       "x" -> x,
       "y" -> y

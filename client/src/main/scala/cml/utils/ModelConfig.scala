@@ -20,10 +20,12 @@ object ModelConfig {
 
   object Building {
     val B_INIT_LEVEL: Int = 1
+    val BUILDING: String = "BUILDING"
   }
 
   object Habitat{
     val H_INIT_LEVEL: Int = 1
+    val HABITAT: String = "HABITAT"
   }
 
   object Resource {
@@ -44,6 +46,8 @@ object ModelConfig {
     val FARM_CLASS: String = "cml.model.base.Farm"
     val CAVE_CLASS: String = "cml.model.base.Cave"
     val HABITAT_CLASS: String = "cml.model.base.Habitat$Habitat"
+    val FOOD_CLASS: String = "cml.model.base.Food"
+    val MONEY_CLASS: String = "cml.model.base.Money"
   }
 
   object StructureType{

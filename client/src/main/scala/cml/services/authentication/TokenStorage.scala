@@ -4,7 +4,7 @@ trait TokenStorage {
 
   def setUserJWTToken(token: String)
 
-  def getUserJWTToken:String
+  def getUserJWTToken: String
 }
 
 object TokenStorage extends TokenStorage {
