@@ -44,7 +44,7 @@ sealed trait VillageService {
     * Update items in user's village
     * @param username used to find the document
     * @param update a json describing the existing item to update
-    * @return
+    * @return successful or failed update
     */
   def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
 
