@@ -10,7 +10,9 @@ object ModelConfig {
     val GRIFFIN: String = "Griffin"
     val GOLEM: String = "Golem"
     val DRAGON_NAME: String = "Smaug"
+    val DRAGON2_NAME: String = "Saphira"
     val GOLEM_NAME: String = "Astaroth"
+    val GOLEM2_NAME: String = "Alduin"
     val WATERDEMON_NAME: String = "Blagrox"
     val GRIFFIN_NAME: String = "Cerulea"
     val INITIAL_LEVEL: Int = 1

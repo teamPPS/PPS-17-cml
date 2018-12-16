@@ -31,9 +31,6 @@ class ResourceProductionTest extends FunSuite{
         farm.food.inc(farm.building_level)
         cave.money.inc(cave.building_level)
         habitat.money.inc(habitat.level)
-//        println("farm food "+  farm.food.foodAmount +
-//          " cave money " + cave.money.amount
-//          +" habitat money " + habitat.money.amount)
       }
     }
     val delay = 0
@@ -56,16 +53,9 @@ class ResourceProductionTest extends FunSuite{
       habitat.money.inc(habitat.level)
     }
 
-    println("food: " + farm.food.amount + " money: " + habitat.money.amount)
-
-    val foodTaken = farm.food.take()
-    println("food taken from farm: " + foodTaken + " food amount now: " + farm.food.amount)
-
-    val caveMoneyTaken = cave.money.take()
-    println("money taken from cave : "+ caveMoneyTaken + " money amount now: " + habitat.money.amount)
-
-    val habitatMoneyTaken = habitat.money.take()
-    println("money taken from habitat: "+ habitatMoneyTaken + " money amount now: " + habitat.money.amount)
+    farm.food.take()
+    cave.money.take()
+    habitat.money.take()
 
     assert(farm.food.amount.equals(INIT_VALUE) && cave.money.amount.equals(INIT_VALUE) && habitat.money.amount.equals(INIT_VALUE))
   }

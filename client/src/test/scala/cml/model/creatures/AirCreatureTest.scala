@@ -1,7 +1,9 @@
 package cml.model.creatures
 
 import cml.utils.ModelConfig.Creature.GRIFFIN_NAME
+import cml.utils.ModelConfig.Creature.GOLEM_NAME
 import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
+import cml.utils.ModelConfig.Elements.AIR
 import org.scalatest.FunSuite
 
 /**
@@ -32,15 +34,15 @@ class AirCreatureTest extends FunSuite {
   }
 
   test("Element test"){
-    assert(griffin._element.equals("air"))
+    assert(griffin._element.equals(AIR))
   }
 
   test("Name test"){
     //name is correct
-    assert(griffin.name.equals("Cerulea"))
+    assert(griffin.name.equals(GRIFFIN_NAME))
 
     //name is wrong
-    assert(griffin.name != "Astaroth")
+    assert(griffin.name != GOLEM_NAME)
   }
 
 

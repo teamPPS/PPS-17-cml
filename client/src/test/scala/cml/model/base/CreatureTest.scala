@@ -21,11 +21,9 @@ class CreatureTest extends FunSuite {
   val y = 10
 
   val dragon : FireCreature = FireCreature(DRAGON_NAME, INITIAL_LEVEL)
-
-  val dragon2 : FireCreature = FireCreature("Saphira", dragonLevel)
+  val dragon2 : FireCreature = FireCreature(DRAGON2_NAME, dragonLevel)
   val golem1 : EarthCreature = EarthCreature(GOLEM_NAME, INITIAL_LEVEL)
-  val golem2 : EarthCreature = EarthCreature("Alduin", 10)
-
+  val golem2 : EarthCreature = EarthCreature(GOLEM2_NAME, 10)
   val kraken: WaterCreature = WaterCreature(WATERDEMON_NAME, INITIAL_LEVEL)
   val griffin: AirCreature = AirCreature(GRIFFIN_NAME, griffinLevel)
 
