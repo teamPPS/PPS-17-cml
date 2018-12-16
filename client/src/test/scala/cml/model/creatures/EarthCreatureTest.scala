@@ -6,6 +6,11 @@ import cml.utils.ModelConfig.Creature.INITIAL_LEVEL
 import cml.utils.ModelConfig.Elements.EARTH
 import org.scalatest.FunSuite
 
+/**
+  * Test class for EarthCreature
+  * @author Filippo Portolani
+  */
+
 class EarthCreatureTest extends FunSuite {
 
   val golemLevel = 9

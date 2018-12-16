@@ -45,6 +45,4 @@ class AirCreatureTest extends FunSuite {
     assert(griffin.name != GOLEM_NAME)
   }
 
-
-
 }
