@@ -31,8 +31,8 @@ trait Structure{
   def resource: Resource
 
   def addCreature(creature: Creature): Unit
-  def creatures: mutable.MutableList[Creature]
-  def habitatElement: String
+  def creatures: Option[mutable.MutableList[Creature]]
+  def habitatElement: Option[String]
 }
 
 /**
@@ -51,8 +51,8 @@ case class Farm(building_pos: Position, var building_level: Int) extends Structu
     if(creature != null)
       throw new NoSuchElementException
   }
-  override def creatures: mutable.MutableList[Creature] = null
-  override def habitatElement: String = "Not an habitat"
+  override def creatures: Option[mutable.MutableList[Creature]] = Option.empty
+  override def habitatElement: Option[String] = Option.empty
 }
 
 object Farm {
@@ -75,8 +75,8 @@ case class Cave(building_pos: Position, var building_level: Int) extends Structu
     if(creature != null)
       throw new NoSuchElementException
   }
-  override def creatures: mutable.MutableList[Creature] = null
-  override def habitatElement: String = "Not an habitat"
+  override def creatures: Option[mutable.MutableList[Creature]] = Option.empty
+  override def habitatElement: Option[String] = Option.empty
 }
 
 object Cave {
@@ -102,8 +102,8 @@ object Habitat {
     override def position: Position = habitat_pos
     override def resource: Resource = money
     override def addCreature(creature: Creature): Unit = creatureList += creature
-    override def creatures: mutable.MutableList[Creature] = creatureList
-    override def habitatElement: String = element
+    override def creatures: Option[mutable.MutableList[Creature]] = Option(creatureList)
+    override def habitatElement: Option[String] = Option(element)
   }
 
   implicit val habitatReader = Json.format[Habitat]

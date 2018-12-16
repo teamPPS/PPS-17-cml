@@ -52,8 +52,8 @@ class BattleViewController {
   def initialize(): Unit = {
 
     for (s <- village.villageStructure) {
-      if (s.creatures != null && s.creatures.nonEmpty) {
-        creatures = s.creatures
+      if (s.creatures.nonEmpty && s.creatures.get.nonEmpty) {
+        creatures = s.creatures.get
         obsCreatures add creatures.head
       }
     }

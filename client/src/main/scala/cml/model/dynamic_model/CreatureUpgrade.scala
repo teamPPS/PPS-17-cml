@@ -9,7 +9,7 @@ import play.api.libs.json.JsValue
   */
 
 trait UpgradeCreature {
-  def creatureJson: JsValue
+  def creatureJson: Option[JsValue]
 }
 
 /**
@@ -21,5 +21,5 @@ case class CreatureUpgrade(creature: Creature, habitat: Structure) extends Upgra
   creature levelUp()
   private val json: JsValue = CreatureJson(creature name, creature.currentLevel, creature.creatureType, habitat) json
 
-  override def creatureJson: JsValue = json
+  override def creatureJson: Option[JsValue] = Option(json)
 }

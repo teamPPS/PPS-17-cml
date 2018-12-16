@@ -47,6 +47,13 @@ object Handler {
   val villageActor: ActorSelection = system actorSelection VillageActorPath
   val price = 30
 
+  implicit val check: (Int,Int) => Boolean = _ > _
+  implicit val modifier: (Int,Int) => Int = _ * _
+  def enoughResource(current: Int, baseCost: Int, toLevel: Int)
+                    (implicit modifier: (Int,Int) => Int,
+                     check: (Int,Int) => Boolean): Boolean = check(current, modifier(baseCost, toLevel))
+  def enoughResourceForBuild(currentResource: Int): Boolean = enoughResource(currentResource, price, 1)
+  def enoughResourceForLevelUp(currentResource: Int, toLevel: Int): Boolean = enoughResource(currentResource, price, toLevel)
 
   val handleVillage: Handler = {
     (elem: Node, control: VillageViewController) =>
@@ -70,9 +77,9 @@ object Handler {
 
       for (s <- VillageMap.instance().get.villageStructure) {
         if (s.position equals Position(x, y)) {
-          if (s.creatures != null && s.creatures.isEmpty) {
+          if (s.creatures.nonEmpty && s.creatures.get.isEmpty) {
             c.addCreatureButton setDisable false
-            c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount)
+            c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
             c.addCreatureButton.setOnMouseClicked(_ => addNewCreature(s, c))
           } else {
             c.levelUpButton setDisable false
@@ -101,7 +108,7 @@ object Handler {
       content putString t.description
       dragBoard setContent content
       val gold = VillageMap.instance().get.gold
-      if(gold >= price) c.selectionInfo setText "Dragged element " + dragBoard.getString
+      if(enoughResourceForBuild(gold)) c.selectionInfo setText "Dragged element " + dragBoard.getString
       else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
     })
@@ -116,7 +123,7 @@ object Handler {
 
     n setOnDragDropped ((event: DragEvent) => {
       val gold = VillageMap.instance().get.gold
-      if(gold >= price){
+      if(enoughResourceForBuild(gold)){
         val dragBoard: Dragboard = event getDragboard()
         val newTile = tileSet.filter(t => t.description.equals(dragBoard.getString)).head
         n match {
@@ -143,6 +150,7 @@ object Handler {
     val creature = StaticCreatures(s)
     villageActor ! SetUpdateVillage(creature json)
     c.addCreatureButton setDisable true
+    c.levelUpButton setDisable false
     c.battleButton setDisable false
     c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
   }
@@ -150,19 +158,17 @@ object Handler {
   private def upgradeStructure(s: Structure, c: VillageViewController): Unit = {
     val gold =  VillageMap.instance().get.gold
     val food =  VillageMap.instance().get.food
-    if(gold >= price){
-      val upgrade = StructureUpgrade(s)
-      upgrade creatureJson match {
-        case null => villageActor ! SetUpdateVillage(upgrade structureJson)
-        case _ => {
-          villageActor ! SetUpdateVillage(upgrade creatureJson)
-          decrementFood(food, price*s.level, c)
-        }
+    if(enoughResourceForLevelUp(gold, s.level)) {
+      s.creatures match {
+        case None => villageActor ! SetUpdateVillage(StructureUpgrade(s).structureJson)
+        case _ =>
+          if(enoughResourceForLevelUp(food, s.level+1))
+            villageActor ! SetUpdateVillage(StructureUpgrade(s).creatureJson.get)
+            decrementFood(food, price*s.level, c)
       }
       decrementMoney(gold, price*s.level, c)
       c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-    }
-    else{
+    } else {
       c.levelUpButton setDisable true
       c.selectionInfo setText "You can't upgrade a structure if you don't have money"
     }
@@ -199,15 +205,15 @@ object Handler {
     villageActor ! SetUpdateVillage(resourceJson)
   }
 
-  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: mutable.MutableList[Creature] = mutable.MutableList[Creature]()): String = {
+  private def displayText(name: String, level: Int, resourceAmount: Int, creatures: Option[mutable.MutableList[Creature]]): String = {
     var text: String = ""
-    if(creatures != null && creatures.nonEmpty) {
+    if(creatures.nonEmpty && creatures.get.nonEmpty) {
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +
         "Resources: " + resourceAmount + "\n" +
-        "Creature: " + creatures.head.name + "\nType: "+ creatures.head.creatureType +"\n"+
-        "Creature level: " + creatures.head.level
-    }else{
+        "Creature: " + creatures.get.head.name + "\nType: "+ creatures.get.head.creatureType +"\n"+
+        "Creature level: " + creatures.get.head.level
+    } else {
       text = "Structure " + name + "\n" +
         "Level: " + level + "\n" +
         "Resources: " + resourceAmount + "\n"
