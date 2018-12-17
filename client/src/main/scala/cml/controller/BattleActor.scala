@@ -52,7 +52,7 @@ class BattleActor extends Actor with ActorLogging {
       challengerCreature = creature
       self ! SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
-      arenaActor ! ActorRefRequest(self, challengerCreature, turn)
+      arenaActor ! ActorRefRequest(self, challenger, challengerCreature, turn)
       Platform.runLater(() => switchInArena())
     case AttackRequest(attackPower, protection) => remoteActor ! RequireTurnRequest(attackPower, protection, turn)
     case RequireTurnSuccess(attackPower, protection, turnValue) =>
@@ -62,7 +62,7 @@ class BattleActor extends Actor with ActorLogging {
       log.info("Attack " + attackPower + " is protected " + isProtected)
       arenaActor ! AttackSuccess(attackPower, isProtected, turnValue)
     case StopRequest(scene) =>
-      remoteActor ! NotifierExit(self)
+      arenaActor ! NotifierExit(self)
       Platform.runLater(() => ViewSwitch.activate(VillageWindow.path, scene))
       context.stop(self)
     case NotifierExitSuccess() => arenaActor ! NotifierExitSuccess()

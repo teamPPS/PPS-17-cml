@@ -18,10 +18,12 @@ object ArenaRequest {
     * Request for know the remote actor
     *
     * @param actor is actor battle ref
+    * @param challenger challenger actor
     * @param challengeCreature is challenge creature image
     * @param turnValue is user turn
     */
-  case class ActorRefRequest(actor: ActorRef, challengeCreature: Option[Creature], turnValue: Int) extends ArenaRequest
+  case class ActorRefRequest(actor: ActorRef, challenger: ActorRef, challengeCreature: Option[Creature], turnValue: Int)
+    extends ArenaRequest
 
 
   case class ChallengerCreatureRequire() extends ArenaRequest
