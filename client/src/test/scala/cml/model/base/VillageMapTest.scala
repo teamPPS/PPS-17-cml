@@ -19,10 +19,10 @@ class VillageMapTest extends FunSuite{
   val structures: mutable.MutableList[Structure] = mutable.MutableList[Structure]()
   val defaultVillage = VillageMap(structures, defGold, defFood, defUsername)
 
-  /*test("Empty village instance"){
-    VillageMap.instance()
-    assert(VillageMap.instance().get.equals(defaultVillage))
-  }*/
+  test("Init village instance"){
+      VillageMap.initVillage(structures, defGold, defFood, defUsername)
+      assert(VillageMap.instance().get.equals(defaultVillage))
+  }
 
   test("Fill villageMap instance"){
     val x = 10
