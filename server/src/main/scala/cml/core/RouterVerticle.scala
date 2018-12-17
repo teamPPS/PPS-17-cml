@@ -29,14 +29,14 @@ abstract class RouterVerticle extends ScalaVerticle {
     initializeService
     vertx.createHttpServer()
       .requestHandler(router.accept)
-      .listenFuture(AuthenticationServicePort, ServiceHost)
+      .listenFuture(ServicePort, ServiceHost)
       .onComplete({
         case Success(startedServer) =>
-          log.info(s"Server successfully started on port: $AuthenticationServicePort", None)
+          log.info(s"Server successfully started on port: $ServicePort", None)
           server = startedServer
           promise.success(())
         case Failure(ex) =>
-          log.info(s"Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}", None)
+          log.info(s"Server failed to start on port: $ServicePort, b/c ${ex.getCause}", None)
           promise.failure(ex)
       })
     promise.future

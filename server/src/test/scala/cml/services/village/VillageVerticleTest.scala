@@ -28,12 +28,12 @@ class VillageVerticleTest extends VillageVerticleRoutingTest {
 
   test("Bad village creation test") {
     println("Returns a bad request because handler is empty.")
-    client.post(VillageServicePort, ServiceHostForRequest, VillagesAPI)
+    client.post(ServicePort, ServiceHostForRequest, VillagesAPI)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
     println("Returns a bad request because handler is invalid.")
-    client.post(VillageServicePort, ServiceHostForRequest, VillagesAPI)
+    client.post(ServicePort, ServiceHostForRequest, VillagesAPI)
       .putHeader("", "")
       .sendFuture
       .map({ response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString)
@@ -42,11 +42,11 @@ class VillageVerticleTest extends VillageVerticleRoutingTest {
 
   test("Bad enter to village test") {
 
-    client.get(VillageServicePort, ServiceHostForRequest, VillagesAPI)
+    client.get(ServicePort, ServiceHostForRequest, VillagesAPI)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))
 
-    client.get(VillageServicePort, ServiceHostForRequest, VillagesAPI)
+    client.get(ServicePort, ServiceHostForRequest, VillagesAPI)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), token)
       .sendFuture
       .map(response => assert(response.statusCode().toString equals BAD_REQUEST.code().toString))

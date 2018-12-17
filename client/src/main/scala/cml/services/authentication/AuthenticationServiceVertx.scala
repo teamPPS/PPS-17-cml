@@ -79,7 +79,7 @@ object AuthenticationServiceVertx{
 
     override def register(username: String, password: String): Future[String] = {
       log.info(s"sending registration request from username: $username", username)
-      client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
+      client.post(ServicePort, ServiceHostForRequest, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .map(r => r.statusCode match { // technical debt?
@@ -90,7 +90,7 @@ object AuthenticationServiceVertx{
 
     override def login(username: String, password: String): Future[String] = {
       log.info(s"sending login request from username: $username", username)
-      client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+      client.put(ServicePort, ServiceHostForRequest, LoginApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
         .map(r => r.statusCode match { //technical debt?
@@ -101,14 +101,14 @@ object AuthenticationServiceVertx{
 
     override def logout(token: String): Future[Unit] = {
       log.info(s"sending logout request with token: $token", token)
-      client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
+      client.delete(ServicePort, ServiceHostForRequest, LogoutApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
         .sendFuture
         .map(_ => ())
     }
 
     override def validationToken(header: String): Future[Unit] = {
-      client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
+      client.get(ServicePort, ServiceHostForRequest, ValidationTokenApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
         .sendFuture
         .map(response => response.statusCode match {
@@ -119,7 +119,7 @@ object AuthenticationServiceVertx{
 
     override def delete(): Future[String] = {
     log.info("sending deletion request", None)
-    client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
+    client.put(ServicePort, ServiceHostForRequest, LoginApi)
       .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
       .sendFuture
       .map(r => r.statusCode match {

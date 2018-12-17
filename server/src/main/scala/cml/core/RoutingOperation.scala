@@ -6,7 +6,7 @@ import io.vertx.scala.ext.web.RoutingContext
 import scala.concurrent.Future
 
 /**
-  * This trait is useful to implement AuthenticationVerticle
+  * This trait is useful to implement services
   *
   * @author Chiara Volonnino
   */

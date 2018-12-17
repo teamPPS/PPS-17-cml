@@ -45,15 +45,15 @@ object Handler {
 
   val VillageActorPath: String= "/user/VillageActor"
   val villageActor: ActorSelection = system actorSelection VillageActorPath
-  val price = 30
+  val Price = 30
 
   implicit val check: (Int,Int) => Boolean = _ > _
   implicit val modifier: (Int,Int) => Int = _ * _
   def enoughResource(current: Int, baseCost: Int, toLevel: Int)
                     (implicit modifier: (Int,Int) => Int,
                      check: (Int,Int) => Boolean): Boolean = check(current, modifier(baseCost, toLevel))
-  def enoughResourceForBuild(currentResource: Int): Boolean = enoughResource(currentResource, price, 1)
-  def enoughResourceForLevelUp(currentResource: Int, toLevel: Int): Boolean = enoughResource(currentResource, price, toLevel)
+  def enoughResourceForBuild(currentResource: Int): Boolean = enoughResource(currentResource, Price, 1)
+  def enoughResourceForLevelUp(currentResource: Int, toLevel: Int): Boolean = enoughResource(currentResource, Price, toLevel)
 
   val handleVillage: Handler = {
     (elem: Node, control: VillageViewController) =>
@@ -99,7 +99,7 @@ object Handler {
 
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked (_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+price)
+    canvas setOnMouseClicked (_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+Price)
     canvas setOnDragDetected ((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
@@ -139,7 +139,7 @@ object Handler {
         villageActor ! UpdateVillage(json)
         c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
 
-        decrementMoney(gold, price, c)
+        decrementMoney(gold, Price, c)
 
       } else c.selectionInfo setText "You can't build a structure if you don't have money"
       event consume()
@@ -164,9 +164,9 @@ object Handler {
         case _ =>
           if(enoughResourceForLevelUp(food, s.level+1))
             villageActor ! SetUpdateVillage(StructureUpgrade(s).creatureJson.get)
-            decrementFood(food, price*s.level, c)
+            decrementFood(food, Price*s.level, c)
       }
-      decrementMoney(gold, price*s.level, c)
+      decrementMoney(gold, Price*s.level, c)
       c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
     } else {
       c.levelUpButton setDisable true
@@ -188,7 +188,7 @@ object Handler {
     c.takeButton setDisable true
     c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
   }
-// TODO i due decrementi stesso codice!!!
+
   private def decrementMoney(gold: Int, price: Int, c: VillageViewController): Unit = {
     Thread.sleep(200) //TODO controllo invio di messaggi future
     val resourceJson = MoneyJson(gold - price).json
