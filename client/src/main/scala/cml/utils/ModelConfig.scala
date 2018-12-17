@@ -32,7 +32,7 @@ object ModelConfig {
 
   object Resource {
     val INC_BY_10: Int = 10
-    val INIT_VALUE: Int = 10
+    val INIT_VALUE: Int = 0
     val FOOD: String = "Food"
     val MONEY: String = "Money"
   }

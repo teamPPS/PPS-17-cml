@@ -29,26 +29,26 @@ abstract class RouterVerticle extends ScalaVerticle with RoutingOperation {
     initializeService()
     vertx.createHttpServer()
       .requestHandler(router.accept)
-      .listenFuture(AuthenticationServicePort, ServiceHost)
+      .listenFuture(ServicePort, ServiceHost)
       .onComplete({
         case Success(startedServer) =>
-          log.info(s"Server successfully started on port: $AuthenticationServicePort", None)
+          log.info(s"Server successfully started on port: $ServicePort", None)
           server = startedServer
           promise.success(())
         case Failure(ex) =>
-          log.info(s"Server failed to start on port: $AuthenticationServicePort, b/c ${ex.getCause}", None)
+          log.info(s"Server failed to start on port: $ServicePort, b/c ${ex.getCause}", None)
           promise.failure(ex)
       })
     promise.future
   }
 
-  override def stopFuture(): Future[Unit] = {
-    log.info("Stopping", None)
-    for {
-      _ <- server.closeFuture()
-      _ <- vertx.undeployFuture(this.deploymentID)
-    } yield ()
-  }
+//  override def stopFuture(): Future[Unit] = {
+//    log.info("Stopping", None)
+//    for {
+//      _ <- server.closeFuture()
+//      _ <- vertx.undeployFuture(this.deploymentID)
+//    } yield ()
+//  }
 
   /**
     * Initialize router

@@ -103,34 +103,3 @@ case class MoneyJson(amount: Int) extends JsonMaker {
   )
 }
 
-/**
-  * This class creates a new json for Money resource by given fields
-  * @param structType building or habitat
-  * @param x coordinate x of the structure in the village map
-  * @param y coordinate y of the structure in the village map
-  */
-
-case class PositionJson(structType: String, x: Int, y: Int) extends JsonMaker {
-
-  private var structJson: JsValue = _
-  structType match{
-    case BUILDING => structJson = Json.obj(
-      BUILDING_POSITION_FIELD -> Json.obj(
-        "x" -> x,
-        "y" -> y
-      )
-    )
-    case HABITAT => structJson = Json.obj(
-      HABITAT_POSITION_FIELD -> Json.obj(
-      "x" -> x,
-      "y" -> y
-     )
-    )
-  }
-  override def json: JsValue = structJson
-}
-
-
-
-
-

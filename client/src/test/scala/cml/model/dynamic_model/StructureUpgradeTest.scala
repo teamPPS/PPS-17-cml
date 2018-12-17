@@ -36,7 +36,7 @@ class StructureUpgradeTest extends FunSuite {
 
   test("farm not having a creature json test"){
     val json = StructureUpgrade(farm).creatureJson
-    assert(json == null)
+    assert(json.isEmpty)
   }
 
   val cave: Cave = Cave(pos, B_INIT_LEVEL)
@@ -55,7 +55,7 @@ class StructureUpgradeTest extends FunSuite {
 
   test("cave not having a creature json test"){
     val json = StructureUpgrade(cave).creatureJson
-    assert(json == null)
+    assert(json.isEmpty)
   }
 
   val habitat: Habitat = Habitat(FIRE, pos, H_INIT_LEVEL)
@@ -65,17 +65,17 @@ class StructureUpgradeTest extends FunSuite {
   val fireCreature = FireCreature(DRAGON_NAME, INITIAL_LEVEL)
   val prevCreatureLevel: Int = fireCreature.level
   val initCreatureJson = CreatureJson(DRAGON_NAME, INITIAL_LEVEL, DRAGON, habitat)
-  habitat.creatures += fireCreature
+  habitat.creatures.get += fireCreature
 
   test("habitat and creature upgrade test"){
     StructureUpgrade(habitat)
-    assert(!habitat.level.equals(prevFarmLevel) && !habitat.creatures.head.level.equals(prevCreatureLevel))
+    assert(!habitat.level.equals(prevFarmLevel) && !habitat.creatures.get.head.level.equals(prevCreatureLevel))
   }
 
   test("habitat and creature upgrade in json test"){
     val json = StructureUpgrade(habitat).structureJson
     val jsonCreature = StructureUpgrade(habitat).creatureJson
-    assert(!json.equals(initFarmJson) && !jsonCreature.equals(initCreatureJson))
+    assert(!json.equals(initFarmJson) && !jsonCreature.get.equals(initCreatureJson))
   }
 
   test("habitat having a creature json test"){

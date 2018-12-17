@@ -10,15 +10,17 @@ import scala.collection.mutable
   * @param food amount of user's food resource
   * @param username user's username
   */
-case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var username: String)
+case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var villageName: String)
 
 object VillageMap {
 
   private var _instance : Option[VillageMap] = Option.empty
 
-  def initVillage(structures: mutable.MutableList[Structure], gold: Int, food: Int, user: String): Unit = {
-    _instance = Option(VillageMap(structures, gold, food, user))
+  def initVillage(structures: mutable.MutableList[Structure], gold: Int, food: Int, villageName: String): Unit = {
+    _instance = Option(VillageMap(structures, gold, food, villageName))
   }
+
+  def createVillage[A](howToPopulate: A => Unit)(villageInfo: A): Unit = howToPopulate(villageInfo)
 
   def instance(): Option[VillageMap] = {
     if (_instance.isEmpty)

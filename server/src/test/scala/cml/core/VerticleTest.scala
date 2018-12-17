@@ -40,6 +40,6 @@ trait VerticleTest {
     * @throws RuntimeException if any verticle can't be undeployed
     */
   def undeploy(atMost: Duration = 10000.millis): Unit = {
-    servicesIdentifier.foreach(service => vertx.undeploy(service))
+    servicesIdentifier.foreach(service => Await.result(vertx.undeployFuture(service), atMost))
   }
 }
