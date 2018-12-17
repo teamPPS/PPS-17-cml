@@ -66,8 +66,9 @@ object Handler {
       disableButtons(c)
       c.selectionInfo setText "Coordinates (" + x + ", " + y + ")"
 
-      for (s <- VillageMap.instance().get.villageStructure) {
-        if (s.position equals Position(x, y)) {
+      VillageMap.instance().get.villageStructure
+        .filter(s => s.position.equals(Position(x, y)))
+        .map(s => {
           if (s.creatures.nonEmpty && s.creatures.get.isEmpty) {
             c.addCreatureButton setDisable false
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
@@ -75,16 +76,15 @@ object Handler {
           } else {
             c.levelUpButton setDisable false
             c.levelUpButton setOnMouseClicked (_ => upgradeStructure(s, c))
-
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
-
-            if (s.resource.amount > INIT_VALUE) {
-              c.takeButton setDisable false
-              c.takeButton setOnMouseClicked (_ => retrieveResource(s, c))
-            }
           }
-        }
-      }
+          s
+        })
+        .filter(s => s.resource.amount > INIT_VALUE)
+        .foreach(s => {
+          c.takeButton setDisable false
+          c.takeButton setOnMouseClicked (_ => retrieveResource(s, c))
+        })
     })
   }
 
