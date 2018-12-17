@@ -35,7 +35,7 @@ class ResourceProductionTest extends FunSuite{
     }
     val delay = 0
     val period = 1000L
-    val millis = 10000
+    val millis = 3000
     timer.schedule(task, delay, period)
     Thread.sleep(millis)
 
@@ -53,11 +53,9 @@ class ResourceProductionTest extends FunSuite{
       habitat.money.inc(habitat.level)
     }
 
-    val foodTaken = farm.food.take()
-
-    val caveMoneyTaken = cave.money.take()
-
-    val habitatMoneyTaken = habitat.money.take()
+    farm.food.take()
+    cave.money.take()
+    habitat.money.take()
 
     assert(farm.food.amount.equals(INIT_VALUE) && cave.money.amount.equals(INIT_VALUE) && habitat.money.amount.equals(INIT_VALUE))
   }

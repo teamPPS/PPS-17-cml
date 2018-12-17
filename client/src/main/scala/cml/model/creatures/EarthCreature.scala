@@ -21,7 +21,7 @@ case class EarthCreature(creature_name: String, creature_level: Int) extends Cre
   }
 
   /**
-    * Golem earns 15 more damage instead of 10
+    * Golem earns 15 more damage points instead of 10
     */
 
   override def setAttack(): Unit = {
