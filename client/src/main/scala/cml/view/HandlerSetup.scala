@@ -9,12 +9,13 @@ import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
 import cml.model.static_model.{StaticCreatures, StaticStructure}
 import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
 import cml.utils.ModelConfig.Resource.{FOOD, INIT_VALUE, MONEY}
-import cml.utils.{FoodJson, MoneyJson}
+import cml.utils.{FoodJson, JsonMaker, MoneyJson}
 import cml.view.utils.TileConfig.tileSet
 import javafx.scene.image.ImageView
 import javafx.scene.input._
 import javafx.scene.layout.GridPane
 import javafx.scene.{Node, SnapshotParameters}
+import play.api.libs.json.JsValue
 
 import scala.collection.mutable
 
@@ -190,19 +191,22 @@ object Handler {
   }
 
   private def decrementMoney(gold: Int, price: Int, c: VillageViewController): Unit = {
-    Thread.sleep(200) //TODO controllo invio di messaggi future
     val resourceJson = MoneyJson(gold - price).json
     VillageMap.instance().get.gold = gold - price
     c.goldLabel.setText((gold - price).toString)
-    villageActor ! SetUpdateVillage(resourceJson)
+    updateDecrementedResource(resourceJson)
   }
 
   private def decrementFood(food: Int, price: Int, c: VillageViewController): Unit = {
-    Thread.sleep(200)
     val resourceJson = FoodJson(food - price).json
     VillageMap.instance().get.food = food - price
     c.foodLabel.setText((food - price).toString)
-    villageActor ! SetUpdateVillage(resourceJson)
+    updateDecrementedResource(resourceJson)
+  }
+
+  private def updateDecrementedResource(resource: JsValue): Unit = {
+    Thread.sleep(200)
+    villageActor ! SetUpdateVillage(resource)
   }
 
   private def displayText(name: String, level: Int, resourceAmount: Int, creatures: Option[mutable.MutableList[Creature]]): String = {
