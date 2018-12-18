@@ -36,10 +36,11 @@ trait Handler {
 
 object Handler {
   import cml.controller.fx.HandlerLogic._
+  import cml.view.utils.VillageViewMessage._
 
   val Price = 30
-  implicit val check: (Int,Int) => Boolean = _ >= _
-  implicit val modifier: (Int,Int) => Int = _ * _
+  implicit val greaterThan: (Int,Int) => Boolean = _ >= _
+  implicit val multModifier: (Int,Int) => Int = _ * _
   def enoughResource(current: Int, baseCost: Int, toLevel: Int)
                     (implicit modifier: (Int,Int) => Int,
                      check: (Int,Int) => Boolean): Boolean = check(current, modifier(baseCost, toLevel))
@@ -64,7 +65,7 @@ object Handler {
       val y = GridPane.getColumnIndex(n)
       val x = GridPane.getRowIndex(n)
       disableButtons(c)
-      c.selectionInfo setText "Coordinates (" + x + ", " + y + ")"
+      c.selectionInfo setText CoordinatesMessage(x,y)
 
       VillageMap.instance().get.villageStructure
         .filter(s => s.position.equals(Position(x, y)))
@@ -90,7 +91,7 @@ object Handler {
 
   private def addDragAndDropSourceHandler(t: Tile, c: VillageViewController): Unit = {
     val canvas = t.imageSprite
-    canvas setOnMouseClicked (_ => c.selectionInfo setText "Element selected: "+ t.description + "\nPrice: "+Price)
+    canvas setOnMouseClicked (_ => c.selectionInfo setText PriceMessage(t.description, Price))
     canvas setOnDragDetected ((event: MouseEvent) => {
       val dragBoard: Dragboard = canvas startDragAndDrop TransferMode.COPY
       val image = canvas.snapshot(new SnapshotParameters, null)
@@ -99,8 +100,8 @@ object Handler {
       content putString t.description
       dragBoard setContent content
       val gold = VillageMap.instance().get.gold
-      if(enoughResourceForBuild(gold)) c.selectionInfo setText "Dragged element " + dragBoard.getString
-      else c.selectionInfo setText "You can't build a structure if you don't have money"
+      if(enoughResourceForBuild(gold)) c.selectionInfo setText DragMessage(dragBoard.getString)
+      else c.selectionInfo setText NotHaveMoney
       event consume()
     })
   }
@@ -122,10 +123,14 @@ object Handler {
         }
         val y = GridPane.getColumnIndex(n)
         val x = GridPane.getRowIndex(n)
-        updateVillage(newTile, x, y)
-        decrementMoney(gold, Price, c)
-        c.selectionInfo setText "Dropped element " + dragBoard.getString + " in coordinates (" + x + " - " + y + ")"
-      } else c.selectionInfo setText "You can't build a structure if you don't have money"
+        if(!VillageMap.instance().get.villageStructure.exists(s => s.position.equals(Position(x, y)))) {
+          updateVillage(newTile, x, y)
+          decrementMoney(gold, Price, c)
+          c.selectionInfo setText DroppedMessage(dragBoard.getString, x, y)
+        } else {
+          c.selectionInfo setText CantBuildInOldOne
+        }
+      } else c.selectionInfo setText NotHaveMoney
       event consume()
     })
   }
@@ -155,12 +160,12 @@ object Handler {
             decrementMoney(gold, Price*s.level, c)
             c.selectionInfo setText displayText(getClassName(s), s.level, s.resource.amount, s.creatures)
           } else {
-            c.selectionInfo setText "You can't upgrade an habitat if you don't have food"
+            c.selectionInfo setText NotHaveFood
           }
       }
     } else {
       c.levelUpButton setDisable true
-      c.selectionInfo setText "You can't upgrade a structure if you don't have money"
+      c.selectionInfo setText NotHaveMoney
     }
   }
 
@@ -188,19 +193,12 @@ object Handler {
   }
 
   private def displayText(name: String, level: Int, resourceAmount: Int, creatures: Option[mutable.MutableList[Creature]]): String = {
-    var text: String = ""
     if(creatures.nonEmpty && creatures.get.nonEmpty) {
-      text = "Structure " + name + "\n" +
-        "Level: " + level + "\n" +
-        "Resources: " + resourceAmount + "\n" +
-        "Creature: " + creatures.get.head.name + "\nType: "+ creatures.get.head.creatureType +"\n"+
-        "Creature level: " + creatures.get.head.level
+      val creature = creatures.get.head
+      HabitatInformation(name, level, resourceAmount, creature.name, creature.creatureType, creature.level)
     } else {
-      text = "Structure " + name + "\n" +
-        "Level: " + level + "\n" +
-        "Resources: " + resourceAmount + "\n"
+      BuildingInformation(name, level, resourceAmount)
     }
-    text
   }
 
   private def disableButtons(c: VillageViewController): Unit = {
