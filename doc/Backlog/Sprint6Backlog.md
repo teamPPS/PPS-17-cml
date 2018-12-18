@@ -1,8 +1,7 @@
 # Sprint 6 backlog
 
-| Product Backlog Item                                                                   | Sprint Task                                            | Person  | Initial size estimate | Size estimate at sprint |    |    |    |    |    |    |
+| Product Backlog Item                                                                   | Sprint Task                                            | Person  | Initial size estimate | 1                       | 2  | 3  | 4  | 5  | 6  | 7  |
 |----------------------------------------------------------------------------------------|--------------------------------------------------------|---------|-----------------------|-------------------------|----|----|----|----|----|----|
-|                                                                                        |                                                        |         |                       | 1                       | 2  | 3  | 4  | 5  | 6  | 7  |
 | Il Client dispone di una GUI per fare interagire il giocatore                          
 || Riempimento modello e gestione modello negli handler   | Monica  | 10                    | 10                      | 10 | 7  | 6  | 4  | 3  | 0  |
 || Menu creature GUI                                                                      | Monica                                                 | 3       | 3                     | 3                       | 3  | 3  | 3  | 3  | 1  |    |
