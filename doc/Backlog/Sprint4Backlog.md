@@ -1,8 +1,7 @@
 # Sprint 4 backlog
 
-| Product Backlog Item                                          | Sprint Task                                                  | Person  | Initial size estimate | Size estimate at sprint |    |    |    |   |   |   |
+| Product Backlog Item                                          | Sprint Task                                                  | Person  | Initial size estimate | 1                       | 2  | 3  | 4  | 5 | 6 | 7 |
 |---------------------------------------------------------------|--------------------------------------------------------------|---------|-----------------------|-------------------------|----|----|----|---|---|---|
-|                                                               |                                                              |         |                       | 1                       | 2  | 3  | 4  | 5 | 6 | 7 |
 | Il Client dispone di una GUI per fare interagire il giocatore 
 || Rendere la GUI dinamica                                      | Eugenio | 10                    | 10                      | 8  | 8  | 6  | 4 | 2 | 0 |
 || Creazione Modello Strutture                                   | Monica                                                       | 5       | 5                     | 5                       | 4  | 4  | 0  |   |   |   |
