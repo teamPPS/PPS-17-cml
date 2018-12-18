@@ -1,8 +1,7 @@
 # Sprint 3 backlog
 
-| Item                                                                                   | Sprint Task                                   | Person  | Initial size estimate | Size estimate at sprint |    |   |   |   |   |   |
+| Item                                                                                   | Sprint Task                                   | Person  | Initial size estimate |  1                       | 2  | 3 | 4 | 5 | 6 | 7 |
 |----------------------------------------------------------------------------------------|-----------------------------------------------|---------|-----------------------|-------------------------|----|---|---|---|---|---|
-|                                                                                        |                                               |         |                       | 1                       | 2  | 3 | 4 | 5 | 6 | 7 |
 | Il Client dispone di una GUI per fare interagire il giocatore                          
 || Revisione GUI Registrazione e Login           | Filippo | 5                     | 5                       | 5  | 4 | 3 | 2 | 1 | 0 |
 || GUI Combattimento                                                                      | Chiara                                        | 10      | 9                     | 4                       | 5  | 0 |   |   |   |   |
