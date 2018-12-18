@@ -26,7 +26,7 @@ case class VillageVerticle() extends RouterVerticle {
   private val log: Logger = LoggerFactory.getLogger("Village Verticle")
 
   override def initializeRouter(router: Router): Unit = {
-    router.route.handler(BodyHandler.create())
+    router.route.handler(BodyHandler.create()).handler(rc => {log.info(rc.request().path()+" from: "+rc.request().remoteAddress(), None); rc.next()})
     router get VillagesAPI handler enter
     router post VillagesAPI handler create
     router put VillagesAPI handler update

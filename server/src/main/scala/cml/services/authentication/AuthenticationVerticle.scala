@@ -24,7 +24,7 @@ case class AuthenticationVerticle() extends RouterVerticle {
   private val log: Logger = LoggerFactory.getLogger("Authentication Verticle")
 
   override def initializeRouter(router: Router): Unit = {
-    router.route.handler(BodyHandler.create())
+    router.route.handler(BodyHandler.create()).handler(rc => {log.info(rc.request().path()+" from: "+rc.request().remoteAddress(), None); rc.next()})
     router post RegisterApi handler register
     router put LoginApi handler login
     router delete  LogoutApi handler logout
