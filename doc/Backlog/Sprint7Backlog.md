@@ -1,8 +1,7 @@
 # Sprint 7 Backlog
 
-| Product Backlog Item                                               | Sprint Task                                            | Person         | Initial size estimate | Size estimate at sprint |    |    |   |   |   |   |
+| Product Backlog Item                                               | Sprint Task                                            | Person         | Initial size estimate | 1                       | 2  | 3  | 4 | 5 | 6 | 7 |
 |--------------------------------------------------------------------|--------------------------------------------------------|----------------|-----------------------|-------------------------|----|----|---|---|---|---|
-|                                                                    |                                                        |                |                       | 1                       | 2  | 3  | 4 | 5 | 6 | 7 |
 | Come utente voglio combattere con gli altri giocatori              
 || Architettura, lista utenti per sincronizzazione battle | Chiara         | 10                    | 10                      | 8  | 0  |   |   |   |   |
 || Regole di battaglia                                                | Chiara                                                 | 15             | 15                    | 15                      | 15 | 10 | 5 | 1 | 0 |   |
