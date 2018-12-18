@@ -1,8 +1,7 @@
 #Sprint 5 backlog
 
-| Product Backlog Item                                          | Sprint Task                            | Person  | Initial size estimate | Size estimate at sprint |   |   |   |   |   |   |
+| Product Backlog Item                                          | Sprint Task                            | Person  | Initial size estimate |1                       | 2 | 3 | 4 | 5 | 6 | 7 |
 |---------------------------------------------------------------|----------------------------------------|---------|-----------------------|-------------------------|---|---|---|---|---|---|
-|                                                               |                                        |         |                       | 1                       | 2 | 3 | 4 | 5 | 6 | 7 |
 | Il Client dispone di una GUI per fare interagire il giocatore 
 || Modello statico costruzioni e creature | Filippo | 10                    | 9                       | 7 | 6 | 4 | 3 | 2 | 0 |
 | Collegamento handler con pannelli                             | Monica                                 | 5       | 5                     | 3                       | 0 |   |   |   |   |   |
