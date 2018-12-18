@@ -1,7 +1,7 @@
 package cml.services.village
 
 import cml.core.utils.JWTAuthentication
-import cml.core.{RouterVerticle, RoutingOperation, TokenAuthentication}
+import cml.core.{RouterVerticle, TokenAuthentication}
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
 import cml.services.village.utils.VillageUrl._

@@ -5,6 +5,7 @@ import cml.utils.ModelConfig.ModelClass.FOOD_CLASS
 import org.scalatest.FunSuite
 
 /**
+  * This test class matches if Farm class is correct
   * @author Monica Gondolini
   */
 

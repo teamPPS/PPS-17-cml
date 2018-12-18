@@ -7,7 +7,7 @@ import cml.utils.ModelConfig.Creature._
   * @author Filippo Portolani
   */
 
-trait   Creature {
+trait Creature {
 
   var currentLevel: Int = INITIAL_LEVEL
   val initialHp: Int = HEALTH_POINT
@@ -59,6 +59,9 @@ trait   Creature {
   def creatureType: String
 }
 
+/**
+  * Object define general creature 
+  */
 object Creature{
   var selectedCreature: Option[Creature] = None
   def setSelectedCreature(creature: Option[Creature]): Unit = selectedCreature = creature

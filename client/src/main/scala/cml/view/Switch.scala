@@ -2,6 +2,8 @@ package cml.view
 
 /**
   * Define a Trait useful to switch a root view element in ancestor given the element
+  * @author ecavina
+  *
   * @tparam A type of element
   * @tparam B type of ancestor element where set new element
   */

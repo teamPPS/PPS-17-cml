@@ -1,7 +1,6 @@
 package cml
 
 import java.io.File
-
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props, Stash}
 import cml.controller.actor.utils.ActorUtils.RemoteActorInfo._
 import cml.controller.messages.ArenaRequest.RequireTurnRequest
@@ -10,7 +9,6 @@ import cml.controller.messages.BattleRequest.{ExistChallenger, ExitRequest, Requ
 import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import cml.view.BattleRule.{TurnManagement, TurnManagementImpl}
 import com.typesafe.config.ConfigFactory
-
 import scala.collection.mutable.ListBuffer
 
 /**

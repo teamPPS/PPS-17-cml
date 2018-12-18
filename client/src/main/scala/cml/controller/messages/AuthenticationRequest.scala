@@ -20,13 +20,20 @@ object AuthenticationRequest{
   case class Register(username: String, password: String) extends AuthenticationRequest
 
   /**
-    * Request to log the user into the system
+    * Request to login the user into the system
     * @param username user's username
     * @param password user's password
     */
   case class Login(username: String, password: String) extends AuthenticationRequest
 
+  /**
+    * Request to logout user in the system
+    */
   case class Logout() extends AuthenticationRequest
 
+  /**
+    * Request for set controller in switch initial pane
+    * @param controller controller identifier
+    */
   case class SetController(controller: AuthenticationViewController) extends AuthenticationRequest
 }

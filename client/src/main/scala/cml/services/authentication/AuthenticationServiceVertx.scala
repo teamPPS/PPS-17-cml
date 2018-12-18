@@ -49,11 +49,6 @@ trait AuthenticationServiceVertx {
     */
   def validationToken(header: String): Future[Unit]
 
-  /**
-    * Deletion of a user from the system
-    * @return success if deletion is completed
-    */
-  def delete(): Future[String]
 }
 
 /**
@@ -93,7 +88,7 @@ object AuthenticationServiceVertx{
       client.put(ServicePort, ServiceHostForRequest, LoginApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
-        .map(r => r.statusCode match { //technical debt?
+        .map(r => r.statusCode match {
           case `successfulLoginResponse` => r.bodyAsString().getOrElse("")
           case _ => "Not a valid request"
         })
@@ -116,16 +111,5 @@ object AuthenticationServiceVertx{
           case _ => Future.failed(new Exception)
         })
     }
-
-    override def delete(): Future[String] = {
-    log.info("sending deletion request", None)
-    client.put(ServicePort, ServiceHostForRequest, LoginApi)
-      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-      .sendFuture
-      .map(r => r.statusCode match {
-        case `successfulDeletionResponse` => r.bodyAsString().getOrElse("")
-        case _ => "Not a valid request"
-      })
-  }
   }
 }

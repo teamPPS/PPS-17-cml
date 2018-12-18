@@ -1,5 +1,8 @@
 package cml.services.village.utils
 
+/**
+  * Object utils for village configuration
+  */
 object VillageConfig {
 
   object Village{

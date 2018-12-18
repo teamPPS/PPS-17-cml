@@ -2,6 +2,10 @@ package cml.controller.actor.utils
 
 import akka.actor.ActorSystem
 
+/**
+  * This object implements utils val for managements actors
+  */
+
 object ActorUtils {
 
   object ActorSystemInfo {

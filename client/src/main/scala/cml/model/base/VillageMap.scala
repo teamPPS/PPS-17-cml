@@ -8,7 +8,7 @@ import scala.collection.mutable
   * @param villageStructure list of structures componing the village
   * @param gold amount of user's gold resource
   * @param food amount of user's food resource
-  * @param username user's username
+  * @param villageName village's username
   */
 case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var villageName: String)
 

@@ -5,12 +5,14 @@ package cml.schema
   *
   * @author Chiara Volonnino
   */
-
 trait User {
   def username: String
   def password: String
 }
 
+/**
+  * User object
+  */
 object User {
   val USERNAME = "username"
   val PASSWORD = "password"

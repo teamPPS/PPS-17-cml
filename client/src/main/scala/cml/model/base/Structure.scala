@@ -39,7 +39,7 @@ trait Structure{
   * @param building_pos coordinates of the building in the village
   * @param building_level level of the building
   */
-case class Farm(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
+case class Farm(building_pos: Position, var building_level: Int) extends Structure {
   val food = Food(INIT_VALUE)
   override def levelUp(): Unit = building_level += 1
   override def level: Int = building_level
@@ -54,6 +54,9 @@ case class Farm(building_pos: Position, var building_level: Int) extends Structu
   override def habitatElement: Option[String] = Option.empty
 }
 
+/**
+  * Define implicit Farm structure
+  */
 object Farm {
   implicit val farmReader = Json.format[Farm]
 }
@@ -63,7 +66,7 @@ object Farm {
   * @param building_pos coordinates of the building in the village
   * @param building_level level of the building
   */
-case class Cave(building_pos: Position, var building_level: Int) extends Structure { //TODO refactoring nome parametri (adesso devono corrispondere al campo json)
+case class Cave(building_pos: Position, var building_level: Int) extends Structure {
   val money = Money(INIT_VALUE)
   override def levelUp(): Unit = building_level += 1
   override def level: Int = building_level
@@ -78,10 +81,16 @@ case class Cave(building_pos: Position, var building_level: Int) extends Structu
   override def habitatElement: Option[String] = Option.empty
 }
 
+/**
+  * Define implicit Cave structure
+  */
 object Cave {
   implicit val caveReader = Json.format[Cave]
 }
 
+/**
+  * Object define habitat structure
+  */
 object Habitat {
 
   def apply(habitatElement: String, habitatPosition: Position, habitatLevel: Int) : Habitat =
@@ -95,7 +104,7 @@ object Habitat {
     */
   case class Habitat(element: String, habitat_pos: Position, var habitat_level: Int) extends Structure {
     var creatureList: mutable.MutableList[Creature] = mutable.MutableList[Creature]()
-    val money = Money(INIT_VALUE) //crea più denaro in base al numero di creature  e al livello delle creature(?)
+    val money = Money(INIT_VALUE) 
     override def levelUp(): Unit = habitat_level += 1
     override def level: Int = habitat_level
     override def position: Position = habitat_pos

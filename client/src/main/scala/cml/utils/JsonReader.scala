@@ -4,6 +4,8 @@ import play.api.libs.json.JsValue
 
 /**
   * Utility to get information from a Json file
+  * @author ecavina
+  *
   * @tparam A json object representation
   * @tparam B field id representation
   */
@@ -34,6 +36,9 @@ trait JsonReader[A,B] {
   def jsonFieldExist(jsonFile: A, fieldName: B): Boolean
 }
 
+/**
+  * Object implements JsonJsonReader[A,B]
+  */
 object JsonReader extends JsonReader[JsValue, String] {
 
    override def readJsonField(jsonFile: JsValue, fieldName: String): JsValue = (jsonFile \ fieldName).get

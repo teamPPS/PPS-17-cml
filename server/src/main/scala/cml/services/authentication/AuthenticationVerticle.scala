@@ -1,11 +1,10 @@
 package cml.services.authentication
 
 import cml.core.utils.JWTAuthentication
-import cml.core.{RouterVerticle, RoutingOperation, TokenAuthentication}
+import cml.core.{RouterVerticle, TokenAuthentication}
 import io.netty.handler.codec.http.HttpResponseStatus._
 import io.vertx.core.Handler
 import io.vertx.scala.ext.web.{Router, RoutingContext}
-
 import scala.util.{Failure, Success}
 import cml.services.authentication.utils.AuthenticationUrl._
 import io.vertx.core.logging.{Logger, LoggerFactory}
@@ -16,7 +15,6 @@ import io.vertx.scala.ext.web.handler.BodyHandler
   *
   * @author Chiara Volonnino
   */
-
 case class AuthenticationVerticle() extends RouterVerticle {
 
   private var authenticationService: AuthenticationService = _

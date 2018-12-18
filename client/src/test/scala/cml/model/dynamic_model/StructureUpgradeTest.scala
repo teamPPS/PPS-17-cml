@@ -12,6 +12,7 @@ import cml.utils.ModelConfig.StructureType.{CAVE, FARM}
 import org.scalatest.FunSuite
 
 /**
+  * This test class matches if StrucutureUpdate class is correct
   * @author Monica Gondolini
   */
 class StructureUpgradeTest extends FunSuite {

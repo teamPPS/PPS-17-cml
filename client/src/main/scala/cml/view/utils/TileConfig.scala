@@ -9,6 +9,7 @@ import cml.view.{BaseTile, ImageSlicer, Tile}
 import javafx.scene.image.Image
 
 /**
+  * Object utils for title configuration
   * @author ecavina
   */
 
@@ -16,11 +17,9 @@ object TileConfig {
 
   val spriteSheet: Image =  new Image(getClass.getClassLoader.getResource("image/Town64x64.png").toString, false)
   val slicer: ImageSlicer = new ImageSlicer(spriteSheet, 16, 16)
-  val baseTileSet: Set[BaseTile] = Set[BaseTile](
-    BaseTile("TERRAIN", slicer.sliceAt(6, 1))
-  )
+  val baseTileSet: Set[BaseTile] = Set[BaseTile](BaseTile("TERRAIN", slicer.sliceAt(6, 1)))
   val tileSet: Set[Tile] = Set[Tile](
-    Tile(FIRE_HABITAT, slicer.sliceAt(4, 1), HabitatJson(FIRE, B_INIT_LEVEL, Position(0,0)).json),  //TODO dummy position?
+    Tile(FIRE_HABITAT, slicer.sliceAt(4, 1), HabitatJson(FIRE, B_INIT_LEVEL, Position(0,0)).json),
     Tile(AIR_HABITAT, slicer.sliceAt(3, 1), HabitatJson(AIR, B_INIT_LEVEL, Position(0,0)).json),
     Tile(WATER_HABITAT, slicer.sliceAt(2, 1), HabitatJson(WATER, B_INIT_LEVEL, Position(0,0)).json),
     Tile(EARTH_HABITAT, slicer.sliceAt(1, 1), HabitatJson(EARTH, B_INIT_LEVEL, Position(0,0)).json),

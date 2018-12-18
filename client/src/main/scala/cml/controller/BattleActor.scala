@@ -47,7 +47,7 @@ class BattleActor extends Actor with ActorLogging {
     case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
     case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
-      myChallenge(user)
+      challenger_(user)
     case CreatureRequire(creature) =>
       challengerCreature = creature
       self ! SwitchInArenaRequest()
@@ -69,7 +69,7 @@ class BattleActor extends Actor with ActorLogging {
     case _ =>
   }
 
-  private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
+  private def challenger_(user: ListBuffer[ActorRef]): Unit = {
     user.foreach{ actor => if(!actor.equals(self)) challenger = actor}
     challenger ! CreatureRequire(selectedCreature)
     log.info("Im user: " + self + " and my challenger is - " + challenger)

@@ -4,6 +4,7 @@ import cml.core.utils.JWTAuthentication
 import org.scalatest.FunSuite
 
 /**
+  * This test class matches if TokenStorage class is correct
   * @author Monica Gondolini
   */
 

@@ -1,21 +1,18 @@
 package cml.services.authentication
 
-/**
-  * This test class matches if AuthenticationVerticle class is correct
-  *
-  * @author Chiara Volonnino, ecavina
-  */
-
 import cml.core.TokenAuthentication
 import cml.services.authentication.utils.AuthenticationUrl._
 import cml.core.utils.NetworkConfiguration._
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpResponseStatus._
-import io.vertx.scala.core.Vertx
 import io.vertx.scala.ext.web.client.WebClient
-
 import scala.language.implicitConversions
 
+/**
+  * This test class matches if AuthenticationVerticle class is correct
+  *
+  * @author Chiara Volonnino, ecavina
+  */
 class AuthenticationVerticleTest extends AuthenticationServiceTest {
 
   private val client: WebClient = WebClient.create(vertx)

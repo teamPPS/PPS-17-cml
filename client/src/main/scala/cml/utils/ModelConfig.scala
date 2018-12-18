@@ -2,6 +2,10 @@ package cml.utils
 
 import javafx.scene.image.Image
 
+/**
+  * Utils for model configuration
+  */
+
 object ModelConfig {
 
   object Creature {

@@ -23,9 +23,6 @@ class VillageActor() extends Actor with ActorLogging{
   val villageVertx = VillageServiceVertxImpl()
   val authenticationActor: ActorSelection = context actorSelection AuthenticationActorPath
 
-  /**
-    * @return village behaviour
-    */
   override def receive: Receive = {
 
     case CreateVillage() =>

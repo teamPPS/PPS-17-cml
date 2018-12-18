@@ -1,5 +1,8 @@
 package cml.controller.messages
 
+/**
+  * Village response message
+  */
 object VillageResponse {
 
   sealed trait VillageResponse

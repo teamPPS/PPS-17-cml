@@ -12,7 +12,6 @@ import cml.services.village.utils.VillageUrl._
   * This test checks if VillageVerticle is correct.
   * @author Filippo Portolani
   */
-
 class VillageVerticleTest extends VillageVerticleRoutingTest {
 
   private var client: WebClient = WebClient.create(vertx)

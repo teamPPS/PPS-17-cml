@@ -39,7 +39,7 @@ class ArenaActor extends Actor with ActorLogging {
     case AttackSuccess(value, isProtected, turnValue) =>
       Platform.runLater(() => controller.userLifeBar_(value, isProtected, turnValue))
     case NotifierExit(actor) =>
-      //tmpUserList -= actor
+      tmpUserList -= actor
       tmpUserList.foreach( actorInList => actorInList ! NotifierExitSuccess())
       if(actor equals battleActor) context.stop(self)
     case NotifierExitSuccess() =>

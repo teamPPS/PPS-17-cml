@@ -14,7 +14,6 @@ import scala.util.{Failure, Success}
   * @author ecavina
   * @author (modified by) Chiara Volonnino
   */
-
 object ServerMain extends App {
   var vertx = Vertx.vertx()
 

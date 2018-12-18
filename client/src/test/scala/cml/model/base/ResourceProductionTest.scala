@@ -9,6 +9,7 @@ import cml.utils.ModelConfig.Resource.INIT_VALUE
 import org.scalatest.FunSuite
 
 /**
+  * This test class matches if ResourceProduction class is correct
   * @author Monica Gondolini
   */
 class ResourceProductionTest extends FunSuite{

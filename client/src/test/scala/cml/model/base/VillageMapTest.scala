@@ -9,6 +9,7 @@ import org.scalatest.FunSuite
 import scala.collection.mutable
 
 /**
+  * This test class matches if VillageMap class is correct
   * @author Monica Gondolini
   */
 class VillageMapTest extends FunSuite{

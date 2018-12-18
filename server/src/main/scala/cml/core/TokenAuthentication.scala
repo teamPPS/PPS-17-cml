@@ -7,8 +7,6 @@ import java.util.Base64
   *
   * @author Chiara Volonnino
   */
-
-
 trait TokenAuthentication {
 
   /**

@@ -6,6 +6,9 @@ import org.scalatest.{AsyncFunSuite, BeforeAndAfter}
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+  * This test class matches if VillageService class is correct
+  */
 class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   val UserField = "username"
@@ -19,8 +22,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   before {
     databaseClient = new MockDatabaseClient
-    villageService = VillageService(databaseClient) // test with mocked db
-//    villageService = VillageService() // test with original db
+    villageService = VillageService(databaseClient)
   }
 
   test("test enter village with existent username") {
@@ -31,7 +33,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
 
   test("test update village") {
     villageService
-      .updateVillage("CMLuser", """{"gold":"300", "buildings": {"1": "Test"}}""")//"""{"GoldField":"300", "BuildingsField": {"1": "Test"}}""")
+      .updateVillage("CMLuser", """{"gold":"300", "buildings": {"1": "Test"}}""")
       .map(result => assert(result, true))
   }
 
@@ -54,15 +56,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
         UserField -> "CMLuser",
         FoodField -> 200,
         GoldField -> 200,
-        BuildingsField -> Document(
-          "1" -> Document(
-            BuildingType -> "farm"
-          ),
-          "2" -> Document(
-            BuildingType -> "Cave"
-          )
-        )
-      )
+        BuildingsField -> Document("1" -> Document(BuildingType -> "farm"), "2" -> Document(BuildingType -> "Cave")))
     )
 
     def getVillageList: ListBuffer[Document] = villagesList
@@ -73,7 +67,7 @@ class VillageServiceTest extends AsyncFunSuite with BeforeAndAfter {
     }(executionContext)
 
     override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = Future {
-      villagesList = villagesList filter(doc => doc.get(UserField).equals(document.get(UserField))) // return deleted elements (filtered by original list)
+      villagesList = villagesList filter(doc => doc.get(UserField).equals(document.get(UserField)))
       println(villagesList.length)
       villagesList.length.toLong
     }(executionContext)

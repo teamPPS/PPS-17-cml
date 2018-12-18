@@ -30,10 +30,22 @@ trait HandlerSetup {
   def setupBuildingsHandlers(grid: GridPane, controller: VillageViewController): Unit
 }
 
+/**
+  * Trait define handler
+  */
 trait Handler {
+
+  /**
+    * Define a handler
+    * @param elem element in input
+    * @param controller controller identifier
+    */
   def handle(elem: Node, controller: VillageViewController): Unit
 }
 
+/**
+  * Object implements Handler
+  */
 object Handler {
   import cml.controller.fx.HandlerLogic._
 
@@ -210,6 +222,9 @@ object Handler {
   }
 }
 
+/**
+  * Object implements HandlerSetup
+  */
 object ConcreteHandlerSetup extends HandlerSetup {
 
   private def setHandlers(grid: GridPane, controller: VillageViewController, handler: Handler): Unit = {

@@ -14,7 +14,6 @@ import io.vertx.core.logging.{Logger, LoggerFactory}
   *
   * @author Chiara Volonnino
   */
-
 abstract class RouterVerticle extends ScalaVerticle with RoutingOperation {
 
   var server: HttpServer = _
@@ -41,14 +40,6 @@ abstract class RouterVerticle extends ScalaVerticle with RoutingOperation {
       })
     promise.future
   }
-
-//  override def stopFuture(): Future[Unit] = {
-//    log.info("Stopping", None)
-//    for {
-//      _ <- server.closeFuture()
-//      _ <- vertx.undeployFuture(this.deploymentID)
-//    } yield ()
-//  }
 
   /**
     * Initialize router

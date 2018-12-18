@@ -7,7 +7,7 @@ import cml.utils.ModelConfig.Creature._
 import cml.utils.ModelConfig.Elements.FIRE
 
 /**
-  * Some tests for multiple creatures
+  * This test class matches if all creature class are corrects
   * @author Filippo Portolani
   */
 

@@ -5,7 +5,6 @@ package cml.services.authentication.utils
   *
   * @author Chiara Volonnino
   */
-
 object AuthenticationUrl {
   
     private val GeneralPath = "/api/authentication"

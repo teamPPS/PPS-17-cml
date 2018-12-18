@@ -30,9 +30,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
 
   override def receive: Receive = authenticationBehaviour orElse villageBehaviour
 
-  /**
-    * @return the authentication behaviour
-    */
   private def authenticationBehaviour: Receive = {
     case Register(username, password) => authenticationVertx.register(username, password)
       .onComplete {
@@ -56,9 +53,6 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case SetController(controller: AuthenticationViewController) =>  authController = controller
   }
 
-  /**
-    * @return behaviour when creating and entering a village
-    */
   private def villageBehaviour: Receive = {
     case CreateVillageSuccess() =>
       log.info("Village created with success")
@@ -66,16 +60,8 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     case VillageFailure(m) => displayMsg(m)
   }
 
-  /**
-    * Displays text on the GUI through a label
-    *
-    * @param m message to show
-    */
   def displayMsg(m: String): Unit = Platform.runLater(() => authController.formMsgLabel.setText(m))
 
-  /**
-    * Open Village View after login successful
-    */
   def loginSucceedOnGui(): Unit = Platform.runLater(() => authController.openVillageView())
 
   def successAuthenticationCase(tokenValue: String): Unit = {
@@ -93,12 +79,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
       log.info("Success this is server response with the token: " + str)
       true
   }
-
-  /**
-    * Switches on and off GUI buttons
-    *
-    * @param b boolean
-    */
+  
   def disableButtons(b: Boolean): Unit = {
     authController.registerButton.setDisable(b)
     authController.loginButton.setDisable(b)

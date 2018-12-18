@@ -1,5 +1,9 @@
 package cml.controller.actor.utils
 
+/**
+  * Object utils for pars input
+  */
+
 object InputControl {
 
   val emptyFields: String = "Some fields are empty."

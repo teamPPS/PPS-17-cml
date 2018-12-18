@@ -14,7 +14,6 @@ import scala.concurrent._
   * @author Chiara Volonnino
   * @author Monica Gondolini
   */
-
 trait AuthenticationService {
 
   /**

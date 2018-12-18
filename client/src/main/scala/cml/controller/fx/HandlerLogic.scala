@@ -11,6 +11,10 @@ import cml.utils.{FoodJson, MoneyJson}
 import cml.view.Tile
 import play.api.libs.json.JsValue
 
+/**
+  * This object utils for implements handler logic
+  */
+
 object HandlerLogic {
 
   val VillageActorPath: String= "/user/VillageActor"

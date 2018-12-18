@@ -25,13 +25,7 @@ case class BuildingJson(buildingType: String, buildingLevel: Int, buildingPositi
       SINGLE_BUILDING_FIELD -> Json.obj(
         BUILDING_TYPE_FIELD -> buildingType,
         BUILDING_LEVEL_FIELD -> buildingLevel,
-        BUILDING_POSITION_FIELD -> Json.obj(
-          "x" -> buildingPosition.x,
-          "y" -> buildingPosition.y
-        )
-      )
-    )
-  )
+        BUILDING_POSITION_FIELD -> Json.obj("x" -> buildingPosition.x, "y" -> buildingPosition.y))))
 }
 
 /**
@@ -45,13 +39,7 @@ case class HabitatJson(habitatElem: String, habitatLevel: Int, habitatPosition: 
       SINGLE_HABITAT_FIELD -> Json.obj(
         HABITAT_LEVEL_FIELD -> habitatLevel,
         NATURAL_ELEMENT_FIELD -> habitatElem,
-        HABITAT_POSITION_FIELD -> Json.obj(
-          "x" -> habitatPosition.x,
-          "y" -> habitatPosition.y
-        )
-      )
-    )
-  )
+        HABITAT_POSITION_FIELD -> Json.obj("x" -> habitatPosition.x, "y" -> habitatPosition.y))))
 }
 
 /**
@@ -67,20 +55,12 @@ case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: 
       SINGLE_HABITAT_FIELD -> Json.obj(
         HABITAT_LEVEL_FIELD -> s.level,
         NATURAL_ELEMENT_FIELD -> s.habitatElement,
-        HABITAT_POSITION_FIELD -> Json.obj(
-          "x" -> s.position.x,
-          "y" -> s.position.y
-        ),
+        HABITAT_POSITION_FIELD -> Json.obj("x" -> s.position.x, "y" -> s.position.y),
         MULTIPLE_CREATURES_FIELD -> Json.obj(
           SINGLE_CREATURE_FIELD -> Json.obj(
             CREATURE_NAME_FIELD -> creatureName,
             CREATURE_LEVEL_FIELD -> creatureLevel,
-            CREATURE_TYPE_FIELD -> creatureType
-          )
-        )
-      )
-    )
-  )
+            CREATURE_TYPE_FIELD -> creatureType)))))
 }
 
 /**
@@ -88,9 +68,7 @@ case class CreatureJson(creatureName: String, creatureLevel: Int, creatureType: 
   * @param amount of food
   */
 case class FoodJson(amount: Int) extends JsonMaker {
-  override def json: JsValue = Json.obj(
-      FOOD_FIELD -> amount
-  )
+  override def json: JsValue = Json.obj(FOOD_FIELD -> amount)
 }
 
 /**
@@ -98,8 +76,6 @@ case class FoodJson(amount: Int) extends JsonMaker {
   * @param amount of money
   */
 case class MoneyJson(amount: Int) extends JsonMaker {
-  override def json: JsValue = Json.obj(
-    GOLD_FIELD -> amount
-  )
+  override def json: JsValue = Json.obj(GOLD_FIELD -> amount)
 }
 
