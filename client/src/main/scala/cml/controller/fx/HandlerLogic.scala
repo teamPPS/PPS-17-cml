@@ -17,7 +17,7 @@ object HandlerLogic {
   val villageActor: ActorSelection = system actorSelection VillageActorPath
 
   private def setUpdateRemoteVillage(update: JsValue): Unit = {
-//    Thread.sleep(500)
+    Thread.sleep(500)
     villageActor ! SetUpdateVillage(update)
   }
 
