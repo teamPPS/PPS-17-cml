@@ -23,7 +23,7 @@ To run the project it's sufficient run the server, the remote actor and the clie
 - Remote: 
   - JAR: run the jar or by command line: `java -jar PPS-17-cml-1.0-remote.jar`
 
-## Documentation and coverage reports
+## Documentation, coverage reports and scala test
 Documentation and coverage reports: https://teampps.github.io/PPS-17-cml/
 
 ## Downloads and releases 
