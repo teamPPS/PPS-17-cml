@@ -24,7 +24,7 @@ case class StaticCreatures(s: Structure) extends StaticCreature {
     s.habitatElement.get match {
       case FIRE =>
         creature = FireCreature(DRAGON_NAME,INITIAL_LEVEL)
-        creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL, DRAGON, s).json //passare anche il tipo drago/kraken ecc ?
+        creatureJson = CreatureJson(DRAGON_NAME,INITIAL_LEVEL, DRAGON, s).json
       case WATER =>
         creature = WaterCreature(WATERDEMON_NAME, INITIAL_LEVEL)
         creatureJson = CreatureJson(WATERDEMON_NAME,INITIAL_LEVEL, WATERDEMON, s).json

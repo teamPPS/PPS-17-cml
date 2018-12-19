@@ -25,7 +25,6 @@ object ActorUtils {
     val Name = "BattleActor"
   }
 
-
   object ActorPath {
     val AuthenticationActorPath = "/user/AuthenticationActor"
     val VillageActorPath = "/user/VillageActor"

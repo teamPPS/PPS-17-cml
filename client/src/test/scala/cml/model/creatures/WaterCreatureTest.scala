@@ -18,11 +18,9 @@ class WaterCreatureTest extends FunSuite {
   val waterDemon: WaterCreature = WaterCreature(WATERDEMON_NAME, waterDemonLevel)
 
   test("Level manipulation test"){
-    //level up test
     waterDemon levelUp()
     assert(waterDemon.currentLevel > INITIAL_LEVEL)
 
-    //Setting level test
     waterDemon.level
     assert(waterDemon.currentLevel == waterDemonLevel)
   }
@@ -37,10 +35,8 @@ class WaterCreatureTest extends FunSuite {
   }
 
   test("Name test"){
-    //name is correct
     assert(waterDemon.name.equals(WATERDEMON_NAME))
 
-    //name is wrong
     assert(waterDemon.name != GOLEM2_NAME)
   }
 

@@ -22,7 +22,6 @@ trait VerticleTest {
     * Deploys all the services passed as parameter.
     *
     * @param services the list of services to deploy
-    * @param atMost the maximum time we can wait for start services
     */
   def deploy(services: List[ScalaVerticle]): Unit = {
     servicesIdentifier = Set()

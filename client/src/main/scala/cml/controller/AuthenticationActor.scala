@@ -69,7 +69,7 @@ class AuthenticationActor(controller: AuthenticationViewController) extends Acto
     TokenStorage.setUserJWTToken(tokenValue)
   }
 
-  def checkHttpResponse(str: String, successMessage: String, failureMessage: String): Boolean = str match { //technical debt?
+  def checkHttpResponse(str: String, successMessage: String, failureMessage: String): Boolean = str match {
     case "Not a valid request" =>
       displayMsg(failureMessage)
       false

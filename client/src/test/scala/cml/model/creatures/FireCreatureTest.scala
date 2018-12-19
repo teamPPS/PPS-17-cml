@@ -18,11 +18,9 @@ class FireCreatureTest extends FunSuite {
   val dragon: FireCreature = FireCreature(DRAGON_NAME, dragonLevel)
 
   test("Level manipulation test"){
-    //level up test
     dragon levelUp()
     assert(dragon.currentLevel > INITIAL_LEVEL)
 
-    //Setting level test
     dragon.level
     assert(dragon.currentLevel == dragonLevel)
   }
@@ -37,10 +35,8 @@ class FireCreatureTest extends FunSuite {
   }
 
   test("Name test"){
-    //name is correct
     assert(dragon.name.equals(DRAGON_NAME))
 
-    //name is wrong
     assert(dragon.name != DRAGON2_NAME)
   }
 
