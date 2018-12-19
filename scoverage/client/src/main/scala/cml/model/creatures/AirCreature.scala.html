@@ -31,8 +31,8 @@
 </span>7 <span style=''>
 </span>8 <span style=''>/**
 </span>9 <span style=''>  * This class models a griffin
-</span>10 <span style=''>  * @param creatureName name of the griffin
-</span>11 <span style=''>  * @param creatureLevel set the griffin level
+</span>10 <span style=''>  * @param creature_name name of the griffin
+</span>11 <span style=''>  * @param creature_level set the griffin level
 </span>12 <span style=''>  * @author Filippo Portolani
 </span>13 <span style=''>  */
 </span>14 <span style=''>
@@ -41,13 +41,13 @@
 </span>17 <span style=''>  val _element : String = </span><span style='background: #AEF1AE'>AIR</span><span style=''>
 </span>18 <span style=''>
 </span>19 <span style=''>  override def levelUp(): Unit = {
-</span>20 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel += 1</span><span style=''>
-</span>21 <span style=''>    </span><span style='background: #F0ADAD'>setAttack()</span><span style=''>
+</span>20 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel += 1</span><span style=''>
+</span>21 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
 </span>22 <span style=''>  }
 </span>23 <span style=''>
 </span>24 <span style=''>  override def setAttack(): Unit = {
 </span>25 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''> match {
-</span>26 <span style=''>      case 10 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
+</span>26 <span style=''>      case 10 =&gt; </span><span style='background: #AEF1AE'>attackValue += 10</span><span style=''>
 </span>27 <span style=''>      case 20 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
 </span>28 <span style=''>      case 30 =&gt; </span><span style='background: #F0ADAD'>attackValue += 10</span><span style=''>
 </span>29 <span style=''>      case _ </span><span style='background: #AEF1AE'>=&gt;</span><span style=''> ;
@@ -55,9 +55,9 @@
 </span>31 <span style=''>  }
 </span>32 <span style=''>
 </span>33 <span style=''>  override def level: Int = {
-</span>34 <span style=''>    if(</span><span style='background: #F0ADAD'>currentLevel &lt; creature_level</span><span style=''>)
-</span>35 <span style=''>        </span><span style='background: #F0ADAD'>currentLevel = creature_level</span><span style=''>
-</span>36 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>34 <span style=''>    if(</span><span style='background: #AEF1AE'>currentLevel &lt; creature_level</span><span style=''>)
+</span>35 <span style=''>        </span><span style='background: #AEF1AE'>currentLevel = creature_level</span><span style=''>
+</span>36 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''>
 </span>37 <span style=''>  }
 </span>38 <span style=''>
 </span>39 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
@@ -69,7 +69,7 @@
 </span>45 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
 </span>46 <span style=''>  }
 </span>47 <span style=''>
-</span>48 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creature_name</span><span style=''>
+</span>48 <span style=''>  override def name: String = </span><span style='background: #AEF1AE'>creature_name</span><span style=''>
 </span>49 <span style=''>
 </span>50 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>GRIFFIN</span><span style=''>
 </span>51 <span style=''>}
@@ -94,12 +94,12 @@
           17
         </td>
         <td>
-          706
+          811
         </td>
         <td>
-          472
+          474
           -
-          475
+          477
         </td>
         <td>
           Select
@@ -115,12 +115,12 @@
           20
         </td>
         <td>
-          708
+          813
         </td>
         <td>
-          519
+          521
           -
-          536
+          538
         </td>
         <td>
           Apply
@@ -128,7 +128,7 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.currentLevel_=(AirCreature.this.currentLevel.+(1))
         </td>
       </tr><tr>
@@ -136,12 +136,12 @@
           20
         </td>
         <td>
-          707
+          812
         </td>
         <td>
-          519
+          521
           -
-          536
+          538
         </td>
         <td>
           Apply
@@ -149,7 +149,7 @@
         <td>
           scala.Int.+
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.currentLevel.+(1)
         </td>
       </tr><tr>
@@ -157,12 +157,12 @@
           21
         </td>
         <td>
-          709
+          814
         </td>
         <td>
-          542
+          544
           -
-          553
+          555
         </td>
         <td>
           Apply
@@ -170,7 +170,7 @@
         <td>
           cml.model.creatures.AirCreature.setAttack
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.setAttack()
         </td>
       </tr><tr>
@@ -178,12 +178,12 @@
           25
         </td>
         <td>
-          710
+          815
         </td>
         <td>
-          604
+          606
           -
-          616
+          618
         </td>
         <td>
           Select
@@ -199,33 +199,54 @@
           26
         </td>
         <td>
-          711
+          817
         </td>
         <td>
-          643
+          645
           -
-          660
+          662
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Int.+
+          cml.model.base.Creature.attackValue_=
         </td>
-        <td style="background: #F0ADAD">
-          AirCreature.this.attackValue.+(10)
+        <td style="background: #AEF1AE">
+          AirCreature.this.attackValue_=(AirCreature.this.attackValue.+(10))
         </td>
       </tr><tr>
         <td>
           26
         </td>
         <td>
-          712
+          816
         </td>
         <td>
-          643
+          645
           -
-          660
+          662
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.+
+        </td>
+        <td style="background: #AEF1AE">
+          AirCreature.this.attackValue.+(10)
+        </td>
+      </tr><tr>
+        <td>
+          27
+        </td>
+        <td>
+          819
+        </td>
+        <td>
+          681
+          -
+          698
         </td>
         <td>
           Apply
@@ -241,33 +262,12 @@
           27
         </td>
         <td>
-          714
+          818
         </td>
         <td>
-          679
+          681
           -
-          696
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.attackValue_=
-        </td>
-        <td style="background: #F0ADAD">
-          AirCreature.this.attackValue_=(AirCreature.this.attackValue.+(10))
-        </td>
-      </tr><tr>
-        <td>
-          27
-        </td>
-        <td>
-          713
-        </td>
-        <td>
-          679
-          -
-          696
+          698
         </td>
         <td>
           Apply
@@ -283,12 +283,12 @@
           28
         </td>
         <td>
-          716
+          821
         </td>
         <td>
-          715
+          717
           -
-          732
+          734
         </td>
         <td>
           Apply
@@ -304,12 +304,12 @@
           28
         </td>
         <td>
-          715
+          820
         </td>
         <td>
-          715
+          717
           -
-          732
+          734
         </td>
         <td>
           Apply
@@ -325,12 +325,12 @@
           29
         </td>
         <td>
-          717
+          822
         </td>
         <td>
-          747
-          -
           749
+          -
+          751
         </td>
         <td>
           Literal
@@ -346,12 +346,12 @@
           34
         </td>
         <td>
-          723
+          828
         </td>
         <td>
-          802
+          804
           -
-          802
+          804
         </td>
         <td>
           Literal
@@ -367,12 +367,12 @@
           34
         </td>
         <td>
-          719
+          824
         </td>
         <td>
-          805
+          807
           -
-          834
+          836
         </td>
         <td>
           Apply
@@ -380,7 +380,7 @@
         <td>
           scala.Int.&lt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.currentLevel.&lt;(AirCreature.this.creature_level)
         </td>
       </tr><tr>
@@ -388,12 +388,12 @@
           34
         </td>
         <td>
-          724
+          829
         </td>
         <td>
-          802
+          804
           -
-          802
+          804
         </td>
         <td>
           Block
@@ -409,12 +409,12 @@
           34
         </td>
         <td>
-          718
+          823
         </td>
         <td>
-          820
+          822
           -
-          834
+          836
         </td>
         <td>
           Select
@@ -422,7 +422,7 @@
         <td>
           cml.model.creatures.AirCreature.creature_level
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.creature_level
         </td>
       </tr><tr>
@@ -430,33 +430,12 @@
           35
         </td>
         <td>
-          720
+          827
         </td>
         <td>
-          860
+          847
           -
-          874
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.creatures.AirCreature.creature_level
-        </td>
-        <td style="background: #F0ADAD">
-          AirCreature.this.creature_level
-        </td>
-      </tr><tr>
-        <td>
-          35
-        </td>
-        <td>
-          722
-        </td>
-        <td>
-          845
-          -
-          874
+          876
         </td>
         <td>
           Block
@@ -464,7 +443,7 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.currentLevel_=(AirCreature.this.creature_level)
         </td>
       </tr><tr>
@@ -472,12 +451,12 @@
           35
         </td>
         <td>
-          721
+          826
         </td>
         <td>
-          845
+          847
           -
-          874
+          876
         </td>
         <td>
           Apply
@@ -485,20 +464,41 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.currentLevel_=(AirCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          825
+        </td>
+        <td>
+          862
+          -
+          876
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.creatures.AirCreature.creature_level
+        </td>
+        <td style="background: #AEF1AE">
+          AirCreature.this.creature_level
         </td>
       </tr><tr>
         <td>
           36
         </td>
         <td>
-          725
+          830
         </td>
         <td>
-          880
+          882
           -
-          892
+          894
         </td>
         <td>
           Select
@@ -506,7 +506,7 @@
         <td>
           cml.model.base.Creature.currentLevel
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.currentLevel
         </td>
       </tr><tr>
@@ -514,12 +514,12 @@
           39
         </td>
         <td>
-          726
+          831
         </td>
         <td>
-          934
+          936
           -
-          942
+          944
         </td>
         <td>
           Select
@@ -535,12 +535,12 @@
           41
         </td>
         <td>
-          727
+          832
         </td>
         <td>
-          980
+          982
           -
-          991
+          993
         </td>
         <td>
           Select
@@ -556,33 +556,12 @@
           44
         </td>
         <td>
-          729
+          833
         </td>
         <td>
-          1040
+          1057
           -
-          1069
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.currentLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          AirCreature.this.currentLevel_=(AirCreature.this.creature_level)
-        </td>
-      </tr><tr>
-        <td>
-          44
-        </td>
-        <td>
-          728
-        </td>
-        <td>
-          1055
-          -
-          1069
+          1071
         </td>
         <td>
           Select
@@ -595,15 +574,36 @@
         </td>
       </tr><tr>
         <td>
+          44
+        </td>
+        <td>
+          834
+        </td>
+        <td>
+          1042
+          -
+          1071
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          AirCreature.this.currentLevel_=(AirCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
           45
         </td>
         <td>
-          730
+          835
         </td>
         <td>
-          1075
+          1077
           -
-          1086
+          1088
         </td>
         <td>
           Apply
@@ -619,12 +619,12 @@
           48
         </td>
         <td>
-          731
+          836
         </td>
         <td>
-          1125
+          1127
           -
-          1138
+          1140
         </td>
         <td>
           Select
@@ -632,7 +632,7 @@
         <td>
           cml.model.creatures.AirCreature.creature_name
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           AirCreature.this.creature_name
         </td>
       </tr><tr>
@@ -640,12 +640,12 @@
           50
         </td>
         <td>
-          732
+          837
         </td>
         <td>
-          1180
+          1182
           -
-          1187
+          1189
         </td>
         <td>
           Select

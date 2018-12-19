@@ -31,75 +31,69 @@
 </span>7 <span style=''>  *
 </span>8 <span style=''>  * @author Chiara Volonnino
 </span>9 <span style=''>  */
-</span>10 <span style=''>
+</span>10 <span style=''>trait TokenAuthentication {
 </span>11 <span style=''>
-</span>12 <span style=''>trait TokenAuthentication {
-</span>13 <span style=''>
-</span>14 <span style=''>  /**
-</span>15 <span style=''>    * Create a header for http request
-</span>16 <span style=''>    *
-</span>17 <span style=''>    * @param username is username of user
-</span>18 <span style=''>    * @param password is a password for authentication
-</span>19 <span style=''>    * @return header for a request or None
-</span>20 <span style=''>    */
-</span>21 <span style=''>  def base64Authentication(username: String, password: String): Option[String]
-</span>22 <span style=''>
-</span>23 <span style=''>  /**
-</span>24 <span style=''>    * Check username and password for a request
-</span>25 <span style=''>    *
-</span>26 <span style=''>    * @param header is header for http request
-</span>27 <span style=''>    * @return username and password or none
-</span>28 <span style=''>    */
-</span>29 <span style=''>  def checkBase64Authentication(header: String): Option[(String, String)]
-</span>30 <span style=''>
-</span>31 <span style=''>  /**
-</span>32 <span style=''>    * Create a JWT header for http request
-</span>33 <span style=''>    *
-</span>34 <span style=''>    * @param token is token to read
-</span>35 <span style=''>    * @return header or None
-</span>36 <span style=''>    */
-</span>37 <span style=''>  def authenticationToken(token: String):Option[String]
-</span>38 <span style=''>  /**
-</span>39 <span style=''>    * Check handler and return token for handler request
-</span>40 <span style=''>    *
-</span>41 <span style=''>    * @param header for a request
-</span>42 <span style=''>    * @return token corresponds to the handler request
-</span>43 <span style=''>    */
-</span>44 <span style=''>  def checkAuthenticationToken(header: String): Option[String]
-</span>45 <span style=''>}
-</span>46 <span style=''>
-</span>47 <span style=''>object TokenAuthentication extends TokenAuthentication {
-</span>48 <span style=''>
-</span>49 <span style=''>  val BASE64 = </span><span style='background: #AEF1AE'>&quot;base64&quot;</span><span style=''>
-</span>50 <span style=''>
-</span>51 <span style=''>  override def base64Authentication(username: String, password: String): Option[String] = {
-</span>52 <span style=''>    </span><span style='background: #AEF1AE'>for(
-</span>53 <span style=''></span><span style='background: #AEF1AE'>      checkUsername &lt;- Option(username) if checkUsername.nonEmpty;
-</span>54 <span style=''></span><span style='background: #AEF1AE'>      checkPassword &lt;- Option(password) if checkPassword.nonEmpty
-</span>55 <span style=''></span><span style='background: #AEF1AE'>    ) yield s&quot;$BASE64&quot; + Base64.getEncoder.encodeToString(s&quot;$checkUsername:$checkPassword&quot;.getBytes())</span><span style=''>
-</span>56 <span style=''>  }
-</span>57 <span style=''>
-</span>58 <span style=''>  override def checkBase64Authentication(header: String): Option[(String, String)] = {
-</span>59 <span style=''>    </span><span style='background: #AEF1AE'>for (
-</span>60 <span style=''></span><span style='background: #AEF1AE'>      checkHeader &lt;- Option(header) if checkHeader.nonEmpty;
-</span>61 <span style=''></span><span style='background: #AEF1AE'>      headerInfo = checkHeader.split(s&quot;$BASE64&quot;)(1) if headerInfo.nonEmpty;
-</span>62 <span style=''></span><span style='background: #AEF1AE'>      headerDecode = new String(Base64.getDecoder.decode(headerInfo)).split(&quot;:&quot;)
-</span>63 <span style=''></span><span style='background: #AEF1AE'>    ) yield (headerDecode(0), headerDecode(1))</span><span style=''>
+</span>12 <span style=''>  /**
+</span>13 <span style=''>    * Create a header for http request
+</span>14 <span style=''>    * @param username is username of user
+</span>15 <span style=''>    * @param password is a password for authentication
+</span>16 <span style=''>    * @return header for a request or None
+</span>17 <span style=''>    */
+</span>18 <span style=''>  def base64Authentication(username: String, password: String): Option[String]
+</span>19 <span style=''>
+</span>20 <span style=''>  /**
+</span>21 <span style=''>    * Check username and password for a request
+</span>22 <span style=''>    * @param header is header for http request
+</span>23 <span style=''>    * @return username and password or none
+</span>24 <span style=''>    */
+</span>25 <span style=''>  def checkBase64Authentication(header: String): Option[(String, String)]
+</span>26 <span style=''>
+</span>27 <span style=''>  /**
+</span>28 <span style=''>    * Create a JWT header for http request
+</span>29 <span style=''>    * @param token is token to read
+</span>30 <span style=''>    * @return header or None
+</span>31 <span style=''>    */
+</span>32 <span style=''>  def authenticationToken(token: String):Option[String]
+</span>33 <span style=''>  /**
+</span>34 <span style=''>    * Check handler and return token for handler request
+</span>35 <span style=''>    * @param header for a request
+</span>36 <span style=''>    * @return token corresponds to the handler request
+</span>37 <span style=''>    */
+</span>38 <span style=''>  def checkAuthenticationToken(header: String): Option[String]
+</span>39 <span style=''>}
+</span>40 <span style=''>
+</span>41 <span style=''>object TokenAuthentication extends TokenAuthentication {
+</span>42 <span style=''>
+</span>43 <span style=''>  val BASE64 = </span><span style='background: #AEF1AE'>&quot;base64&quot;</span><span style=''>
+</span>44 <span style=''>
+</span>45 <span style=''>  override def base64Authentication(username: String, password: String): Option[String] = {
+</span>46 <span style=''>    </span><span style='background: #AEF1AE'>for(
+</span>47 <span style=''></span><span style='background: #AEF1AE'>      checkUsername &lt;- Option(username) if checkUsername.nonEmpty;
+</span>48 <span style=''></span><span style='background: #AEF1AE'>      checkPassword &lt;- Option(password) if checkPassword.nonEmpty
+</span>49 <span style=''></span><span style='background: #AEF1AE'>    ) yield s&quot;$BASE64&quot; + Base64.getEncoder.encodeToString(s&quot;$checkUsername:$checkPassword&quot;.getBytes())</span><span style=''>
+</span>50 <span style=''>  }
+</span>51 <span style=''>
+</span>52 <span style=''>  override def checkBase64Authentication(header: String): Option[(String, String)] = {
+</span>53 <span style=''>    </span><span style='background: #AEF1AE'>for (
+</span>54 <span style=''></span><span style='background: #AEF1AE'>      checkHeader &lt;- Option(header) if checkHeader.nonEmpty;
+</span>55 <span style=''></span><span style='background: #AEF1AE'>      headerInfo = checkHeader.split(s&quot;$BASE64&quot;)(1) if headerInfo.nonEmpty;
+</span>56 <span style=''></span><span style='background: #AEF1AE'>      headerDecode = new String(Base64.getDecoder.decode(headerInfo)).split(&quot;:&quot;)
+</span>57 <span style=''></span><span style='background: #AEF1AE'>    ) yield (headerDecode(0), headerDecode(1))</span><span style=''>
+</span>58 <span style=''>  }
+</span>59 <span style=''>
+</span>60 <span style=''>  override def authenticationToken(token: String):Option[String] = {
+</span>61 <span style=''>    </span><span style='background: #AEF1AE'>for (
+</span>62 <span style=''></span><span style='background: #AEF1AE'>      checkToken &lt;- Option(token) if token.nonEmpty
+</span>63 <span style=''></span><span style='background: #AEF1AE'>    ) yield checkToken</span><span style=''>
 </span>64 <span style=''>  }
 </span>65 <span style=''>
-</span>66 <span style=''>  override def authenticationToken(token: String):Option[String] = {
-</span>67 <span style=''>    </span><span style='background: #F0ADAD'>for (
-</span>68 <span style=''></span><span style='background: #F0ADAD'>      checkToken &lt;- Option(token) if token.nonEmpty
-</span>69 <span style=''></span><span style='background: #F0ADAD'>    ) yield checkToken</span><span style=''>
-</span>70 <span style=''>  }
-</span>71 <span style=''>
-</span>72 <span style=''>  override def checkAuthenticationToken(header: String): Option[String] = {
-</span>73 <span style=''>    </span><span style='background: #F0ADAD'>for (
-</span>74 <span style=''></span><span style='background: #F0ADAD'>      checkHeader &lt;- Option(header) if checkHeader.nonEmpty;
-</span>75 <span style=''></span><span style='background: #F0ADAD'>      token = header if token.nonEmpty
-</span>76 <span style=''></span><span style='background: #F0ADAD'>    ) yield token</span><span style=''>
-</span>77 <span style=''>  }
-</span>78 <span style=''>}
+</span>66 <span style=''>  override def checkAuthenticationToken(header: String): Option[String] = {
+</span>67 <span style=''>    </span><span style='background: #AEF1AE'>for (
+</span>68 <span style=''></span><span style='background: #AEF1AE'>      checkHeader &lt;- Option(header) if checkHeader.nonEmpty;
+</span>69 <span style=''></span><span style='background: #AEF1AE'>      token = header if token.nonEmpty
+</span>70 <span style=''></span><span style='background: #AEF1AE'>    ) yield token</span><span style=''>
+</span>71 <span style=''>  }
+</span>72 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -113,15 +107,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          49
+          43
         </td>
         <td>
-          46
+          40
         </td>
         <td>
-          1231
+          1199
           -
-          1239
+          1207
         </td>
         <td>
           Literal
@@ -134,15 +128,15 @@
         </td>
       </tr><tr>
         <td>
-          53
+          47
         </td>
         <td>
-          56
+          50
         </td>
         <td>
-          1340
+          1308
           -
-          1583
+          1551
         </td>
         <td>
           Apply
@@ -155,15 +149,15 @@
         </td>
       </tr><tr>
         <td>
-          53
-        </td>
-        <td>
           47
         </td>
         <td>
-          1389
+          41
+        </td>
+        <td>
+          1357
           -
-          1411
+          1379
         </td>
         <td>
           Select
@@ -176,15 +170,15 @@
         </td>
       </tr><tr>
         <td>
-          54
+          48
         </td>
         <td>
-          55
+          49
         </td>
         <td>
-          1420
+          1388
           -
-          1583
+          1551
         </td>
         <td>
           Apply
@@ -197,15 +191,15 @@
         </td>
       </tr><tr>
         <td>
-          54
-        </td>
-        <td>
           48
         </td>
         <td>
-          1457
+          42
+        </td>
+        <td>
+          1425
           -
-          1479
+          1447
         </td>
         <td>
           Select
@@ -218,15 +212,15 @@
         </td>
       </tr><tr>
         <td>
-          55
+          49
         </td>
         <td>
-          50
+          44
         </td>
         <td>
-          1502
+          1470
           -
-          1503
+          1471
         </td>
         <td>
           Literal
@@ -239,15 +233,15 @@
         </td>
       </tr><tr>
         <td>
-          55
+          49
         </td>
         <td>
-          53
+          47
         </td>
         <td>
-          1506
+          1474
           -
-          1583
+          1551
         </td>
         <td>
           Apply
@@ -260,36 +254,15 @@
         </td>
       </tr><tr>
         <td>
-          55
-        </td>
-        <td>
           49
         </td>
         <td>
-          1495
+          46
+        </td>
+        <td>
+          1507
           -
-          1496
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;&quot;
-        </td>
-      </tr><tr>
-        <td>
-          55
-        </td>
-        <td>
-          52
-        </td>
-        <td>
-          1539
-          -
-          1582
+          1550
         </td>
         <td>
           Apply
@@ -302,36 +275,36 @@
         </td>
       </tr><tr>
         <td>
-          55
+          49
         </td>
         <td>
-          54
+          43
         </td>
         <td>
-          1493
+          1463
           -
-          1583
+          1464
         </td>
         <td>
-          Apply
+          Literal
         </td>
         <td>
-          java.lang.String.+
+          &lt;nosymbol&gt;
         </td>
         <td style="background: #AEF1AE">
-          scala.StringContext.apply(&quot;&quot;, &quot;&quot;).s(TokenAuthentication.this.BASE64).+(java.util.Base64.getEncoder().encodeToString(scala.StringContext.apply(&quot;&quot;, &quot;:&quot;, &quot;&quot;).s(checkUsername, checkPassword).getBytes()))
+          &quot;&quot;
         </td>
       </tr><tr>
         <td>
-          55
+          49
         </td>
         <td>
-          51
+          45
         </td>
         <td>
-          1496
+          1464
           -
-          1502
+          1470
         </td>
         <td>
           Select
@@ -344,15 +317,36 @@
         </td>
       </tr><tr>
         <td>
-          60
+          49
         </td>
         <td>
-          59
+          48
         </td>
         <td>
-          1697
+          1461
           -
-          1697
+          1551
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #AEF1AE">
+          scala.StringContext.apply(&quot;&quot;, &quot;&quot;).s(TokenAuthentication.this.BASE64).+(java.util.Base64.getEncoder().encodeToString(scala.StringContext.apply(&quot;&quot;, &quot;:&quot;, &quot;&quot;).s(checkUsername, checkPassword).getBytes()))
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          53
+        </td>
+        <td>
+          1665
+          -
+          1665
         </td>
         <td>
           Apply
@@ -365,15 +359,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          54
         </td>
         <td>
-          62
+          56
         </td>
         <td>
-          1697
+          1665
           -
-          1697
+          1665
         </td>
         <td>
           Apply
@@ -386,36 +380,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          54
         </td>
-        <td>
-          57
-        </td>
-        <td>
-          1730
-          -
-          1750
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.collection.TraversableOnce.nonEmpty
-        </td>
-        <td style="background: #AEF1AE">
-          scala.Predef.augmentString(checkHeader).nonEmpty
-        </td>
-      </tr><tr>
         <td>
           60
         </td>
         <td>
-          66
-        </td>
-        <td>
-          1684
+          1652
           -
-          1958
+          1926
         </td>
         <td>
           Apply
@@ -440,15 +413,36 @@
         </td>
       </tr><tr>
         <td>
-          61
+          54
         </td>
         <td>
-          58
+          51
         </td>
         <td>
-          1772
+          1698
           -
-          1804
+          1718
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.collection.TraversableOnce.nonEmpty
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Predef.augmentString(checkHeader).nonEmpty
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          52
+        </td>
+        <td>
+          1740
+          -
+          1772
         </td>
         <td>
           Apply
@@ -461,15 +455,15 @@
         </td>
       </tr><tr>
         <td>
-          61
+          55
         </td>
         <td>
-          60
+          54
         </td>
         <td>
-          1808
+          1776
           -
-          1827
+          1795
         </td>
         <td>
           Select
@@ -482,15 +476,15 @@
         </td>
       </tr><tr>
         <td>
-          62
+          56
         </td>
         <td>
-          61
+          55
         </td>
         <td>
-          1851
+          1819
           -
-          1910
+          1878
         </td>
         <td>
           Apply
@@ -503,15 +497,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          57
         </td>
         <td>
-          65
+          59
         </td>
         <td>
-          1924
+          1892
           -
-          1958
+          1926
         </td>
         <td>
           Apply
@@ -524,15 +518,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          57
         </td>
         <td>
-          64
+          58
         </td>
         <td>
-          1942
+          1910
           -
-          1957
+          1925
         </td>
         <td>
           Apply
@@ -545,15 +539,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          57
         </td>
         <td>
-          63
+          57
         </td>
         <td>
-          1925
+          1893
           -
-          1940
+          1908
         </td>
         <td>
           Apply
@@ -566,15 +560,15 @@
         </td>
       </tr><tr>
         <td>
-          68
+          62
         </td>
         <td>
-          68
+          62
         </td>
         <td>
-          2041
+          2009
           -
-          2123
+          2091
         </td>
         <td>
           Apply
@@ -582,20 +576,20 @@
         <td>
           scala.Option.WithFilter.map
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Option.apply[String](token).withFilter(((checkToken: String) =&gt; scala.Predef.augmentString(token).nonEmpty)).map[String](((checkToken: String) =&gt; checkToken))
         </td>
       </tr><tr>
         <td>
-          68
+          62
         </td>
         <td>
-          67
+          61
         </td>
         <td>
-          2085
+          2053
           -
-          2099
+          2067
         </td>
         <td>
           Select
@@ -603,20 +597,20 @@
         <td>
           scala.collection.TraversableOnce.nonEmpty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.augmentString(token).nonEmpty
         </td>
       </tr><tr>
         <td>
-          74
+          68
         </td>
         <td>
-          70
+          64
         </td>
         <td>
-          2226
+          2194
           -
-          2226
+          2194
         </td>
         <td>
           Apply
@@ -624,20 +618,20 @@
         <td>
           scala.Tuple2.apply
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Tuple2.apply[String, String](checkHeader, token)
         </td>
       </tr><tr>
         <td>
-          74
+          68
         </td>
         <td>
-          69
+          63
         </td>
         <td>
-          2259
+          2227
           -
-          2279
+          2247
         </td>
         <td>
           Select
@@ -645,20 +639,20 @@
         <td>
           scala.collection.TraversableOnce.nonEmpty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.augmentString(checkHeader).nonEmpty
         </td>
       </tr><tr>
         <td>
-          74
+          68
         </td>
         <td>
-          72
+          66
         </td>
         <td>
-          2213
+          2181
           -
-          2339
+          2307
         </td>
         <td>
           Apply
@@ -666,7 +660,7 @@
         <td>
           scala.Option.WithFilter.map
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Option.apply[String](header).withFilter(((checkHeader: String) =&gt; scala.Predef.augmentString(checkHeader).nonEmpty)).map[(String, String)](((checkHeader: String) =&gt; {
   val token: String = header;
   scala.Tuple2.apply[String, String](checkHeader, token)
@@ -678,15 +672,15 @@
         </td>
       </tr><tr>
         <td>
-          75
+          69
         </td>
         <td>
-          71
+          65
         </td>
         <td>
-          2306
+          2274
           -
-          2320
+          2288
         </td>
         <td>
           Select
@@ -694,7 +688,7 @@
         <td>
           scala.collection.TraversableOnce.nonEmpty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Predef.augmentString(token).nonEmpty
         </td>
       </tr>

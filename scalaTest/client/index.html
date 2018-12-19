@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+      <head>
+        <title>ScalaTest Results</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta http-equiv="Expires" content="-1"/>
+        <meta http-equiv="Pragma" content="no-cache"/>
+        <link href="css/styles.css" rel="stylesheet"/>
+        
+        <script type="text/javascript" src="js/d3.v2.min.js"></script>
+        <script type="text/javascript" src="js/sorttable.js"></script>
+        <script type="text/javascript">
+          var tagMap = {};
+var SUCCEEDED_BIT = 1;
+var FAILED_BIT = 2;
+var IGNORED_BIT = 4;
+var PENDING_BIT = 8;
+var CANCELED_BIT = 16;
+function applyFilter() {
+  var mask = 0;
+  if (document.getElementById('succeeded_checkbox').checked)
+    mask |= SUCCEEDED_BIT;
+  if (document.getElementById('failed_checkbox').checked)
+    mask |= FAILED_BIT;
+  if (document.getElementById('ignored_checkbox').checked)
+    mask |= IGNORED_BIT;
+  if (document.getElementById('pending_checkbox').checked)
+    mask |= PENDING_BIT;
+  if (document.getElementById('canceled_checkbox').checked)
+    mask |= CANCELED_BIT;
+  for (var key in tagMap) {
+    if (tagMap.hasOwnProperty(key)) {
+      var bitSet = tagMap[key];
+      var element = document.getElementById(key);
+      if ((bitSet & mask) != 0)
+        element.style.display = "table-row";
+      else 
+        element.style.display = "none";
+    }
+  }
+}
+function showDetails(suiteName) {
+  document.getElementById('details_view').innerHTML = "<iframe src='" + suiteName + ".html' width='100%' height='100%'></iframe>";
+}
+function resizeDetailsView() {
+  var headerView = document.getElementById('scalatest-header');
+  var detailsView = document.getElementById('details_view');
+  var summaryView = document.getElementById('summary_view');
+  var left = summaryView.offsetWidth + 30;
+  detailsView.style.left = left + "px";
+  detailsView.style.width = (window.innerWidth - left - 30) + "px";
+  detailsView.style.height = (window.innerHeight - headerView.offsetHeight - 20) + "px";
+}
+
+        </script>
+      </head>
+      <body onresize="resizeDetailsView()">
+        <div class="scalatest-report"> 
+          <div id="scalatest-header" class="scalatest-header-passed">
+      <div id="title">
+        ScalaTest Results
+      </div>
+
+      <div id="summary">
+        <p id="duration">Run completed in 7 seconds, 836 milliseconds.</p>
+        <p id="totalTests">Total number of tests run: 62</p>
+        <p id="suiteSummary">Suites: completed 13, aborted 0</p>
+        <p id="testSummary">Tests: succeeded 62, failed 0, canceled 0, ignored 0, pending 0</p>
+      </div>
+    </div>
+          <table id="summary_view">
+            <tr id="summary_view_row_1">
+              <td id="summary_view_row_1_chart">
+                <div id="chart_div"></div>
+              </td>
+              <td id="summary_view_row_1_legend">
+                <table id="summary_view_row_1_legend_table">
+                  <tr id="summary_view_row_1_legend_table_row_succeeded">
+                    <td id="summary_view_row_1_legend_succeeded_label">Succeeded</td>
+                    <td id="summary_view_row_1_legend_succeeded_count">62</td>
+                    <td id="summary_view_row_1_legend_succeeded_percent">(100%)</td>
+                  </tr>
+                  <tr id="summary_view_row_1_legend_table_row_failed">
+                    <td id="summary_view_row_1_legend_failed_label">Failed</td>
+                    <td id="summary_view_row_1_legend_failed_count">0</td>
+                    <td id="summary_view_row_1_legend_failed_percent">(0%)</td>
+                  </tr>
+                  <tr id="summary_view_row_1_legend_table_row_canceled">
+                    <td id="summary_view_row_1_legend_canceled_label">Canceled</td>
+                    <td id="summary_view_row_1_legend_canceled_count">0</td>
+                    <td id="summary_view_row_1_legend_canceled_percent">(0%)</td>
+                  </tr>
+                  <tr id="summary_view_row_1_legend_table_row_ignored">
+                    <td id="summary_view_row_1_legend_ignored_label">Ignored</td>
+                    <td id="summary_view_row_1_legend_ignored_count">0</td>
+                    <td id="summary_view_row_1_legend_ignored_percent">(0%)</td>
+                  </tr>
+                  <tr id="summary_view_row_1_legend_table_row_pending">
+                    <td id="summary_view_row_1_legend_pending_label">Pending</td>
+                    <td id="summary_view_row_1_legend_pending_count">0</td>
+                    <td id="summary_view_row_1_legend_pending_percent">(0%)</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr id="summary_view_row_2">
+              <td id="summary_view_row_2_results" colspan="2">
+                <div id="display-filters">
+      <input id="succeeded_checkbox" name="succeeded_checkbox" type="checkbox" checked="checked" onchange="applyFilter()"/> <label id="succeeded_checkbox_label" for="passed_checkbox">Succeeded</label>
+      <input id="failed_checkbox" name="failed_checkbox" type="checkbox" checked="checked" onchange="applyFilter()"/> <label id="failed_checkbox_label" for="failed_checkbox">Failed</label>
+      <input id="canceled_checkbox" name="canceled_checkbox" type="checkbox" checked="checked" onchange="applyFilter()"/> <label id="canceled_checkbox_label" for="canceled_checkbox">Canceled</label>
+      <input id="ignored_checkbox" name="ignored_checkbox" type="checkbox" checked="checked" onchange="applyFilter()"/> <label id="ignored_checkbox_label" for="ignored_checkbox">Ignored</label>
+      <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked="checked" onchange="applyFilter()"/> <label id="pending_checkbox_label" for="pending_checkbox">Pending</label>
+    </div>
+                <table class="sortable">
+      <tr>
+        <td>Suite</td>
+        <td>Duration (ms.)</td>
+        <td>Succeeded</td>
+        <td>Failed</td>
+        <td>Canceled</td>
+        <td>Ignored</td>
+        <td>Pending</td>
+        <td>Total</td>
+      </tr>
+    <tr id="ee63ade2-fa4f-4a16-8d2a-eda1aa0f334c">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.creatures.AirCreatureTest')">AirCreatureTest</a></td>
+      <td class="duration_passed_all">3</td>
+      <td class="succeeded">4</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">4</td>
+    </tr><tr id="b5513774-bfaa-4231-9b60-3b19f7e3eaca">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.base.CaveTest')">CaveTest</a></td>
+      <td class="duration_passed_all">5</td>
+      <td class="succeeded">5</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">5</td>
+    </tr><tr id="18257b2a-da5d-48f0-9a77-c34f1ed9ae05">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.base.CreatureTest')">CreatureTest</a></td>
+      <td class="duration_passed_all">53</td>
+      <td class="succeeded">9</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">9</td>
+    </tr><tr id="a426de88-3948-474a-8aa0-121ba7012c7b">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.creatures.EarthCreatureTest')">EarthCreatureTest</a></td>
+      <td class="duration_passed_all">4</td>
+      <td class="succeeded">4</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">4</td>
+    </tr><tr id="849b6e03-057d-4832-83ef-aabc6f5707a6">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.base.FarmTest')">FarmTest</a></td>
+      <td class="duration_passed_all">9</td>
+      <td class="succeeded">5</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">5</td>
+    </tr><tr id="8bb1237d-5c7a-453d-82b4-1360130c2423">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.creatures.FireCreatureTest')">FireCreatureTest</a></td>
+      <td class="duration_passed_all">9</td>
+      <td class="succeeded">4</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">4</td>
+    </tr><tr id="6234d314-799c-4e2b-b975-02fb6581dbad">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.base.ResourceProductionTest')">ResourceProductionTest</a></td>
+      <td class="duration_passed_all">3010</td>
+      <td class="succeeded">2</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">2</td>
+    </tr><tr id="183800dc-18ee-4f69-9002-2ac68870ffcc">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.dynamic_model.RetrieveResourceTest')">RetrieveResourceTest</a></td>
+      <td class="duration_passed_all">3014</td>
+      <td class="succeeded">9</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">9</td>
+    </tr><tr id="351ddb31-8970-419e-937b-199c81af2bf7">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.base.StructureTest')">StructureTest</a></td>
+      <td class="duration_passed_all">3</td>
+      <td class="succeeded">4</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">4</td>
+    </tr><tr id="828da9a9-bac4-44b6-b2a5-ba0662989895">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.dynamic_model.StructureUpgradeTest')">StructureUpgradeTest</a></td>
+      <td class="duration_passed_all">37</td>
+      <td class="succeeded">9</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">9</td>
+    </tr><tr id="91d0d9a0-daf9-41d0-a807-4d07b7e3cd6c">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.services.authentication.TokenStorageTest')">TokenStorageTest</a></td>
+      <td class="duration_passed_all">2</td>
+      <td class="succeeded">1</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">1</td>
+    </tr><tr id="c31c7ea1-6389-4c5b-89f2-f0f75240c7eb">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.base.VillageMapTest')">VillageMapTest</a></td>
+      <td class="duration_passed_all">2</td>
+      <td class="succeeded">2</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">2</td>
+    </tr><tr id="9c5f75d0-a80c-41c1-b9e4-83122778615e">
+      <td class="suite_name_passed_all"><a href="javascript: showDetails('cml.model.creatures.WaterCreatureTest')">WaterCreatureTest</a></td>
+      <td class="duration_passed_all">3</td>
+      <td class="succeeded">4</td>
+      <td class="failed_zero">0</td>
+      <td class="canceled_zero">0</td>
+      <td class="ignored_zero">0</td>
+      <td class="pending_zero">0</td>
+      <td class="total_passed_all">4</td>
+    </tr>
+    </table>
+              </td>
+            </tr>
+          </table>
+          <div id="details_view">
+            <span id="click_suite_hint">Click on suite name to view details.</span> <br/>
+            <span id="click_column_hint">Click on column name to sort.</span>
+          </div>
+        </div>
+        <script type="text/javascript">
+          /* modified from http://www.permadi.com/tutorial/cssGettingBackgroundColor/index.html - */
+function getBgColor(elementId)
+{
+  var element = document.getElementById(elementId);
+  if (element.currentStyle)
+    return element.currentStyle.backgroundColor;
+  if (window.getComputedStyle)
+  {
+    var elementStyle=window.getComputedStyle(element,"");
+    if (elementStyle)
+      return elementStyle.getPropertyValue("background-color");
+  }
+  // Return 0 if both methods failed.
+  return 0;
+}
+var data = [62, 0, 0, 0, 0];
+var color = [getBgColor('summary_view_row_1_legend_succeeded_label'), 
+             getBgColor('summary_view_row_1_legend_failed_label'), 
+             getBgColor('summary_view_row_1_legend_ignored_label'), 
+             getBgColor('summary_view_row_1_legend_pending_label'), 
+             getBgColor('summary_view_row_1_legend_canceled_label')
+            ];
+var width = document.getElementById('chart_div').offsetWidth,
+    height = document.getElementById('chart_div').offsetHeight,
+    outerRadius = Math.min(width, height) / 2,
+    innerRadius = 0,
+    donut = d3.layout.pie(),
+    arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
+var vis = d3.select("#chart_div")
+            .append("svg")
+            .data([data])
+            .attr("width", width)
+            .attr("height", height);
+var arcs = vis.selectAll("g.arc")
+              .data(donut)
+              .enter().append("g")
+              .attr("class", "arc")
+              .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+arcs.append("path")
+    .attr("fill", function(d, i) { return color[i]; })
+    .attr("d", arc);
+
+        </script>
+        <script type="text/javascript">
+          tagMap = { 
+"9c5f75d0-a80c-41c1-b9e4-83122778615e": 1, 
+"849b6e03-057d-4832-83ef-aabc6f5707a6": 1, 
+"6234d314-799c-4e2b-b975-02fb6581dbad": 1, 
+"18257b2a-da5d-48f0-9a77-c34f1ed9ae05": 1, 
+"ee63ade2-fa4f-4a16-8d2a-eda1aa0f334c": 1, 
+"a426de88-3948-474a-8aa0-121ba7012c7b": 1, 
+"91d0d9a0-daf9-41d0-a807-4d07b7e3cd6c": 1, 
+"8bb1237d-5c7a-453d-82b4-1360130c2423": 1, 
+"b5513774-bfaa-4231-9b60-3b19f7e3eaca": 1, 
+"828da9a9-bac4-44b6-b2a5-ba0662989895": 1, 
+"183800dc-18ee-4f69-9002-2ac68870ffcc": 1, 
+"351ddb31-8970-419e-937b-199c81af2bf7": 1, 
+"c31c7ea1-6389-4c5b-89f2-f0f75240c7eb": 1};
+applyFilter();
+        </script>
+        <script type="text/javascript">
+          resizeDetailsView();
+        </script>
+      </body>
+    </html>

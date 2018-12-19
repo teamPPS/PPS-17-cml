@@ -164,7 +164,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">AuthenticationVerticle</span><span class="params">()</span><span class="result"> extends <a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a> with <a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">AuthenticationVerticle</span><span class="params">()</span><span class="result"> extends <a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -174,7 +174,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a>, <a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a>, <span class="extype" name="io.vertx.lang.scala.ScalaVerticle">ScalaVerticle</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a>, <a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a>, <span class="extype" name="io.vertx.lang.scala.ScalaVerticle">ScalaVerticle</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -200,7 +200,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="cml.services.authentication.AuthenticationVerticle"><span>AuthenticationVerticle</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="cml.core.RoutingOperation"><span>RoutingOperation</span></li><li class="in" name="cml.core.RouterVerticle"><span>RouterVerticle</span></li><li class="in" name="io.vertx.lang.scala.ScalaVerticle"><span>ScalaVerticle</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="cml.services.authentication.AuthenticationVerticle"><span>AuthenticationVerticle</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="cml.core.RouterVerticle"><span>RouterVerticle</span></li><li class="in" name="cml.core.RoutingOperation"><span>RoutingOperation</span></li><li class="in" name="io.vertx.lang.scala.ScalaVerticle"><span>ScalaVerticle</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -341,7 +341,7 @@
         <span class="name">checkAuthenticationHandler</span><span class="params">(<span class="implicit">implicit </span><span name="routingContext">routingContext: <span class="extype" name="io.vertx.scala.ext.web.RoutingContext">RoutingContext</span></span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
+      <p class="shortcomment cmt">Check if the handler is correct</p><div class="fullcomment"><div class="comment cmt"><p>Check if the handler is correct</p></div><dl class="paramcmts block"><dt class="param">routingContext</dt><dd class="cmt"><p>implicit routing context</p></dd><dt>returns</dt><dd class="cmt"><p>handler</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">
@@ -518,9 +518,7 @@
         <span class="name">getRequestAndHeader</span><span class="params">(<span class="implicit">implicit </span><span name="routingContext">routingContext: <span class="extype" name="io.vertx.scala.ext.web.RoutingContext">RoutingContext</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Get the header of the request
-</p><div class="fullcomment"><div class="comment cmt"><p>Get the header of the request
-</p></div><dl class="paramcmts block"><dt class="param">routingContext</dt><dd class="cmt"><p>is implicit routing context</p></dd><dt>returns</dt><dd class="cmt"><p>A Optional with the header or None</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
+      <p class="shortcomment cmt">Get the header of the request</p><div class="fullcomment"><div class="comment cmt"><p>Get the header of the request</p></div><dl class="paramcmts block"><dt class="param">routingContext</dt><dd class="cmt"><p>implicit routing context</p></dd><dt>returns</dt><dd class="cmt"><p>A Optional with the header or None</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
     </li><li name="cml.core.RoutingOperation#getResponse" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getResponse(implicitroutingContext:io.vertx.scala.ext.web.RoutingContext):io.vertx.scala.core.http.HttpServerResponse"></a><a id="getResponse(RoutingContext):HttpServerResponse"></a>
       <span class="permalink">
@@ -536,9 +534,7 @@
         <span class="name">getResponse</span><span class="params">(<span class="implicit">implicit </span><span name="routingContext">routingContext: <span class="extype" name="io.vertx.scala.ext.web.RoutingContext">RoutingContext</span></span>)</span><span class="result">: <span class="extype" name="io.vertx.scala.core.http.HttpServerResponse">HttpServerResponse</span></span>
       </span>
       
-      <p class="shortcomment cmt">Get a response
-</p><div class="fullcomment"><div class="comment cmt"><p>Get a response
-</p></div><dl class="paramcmts block"><dt class="param">routingContext</dt><dd class="cmt"><p>routing context</p></dd><dt>returns</dt><dd class="cmt"><p>the response</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
+      <p class="shortcomment cmt">Get a response</p><div class="fullcomment"><div class="comment cmt"><p>Get a response</p></div><dl class="paramcmts block"><dt class="param">routingContext</dt><dd class="cmt"><p>implicit routing context</p></dd><dt>returns</dt><dd class="cmt"><p>the server response</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
     </li><li name="io.vertx.lang.scala.ScalaVerticle#init" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="init(vertx:io.vertx.core.Vertx,context:io.vertx.core.Context,verticle:io.vertx.core.AbstractVerticle):Unit"></a><a id="init(Vertx,Context,AbstractVerticle):Unit"></a>
       <span class="permalink">
@@ -574,9 +570,9 @@
 </p><div class="fullcomment"><div class="comment cmt"><p>Initialize router
 </p></div><dl class="paramcmts block"><dt class="param">router</dt><dd class="cmt"><p>is router to initialize</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.services.authentication.AuthenticationVerticle">AuthenticationVerticle</a> → <a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a></dd></dl></div>
     </li><li name="cml.services.authentication.AuthenticationVerticle#initializeService" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="initializeService:Unit"></a>
+      <a id="initializeService():Unit"></a>
       <span class="permalink">
-      <a href="../../../cml/services/authentication/AuthenticationVerticle.html#initializeService:Unit" title="Permalink">
+      <a href="../../../cml/services/authentication/AuthenticationVerticle.html#initializeService():Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -585,7 +581,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">initializeService</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">initializeService</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
       <p class="shortcomment cmt">Initializes the services
@@ -692,9 +688,7 @@
         <span class="name">sendResponse</span><span class="params">(<span name="httpCode">httpCode: <span class="extype" name="io.netty.handler.codec.http.HttpResponseStatus">HttpResponseStatus</span></span>, <span name="message">message: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="routingContext">routingContext: <span class="extype" name="io.vertx.scala.ext.web.RoutingContext">RoutingContext</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <p class="shortcomment cmt">Send a response to client
-</p><div class="fullcomment"><div class="comment cmt"><p>Send a response to client
-</p></div><dl class="paramcmts block"><dt class="param">httpCode</dt><dd class="cmt"><p>http code response</p></dd><dt class="param">message</dt><dd class="cmt"><p>to send to the client</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
+      <p class="shortcomment cmt">Send a response to client</p><div class="fullcomment"><div class="comment cmt"><p>Send a response to client</p></div><dl class="paramcmts block"><dt class="param">httpCode</dt><dd class="cmt"><p>http code response</p></dd><dt class="param">message</dt><dd class="cmt"><p>to send to the client</p></dd><dt class="param">routingContext</dt><dd class="cmt"><p>implicit routing context</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></dd></dl></div>
     </li><li name="cml.core.RouterVerticle#server" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="server:io.vertx.scala.core.http.HttpServer"></a><a id="server:HttpServer"></a>
       <span class="permalink">
@@ -759,10 +753,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ScalaVerticle</dd></dl></div>
-    </li><li name="cml.core.RouterVerticle#stopFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stopFuture():scala.concurrent.Future[Unit]"></a><a id="stopFuture():Future[Unit]"></a>
+    </li><li name="io.vertx.lang.scala.ScalaVerticle#stopFuture" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stopFuture():scala.concurrent.Future[_]"></a><a id="stopFuture():Future[_]"></a>
       <span class="permalink">
-      <a href="../../../cml/services/authentication/AuthenticationVerticle.html#stopFuture():scala.concurrent.Future[Unit]" title="Permalink">
+      <a href="../../../cml/services/authentication/AuthenticationVerticle.html#stopFuture():scala.concurrent.Future[_]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -771,10 +765,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stopFuture</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">stopFuture</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[_]</span>
       </span>
       
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a> → ScalaVerticle</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ScalaVerticle</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -893,10 +887,10 @@
               <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
             </div><div class="parent" name="scala.Equals">
               <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
-            </div><div class="parent" name="cml.core.RoutingOperation">
-              <h3>Inherited from <a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></h3>
             </div><div class="parent" name="cml.core.RouterVerticle">
               <h3>Inherited from <a href="../../core/RouterVerticle.html" class="extype" name="cml.core.RouterVerticle">RouterVerticle</a></h3>
+            </div><div class="parent" name="cml.core.RoutingOperation">
+              <h3>Inherited from <a href="../../core/RoutingOperation.html" class="extype" name="cml.core.RoutingOperation">RoutingOperation</a></h3>
             </div><div class="parent" name="io.vertx.lang.scala.ScalaVerticle">
               <h3>Inherited from <span class="extype" name="io.vertx.lang.scala.ScalaVerticle">ScalaVerticle</span></h3>
             </div><div class="parent" name="scala.AnyRef">

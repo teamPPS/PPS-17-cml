@@ -24,13 +24,13 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.services.authentication
 </span>2 <span style=''>
-</span>3 <span style=''>import akka.actor.ActorRef
-</span>4 <span style=''>import cml.core.TokenAuthentication
+</span>3 <span style=''>import cml.core.TokenAuthentication
+</span>4 <span style=''>import cml.core.utils.NetworkConfiguration._
 </span>5 <span style=''>import cml.services.authentication.utils.AuthenticationUrl._
-</span>6 <span style=''>import cml.core.utils.NetworkConfiguration._
-</span>7 <span style=''>import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
+</span>6 <span style=''>import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
+</span>7 <span style=''>import io.vertx.core.logging.{Logger, LoggerFactory}
 </span>8 <span style=''>import io.vertx.scala.core.Vertx
-</span>9 <span style=''>import io.vertx.scala.ext.web.client.{HttpRequest, WebClient}
+</span>9 <span style=''>import io.vertx.scala.ext.web.client.WebClient
 </span>10 <span style=''>
 </span>11 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
 </span>12 <span style=''>import scala.concurrent.Future
@@ -73,83 +73,70 @@
 </span>49 <span style=''>    */
 </span>50 <span style=''>  def validationToken(header: String): Future[Unit]
 </span>51 <span style=''>
-</span>52 <span style=''>  /**
-</span>53 <span style=''>    * Deletion of a user from the system
-</span>54 <span style=''>    * @return success if deletion is completed
-</span>55 <span style=''>    */
-</span>56 <span style=''>  def delete(): Future[String]
-</span>57 <span style=''>}
+</span>52 <span style=''>}
+</span>53 <span style=''>
+</span>54 <span style=''>/**
+</span>55 <span style=''>  * Companion object
+</span>56 <span style=''>  */
+</span>57 <span style=''>object AuthenticationServiceVertx{
 </span>58 <span style=''>
-</span>59 <span style=''>/**
-</span>60 <span style=''>  * Companion object
-</span>61 <span style=''>  */
-</span>62 <span style=''>object AuthenticationServiceVertx{
-</span>63 <span style=''>
-</span>64 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
-</span>65 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
-</span>66 <span style=''>  val successfulRegisterResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
-</span>67 <span style=''>  val successfulLoginResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
-</span>68 <span style=''>  val successfulDeletionResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
+</span>59 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
+</span>60 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
+</span>61 <span style=''>
+</span>62 <span style=''>  val successfulRegisterResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
+</span>63 <span style=''>  val successfulLoginResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
+</span>64 <span style=''>  val successfulDeletionResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
+</span>65 <span style=''>
+</span>66 <span style=''>  val log: Logger = </span><span style='background: #F0ADAD'>LoggerFactory.getLogger(&quot;Authentication Service&quot;)</span><span style=''>
+</span>67 <span style=''>
+</span>68 <span style=''>  def apply(): AuthenticationServiceVertx = </span><span style='background: #F0ADAD'>AuthenticationServiceVertxImpl()</span><span style=''>
 </span>69 <span style=''>
-</span>70 <span style=''>  def apply(): AuthenticationServiceVertx = </span><span style='background: #F0ADAD'>AuthenticationServiceVertxImpl()</span><span style=''>
-</span>71 <span style=''>
-</span>72 <span style=''>  /**
-</span>73 <span style=''>    * This class implements the Vertx Client
-</span>74 <span style=''>    */
-</span>75 <span style=''>  case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
-</span>76 <span style=''>
-</span>77 <span style=''>    override def register(username: String, password: String): Future[String] = {
-</span>78 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending registration request from username:$username with password:$password&quot;)</span><span style=''>
-</span>79 <span style=''>      </span><span style='background: #F0ADAD'>client.post(AuthenticationServicePort, ServiceHostForRequest, RegisterApi)
-</span>80 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
-</span>81 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>82 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { // technical debt?
-</span>83 <span style=''></span><span style='background: #F0ADAD'>          case `successfulRegisterResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>84 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
-</span>85 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>86 <span style=''>    }
-</span>87 <span style=''>
-</span>88 <span style=''>    override def login(username: String, password: String): Future[String] = {
-</span>89 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending login request from username:$username with password:$password&quot;)</span><span style=''> //debug
-</span>90 <span style=''>      </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
-</span>91 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
-</span>92 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>93 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { //technical debt?
-</span>94 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>95 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
-</span>96 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>97 <span style=''>    }
-</span>98 <span style=''>
-</span>99 <span style=''>    override def logout(token: String): Future[Unit] = {
-</span>100 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending logout request with token: $token&quot;)</span><span style=''>
-</span>101 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(AuthenticationServicePort, ServiceHostForRequest, LogoutApi)
-</span>102 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
-</span>103 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>104 <span style=''></span><span style='background: #F0ADAD'>        .map(_ =&gt; ())</span><span style=''>
-</span>105 <span style=''>    }
-</span>106 <span style=''>
-</span>107 <span style=''>    override def validationToken(header: String): Future[Unit] = {
-</span>108 <span style=''>      </span><span style='background: #F0ADAD'>client.get(AuthenticationServicePort, ServiceHostForRequest, ValidationTokenApi)
-</span>109 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
-</span>110 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>111 <span style=''></span><span style='background: #F0ADAD'>        .map(response =&gt; response.statusCode match {
-</span>112 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; Future.successful(successfulLoginResponse)
-</span>113 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; Future.failed(new Exception)
-</span>114 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>115 <span style=''>    }
-</span>116 <span style=''>
-</span>117 <span style=''>    override def delete(): Future[String] = {
-</span>118 <span style=''>    </span><span style='background: #F0ADAD'>println(s&quot;sending deletion request from username&quot;)</span><span style=''> //debug
-</span>119 <span style=''>    </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, LoginApi)
-</span>120 <span style=''></span><span style='background: #F0ADAD'>      .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-</span>121 <span style=''></span><span style='background: #F0ADAD'>      .sendFuture
-</span>122 <span style=''></span><span style='background: #F0ADAD'>      .map(r =&gt; r.statusCode match { //technical debt?
-</span>123 <span style=''></span><span style='background: #F0ADAD'>        case `successfulDeletionResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>124 <span style=''></span><span style='background: #F0ADAD'>        case _ =&gt; &quot;Not a valid request&quot;
-</span>125 <span style=''></span><span style='background: #F0ADAD'>      })</span><span style=''>
-</span>126 <span style=''>  }
-</span>127 <span style=''>  }
-</span>128 <span style=''>}
+</span>70 <span style=''>  /**
+</span>71 <span style=''>    * This class implements the Vertx Client
+</span>72 <span style=''>    */
+</span>73 <span style=''>  case class AuthenticationServiceVertxImpl() extends AuthenticationServiceVertx {
+</span>74 <span style=''>
+</span>75 <span style=''>    override def register(username: String, password: String): Future[String] = {
+</span>76 <span style=''>      </span><span style='background: #F0ADAD'>log.info(s&quot;sending registration request from username: $username&quot;, username)</span><span style=''>
+</span>77 <span style=''>      </span><span style='background: #F0ADAD'>client.post(ServicePort, ServiceHostForRequest, RegisterApi)
+</span>78 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
+</span>79 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>80 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match { // technical debt?
+</span>81 <span style=''></span><span style='background: #F0ADAD'>          case `successfulRegisterResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>82 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
+</span>83 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>84 <span style=''>    }
+</span>85 <span style=''>
+</span>86 <span style=''>    override def login(username: String, password: String): Future[String] = {
+</span>87 <span style=''>      </span><span style='background: #F0ADAD'>log.info(s&quot;sending login request from username: $username&quot;, username)</span><span style=''>
+</span>88 <span style=''>      </span><span style='background: #F0ADAD'>client.put(ServicePort, ServiceHostForRequest, LoginApi)
+</span>89 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
+</span>90 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>91 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
+</span>92 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>93 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; &quot;Not a valid request&quot;
+</span>94 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>95 <span style=''>    }
+</span>96 <span style=''>
+</span>97 <span style=''>    override def logout(token: String): Future[Unit] = {
+</span>98 <span style=''>      </span><span style='background: #F0ADAD'>log.info(s&quot;sending logout request with token: $token&quot;, token)</span><span style=''>
+</span>99 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(ServicePort, ServiceHostForRequest, LogoutApi)
+</span>100 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.authenticationToken(token).get)
+</span>101 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>102 <span style=''></span><span style='background: #F0ADAD'>        .map(_ =&gt; ())</span><span style=''>
+</span>103 <span style=''>    }
+</span>104 <span style=''>
+</span>105 <span style=''>    override def validationToken(header: String): Future[Unit] = {
+</span>106 <span style=''>      </span><span style='background: #F0ADAD'>client.get(ServicePort, ServiceHostForRequest, ValidationTokenApi)
+</span>107 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), header)
+</span>108 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>109 <span style=''></span><span style='background: #F0ADAD'>        .map(response =&gt; response.statusCode match {
+</span>110 <span style=''></span><span style='background: #F0ADAD'>          case `successfulLoginResponse` =&gt; Future.successful(successfulLoginResponse)
+</span>111 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; Future.failed(new Exception)
+</span>112 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>113 <span style=''>    }
+</span>114 <span style=''>  }
+</span>115 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -163,15 +150,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          64
+          59
         </td>
         <td>
-          911
+          988
         </td>
         <td>
-          1905
+          1779
           -
-          1918
+          1792
         </td>
         <td>
           Apply
@@ -184,36 +171,15 @@
         </td>
       </tr><tr>
         <td>
-          65
+          60
         </td>
         <td>
-          913
+          989
         </td>
         <td>
-          1946
+          1837
           -
-          1969
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.WebClient.create
-        </td>
-        <td style="background: #F0ADAD">
-          io.vertx.scala.ext.web.client.WebClient.create(AuthenticationServiceVertx.this.vertx)
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          912
-        </td>
-        <td>
-          1963
-          -
-          1968
+          1842
         </td>
         <td>
           Select
@@ -226,15 +192,36 @@
         </td>
       </tr><tr>
         <td>
-          66
+          60
         </td>
         <td>
-          914
+          990
         </td>
         <td>
-          2011
+          1820
           -
-          2042
+          1843
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.WebClient.create
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.scala.ext.web.client.WebClient.create(AuthenticationServiceVertx.this.vertx)
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          991
+        </td>
+        <td>
+          1887
+          -
+          1918
         </td>
         <td>
           Apply
@@ -247,15 +234,15 @@
         </td>
       </tr><tr>
         <td>
-          67
+          63
         </td>
         <td>
-          915
+          992
         </td>
         <td>
-          2081
+          1957
           -
-          2107
+          1983
         </td>
         <td>
           Apply
@@ -265,39 +252,60 @@
         </td>
         <td style="background: #F0ADAD">
           io.netty.handler.codec.http.HttpResponseStatus.OK.code()
+        </td>
+      </tr><tr>
+        <td>
+          64
+        </td>
+        <td>
+          993
+        </td>
+        <td>
+          2025
+          -
+          2051
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.handler.codec.http.HttpResponseStatus.code
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpResponseStatus.OK.code()
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          994
+        </td>
+        <td>
+          2075
+          -
+          2124
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.LoggerFactory.getLogger
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.core.logging.LoggerFactory.getLogger(&quot;Authentication Service&quot;)
         </td>
       </tr><tr>
         <td>
           68
         </td>
         <td>
-          916
+          995
         </td>
         <td>
-          2149
+          2172
           -
-          2175
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.netty.handler.codec.http.HttpResponseStatus.code
-        </td>
-        <td style="background: #F0ADAD">
-          io.netty.handler.codec.http.HttpResponseStatus.OK.code()
-        </td>
-      </tr><tr>
-        <td>
-          70
-        </td>
-        <td>
-          917
-        </td>
-        <td>
-          2223
-          -
-          2255
+          2204
         </td>
         <td>
           Apply
@@ -310,36 +318,36 @@
         </td>
       </tr><tr>
         <td>
-          78
+          76
         </td>
         <td>
-          919
+          997
         </td>
         <td>
-          2495
+          2444
           -
-          2583
+          2520
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          io.vertx.core.logging.Logger.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending registration request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password))
+          AuthenticationServiceVertx.this.log.info(scala.StringContext.apply(&quot;sending registration request from username: &quot;, &quot;&quot;).s(username), username)
         </td>
       </tr><tr>
         <td>
-          78
+          76
         </td>
         <td>
-          918
+          996
         </td>
         <td>
-          2503
+          2453
           -
-          2582
+          2509
         </td>
         <td>
           Apply
@@ -348,40 +356,40 @@
           scala.StringContext.s
         </td>
         <td style="background: #F0ADAD">
-          scala.StringContext.apply(&quot;sending registration request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password)
+          scala.StringContext.apply(&quot;sending registration request from username: &quot;, &quot;&quot;).s(username)
         </td>
       </tr><tr>
         <td>
-          79
+          77
         </td>
         <td>
-          920
+          998
         </td>
         <td>
-          2603
+          2540
           -
-          2628
+          2551
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
       </tr><tr>
         <td>
-          79
+          77
         </td>
         <td>
-          922
+          1000
         </td>
         <td>
-          2653
+          2576
           -
-          2664
+          2587
         </td>
         <td>
           Select
@@ -394,15 +402,15 @@
         </td>
       </tr><tr>
         <td>
-          79
+          77
         </td>
         <td>
-          921
+          999
         </td>
         <td>
-          2630
+          2553
           -
-          2651
+          2574
         </td>
         <td>
           Select
@@ -415,15 +423,15 @@
         </td>
       </tr><tr>
         <td>
-          80
+          78
         </td>
         <td>
-          923
+          1001
         </td>
         <td>
-          2686
+          2609
           -
-          2726
+          2649
         </td>
         <td>
           Apply
@@ -436,15 +444,15 @@
         </td>
       </tr><tr>
         <td>
-          80
+          78
         </td>
         <td>
-          924
+          1002
         </td>
         <td>
-          2728
+          2651
           -
-          2792
+          2715
         </td>
         <td>
           Select
@@ -457,36 +465,15 @@
         </td>
       </tr><tr>
         <td>
-          82
+          80
         </td>
         <td>
-          925
+          1006
         </td>
         <td>
-          2834
+          2528
           -
-          2846
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusCode
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode()
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          928
-        </td>
-        <td>
-          2591
-          -
-          3007
+          2930
         </td>
         <td>
           ApplyToImplicitArgs
@@ -495,211 +482,22 @@
           scala.concurrent.Future.map
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationServiceVertx.this.client.post(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.RegisterApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.base64Authentication(username, password).get).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+          AuthenticationServiceVertx.this.client.post(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.RegisterApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.base64Authentication(username, password).get).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
   case AuthenticationServiceVertx.this.successfulRegisterResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
   case _ =&gt; &quot;Not a valid request&quot;
 }))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
-          83
+          80
         </td>
         <td>
-          926
+          1003
         </td>
         <td>
-          2922
+          2757
           -
-          2952
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Option.getOrElse
-        </td>
-        <td style="background: #F0ADAD">
-          r.bodyAsString().getOrElse[String](&quot;&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          84
-        </td>
-        <td>
-          927
-        </td>
-        <td>
-          2974
-          -
-          2995
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Not a valid request&quot;
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          929
-        </td>
-        <td>
-          3112
-          -
-          3184
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.StringContext.s
-        </td>
-        <td style="background: #F0ADAD">
-          scala.StringContext.apply(&quot;sending login request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password)
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          930
-        </td>
-        <td>
-          3104
-          -
-          3185
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending login request from username:&quot;, &quot; with password:&quot;, &quot;&quot;).s(username, password))
-        </td>
-      </tr><tr>
-        <td>
-          90
-        </td>
-        <td>
-          932
-        </td>
-        <td>
-          3239
-          -
-          3260
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-      </tr><tr>
-        <td>
-          90
-        </td>
-        <td>
-          931
-        </td>
-        <td>
-          3212
-          -
-          3237
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-      </tr><tr>
-        <td>
-          90
-        </td>
-        <td>
-          933
-        </td>
-        <td>
-          3262
-          -
-          3270
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.utils.AuthenticationUrl.LoginApi
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.utils.AuthenticationUrl.LoginApi
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          935
-        </td>
-        <td>
-          3334
-          -
-          3398
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.Option.get
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.TokenAuthentication.base64Authentication(username, password).get
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          934
-        </td>
-        <td>
-          3292
-          -
-          3332
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.netty.util.AsciiString.toString
-        </td>
-        <td style="background: #F0ADAD">
-          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          936
-        </td>
-        <td>
-          3440
-          -
-          3452
+          2769
         </td>
         <td>
           Apply
@@ -712,39 +510,15 @@
         </td>
       </tr><tr>
         <td>
-          93
+          81
         </td>
         <td>
-          939
+          1004
         </td>
         <td>
-          3201
+          2845
           -
-          3609
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.map
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LoginApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.base64Authentication(username, password).get).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
-  case AuthenticationServiceVertx.this.successfulLoginResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
-  case _ =&gt; &quot;Not a valid request&quot;
-}))(scala.concurrent.ExecutionContext.Implicits.global)
-        </td>
-      </tr><tr>
-        <td>
-          94
-        </td>
-        <td>
-          937
-        </td>
-        <td>
-          3524
-          -
-          3554
+          2875
         </td>
         <td>
           Apply
@@ -757,15 +531,15 @@
         </td>
       </tr><tr>
         <td>
-          95
+          82
         </td>
         <td>
-          938
+          1005
         </td>
         <td>
-          3576
+          2897
           -
-          3597
+          2918
         </td>
         <td>
           Literal
@@ -778,36 +552,270 @@
         </td>
       </tr><tr>
         <td>
-          100
+          87
         </td>
         <td>
-          941
+          1007
         </td>
         <td>
-          3684
+          3036
           -
-          3737
+          3085
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          scala.StringContext.s
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending logout request with token: &quot;, &quot;&quot;).s(token))
+          scala.StringContext.apply(&quot;sending login request from username: &quot;, &quot;&quot;).s(username)
         </td>
       </tr><tr>
         <td>
-          100
+          87
         </td>
         <td>
-          940
+          1008
         </td>
         <td>
-          3692
+          3027
           -
-          3736
+          3096
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.info
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.log.info(scala.StringContext.apply(&quot;sending login request from username: &quot;, &quot;&quot;).s(username), username)
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          1010
+        </td>
+        <td>
+          3128
+          -
+          3149
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          1009
+        </td>
+        <td>
+          3115
+          -
+          3126
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          1011
+        </td>
+        <td>
+          3151
+          -
+          3159
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.utils.AuthenticationUrl.LoginApi
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          1013
+        </td>
+        <td>
+          3223
+          -
+          3287
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.get
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.TokenAuthentication.base64Authentication(username, password).get
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          1012
+        </td>
+        <td>
+          3181
+          -
+          3221
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          1014
+        </td>
+        <td>
+          3329
+          -
+          3341
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          1017
+        </td>
+        <td>
+          3104
+          -
+          3480
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LoginApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.base64Authentication(username, password).get).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case AuthenticationServiceVertx.this.successfulLoginResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; &quot;Not a valid request&quot;
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          1015
+        </td>
+        <td>
+          3395
+          -
+          3425
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          r.bodyAsString().getOrElse[String](&quot;&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          1016
+        </td>
+        <td>
+          3447
+          -
+          3468
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Not a valid request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          1019
+        </td>
+        <td>
+          3555
+          -
+          3616
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.info
+        </td>
+        <td style="background: #F0ADAD">
+          AuthenticationServiceVertx.this.log.info(scala.StringContext.apply(&quot;sending logout request with token: &quot;, &quot;&quot;).s(token), token)
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          1018
+        </td>
+        <td>
+          3564
+          -
+          3608
         </td>
         <td>
           Apply
@@ -820,15 +828,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          99
         </td>
         <td>
-          944
+          1022
         </td>
         <td>
-          3809
+          3674
           -
-          3818
+          3683
         </td>
         <td>
           Select
@@ -841,15 +849,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          99
         </td>
         <td>
-          943
+          1021
         </td>
         <td>
-          3786
+          3651
           -
-          3807
+          3672
         </td>
         <td>
           Select
@@ -862,36 +870,36 @@
         </td>
       </tr><tr>
         <td>
-          101
+          99
         </td>
         <td>
-          942
+          1020
         </td>
         <td>
-          3759
+          3638
           -
-          3784
+          3649
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
       </tr><tr>
         <td>
-          102
+          100
         </td>
         <td>
-          946
+          1024
         </td>
         <td>
-          3882
+          3747
           -
-          3932
+          3797
         </td>
         <td>
           Select
@@ -904,15 +912,15 @@
         </td>
       </tr><tr>
         <td>
-          102
+          100
         </td>
         <td>
-          945
+          1023
         </td>
         <td>
-          3840
+          3705
           -
-          3880
+          3745
         </td>
         <td>
           Apply
@@ -925,15 +933,15 @@
         </td>
       </tr><tr>
         <td>
-          104
+          102
         </td>
         <td>
-          947
+          1025
         </td>
         <td>
-          3974
+          3839
           -
-          3976
+          3841
         </td>
         <td>
           Literal
@@ -946,15 +954,15 @@
         </td>
       </tr><tr>
         <td>
-          104
+          102
         </td>
         <td>
-          948
+          1026
         </td>
         <td>
-          3745
+          3624
           -
-          3977
+          3842
         </td>
         <td>
           ApplyToImplicitArgs
@@ -963,19 +971,19 @@
           scala.concurrent.Future.map
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LogoutApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.authenticationToken(token).get).sendFuture().map[Unit](((x$1: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; ()))(scala.concurrent.ExecutionContext.Implicits.global)
+          AuthenticationServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LogoutApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.core.TokenAuthentication.authenticationToken(token).get).sendFuture().map[Unit](((x$1: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; ()))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
-          108
+          106
         </td>
         <td>
-          950
+          1028
         </td>
         <td>
-          4100
+          3951
           -
-          4121
+          3972
         </td>
         <td>
           Select
@@ -988,36 +996,36 @@
         </td>
       </tr><tr>
         <td>
-          108
+          106
         </td>
         <td>
-          949
+          1027
         </td>
         <td>
-          4073
+          3938
           -
-          4098
+          3949
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
       </tr><tr>
         <td>
-          108
+          106
         </td>
         <td>
-          951
+          1029
         </td>
         <td>
-          4123
+          3974
           -
-          4141
+          3992
         </td>
         <td>
           Select
@@ -1030,15 +1038,15 @@
         </td>
       </tr><tr>
         <td>
-          109
+          107
         </td>
         <td>
-          952
+          1030
         </td>
         <td>
-          4163
+          4014
           -
-          4203
+          4054
         </td>
         <td>
           Apply
@@ -1051,15 +1059,15 @@
         </td>
       </tr><tr>
         <td>
-          111
+          109
         </td>
         <td>
-          953
+          1031
         </td>
         <td>
-          4260
+          4111
           -
-          4279
+          4130
         </td>
         <td>
           Apply
@@ -1072,15 +1080,15 @@
         </td>
       </tr><tr>
         <td>
-          111
+          109
         </td>
         <td>
-          960
+          1038
         </td>
         <td>
-          4062
+          3927
           -
-          4437
+          4288
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1089,7 +1097,7 @@
           scala.concurrent.Future.map
         </td>
         <td style="background: #F0ADAD">
-          AuthenticationServiceVertx.this.client.get(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), header).sendFuture().map[Unit](((response: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; response.statusCode() match {
+          AuthenticationServiceVertx.this.client.get(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.ValidationTokenApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), header).sendFuture().map[Unit](((response: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; response.statusCode() match {
   case AuthenticationServiceVertx.this.successfulLoginResponse =&gt; {
     scala.concurrent.Future.successful[Int](AuthenticationServiceVertx.this.successfulLoginResponse);
     ()
@@ -1102,15 +1110,15 @@
         </td>
       </tr><tr>
         <td>
-          112
+          110
         </td>
         <td>
-          956
+          1034
         </td>
         <td>
-          4350
+          4201
           -
-          4350
+          4201
         </td>
         <td>
           Literal
@@ -1123,15 +1131,15 @@
         </td>
       </tr><tr>
         <td>
-          112
+          110
         </td>
         <td>
-          955
+          1033
         </td>
         <td>
-          4333
+          4184
           -
-          4375
+          4226
         </td>
         <td>
           Apply
@@ -1144,15 +1152,15 @@
         </td>
       </tr><tr>
         <td>
-          112
+          110
         </td>
         <td>
-          954
+          1032
         </td>
         <td>
-          4351
+          4202
           -
-          4374
+          4225
         </td>
         <td>
           Select
@@ -1165,15 +1173,15 @@
         </td>
       </tr><tr>
         <td>
-          113
+          111
         </td>
         <td>
-          959
+          1037
         </td>
         <td>
-          4410
+          4261
           -
-          4410
+          4261
         </td>
         <td>
           Literal
@@ -1186,15 +1194,15 @@
         </td>
       </tr><tr>
         <td>
-          113
+          111
         </td>
         <td>
-          958
+          1036
         </td>
         <td>
-          4397
+          4248
           -
-          4425
+          4276
         </td>
         <td>
           Apply
@@ -1207,15 +1215,15 @@
         </td>
       </tr><tr>
         <td>
-          113
+          111
         </td>
         <td>
-          957
+          1035
         </td>
         <td>
-          4411
+          4262
           -
-          4424
+          4275
         </td>
         <td>
           Apply
@@ -1225,240 +1233,6 @@
         </td>
         <td style="background: #F0ADAD">
           new scala.`package`.Exception()
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          962
-        </td>
-        <td>
-          4499
-          -
-          4549
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending deletion request from username&quot;).s())
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          961
-        </td>
-        <td>
-          4507
-          -
-          4548
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.StringContext.s
-        </td>
-        <td style="background: #F0ADAD">
-          scala.StringContext.apply(&quot;sending deletion request from username&quot;).s()
-        </td>
-      </tr><tr>
-        <td>
-          119
-        </td>
-        <td>
-          965
-        </td>
-        <td>
-          4624
-          -
-          4632
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.utils.AuthenticationUrl.LoginApi
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.utils.AuthenticationUrl.LoginApi
-        </td>
-      </tr><tr>
-        <td>
-          119
-        </td>
-        <td>
-          964
-        </td>
-        <td>
-          4601
-          -
-          4622
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-      </tr><tr>
-        <td>
-          119
-        </td>
-        <td>
-          963
-        </td>
-        <td>
-          4574
-          -
-          4599
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-      </tr><tr>
-        <td>
-          120
-        </td>
-        <td>
-          967
-        </td>
-        <td>
-          4694
-          -
-          4722
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-        <td style="background: #F0ADAD">
-          TokenStorage.getUserJWTToken
-        </td>
-      </tr><tr>
-        <td>
-          120
-        </td>
-        <td>
-          966
-        </td>
-        <td>
-          4652
-          -
-          4692
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.netty.util.AsciiString.toString
-        </td>
-        <td style="background: #F0ADAD">
-          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
-        </td>
-      </tr><tr>
-        <td>
-          122
-        </td>
-        <td>
-          968
-        </td>
-        <td>
-          4760
-          -
-          4772
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusCode
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode()
-        </td>
-      </tr><tr>
-        <td>
-          122
-        </td>
-        <td>
-          971
-        </td>
-        <td>
-          4563
-          -
-          4926
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.map
-        </td>
-        <td style="background: #F0ADAD">
-          AuthenticationServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.authentication.utils.AuthenticationUrl.LoginApi).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
-  case AuthenticationServiceVertx.this.successfulDeletionResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
-  case _ =&gt; &quot;Not a valid request&quot;
-}))(scala.concurrent.ExecutionContext.Implicits.global)
-        </td>
-      </tr><tr>
-        <td>
-          123
-        </td>
-        <td>
-          969
-        </td>
-        <td>
-          4845
-          -
-          4875
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Option.getOrElse
-        </td>
-        <td style="background: #F0ADAD">
-          r.bodyAsString().getOrElse[String](&quot;&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          124
-        </td>
-        <td>
-          970
-        </td>
-        <td>
-          4895
-          -
-          4916
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Not a valid request&quot;
         </td>
       </tr>
     </table>

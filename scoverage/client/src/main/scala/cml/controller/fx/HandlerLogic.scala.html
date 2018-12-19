@@ -1,0 +1,1170 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\controller\fx\HandlerLogic.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller.fx
+</span>2 <span style=''>
+</span>3 <span style=''>import akka.actor.ActorSelection
+</span>4 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+</span>5 <span style=''>import cml.controller.messages.VillageRequest.{SetUpdateVillage, UpdateVillage}
+</span>6 <span style=''>import cml.model.base.{Structure, VillageMap}
+</span>7 <span style=''>import cml.model.dynamic_model.{RetrieveResource, StructureUpgrade}
+</span>8 <span style=''>import cml.model.static_model.{StaticCreatures, StaticStructure}
+</span>9 <span style=''>import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
+</span>10 <span style=''>import cml.utils.{FoodJson, MoneyJson}
+</span>11 <span style=''>import cml.view.Tile
+</span>12 <span style=''>import play.api.libs.json.JsValue
+</span>13 <span style=''>
+</span>14 <span style=''>/**
+</span>15 <span style=''>  * This object utils for implements handler logic
+</span>16 <span style=''>  * @author ecavina
+</span>17 <span style=''>  */
+</span>18 <span style=''>
+</span>19 <span style=''>object HandlerLogic {
+</span>20 <span style=''>
+</span>21 <span style=''>  val VillageActorPath: String= </span><span style='background: #F0ADAD'>&quot;/user/VillageActor&quot;</span><span style=''>
+</span>22 <span style=''>  val villageActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection VillageActorPath</span><span style=''>
+</span>23 <span style=''>
+</span>24 <span style=''>  private def setUpdateRemoteVillage(update: JsValue): Unit = {
+</span>25 <span style=''>    </span><span style='background: #F0ADAD'>Thread.sleep(500)</span><span style=''>
+</span>26 <span style=''>    </span><span style='background: #F0ADAD'>villageActor ! SetUpdateVillage(update)</span><span style=''>
+</span>27 <span style=''>  }
+</span>28 <span style=''>
+</span>29 <span style=''>  private def updateRemoteVillage(update: JsValue): Unit = {
+</span>30 <span style=''>    </span><span style='background: #F0ADAD'>villageActor ! UpdateVillage(update)</span><span style=''>
+</span>31 <span style=''>  }
+</span>32 <span style=''>
+</span>33 <span style=''>  def retrieveLocalResource(s: Structure): RetrieveResource ={
+</span>34 <span style=''>    val retrieve = </span><span style='background: #F0ADAD'>RetrieveResource(s)</span><span style=''>
+</span>35 <span style=''>    </span><span style='background: #F0ADAD'>villageActor ! SetUpdateVillage(retrieve resourceJson)</span><span style=''>
+</span>36 <span style=''>    retrieve
+</span>37 <span style=''>  }
+</span>38 <span style=''>
+</span>39 <span style=''>  def updateVillage(tile: Tile, x: Int, y: Int): Unit = {
+</span>40 <span style=''>    val structure = </span><span style='background: #F0ADAD'>StaticStructure(tile, x, y)</span><span style=''>
+</span>41 <span style=''>    val json = </span><span style='background: #F0ADAD'>structure.json</span><span style=''>
+</span>42 <span style=''>    </span><span style='background: #F0ADAD'>updateRemoteVillage(json)</span><span style=''>
+</span>43 <span style=''>    </span><span style='background: #F0ADAD'>VillageMap.instance().get.villageStructure += structure.getStructure</span><span style=''>
+</span>44 <span style=''>  }
+</span>45 <span style=''>
+</span>46 <span style=''>  def addNewCreatureToVillage(s: Structure): Unit = {
+</span>47 <span style=''>    </span><span style='background: #F0ADAD'>setUpdateRemoteVillage(StaticCreatures(s).json)</span><span style=''>
+</span>48 <span style=''>  }
+</span>49 <span style=''>
+</span>50 <span style=''>  def upgradeBuildings(s: Structure): Unit = {
+</span>51 <span style=''>    </span><span style='background: #F0ADAD'>setUpdateRemoteVillage(StructureUpgrade(s).structureJson)</span><span style=''>
+</span>52 <span style=''>  }
+</span>53 <span style=''>
+</span>54 <span style=''>  def upgradeHabitat(s: Structure): Unit = {
+</span>55 <span style=''>    </span><span style='background: #F0ADAD'>setUpdateRemoteVillage(StructureUpgrade(s).creatureJson.get)</span><span style=''>
+</span>56 <span style=''>  }
+</span>57 <span style=''>
+</span>58 <span style=''>  def decrementAndUpdateMoney(gold: Int, price: Int): Unit = {
+</span>59 <span style=''>    val resourceJson = </span><span style='background: #F0ADAD'>MoneyJson(gold - price).json</span><span style=''>
+</span>60 <span style=''>    </span><span style='background: #F0ADAD'>VillageMap.instance().get.gold = gold - price</span><span style=''>
+</span>61 <span style=''>    </span><span style='background: #F0ADAD'>setUpdateRemoteVillage(resourceJson)</span><span style=''>
+</span>62 <span style=''>  }
+</span>63 <span style=''>
+</span>64 <span style=''>  def decrementAndUpdateFood(food: Int, price: Int): Unit = {
+</span>65 <span style=''>    val resourceJson = </span><span style='background: #F0ADAD'>FoodJson(food - price).json</span><span style=''>
+</span>66 <span style=''>    </span><span style='background: #F0ADAD'>VillageMap.instance().get.food = food - price</span><span style=''>
+</span>67 <span style=''>    </span><span style='background: #F0ADAD'>setUpdateRemoteVillage(resourceJson)</span><span style=''>
+</span>68 <span style=''>  }
+</span>69 <span style=''>
+</span>70 <span style=''>  def getClassName(s: Structure): String = {
+</span>71 <span style=''>    var name: String = </span><span style='background: #F0ADAD'>&quot;&quot;</span><span style=''>
+</span>72 <span style=''>    </span><span style='background: #F0ADAD'>s.getClass.getName</span><span style=''> match {
+</span>73 <span style=''>      case FARM_CLASS =&gt; name = </span><span style='background: #F0ADAD'>&quot;FARM&quot;</span><span style=''>
+</span>74 <span style=''>      case CAVE_CLASS =&gt; name = </span><span style='background: #F0ADAD'>&quot;CAVE&quot;</span><span style=''>
+</span>75 <span style=''>      case HABITAT_CLASS =&gt; name = </span><span style='background: #F0ADAD'>&quot;HABITAT - Element: &quot; + s.habitatElement.getOrElse(&quot;without element&quot;)</span><span style=''>
+</span>76 <span style=''>    }
+</span>77 <span style=''>    name
+</span>78 <span style=''>  }
+</span>79 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          547
+        </td>
+        <td>
+          718
+          -
+          738
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;/user/VillageActor&quot;
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          549
+        </td>
+        <td>
+          777
+          -
+          815
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ActorRefFactory.actorSelection
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(HandlerLogic.this.VillageActorPath)
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          548
+        </td>
+        <td>
+          799
+          -
+          815
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.VillageActorPath
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.VillageActorPath
+        </td>
+      </tr><tr>
+        <td>
+          25
+        </td>
+        <td>
+          550
+        </td>
+        <td>
+          888
+          -
+          905
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Thread.sleep
+        </td>
+        <td style="background: #F0ADAD">
+          java.lang.Thread.sleep(500L)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          552
+        </td>
+        <td>
+          911
+          -
+          923
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(HandlerLogic.this.villageActor)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          555
+        </td>
+        <td>
+          911
+          -
+          950
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!(x$1)(x$2)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          551
+        </td>
+        <td>
+          911
+          -
+          923
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.villageActor
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.villageActor
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          554
+        </td>
+        <td>
+          924
+          -
+          924
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!$default$2(x$1)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          553
+        </td>
+        <td>
+          926
+          -
+          950
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.VillageRequest.SetUpdateVillage.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.VillageRequest.SetUpdateVillage.apply(update)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          559
+        </td>
+        <td>
+          1038
+          -
+          1038
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!$default$2(x$3)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          558
+        </td>
+        <td>
+          1040
+          -
+          1061
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.VillageRequest.UpdateVillage.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.VillageRequest.UpdateVillage.apply(update)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          557
+        </td>
+        <td>
+          1025
+          -
+          1037
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(HandlerLogic.this.villageActor)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          560
+        </td>
+        <td>
+          1025
+          -
+          1061
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!(x$3)(x$4)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          556
+        </td>
+        <td>
+          1025
+          -
+          1037
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.villageActor
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.villageActor
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          561
+        </td>
+        <td>
+          1153
+          -
+          1172
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.RetrieveResource.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.dynamic_model.RetrieveResource.apply(s)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          567
+        </td>
+        <td>
+          1178
+          -
+          1232
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!(x$5)(x$6)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          564
+        </td>
+        <td>
+          1210
+          -
+          1231
+        </td>
+        <td>
+          PostfixSelect
+        </td>
+        <td>
+          cml.model.dynamic_model.RetrieveResource.resourceJson
+        </td>
+        <td style="background: #F0ADAD">
+          retrieve.resourceJson
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          563
+        </td>
+        <td>
+          1178
+          -
+          1190
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(HandlerLogic.this.villageActor)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          566
+        </td>
+        <td>
+          1191
+          -
+          1191
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!$default$2
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!$default$2(x$5)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          562
+        </td>
+        <td>
+          1178
+          -
+          1190
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.villageActor
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.villageActor
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          565
+        </td>
+        <td>
+          1193
+          -
+          1232
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.VillageRequest.SetUpdateVillage.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.VillageRequest.SetUpdateVillage.apply(retrieve.resourceJson)
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          568
+        </td>
+        <td>
+          1334
+          -
+          1361
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.static_model.StaticStructure.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.static_model.StaticStructure.apply(tile, x, y)
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          569
+        </td>
+        <td>
+          1378
+          -
+          1392
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.static_model.StaticStructure.json
+        </td>
+        <td style="background: #F0ADAD">
+          structure.json
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          570
+        </td>
+        <td>
+          1398
+          -
+          1423
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.updateRemoteVillage
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.updateRemoteVillage(json)
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          573
+        </td>
+        <td>
+          1472
+          -
+          1472
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          572
+        </td>
+        <td>
+          1429
+          -
+          1497
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.mutable.MutableList.+=
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.villageStructure.+=(structure.getStructure)
+        </td>
+      </tr><tr>
+        <td>
+          43
+        </td>
+        <td>
+          571
+        </td>
+        <td>
+          1475
+          -
+          1497
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.static_model.StaticStructure.getStructure
+        </td>
+        <td style="background: #F0ADAD">
+          structure.getStructure
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          575
+        </td>
+        <td>
+          1565
+          -
+          1612
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.setUpdateRemoteVillage
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.setUpdateRemoteVillage(cml.model.static_model.StaticCreatures.apply(s).json)
+        </td>
+      </tr><tr>
+        <td>
+          47
+        </td>
+        <td>
+          574
+        </td>
+        <td>
+          1588
+          -
+          1611
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.static_model.StaticCreatures.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.static_model.StaticCreatures.apply(s).json
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          577
+        </td>
+        <td>
+          1673
+          -
+          1730
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.setUpdateRemoteVillage
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.setUpdateRemoteVillage(cml.model.dynamic_model.StructureUpgrade.apply(s).structureJson)
+        </td>
+      </tr><tr>
+        <td>
+          51
+        </td>
+        <td>
+          576
+        </td>
+        <td>
+          1696
+          -
+          1729
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.dynamic_model.StructureUpgrade.structureJson
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.dynamic_model.StructureUpgrade.apply(s).structureJson
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          579
+        </td>
+        <td>
+          1789
+          -
+          1849
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.setUpdateRemoteVillage
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.setUpdateRemoteVillage(cml.model.dynamic_model.StructureUpgrade.apply(s).creatureJson.get)
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          578
+        </td>
+        <td>
+          1812
+          -
+          1848
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.get
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.dynamic_model.StructureUpgrade.apply(s).creatureJson.get
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          581
+        </td>
+        <td>
+          1945
+          -
+          1973
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.MoneyJson.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.MoneyJson.apply(gold.-(price)).json
+        </td>
+      </tr><tr>
+        <td>
+          59
+        </td>
+        <td>
+          580
+        </td>
+        <td>
+          1955
+          -
+          1967
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          gold.-(price)
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          582
+        </td>
+        <td>
+          2012
+          -
+          2024
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          gold.-(price)
+        </td>
+      </tr><tr>
+        <td>
+          60
+        </td>
+        <td>
+          583
+        </td>
+        <td>
+          1979
+          -
+          2024
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.VillageMap.gold_=
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.gold_=(gold.-(price))
+        </td>
+      </tr><tr>
+        <td>
+          61
+        </td>
+        <td>
+          584
+        </td>
+        <td>
+          2030
+          -
+          2066
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.setUpdateRemoteVillage
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.setUpdateRemoteVillage(resourceJson)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          585
+        </td>
+        <td>
+          2170
+          -
+          2182
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          food.-(price)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          586
+        </td>
+        <td>
+          2161
+          -
+          2188
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.FoodJson.json
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.FoodJson.apply(food.-(price)).json
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          588
+        </td>
+        <td>
+          2194
+          -
+          2239
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.VillageMap.food_=
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.food_=(food.-(price))
+        </td>
+      </tr><tr>
+        <td>
+          66
+        </td>
+        <td>
+          587
+        </td>
+        <td>
+          2227
+          -
+          2239
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.-
+        </td>
+        <td style="background: #F0ADAD">
+          food.-(price)
+        </td>
+      </tr><tr>
+        <td>
+          67
+        </td>
+        <td>
+          589
+        </td>
+        <td>
+          2245
+          -
+          2281
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.HandlerLogic.setUpdateRemoteVillage
+        </td>
+        <td style="background: #F0ADAD">
+          HandlerLogic.this.setUpdateRemoteVillage(resourceJson)
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          590
+        </td>
+        <td>
+          2359
+          -
+          2361
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          591
+        </td>
+        <td>
+          2367
+          -
+          2385
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.Class.getName
+        </td>
+        <td style="background: #F0ADAD">
+          s.getClass().getName()
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          592
+        </td>
+        <td>
+          2427
+          -
+          2433
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;FARM&quot;
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          593
+        </td>
+        <td>
+          2467
+          -
+          2473
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;CAVE&quot;
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          594
+        </td>
+        <td>
+          2510
+          -
+          2531
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;HABITAT - Element: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          596
+        </td>
+        <td>
+          2510
+          -
+          2579
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;HABITAT - Element: &quot;.+(s.habitatElement.getOrElse[String](&quot;without element&quot;))
+        </td>
+      </tr><tr>
+        <td>
+          75
+        </td>
+        <td>
+          595
+        </td>
+        <td>
+          2534
+          -
+          2579
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          s.habitatElement.getOrElse[String](&quot;without element&quot;)
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

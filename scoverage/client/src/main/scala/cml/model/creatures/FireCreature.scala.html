@@ -31,8 +31,8 @@
 </span>7 <span style=''>
 </span>8 <span style=''>/**
 </span>9 <span style=''>  * This class models a dragon
-</span>10 <span style=''>  * @param creatureName name of the dragon
-</span>11 <span style=''>  * @param creatureLevel set the dragon level
+</span>10 <span style=''>  * @param creature_name name of the dragon
+</span>11 <span style=''>  * @param creature_level set the dragon level
 </span>12 <span style=''>  *
 </span>13 <span style=''>  * @author Filippo Portolani, (edited by) ecavina
 </span>14 <span style=''>  */
@@ -59,9 +59,9 @@
 </span>35 <span style=''>  override def element: String = </span><span style='background: #F0ADAD'>_element</span><span style=''>
 </span>36 <span style=''>
 </span>37 <span style=''>  override def level: Int = {
-</span>38 <span style=''>    if(</span><span style='background: #F0ADAD'>currentLevel &lt; creature_level</span><span style=''>)
-</span>39 <span style=''>      </span><span style='background: #F0ADAD'>currentLevel = creature_level</span><span style=''>
-</span>40 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>38 <span style=''>    if(</span><span style='background: #AEF1AE'>currentLevel &lt; creature_level</span><span style=''>)
+</span>39 <span style=''>      </span><span style='background: #AEF1AE'>currentLevel = creature_level</span><span style=''>
+</span>40 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''>
 </span>41 <span style=''>  }
 </span>42 <span style=''>  override def attackPower: Int = </span><span style='background: #F0ADAD'>attackValue</span><span style=''>
 </span>43 <span style=''>
@@ -70,9 +70,9 @@
 </span>46 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
 </span>47 <span style=''>  }
 </span>48 <span style=''>
-</span>49 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creature_name</span><span style=''>
+</span>49 <span style=''>  override def name: String = </span><span style='background: #AEF1AE'>creature_name</span><span style=''>
 </span>50 <span style=''>
-</span>51 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>DRAGON</span><span style=''>
+</span>51 <span style=''>  override def creatureType: String = </span><span style='background: #AEF1AE'>DRAGON</span><span style=''>
 </span>52 <span style=''>}
 </span>53 <span style=''>
 </span>54 <span style=''>object FireCreature {
@@ -94,12 +94,12 @@
           18
         </td>
         <td>
-          760
+          865
         </td>
         <td>
-          495
+          497
           -
-          499
+          501
         </td>
         <td>
           Select
@@ -115,33 +115,12 @@
           21
         </td>
         <td>
-          762
+          866
         </td>
         <td>
-          543
+          545
           -
-          560
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.currentLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          FireCreature.this.currentLevel_=(FireCreature.this.currentLevel.+(1))
-        </td>
-      </tr><tr>
-        <td>
-          21
-        </td>
-        <td>
-          761
-        </td>
-        <td>
-          543
-          -
-          560
+          562
         </td>
         <td>
           Apply
@@ -154,15 +133,36 @@
         </td>
       </tr><tr>
         <td>
+          21
+        </td>
+        <td>
+          867
+        </td>
+        <td>
+          545
+          -
+          562
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel_=(FireCreature.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
           22
         </td>
         <td>
-          763
+          868
         </td>
         <td>
-          566
+          568
           -
-          577
+          579
         </td>
         <td>
           Apply
@@ -178,12 +178,12 @@
           26
         </td>
         <td>
-          764
+          869
         </td>
         <td>
-          629
+          631
           -
-          641
+          643
         </td>
         <td>
           Select
@@ -199,54 +199,54 @@
           27
         </td>
         <td>
-          765
+          871
         </td>
         <td>
-          668
+          670
           -
-          685
+          687
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Int.+
+          cml.model.base.Creature.attackValue_=
         </td>
         <td style="background: #AEF1AE">
-          FireCreature.this.attackValue.+(10)
+          FireCreature.this.attackValue_=(FireCreature.this.attackValue.+(10))
         </td>
       </tr><tr>
         <td>
           27
         </td>
         <td>
-          766
+          870
         </td>
         <td>
-          668
+          670
           -
-          685
+          687
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.model.base.Creature.attackValue_=
+          scala.Int.+
         </td>
         <td style="background: #AEF1AE">
-          FireCreature.this.attackValue_=(FireCreature.this.attackValue.+(10))
+          FireCreature.this.attackValue.+(10)
         </td>
       </tr><tr>
         <td>
           28
         </td>
         <td>
-          768
+          873
         </td>
         <td>
-          704
+          706
           -
-          721
+          723
         </td>
         <td>
           Apply
@@ -262,12 +262,12 @@
           28
         </td>
         <td>
-          767
+          872
         </td>
         <td>
-          704
+          706
           -
-          721
+          723
         </td>
         <td>
           Apply
@@ -283,12 +283,12 @@
           29
         </td>
         <td>
-          770
+          875
         </td>
         <td>
-          740
+          742
           -
-          757
+          759
         </td>
         <td>
           Apply
@@ -304,12 +304,12 @@
           29
         </td>
         <td>
-          769
+          874
         </td>
         <td>
-          740
+          742
           -
-          757
+          759
         </td>
         <td>
           Apply
@@ -325,12 +325,12 @@
           30
         </td>
         <td>
-          771
+          876
         </td>
         <td>
-          772
-          -
           774
+          -
+          776
         </td>
         <td>
           Literal
@@ -346,12 +346,12 @@
           35
         </td>
         <td>
-          772
+          877
         </td>
         <td>
-          827
+          829
           -
-          835
+          837
         </td>
         <td>
           Select
@@ -367,33 +367,12 @@
           38
         </td>
         <td>
-          774
+          884
         </td>
         <td>
-          877
+          876
           -
-          906
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.&lt;
-        </td>
-        <td style="background: #F0ADAD">
-          FireCreature.this.currentLevel.&lt;(FireCreature.this.creature_level)
-        </td>
-      </tr><tr>
-        <td>
-          38
-        </td>
-        <td>
-          779
-        </td>
-        <td>
-          874
-          -
-          874
+          876
         </td>
         <td>
           Block
@@ -401,7 +380,7 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           ()
         </td>
       </tr><tr>
@@ -409,12 +388,12 @@
           38
         </td>
         <td>
-          773
+          878
         </td>
         <td>
-          892
+          894
           -
-          906
+          908
         </td>
         <td>
           Select
@@ -422,7 +401,7 @@
         <td>
           cml.model.creatures.FireCreature.creature_level
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FireCreature.this.creature_level
         </td>
       </tr><tr>
@@ -430,12 +409,12 @@
           38
         </td>
         <td>
-          778
+          883
         </td>
         <td>
-          874
+          876
           -
-          874
+          876
         </td>
         <td>
           Literal
@@ -443,20 +422,41 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           ()
+        </td>
+      </tr><tr>
+        <td>
+          38
+        </td>
+        <td>
+          879
+        </td>
+        <td>
+          879
+          -
+          908
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.&lt;
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel.&lt;(FireCreature.this.creature_level)
         </td>
       </tr><tr>
         <td>
           39
         </td>
         <td>
-          777
+          882
         </td>
         <td>
-          915
+          917
           -
-          944
+          946
         </td>
         <td>
           Block
@@ -464,7 +464,7 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
         </td>
       </tr><tr>
@@ -472,12 +472,12 @@
           39
         </td>
         <td>
-          776
+          881
         </td>
         <td>
-          915
+          917
           -
-          944
+          946
         </td>
         <td>
           Apply
@@ -485,7 +485,7 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
         </td>
       </tr><tr>
@@ -493,12 +493,12 @@
           39
         </td>
         <td>
-          775
+          880
         </td>
         <td>
-          930
+          932
           -
-          944
+          946
         </td>
         <td>
           Select
@@ -506,7 +506,7 @@
         <td>
           cml.model.creatures.FireCreature.creature_level
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FireCreature.this.creature_level
         </td>
       </tr><tr>
@@ -514,12 +514,12 @@
           40
         </td>
         <td>
-          780
+          885
         </td>
         <td>
-          950
+          952
           -
-          962
+          964
         </td>
         <td>
           Select
@@ -527,7 +527,7 @@
         <td>
           cml.model.base.Creature.currentLevel
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FireCreature.this.currentLevel
         </td>
       </tr><tr>
@@ -535,12 +535,12 @@
           42
         </td>
         <td>
-          781
+          886
         </td>
         <td>
-          1003
+          1005
           -
-          1014
+          1016
         </td>
         <td>
           Select
@@ -556,33 +556,12 @@
           45
         </td>
         <td>
-          783
+          887
         </td>
         <td>
-          1063
+          1080
           -
-          1092
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.currentLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          782
-        </td>
-        <td>
-          1078
-          -
-          1092
+          1094
         </td>
         <td>
           Select
@@ -595,15 +574,36 @@
         </td>
       </tr><tr>
         <td>
+          45
+        </td>
+        <td>
+          888
+        </td>
+        <td>
+          1065
+          -
+          1094
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          FireCreature.this.currentLevel_=(FireCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
           46
         </td>
         <td>
-          784
+          889
         </td>
         <td>
-          1098
+          1100
           -
-          1109
+          1111
         </td>
         <td>
           Apply
@@ -619,12 +619,12 @@
           49
         </td>
         <td>
-          785
+          890
         </td>
         <td>
-          1148
+          1150
           -
-          1161
+          1163
         </td>
         <td>
           Select
@@ -632,7 +632,7 @@
         <td>
           cml.model.creatures.FireCreature.creature_name
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           FireCreature.this.creature_name
         </td>
       </tr><tr>
@@ -640,12 +640,12 @@
           51
         </td>
         <td>
-          786
+          891
         </td>
         <td>
-          1203
+          1205
           -
-          1209
+          1211
         </td>
         <td>
           Select
@@ -653,7 +653,7 @@
         <td>
           cml.utils.ModelConfig.Creature.DRAGON
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cml.utils.ModelConfig.Creature.DRAGON
         </td>
       </tr>

@@ -28,128 +28,132 @@
 </span>4 <span style=''>import cml.database.utils.Configuration.DbConfig
 </span>5 <span style=''>import cml.schema.User.USERNAME
 </span>6 <span style=''>import cml.schema.Village.{FOOD_FIELD, GOLD_FIELD, VILLAGE_NAME_FIELD}
-</span>7 <span style=''>import org.mongodb.scala.Document
-</span>8 <span style=''>import play.api.libs.json.Json
-</span>9 <span style=''>
-</span>10 <span style=''>import scala.concurrent.{ExecutionContext, Future}
-</span>11 <span style=''>
-</span>12 <span style=''>/**
-</span>13 <span style=''>  * Village service
-</span>14 <span style=''>  *
-</span>15 <span style=''>  * @author ecavina
-</span>16 <span style=''>  */
-</span>17 <span style=''>sealed trait VillageService {
-</span>18 <span style=''>
-</span>19 <span style=''>  /**
-</span>20 <span style=''>    * Insert a new Document with base resources value, username and village name
-</span>21 <span style=''>    * and get created Document in JSON
-</span>22 <span style=''>    * @param username using to create a specific village for this user
-</span>23 <span style=''>    * @return a future string representing the new village in JSON
-</span>24 <span style=''>    */
-</span>25 <span style=''>  def createVillage(username: String)(implicit ec: ExecutionContext): Future[String]
-</span>26 <span style=''>
-</span>27 <span style=''>  /**
-</span>28 <span style=''>    * Get a future string with user's village in JSON
-</span>29 <span style=''>    * @param username using to find personal village
-</span>30 <span style=''>    * @return a future string representing the village in jSON
-</span>31 <span style=''>    */
-</span>32 <span style=''>  def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String]
-</span>33 <span style=''>
-</span>34 <span style=''>  /**
-</span>35 <span style=''>    * Update a user's village with updated information
-</span>36 <span style=''>    * @param username using to find personal village
-</span>37 <span style=''>    * @param update a json describing what to update
-</span>38 <span style=''>    * @return successful or failed update
-</span>39 <span style=''>    */
-</span>40 <span style=''>  def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
-</span>41 <span style=''>
-</span>42 <span style=''>  /**
-</span>43 <span style=''>    * Update items in user's village
-</span>44 <span style=''>    * @param username used to find the document
-</span>45 <span style=''>    * @param update a json describing the existing item to update
-</span>46 <span style=''>    * @return
-</span>47 <span style=''>    */
-</span>48 <span style=''>  def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
-</span>49 <span style=''>
-</span>50 <span style=''>  /**
-</span>51 <span style=''>    * Delete user's village and account
-</span>52 <span style=''>    * @param username target village to delete
-</span>53 <span style=''>    * @return delete successful
-</span>54 <span style=''>    */
-</span>55 <span style=''>  def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean]
-</span>56 <span style=''>}
-</span>57 <span style=''>
-</span>58 <span style=''>object VillageService {
-</span>59 <span style=''>
-</span>60 <span style=''>  def apply(databaseClient: DatabaseClient = DatabaseClient(DbConfig.villageColl)): VillageService =
-</span>61 <span style=''>    </span><span style='background: #AEF1AE'>VillageServiceImpl(databaseClient)</span><span style=''>
-</span>62 <span style=''>
-</span>63 <span style=''>  case class VillageServiceImpl(villageCollection: DatabaseClient) extends VillageService {
-</span>64 <span style=''>    var document: Document = _
-</span>65 <span style=''>
-</span>66 <span style=''>    override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
-</span>67 <span style=''>
-</span>68 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(
-</span>69 <span style=''></span><span style='background: #AEF1AE'>        VILLAGE_NAME_FIELD -&gt; StringBuilder.newBuilder.append(username).append(&quot;'s village&quot;).toString(),
-</span>70 <span style=''></span><span style='background: #AEF1AE'>        USERNAME -&gt; username,
-</span>71 <span style=''></span><span style='background: #AEF1AE'>        FOOD_FIELD -&gt; 100,
-</span>72 <span style=''></span><span style='background: #AEF1AE'>        GOLD_FIELD -&gt; 100
-</span>73 <span style=''></span><span style='background: #AEF1AE'>      )</span><span style=''>
-</span>74 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.insert(document).map(_ =&gt; &quot;Completed&quot;)
-</span>75 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
-</span>76 <span style=''></span><span style='background: #AEF1AE'>          println(e)
-</span>77 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
-</span>78 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
-</span>79 <span style=''>    }
-</span>80 <span style=''>
-</span>81 <span style=''>    override def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
-</span>82 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME -&gt; username)</span><span style=''>
-</span>83 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.find(document)
-</span>84 <span style=''></span><span style='background: #AEF1AE'>        .map(doc =&gt; if(doc.isEmpty) &quot;Village not found&quot; else doc.toJson())
-</span>85 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
-</span>86 <span style=''></span><span style='background: #AEF1AE'>          println(e)
-</span>87 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
-</span>88 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
-</span>89 <span style=''>    }
-</span>90 <span style=''>
-</span>91 <span style=''>    override def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-</span>92 <span style=''>      val queryDocument = </span><span style='background: #AEF1AE'>Document(USERNAME -&gt; username)</span><span style=''>
-</span>93 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.update(queryDocument, Document(Json.parse(update).toString()))
-</span>94 <span style=''></span><span style='background: #AEF1AE'>        .map(modifiedDocument =&gt; modifiedDocument&gt;0)
-</span>95 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
-</span>96 <span style=''></span><span style='background: #AEF1AE'>          println(e)
-</span>97 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
-</span>98 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
-</span>99 <span style=''>    }
-</span>100 <span style=''>
-</span>101 <span style=''>    override def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-</span>102 <span style=''>      val userDoc = </span><span style='background: #F0ADAD'>Document(USERNAME -&gt; username)</span><span style=''>
-</span>103 <span style=''>      </span><span style='background: #F0ADAD'>villageCollection.setUpdate(userDoc, Document(Json.parse(update).toString()))
-</span>104 <span style=''></span><span style='background: #F0ADAD'>        .map(modifiedDocument =&gt; modifiedDocument&gt;0)
-</span>105 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith{case e: Throwable =&gt;
-</span>106 <span style=''></span><span style='background: #F0ADAD'>          println(e)
-</span>107 <span style=''></span><span style='background: #F0ADAD'>          Future.failed(e)
-</span>108 <span style=''></span><span style='background: #F0ADAD'>        }</span><span style=''>
-</span>109 <span style=''>    }
-</span>110 <span style=''>
-</span>111 <span style=''>    override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = {
-</span>112 <span style=''>      val userCollection: DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClient(DbConfig.usersColl)</span><span style=''>
-</span>113 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME -&gt; username)</span><span style=''>
-</span>114 <span style=''>      </span><span style='background: #AEF1AE'>userCollection.delete(document)
-</span>115 <span style=''></span><span style='background: #AEF1AE'>        .map(deletedDocument =&gt; deletedDocument&gt;0)
-</span>116 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith { case e: Throwable =&gt;
-</span>117 <span style=''></span><span style='background: #AEF1AE'>          println(e)
-</span>118 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
-</span>119 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
-</span>120 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.delete(document)
-</span>121 <span style=''></span><span style='background: #AEF1AE'>        .map(deletedDocument =&gt; deletedDocument&gt;0)
-</span>122 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
-</span>123 <span style=''></span><span style='background: #AEF1AE'>          println(e)
-</span>124 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
-</span>125 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
-</span>126 <span style=''>    }
-</span>127 <span style=''>  }
-</span>128 <span style=''>}
+</span>7 <span style=''>import io.vertx.core.logging.{Logger, LoggerFactory}
+</span>8 <span style=''>import org.mongodb.scala.Document
+</span>9 <span style=''>import play.api.libs.json.Json
+</span>10 <span style=''>
+</span>11 <span style=''>import scala.concurrent.{ExecutionContext, Future}
+</span>12 <span style=''>
+</span>13 <span style=''>/**
+</span>14 <span style=''>  * Village service
+</span>15 <span style=''>  *
+</span>16 <span style=''>  * @author ecavina
+</span>17 <span style=''>  */
+</span>18 <span style=''>sealed trait VillageService {
+</span>19 <span style=''>
+</span>20 <span style=''>  /**
+</span>21 <span style=''>    * Insert a new Document with base resources value, username and village name
+</span>22 <span style=''>    * and get created Document in JSON
+</span>23 <span style=''>    * @param username using to create a specific village for this user
+</span>24 <span style=''>    * @return a future string representing the new village in JSON
+</span>25 <span style=''>    */
+</span>26 <span style=''>  def createVillage(username: String)(implicit ec: ExecutionContext): Future[String]
+</span>27 <span style=''>
+</span>28 <span style=''>  /**
+</span>29 <span style=''>    * Get a future string with user's village in JSON
+</span>30 <span style=''>    * @param username using to find personal village
+</span>31 <span style=''>    * @return a future string representing the village in jSON
+</span>32 <span style=''>    */
+</span>33 <span style=''>  def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String]
+</span>34 <span style=''>
+</span>35 <span style=''>  /**
+</span>36 <span style=''>    * Update a user's village with updated information
+</span>37 <span style=''>    * @param username using to find personal village
+</span>38 <span style=''>    * @param update a json describing what to update
+</span>39 <span style=''>    * @return successful or failed update
+</span>40 <span style=''>    */
+</span>41 <span style=''>  def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
+</span>42 <span style=''>
+</span>43 <span style=''>  /**
+</span>44 <span style=''>    * Update items in user's village
+</span>45 <span style=''>    * @param username used to find the document
+</span>46 <span style=''>    * @param update a json describing the existing item to update
+</span>47 <span style=''>    * @return successful or failed update
+</span>48 <span style=''>    */
+</span>49 <span style=''>  def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean]
+</span>50 <span style=''>
+</span>51 <span style=''>  /**
+</span>52 <span style=''>    * Delete user's village and account
+</span>53 <span style=''>    * @param username target village to delete
+</span>54 <span style=''>    * @return delete successful
+</span>55 <span style=''>    */
+</span>56 <span style=''>  def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean]
+</span>57 <span style=''>}
+</span>58 <span style=''>
+</span>59 <span style=''>object VillageService {
+</span>60 <span style=''>
+</span>61 <span style=''>  private val errorMessage = </span><span style='background: #AEF1AE'>&quot;error&quot;</span><span style=''>
+</span>62 <span style=''>  private val log: Logger = </span><span style='background: #AEF1AE'>LoggerFactory.getLogger(&quot;Village Service&quot;)</span><span style=''>
+</span>63 <span style=''>
+</span>64 <span style=''>  def apply(databaseClient: DatabaseClient = DatabaseClient(DbConfig.villageColl)): VillageService =
+</span>65 <span style=''>    </span><span style='background: #AEF1AE'>VillageServiceImpl(databaseClient)</span><span style=''>
+</span>66 <span style=''>
+</span>67 <span style=''>  case class VillageServiceImpl(villageCollection: DatabaseClient) extends VillageService {
+</span>68 <span style=''>    var document: Document = _
+</span>69 <span style=''>
+</span>70 <span style=''>    override def createVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+</span>71 <span style=''>
+</span>72 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(
+</span>73 <span style=''></span><span style='background: #AEF1AE'>        VILLAGE_NAME_FIELD -&gt; StringBuilder.newBuilder.append(username).append(&quot;'s village&quot;).toString(),
+</span>74 <span style=''></span><span style='background: #AEF1AE'>        USERNAME -&gt; username,
+</span>75 <span style=''></span><span style='background: #AEF1AE'>        FOOD_FIELD -&gt; 100,
+</span>76 <span style=''></span><span style='background: #AEF1AE'>        GOLD_FIELD -&gt; 100
+</span>77 <span style=''></span><span style='background: #AEF1AE'>      )</span><span style=''>
+</span>78 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.insert(document).map(_ =&gt; &quot;Completed&quot;)
+</span>79 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
+</span>80 <span style=''></span><span style='background: #AEF1AE'>          log.error(errorMessage, e)
+</span>81 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
+</span>82 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
+</span>83 <span style=''>    }
+</span>84 <span style=''>
+</span>85 <span style=''>    override def enterVillage(username: String)(implicit ec: ExecutionContext): Future[String] = {
+</span>86 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME -&gt; username)</span><span style=''>
+</span>87 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.find(document)
+</span>88 <span style=''></span><span style='background: #AEF1AE'>        .map(doc =&gt; if(doc.isEmpty) &quot;Village not found&quot; else doc.toJson())
+</span>89 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
+</span>90 <span style=''></span><span style='background: #AEF1AE'>          log.error(errorMessage, e)
+</span>91 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
+</span>92 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
+</span>93 <span style=''>    }
+</span>94 <span style=''>
+</span>95 <span style=''>    override def updateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+</span>96 <span style=''>      val queryDocument = </span><span style='background: #AEF1AE'>Document(USERNAME -&gt; username)</span><span style=''>
+</span>97 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.update(queryDocument, Document(Json.parse(update).toString()))
+</span>98 <span style=''></span><span style='background: #AEF1AE'>        .map(modifiedDocument =&gt; modifiedDocument&gt;0)
+</span>99 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
+</span>100 <span style=''></span><span style='background: #AEF1AE'>          log.error(errorMessage, e)
+</span>101 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
+</span>102 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
+</span>103 <span style=''>    }
+</span>104 <span style=''>
+</span>105 <span style=''>    override def setUpdateVillage(username: String, update: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+</span>106 <span style=''>      val userDoc = </span><span style='background: #F0ADAD'>Document(USERNAME -&gt; username)</span><span style=''>
+</span>107 <span style=''>      </span><span style='background: #F0ADAD'>villageCollection.setUpdate(userDoc, Document(Json.parse(update).toString()))
+</span>108 <span style=''></span><span style='background: #F0ADAD'>        .map(modifiedDocument =&gt; modifiedDocument&gt;0)
+</span>109 <span style=''></span><span style='background: #F0ADAD'>        .recoverWith{case e: Throwable =&gt;
+</span>110 <span style=''></span><span style='background: #F0ADAD'>          log.error(errorMessage, e)
+</span>111 <span style=''></span><span style='background: #F0ADAD'>          Future.failed(e)
+</span>112 <span style=''></span><span style='background: #F0ADAD'>        }</span><span style=''>
+</span>113 <span style=''>    }
+</span>114 <span style=''>
+</span>115 <span style=''>    override def deleteVillageAndUser(username: String)(implicit ec: ExecutionContext): Future[Boolean] = {
+</span>116 <span style=''>      val userCollection: DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClient(DbConfig.usersColl)</span><span style=''>
+</span>117 <span style=''>      </span><span style='background: #AEF1AE'>document = Document(USERNAME -&gt; username)</span><span style=''>
+</span>118 <span style=''>      </span><span style='background: #AEF1AE'>userCollection.delete(document)
+</span>119 <span style=''></span><span style='background: #AEF1AE'>        .map(deletedDocument =&gt; deletedDocument&gt;0)
+</span>120 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith { case e: Throwable =&gt;
+</span>121 <span style=''></span><span style='background: #AEF1AE'>          log.error(errorMessage, e)
+</span>122 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
+</span>123 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
+</span>124 <span style=''>      </span><span style='background: #AEF1AE'>villageCollection.delete(document)
+</span>125 <span style=''></span><span style='background: #AEF1AE'>        .map(deletedDocument =&gt; deletedDocument&gt;0)
+</span>126 <span style=''></span><span style='background: #AEF1AE'>        .recoverWith{case e: Throwable =&gt;
+</span>127 <span style=''></span><span style='background: #AEF1AE'>          log.error(errorMessage, e)
+</span>128 <span style=''></span><span style='background: #AEF1AE'>          Future.failed(e)
+</span>129 <span style=''></span><span style='background: #AEF1AE'>        }</span><span style=''>
+</span>130 <span style=''>    }
+</span>131 <span style=''>  }
+</span>132 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -166,12 +170,54 @@
           61
         </td>
         <td>
-          281
+          284
         </td>
         <td>
-          2065
+          2070
           -
-          2099
+          2077
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;error&quot;
+        </td>
+      </tr><tr>
+        <td>
+          62
+        </td>
+        <td>
+          285
+        </td>
+        <td>
+          2107
+          -
+          2149
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.LoggerFactory.getLogger
+        </td>
+        <td style="background: #AEF1AE">
+          io.vertx.core.logging.LoggerFactory.getLogger(&quot;Village Service&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          286
+        </td>
+        <td>
+          2259
+          -
+          2293
         </td>
         <td>
           Apply
@@ -184,36 +230,15 @@
         </td>
       </tr><tr>
         <td>
-          68
+          72
         </td>
         <td>
-          297
+          301
         </td>
         <td>
-          2339
+          2544
           -
-          2560
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.services.village.VillageService.VillageServiceImpl.document_=
-        </td>
-        <td style="background: #AEF1AE">
-          VillageServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.Village.VILLAGE_NAME_FIELD).-&gt;[String](scala.`package`.StringBuilder.newBuilder.append(username).append(&quot;\'s village&quot;).toString()))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.FOOD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt), bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.GOLD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt)))
-        </td>
-      </tr><tr>
-        <td>
-          68
-        </td>
-        <td>
-          296
-        </td>
-        <td>
-          2350
-          -
-          2560
+          2754
         </td>
         <td>
           Apply
@@ -226,99 +251,36 @@
         </td>
       </tr><tr>
         <td>
-          69
+          72
         </td>
         <td>
-          286
+          302
         </td>
         <td>
-          2369
+          2533
           -
-          2464
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.Village.VILLAGE_NAME_FIELD).-&gt;[String](scala.`package`.StringBuilder.newBuilder.append(username).append(&quot;\'s village&quot;).toString()))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          283
-        </td>
-        <td>
-          2391
-          -
-          2464
+          2754
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.collection.mutable.StringBuilder.toString
+          cml.services.village.VillageService.VillageServiceImpl.document_=
         </td>
         <td style="background: #AEF1AE">
-          scala.`package`.StringBuilder.newBuilder.append(username).append(&quot;\'s village&quot;).toString()
+          VillageServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.Village.VILLAGE_NAME_FIELD).-&gt;[String](scala.`package`.StringBuilder.newBuilder.append(username).append(&quot;\'s village&quot;).toString()))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString), bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.FOOD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt), bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.GOLD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt)))
         </td>
       </tr><tr>
         <td>
-          69
+          73
         </td>
         <td>
-          285
+          289
         </td>
         <td>
-          2388
+          2563
           -
-          2388
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          282
-        </td>
-        <td>
-          2369
-          -
-          2387
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.VILLAGE_NAME_FIELD
-        </td>
-        <td style="background: #AEF1AE">
-          cml.schema.Village.VILLAGE_NAME_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          69
-        </td>
-        <td>
-          284
-        </td>
-        <td>
-          2369
-          -
-          2464
+          2658
         </td>
         <td>
           Apply
@@ -331,15 +293,36 @@
         </td>
       </tr><tr>
         <td>
-          70
+          73
         </td>
         <td>
-          289
+          288
         </td>
         <td>
-          2475
+          2585
           -
-          2495
+          2658
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.mutable.StringBuilder.toString
+        </td>
+        <td style="background: #AEF1AE">
+          scala.`package`.StringBuilder.newBuilder.append(username).append(&quot;\'s village&quot;).toString()
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          291
+        </td>
+        <td>
+          2563
+          -
+          2658
         </td>
         <td>
           ApplyToImplicitArgs
@@ -348,19 +331,19 @@
           org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
         </td>
         <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.Village.VILLAGE_NAME_FIELD).-&gt;[String](scala.`package`.StringBuilder.newBuilder.append(username).append(&quot;\'s village&quot;).toString()))(bson.this.BsonTransformer.TransformString)
         </td>
       </tr><tr>
         <td>
-          70
+          73
         </td>
         <td>
-          288
+          290
         </td>
         <td>
-          2484
+          2582
           -
-          2484
+          2582
         </td>
         <td>
           Select
@@ -373,15 +356,36 @@
         </td>
       </tr><tr>
         <td>
-          70
+          73
         </td>
         <td>
           287
         </td>
         <td>
-          2475
+          2563
           -
-          2495
+          2581
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.schema.Village.VILLAGE_NAME_FIELD
+        </td>
+        <td style="background: #AEF1AE">
+          cml.schema.Village.VILLAGE_NAME_FIELD
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          292
+        </td>
+        <td>
+          2669
+          -
+          2689
         </td>
         <td>
           Apply
@@ -394,15 +398,15 @@
         </td>
       </tr><tr>
         <td>
-          71
+          74
         </td>
         <td>
-          292
+          294
         </td>
         <td>
-          2506
+          2669
           -
-          2523
+          2689
         </td>
         <td>
           ApplyToImplicitArgs
@@ -411,40 +415,40 @@
           org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
         </td>
         <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.FOOD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt)
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
         </td>
       </tr><tr>
         <td>
-          71
+          74
         </td>
         <td>
-          291
+          293
         </td>
         <td>
-          2517
+          2678
           -
-          2517
+          2678
         </td>
         <td>
           Select
         </td>
         <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformInt
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
         </td>
         <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformInt
+          bson.this.BsonTransformer.TransformString
         </td>
       </tr><tr>
         <td>
-          71
+          75
         </td>
         <td>
-          290
+          295
         </td>
         <td>
-          2506
+          2700
           -
-          2523
+          2717
         </td>
         <td>
           Apply
@@ -457,15 +461,15 @@
         </td>
       </tr><tr>
         <td>
-          72
+          75
         </td>
         <td>
-          295
+          297
         </td>
         <td>
-          2534
+          2700
           -
-          2551
+          2717
         </td>
         <td>
           ApplyToImplicitArgs
@@ -474,19 +478,19 @@
           org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
         </td>
         <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.GOLD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt)
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.FOOD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt)
         </td>
       </tr><tr>
         <td>
-          72
+          75
         </td>
         <td>
-          294
+          296
         </td>
         <td>
-          2545
+          2711
           -
-          2545
+          2711
         </td>
         <td>
           Select
@@ -499,15 +503,15 @@
         </td>
       </tr><tr>
         <td>
-          72
+          76
         </td>
         <td>
-          293
+          298
         </td>
         <td>
-          2534
+          2728
           -
-          2551
+          2745
         </td>
         <td>
           Apply
@@ -520,15 +524,57 @@
         </td>
       </tr><tr>
         <td>
-          75
+          76
         </td>
         <td>
-          298
+          300
         </td>
         <td>
-          2568
-          -
           2728
+          -
+          2745
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[Int](scala.Predef.ArrowAssoc[String](cml.schema.Village.GOLD_FIELD).-&gt;[Int](100))(bson.this.BsonTransformer.TransformInt)
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          299
+        </td>
+        <td>
+          2739
+          -
+          2739
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformInt
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformInt
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          303
+        </td>
+        <td>
+          2762
+          -
+          2938
         </td>
         <td>
           ApplyToImplicitArgs
@@ -545,7 +591,7 @@
     };
     final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[String]](x1: A1, default: A1 =&gt; B1): B1 = ((x1.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
       case (e @ (_: Throwable)) =&gt; {
-        scala.Predef.println(e);
+        VillageService.this.log.error(VillageService.this.errorMessage, e);
         scala.concurrent.Future.failed[Nothing](e)
       }
       case (defaultCase$ @ _) =&gt; default.apply(x1)
@@ -560,78 +606,15 @@
         </td>
       </tr><tr>
         <td>
-          82
+          86
         </td>
         <td>
-          301
+          304
         </td>
         <td>
-          2865
+          3075
           -
-          2885
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          300
-        </td>
-        <td>
-          2874
-          -
-          2874
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          303
-        </td>
-        <td>
-          2845
-          -
-          2886
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.services.village.VillageService.VillageServiceImpl.document_=
-        </td>
-        <td style="background: #AEF1AE">
-          VillageServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)))
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          299
-        </td>
-        <td>
-          2865
-          -
-          2885
+          3095
         </td>
         <td>
           Apply
@@ -644,15 +627,15 @@
         </td>
       </tr><tr>
         <td>
-          82
+          86
         </td>
         <td>
-          302
+          307
         </td>
         <td>
-          2856
+          3066
           -
-          2886
+          3096
         </td>
         <td>
           Apply
@@ -665,15 +648,78 @@
         </td>
       </tr><tr>
         <td>
-          85
+          86
         </td>
         <td>
-          304
+          306
         </td>
         <td>
-          2894
+          3075
           -
-          3106
+          3095
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          308
+        </td>
+        <td>
+          3055
+          -
+          3096
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.village.VillageService.VillageServiceImpl.document_=
+        </td>
+        <td style="background: #AEF1AE">
+          VillageServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)))
+        </td>
+      </tr><tr>
+        <td>
+          86
+        </td>
+        <td>
+          305
+        </td>
+        <td>
+          3084
+          -
+          3084
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformString
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          309
+        </td>
+        <td>
+          3104
+          -
+          3332
         </td>
         <td>
           ApplyToImplicitArgs
@@ -693,7 +739,7 @@ else
     };
     final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[String]](x2: A1, default: A1 =&gt; B1): B1 = ((x2.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
       case (e @ (_: Throwable)) =&gt; {
-        scala.Predef.println(e);
+        VillageService.this.log.error(VillageService.this.errorMessage, e);
         scala.concurrent.Future.failed[Nothing](e)
       }
       case (defaultCase$ @ _) =&gt; default.apply(x2)
@@ -708,57 +754,15 @@ else
         </td>
       </tr><tr>
         <td>
-          92
+          96
         </td>
         <td>
-          307
+          313
         </td>
         <td>
-          3270
+          3487
           -
-          3290
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          92
-        </td>
-        <td>
-          306
-        </td>
-        <td>
-          3279
-          -
-          3279
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          92
-        </td>
-        <td>
-          308
-        </td>
-        <td>
-          3261
-          -
-          3291
+          3517
         </td>
         <td>
           Apply
@@ -771,15 +775,15 @@ else
         </td>
       </tr><tr>
         <td>
-          92
+          96
         </td>
         <td>
-          305
+          310
         </td>
         <td>
-          3270
+          3496
           -
-          3290
+          3516
         </td>
         <td>
           Apply
@@ -792,15 +796,57 @@ else
         </td>
       </tr><tr>
         <td>
-          95
+          96
         </td>
         <td>
-          309
+          312
         </td>
         <td>
-          3299
+          3496
           -
-          3537
+          3516
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          311
+        </td>
+        <td>
+          3505
+          -
+          3505
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformString
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          314
+        </td>
+        <td>
+          3525
+          -
+          3779
         </td>
         <td>
           ApplyToImplicitArgs
@@ -817,7 +863,7 @@ else
     };
     final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Boolean]](x3: A1, default: A1 =&gt; B1): B1 = ((x3.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
       case (e @ (_: Throwable)) =&gt; {
-        scala.Predef.println(e);
+        VillageService.this.log.error(VillageService.this.errorMessage, e);
         scala.concurrent.Future.failed[Nothing](e)
       }
       case (defaultCase$ @ _) =&gt; default.apply(x3)
@@ -832,78 +878,15 @@ else
         </td>
       </tr><tr>
         <td>
-          102
+          106
         </td>
         <td>
-          313
+          316
         </td>
         <td>
-          3689
+          3949
           -
-          3719
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          org.mongodb.scala.bson.collection.immutable.Document.apply
-        </td>
-        <td style="background: #F0ADAD">
-          org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString))
-        </td>
-      </tr><tr>
-        <td>
-          102
-        </td>
-        <td>
-          310
-        </td>
-        <td>
-          3698
-          -
-          3718
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.ArrowAssoc.-&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username)
-        </td>
-      </tr><tr>
-        <td>
-          102
-        </td>
-        <td>
-          312
-        </td>
-        <td>
-          3698
-          -
-          3718
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #F0ADAD">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          102
-        </td>
-        <td>
-          311
-        </td>
-        <td>
-          3707
-          -
-          3707
+          3949
         </td>
         <td>
           Select
@@ -916,15 +899,78 @@ else
         </td>
       </tr><tr>
         <td>
-          105
+          106
         </td>
         <td>
-          314
+          318
         </td>
         <td>
-          3727
+          3931
           -
-          3962
+          3961
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          org.mongodb.scala.bson.collection.immutable.Document.apply
+        </td>
+        <td style="background: #F0ADAD">
+          org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString))
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          315
+        </td>
+        <td>
+          3940
+          -
+          3960
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Predef.ArrowAssoc.-&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username)
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          317
+        </td>
+        <td>
+          3940
+          -
+          3960
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
+        </td>
+        <td style="background: #F0ADAD">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
+        </td>
+      </tr><tr>
+        <td>
+          109
+        </td>
+        <td>
+          319
+        </td>
+        <td>
+          3969
+          -
+          4220
         </td>
         <td>
           ApplyToImplicitArgs
@@ -941,7 +987,7 @@ else
     };
     final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Boolean]](x4: A1, default: A1 =&gt; B1): B1 = ((x4.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
       case (e @ (_: Throwable)) =&gt; {
-        scala.Predef.println(e);
+        VillageService.this.log.error(VillageService.this.errorMessage, e);
         scala.concurrent.Future.failed[Nothing](e)
       }
       case (defaultCase$ @ _) =&gt; default.apply(x4)
@@ -956,15 +1002,15 @@ else
         </td>
       </tr><tr>
         <td>
-          112
+          116
         </td>
         <td>
-          316
+          321
         </td>
         <td>
-          4125
+          4383
           -
-          4159
+          4417
         </td>
         <td>
           Apply
@@ -977,15 +1023,15 @@ else
         </td>
       </tr><tr>
         <td>
-          112
+          116
         </td>
         <td>
-          315
+          320
         </td>
         <td>
-          4140
+          4398
           -
-          4158
+          4416
         </td>
         <td>
           Select
@@ -998,78 +1044,15 @@ else
         </td>
       </tr><tr>
         <td>
-          113
+          117
         </td>
         <td>
-          319
+          322
         </td>
         <td>
-          4187
+          4445
           -
-          4207
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          318
-        </td>
-        <td>
-          4196
-          -
-          4196
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
-        </td>
-        <td style="background: #AEF1AE">
-          bson.this.BsonTransformer.TransformString
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          321
-        </td>
-        <td>
-          4167
-          -
-          4208
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.services.village.VillageService.VillageServiceImpl.document_=
-        </td>
-        <td style="background: #AEF1AE">
-          VillageServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)))
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          317
-        </td>
-        <td>
-          4187
-          -
-          4207
+          4465
         </td>
         <td>
           Apply
@@ -1082,15 +1065,15 @@ else
         </td>
       </tr><tr>
         <td>
-          113
+          117
         </td>
         <td>
-          320
+          325
         </td>
         <td>
-          4178
+          4436
           -
-          4208
+          4466
         </td>
         <td>
           Apply
@@ -1103,15 +1086,78 @@ else
         </td>
       </tr><tr>
         <td>
-          116
+          117
         </td>
         <td>
-          322
+          324
         </td>
         <td>
-          4216
+          4445
           -
-          4405
+          4465
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.bson.BsonMagnets.tupleToCanBeBsonElement
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)
+        </td>
+      </tr><tr>
+        <td>
+          117
+        </td>
+        <td>
+          323
+        </td>
+        <td>
+          4454
+          -
+          4454
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultBsonTransformers.TransformString
+        </td>
+        <td style="background: #AEF1AE">
+          bson.this.BsonTransformer.TransformString
+        </td>
+      </tr><tr>
+        <td>
+          117
+        </td>
+        <td>
+          326
+        </td>
+        <td>
+          4425
+          -
+          4466
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.services.village.VillageService.VillageServiceImpl.document_=
+        </td>
+        <td style="background: #AEF1AE">
+          VillageServiceImpl.this.document_=(org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[String](scala.Predef.ArrowAssoc[String](cml.schema.User.USERNAME).-&gt;[String](username))(bson.this.BsonTransformer.TransformString)))
+        </td>
+      </tr><tr>
+        <td>
+          120
+        </td>
+        <td>
+          327
+        </td>
+        <td>
+          4474
+          -
+          4679
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1128,7 +1174,7 @@ else
     };
     final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Nothing]](x5: A1, default: A1 =&gt; B1): B1 = ((x5.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
       case (e @ (_: Throwable)) =&gt; {
-        scala.Predef.println(e);
+        VillageService.this.log.error(VillageService.this.errorMessage, e);
         scala.concurrent.Future.failed[Nothing](e)
       }
       case (defaultCase$ @ _) =&gt; default.apply(x5)
@@ -1143,15 +1189,15 @@ else
         </td>
       </tr><tr>
         <td>
-          122
+          126
         </td>
         <td>
-          323
+          328
         </td>
         <td>
-          4413
+          4687
           -
-          4603
+          4893
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1168,7 +1214,7 @@ else
     };
     final override def applyOrElse[A1 &lt;: Throwable, B1 &gt;: scala.concurrent.Future[Boolean]](x6: A1, default: A1 =&gt; B1): B1 = ((x6.asInstanceOf[Throwable]: Throwable): Throwable @unchecked) match {
       case (e @ (_: Throwable)) =&gt; {
-        scala.Predef.println(e);
+        VillageService.this.log.error(VillageService.this.errorMessage, e);
         scala.concurrent.Future.failed[Nothing](e)
       }
       case (defaultCase$ @ _) =&gt; default.apply(x6)

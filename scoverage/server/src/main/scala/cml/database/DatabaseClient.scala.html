@@ -36,130 +36,129 @@
 </span>12 <span style=''>  *
 </span>13 <span style=''>  * @author Filippo Portolani, Monica Gondolini
 </span>14 <span style=''>  */
-</span>15 <span style=''>
-</span>16 <span style=''>trait DatabaseClient{
-</span>17 <span style=''>
-</span>18 <span style=''>  /**
-</span>19 <span style=''>    * Inserts a new document in the Collection
-</span>20 <span style=''>    * @param document to be inserted
-</span>21 <span style=''>    * @param ec implicit for ExecutionContext
-</span>22 <span style=''>    * @return a future
-</span>23 <span style=''>    */
-</span>24 <span style=''>  def insert(document: Document)(implicit ec: ExecutionContext): Future[String]
-</span>25 <span style=''>
-</span>26 <span style=''>  /**
-</span>27 <span style=''>    * Delete a specific document from the database
-</span>28 <span style=''>    * @param document select the document we want to delete
-</span>29 <span style=''>    * @param ec implicit for ExecutionContext
-</span>30 <span style=''>    * @return a future
-</span>31 <span style=''>    */
-</span>32 <span style=''>  def delete(document: Document)(implicit ec: ExecutionContext): Future[Long]
-</span>33 <span style=''>
-</span>34 <span style=''>  /**
-</span>35 <span style=''>    * Update a document with a given query
-</span>36 <span style=''>    * @param document choose the document
-</span>37 <span style=''>    * @param update the change we want to make on the document
-</span>38 <span style=''>    * @param ec implicit for ExecutionContext
-</span>39 <span style=''>    * @return a future
-</span>40 <span style=''>    */
-</span>41 <span style=''>  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
-</span>42 <span style=''>
-</span>43 <span style=''>  /**
-</span>44 <span style=''>    * Update a document with set filter
-</span>45 <span style=''>    * @param document choose the document
-</span>46 <span style=''>    * @param update the change we want to make on the document
-</span>47 <span style=''>    * @param ec implicit for ExecutionContext
-</span>48 <span style=''>    * @return success if the document has been updated
-</span>49 <span style=''>    */
-</span>50 <span style=''>  def setUpdate(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
-</span>51 <span style=''>
-</span>52 <span style=''>  /**
-</span>53 <span style=''>    * Find a requested document
-</span>54 <span style=''>    * @param document what we want to find
-</span>55 <span style=''>    * @param ec implicit for ExecutionContext
-</span>56 <span style=''>    * @return a future document, can be empty if document not found
-</span>57 <span style=''>    */
-</span>58 <span style=''>  def find(document: Document)(implicit ec: ExecutionContext):  Future[Document]
-</span>59 <span style=''>
-</span>60 <span style=''>  /**
-</span>61 <span style=''>    * Allow to insert multiple documents in the database
-</span>62 <span style=''>    * @param documents to insert
-</span>63 <span style=''>    * @param ec implicit for ExecutionContext
-</span>64 <span style=''>    * @return a future
-</span>65 <span style=''>    */
-</span>66 <span style=''>
-</span>67 <span style=''>  def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String]
-</span>68 <span style=''>
-</span>69 <span style=''>  /**
-</span>70 <span style=''>    * Delete multiple documents
-</span>71 <span style=''>    * @param documents to delete
-</span>72 <span style=''>    * @param ec implicit for ExecutionContext
-</span>73 <span style=''>    * @return a future
-</span>74 <span style=''>    */
-</span>75 <span style=''>  def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit]
-</span>76 <span style=''>
-</span>77 <span style=''>  /**
-</span>78 <span style=''>    * Update multiple documents
-</span>79 <span style=''>    * @param query choose the document
-</span>80 <span style=''>    * @param update the change we want to make on the document
-</span>81 <span style=''>    * @param ec implicit for ExecutionContext
-</span>82 <span style=''>    * @return a future
-</span>83 <span style=''>    */
-</span>84 <span style=''>  def multipleUpdate(query:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
-</span>85 <span style=''>}
-</span>86 <span style=''>
-</span>87 <span style=''>/**
-</span>88 <span style=''>  * Companion Object
-</span>89 <span style=''>  */
-</span>90 <span style=''>object DatabaseClient {
-</span>91 <span style=''>  val mongoClient: MongoClient = </span><span style='background: #AEF1AE'>MongoClient(DbConfig.uri)</span><span style=''>
-</span>92 <span style=''>  val database: MongoDatabase = </span><span style='background: #AEF1AE'>mongoClient getDatabase DbConfig.dbName</span><span style=''>
-</span>93 <span style=''>
-</span>94 <span style=''>  def apply(coll: String): DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClientImpl(coll: String)</span><span style=''>
-</span>95 <span style=''>
-</span>96 <span style=''>  case class DatabaseClientImpl(coll: String) extends DatabaseClient with ObservableImplicits {
-</span>97 <span style=''>    val collection: MongoCollection[Document] = </span><span style='background: #AEF1AE'>database getCollection coll</span><span style=''>
-</span>98 <span style=''>
-</span>99 <span style=''>    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
-</span>100 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.insertOne(document).toFuture()</span><span style=''>
-</span>101 <span style=''>      </span><span style='background: #AEF1AE'>future map(_ =&gt; &quot;Insertion Completed&quot;) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
-</span>102 <span style=''>    }
-</span>103 <span style=''>
-</span>104 <span style=''>    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
-</span>105 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.deleteOne(document).toFuture()</span><span style=''>
-</span>106 <span style=''>      </span><span style='background: #AEF1AE'>future map(_.getDeletedCount) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
-</span>107 <span style=''>    }
-</span>108 <span style=''>
-</span>109 <span style=''>    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
-</span>110 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.updateOne(document,Document(&quot;$addToSet&quot;-&gt; update)).toFuture()</span><span style=''>
-</span>111 <span style=''>      </span><span style='background: #F0ADAD'>future map(_.getMatchedCount) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
-</span>112 <span style=''>    }
-</span>113 <span style=''>
-</span>114 <span style=''>    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
-</span>115 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.updateOne(document,Document(&quot;$set&quot;-&gt; update)).toFuture()</span><span style=''>
-</span>116 <span style=''>      </span><span style='background: #F0ADAD'>future map(_.getMatchedCount) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
-</span>117 <span style=''>    }
-</span>118 <span style=''>
-</span>119 <span style=''>    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
-</span>120 <span style=''>      </span><span style='background: #AEF1AE'>collection.find(document).first().toFuture()</span><span style=''>
-</span>121 <span style=''>    }
-</span>122 <span style=''>
-</span>123 <span style=''>    override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
-</span>124 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.insertMany(documents).toFuture()</span><span style=''>
-</span>125 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; &quot;InsertionCompleted&quot;) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
-</span>126 <span style=''>    }
-</span>127 <span style=''>
-</span>128 <span style=''>    override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
-</span>129 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.deleteMany(documents).toFuture()</span><span style=''>
-</span>130 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; {}) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
-</span>131 <span style=''>    }
-</span>132 <span style=''>
-</span>133 <span style=''>    override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
-</span>134 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.updateMany(document,update).toFuture()</span><span style=''>
-</span>135 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; {}) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e)}</span><span style=''>
-</span>136 <span style=''>    }
-</span>137 <span style=''>  }
-</span>138 <span style=''>}
+</span>15 <span style=''>trait DatabaseClient{
+</span>16 <span style=''>
+</span>17 <span style=''>  /**
+</span>18 <span style=''>    * Inserts a new document in the Collection
+</span>19 <span style=''>    * @param document to be inserted
+</span>20 <span style=''>    * @param ec implicit for ExecutionContext
+</span>21 <span style=''>    * @return a future
+</span>22 <span style=''>    */
+</span>23 <span style=''>  def insert(document: Document)(implicit ec: ExecutionContext): Future[String]
+</span>24 <span style=''>
+</span>25 <span style=''>  /**
+</span>26 <span style=''>    * Delete a specific document from the database
+</span>27 <span style=''>    * @param document select the document we want to delete
+</span>28 <span style=''>    * @param ec implicit for ExecutionContext
+</span>29 <span style=''>    * @return a future
+</span>30 <span style=''>    */
+</span>31 <span style=''>  def delete(document: Document)(implicit ec: ExecutionContext): Future[Long]
+</span>32 <span style=''>
+</span>33 <span style=''>  /**
+</span>34 <span style=''>    * Update a document with a given query
+</span>35 <span style=''>    * @param document choose the document
+</span>36 <span style=''>    * @param update the change we want to make on the document
+</span>37 <span style=''>    * @param ec implicit for ExecutionContext
+</span>38 <span style=''>    * @return a future
+</span>39 <span style=''>    */
+</span>40 <span style=''>  def update(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
+</span>41 <span style=''>
+</span>42 <span style=''>  /**
+</span>43 <span style=''>    * Update a document with set filter
+</span>44 <span style=''>    * @param document choose the document
+</span>45 <span style=''>    * @param update the change we want to make on the document
+</span>46 <span style=''>    * @param ec implicit for ExecutionContext
+</span>47 <span style=''>    * @return success if the document has been updated
+</span>48 <span style=''>    */
+</span>49 <span style=''>  def setUpdate(document:Document, update:Document)(implicit ec: ExecutionContext): Future[Long]
+</span>50 <span style=''>
+</span>51 <span style=''>  /**
+</span>52 <span style=''>    * Find a requested document
+</span>53 <span style=''>    * @param document what we want to find
+</span>54 <span style=''>    * @param ec implicit for ExecutionContext
+</span>55 <span style=''>    * @return a future document, can be empty if document not found
+</span>56 <span style=''>    */
+</span>57 <span style=''>  def find(document: Document)(implicit ec: ExecutionContext):  Future[Document]
+</span>58 <span style=''>
+</span>59 <span style=''>  /**
+</span>60 <span style=''>    * Allow to insert multiple documents in the database
+</span>61 <span style=''>    * @param documents to insert
+</span>62 <span style=''>    * @param ec implicit for ExecutionContext
+</span>63 <span style=''>    * @return a future
+</span>64 <span style=''>    */
+</span>65 <span style=''>
+</span>66 <span style=''>  def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String]
+</span>67 <span style=''>
+</span>68 <span style=''>  /**
+</span>69 <span style=''>    * Delete multiple documents
+</span>70 <span style=''>    * @param documents to delete
+</span>71 <span style=''>    * @param ec implicit for ExecutionContext
+</span>72 <span style=''>    * @return a future
+</span>73 <span style=''>    */
+</span>74 <span style=''>  def multipleDelete(documents: Document)(implicit ec: ExecutionContext): Future[Unit]
+</span>75 <span style=''>
+</span>76 <span style=''>  /**
+</span>77 <span style=''>    * Update multiple documents
+</span>78 <span style=''>    * @param query choose the document
+</span>79 <span style=''>    * @param update the change we want to make on the document
+</span>80 <span style=''>    * @param ec implicit for ExecutionContext
+</span>81 <span style=''>    * @return a future
+</span>82 <span style=''>    */
+</span>83 <span style=''>  def multipleUpdate(query:Document, update:Document)(implicit ec: ExecutionContext): Future[Unit]
+</span>84 <span style=''>}
+</span>85 <span style=''>
+</span>86 <span style=''>/**
+</span>87 <span style=''>  * Companion Object
+</span>88 <span style=''>  */
+</span>89 <span style=''>object DatabaseClient {
+</span>90 <span style=''>  val mongoClient: MongoClient = </span><span style='background: #AEF1AE'>MongoClient(DbConfig.uri)</span><span style=''>
+</span>91 <span style=''>  val database: MongoDatabase = </span><span style='background: #AEF1AE'>mongoClient getDatabase DbConfig.dbName</span><span style=''>
+</span>92 <span style=''>
+</span>93 <span style=''>  def apply(coll: String): DatabaseClient = </span><span style='background: #AEF1AE'>DatabaseClientImpl(coll: String)</span><span style=''>
+</span>94 <span style=''>
+</span>95 <span style=''>  case class DatabaseClientImpl(coll: String) extends DatabaseClient with ObservableImplicits {
+</span>96 <span style=''>    val collection: MongoCollection[Document] = </span><span style='background: #AEF1AE'>database getCollection coll</span><span style=''>
+</span>97 <span style=''>
+</span>98 <span style=''>    override def insert(document: Document)(implicit ec: ExecutionContext): Future[String] = {
+</span>99 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.insertOne(document).toFuture()</span><span style=''>
+</span>100 <span style=''>      </span><span style='background: #AEF1AE'>future map(_ =&gt; &quot;Insertion Completed&quot;) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
+</span>101 <span style=''>    }
+</span>102 <span style=''>
+</span>103 <span style=''>    override def delete(document: Document)(implicit ec: ExecutionContext): Future[Long] = {
+</span>104 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.deleteOne(document).toFuture()</span><span style=''>
+</span>105 <span style=''>      </span><span style='background: #AEF1AE'>future map(_.getDeletedCount) recoverWith{case e: Throwable =&gt; Future.failed(e.getCause)}</span><span style=''>
+</span>106 <span style=''>    }
+</span>107 <span style=''>
+</span>108 <span style=''>    override def update(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+</span>109 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.updateOne(document,Document(&quot;$addToSet&quot;-&gt; update)).toFuture()</span><span style=''>
+</span>110 <span style=''>      </span><span style='background: #AEF1AE'>future map(_.getMatchedCount) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
+</span>111 <span style=''>    }
+</span>112 <span style=''>
+</span>113 <span style=''>    override def setUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Long] = {
+</span>114 <span style=''>      val future = </span><span style='background: #AEF1AE'>collection.updateOne(document,Document(&quot;$set&quot;-&gt; update)).toFuture()</span><span style=''>
+</span>115 <span style=''>      </span><span style='background: #AEF1AE'>future map(_.getMatchedCount) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
+</span>116 <span style=''>    }
+</span>117 <span style=''>
+</span>118 <span style=''>    override def find(document: Document)(implicit ec: ExecutionContext): Future[Document] = {
+</span>119 <span style=''>      </span><span style='background: #AEF1AE'>collection.find(document).first().toFuture()</span><span style=''>
+</span>120 <span style=''>    }
+</span>121 <span style=''>
+</span>122 <span style=''>    override def multipleInsert(documents: Array[Document])(implicit ec: ExecutionContext): Future[String] = {
+</span>123 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.insertMany(documents).toFuture()</span><span style=''>
+</span>124 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; &quot;InsertionCompleted&quot;) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
+</span>125 <span style=''>    }
+</span>126 <span style=''>
+</span>127 <span style=''>    override def multipleDelete(documents:Document)(implicit ec: ExecutionContext): Future[Unit] = {
+</span>128 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.deleteMany(documents).toFuture()</span><span style=''>
+</span>129 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; {}) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e.getCause)}</span><span style=''>
+</span>130 <span style=''>    }
+</span>131 <span style=''>
+</span>132 <span style=''>    override def multipleUpdate(document: Document, update: Document)(implicit ec: ExecutionContext): Future[Unit] = {
+</span>133 <span style=''>      val future = </span><span style='background: #F0ADAD'>collection.updateMany(document,update).toFuture()</span><span style=''>
+</span>134 <span style=''>      </span><span style='background: #F0ADAD'>future map(_ =&gt; {}) recoverWith{case e: Throwable =&gt; println(e); Future.failed(e)}</span><span style=''>
+</span>135 <span style=''>    }
+</span>136 <span style=''>  }
+</span>137 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -173,15 +172,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          91
+          90
         </td>
         <td>
-          119
+          112
         </td>
         <td>
-          2805
+          2803
           -
-          2830
+          2828
         </td>
         <td>
           Apply
@@ -194,15 +193,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          90
         </td>
         <td>
-          118
+          111
         </td>
         <td>
-          2817
+          2815
           -
-          2829
+          2827
         </td>
         <td>
           Select
@@ -215,15 +214,36 @@
         </td>
       </tr><tr>
         <td>
-          92
+          91
         </td>
         <td>
-          121
+          113
         </td>
         <td>
-          2864
+          2886
           -
-          2903
+          2901
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.database.utils.Configuration.DbConfig.dbName
+        </td>
+        <td style="background: #AEF1AE">
+          cml.database.utils.Configuration.DbConfig.dbName
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          114
+        </td>
+        <td>
+          2862
+          -
+          2901
         </td>
         <td>
           Apply
@@ -236,36 +256,15 @@
         </td>
       </tr><tr>
         <td>
-          92
+          93
         </td>
         <td>
-          120
+          115
         </td>
         <td>
-          2888
+          2949
           -
-          2903
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.database.utils.Configuration.DbConfig.dbName
-        </td>
-        <td style="background: #AEF1AE">
-          cml.database.utils.Configuration.DbConfig.dbName
-        </td>
-      </tr><tr>
-        <td>
-          94
-        </td>
-        <td>
-          122
-        </td>
-        <td>
-          2951
-          -
-          2983
+          2981
         </td>
         <td>
           Apply
@@ -278,57 +277,15 @@
         </td>
       </tr><tr>
         <td>
-          97
+          96
         </td>
         <td>
-          125
+          116
         </td>
         <td>
-          3132
+          3153
           -
-          3159
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          org.mongodb.scala.MongoDatabase.getCollection
-        </td>
-        <td style="background: #AEF1AE">
-          DatabaseClient.this.database.getCollection[org.mongodb.scala.Document](DatabaseClientImpl.this.coll)(DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document], (ClassTag.apply[org.mongodb.scala.Document](classOf[org.mongodb.scala.bson.collection.immutable.Document]): scala.reflect.ClassTag[org.mongodb.scala.Document]))
-        </td>
-      </tr><tr>
-        <td>
-          97
-        </td>
-        <td>
-          124
-        </td>
-        <td>
-          3141
-          -
-          3141
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          org.mongodb.scala.bson.DefaultHelper.DefaultsTo.default
-        </td>
-        <td style="background: #AEF1AE">
-          DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document]
-        </td>
-      </tr><tr>
-        <td>
-          97
-        </td>
-        <td>
-          123
-        </td>
-        <td>
-          3155
-          -
-          3159
+          3157
         </td>
         <td>
           Select
@@ -341,15 +298,57 @@
         </td>
       </tr><tr>
         <td>
-          100
+          96
         </td>
         <td>
-          126
+          118
         </td>
         <td>
-          3278
+          3130
           -
-          3319
+          3157
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          org.mongodb.scala.MongoDatabase.getCollection
+        </td>
+        <td style="background: #AEF1AE">
+          DatabaseClient.this.database.getCollection[org.mongodb.scala.Document](DatabaseClientImpl.this.coll)(DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document], (ClassTag.apply[org.mongodb.scala.Document](classOf[org.mongodb.scala.bson.collection.immutable.Document]): scala.reflect.ClassTag[org.mongodb.scala.Document]))
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          117
+        </td>
+        <td>
+          3139
+          -
+          3139
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          org.mongodb.scala.bson.DefaultHelper.DefaultsTo.default
+        </td>
+        <td style="background: #AEF1AE">
+          DefaultHelper.this.DefaultsTo.default[org.mongodb.scala.Document]
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          119
+        </td>
+        <td>
+          3276
+          -
+          3317
         </td>
         <td>
           Apply
@@ -362,15 +361,15 @@
         </td>
       </tr><tr>
         <td>
-          101
+          100
         </td>
         <td>
-          127
+          120
         </td>
         <td>
-          3327
+          3325
           -
-          3437
+          3435
         </td>
         <td>
           ApplyToImplicitArgs
@@ -402,15 +401,15 @@
         </td>
       </tr><tr>
         <td>
-          105
+          104
         </td>
         <td>
-          128
+          121
         </td>
         <td>
-          3561
+          3559
           -
-          3602
+          3600
         </td>
         <td>
           Apply
@@ -423,15 +422,15 @@
         </td>
       </tr><tr>
         <td>
-          106
+          105
         </td>
         <td>
-          129
+          122
         </td>
         <td>
-          3610
+          3608
           -
-          3699
+          3697
         </td>
         <td>
           ApplyToImplicitArgs
@@ -460,15 +459,15 @@
         </td>
       </tr><tr>
         <td>
-          110
+          109
         </td>
         <td>
-          130
+          123
         </td>
         <td>
-          3841
+          3839
           -
-          3913
+          3911
         </td>
         <td>
           Apply
@@ -476,20 +475,20 @@
         <td>
           org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.result.UpdateResult](DatabaseClientImpl.this.collection.updateOne(document, org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[org.mongodb.scala.Document](scala.Predef.ArrowAssoc[String](&quot;$addToSet&quot;).-&gt;[org.mongodb.scala.Document](update))(bson.this.BsonTransformer.TransformImmutableDocument)))).toFuture()
         </td>
       </tr><tr>
         <td>
-          111
+          110
         </td>
         <td>
-          131
+          124
         </td>
         <td>
-          3921
+          3919
           -
-          4022
+          4020
         </td>
         <td>
           ApplyToImplicitArgs
@@ -497,7 +496,7 @@
         <td>
           scala.concurrent.Future.recoverWith
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           future.map[Long](((x$3: org.mongodb.scala.result.UpdateResult) =&gt; x$3.getMatchedCount()))(ec).recoverWith[Long](({
   @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Long]] with Serializable {
     def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Long]&gt; = {
@@ -521,15 +520,15 @@
         </td>
       </tr><tr>
         <td>
-          115
+          114
         </td>
         <td>
-          132
+          125
         </td>
         <td>
-          4167
+          4165
           -
-          4234
+          4232
         </td>
         <td>
           Apply
@@ -537,20 +536,20 @@
         <td>
           org.mongodb.scala.ObservableImplicits.ScalaSingleObservable.toFuture
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           DatabaseClientImpl.this.ScalaSingleObservable[org.mongodb.scala.result.UpdateResult](DatabaseClientImpl.this.collection.updateOne(document, org.mongodb.scala.`package`.Document.apply(bson.this.BsonMagnets.tupleToCanBeBsonElement[org.mongodb.scala.Document](scala.Predef.ArrowAssoc[String](&quot;$set&quot;).-&gt;[org.mongodb.scala.Document](update))(bson.this.BsonTransformer.TransformImmutableDocument)))).toFuture()
         </td>
       </tr><tr>
         <td>
-          116
+          115
         </td>
         <td>
-          133
+          126
         </td>
         <td>
-          4242
+          4240
           -
-          4343
+          4341
         </td>
         <td>
           ApplyToImplicitArgs
@@ -558,7 +557,7 @@
         <td>
           scala.concurrent.Future.recoverWith
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           future.map[Long](((x$4: org.mongodb.scala.result.UpdateResult) =&gt; x$4.getMatchedCount()))(ec).recoverWith[Long](({
   @SerialVersionUID(value = 0) final &lt;synthetic&gt; class $anonfun extends scala.runtime.AbstractPartialFunction[Throwable,scala.concurrent.Future[Long]] with Serializable {
     def &lt;init&gt;(): &lt;$anon: Throwable =&gt; scala.concurrent.Future[Long]&gt; = {
@@ -582,15 +581,15 @@
         </td>
       </tr><tr>
         <td>
-          120
+          119
         </td>
         <td>
-          134
+          127
         </td>
         <td>
-          4456
+          4454
           -
-          4500
+          4498
         </td>
         <td>
           Apply
@@ -603,15 +602,15 @@
         </td>
       </tr><tr>
         <td>
-          124
+          123
         </td>
         <td>
-          135
+          128
         </td>
         <td>
-          4642
+          4640
           -
-          4685
+          4683
         </td>
         <td>
           Apply
@@ -624,15 +623,15 @@
         </td>
       </tr><tr>
         <td>
-          125
+          124
         </td>
         <td>
-          136
+          129
         </td>
         <td>
-          4693
+          4691
           -
-          4802
+          4800
         </td>
         <td>
           ApplyToImplicitArgs
@@ -664,15 +663,15 @@
         </td>
       </tr><tr>
         <td>
-          129
+          128
         </td>
         <td>
-          137
+          130
         </td>
         <td>
-          4934
+          4932
           -
-          4977
+          4975
         </td>
         <td>
           Apply
@@ -685,15 +684,15 @@
         </td>
       </tr><tr>
         <td>
-          130
+          129
         </td>
         <td>
-          138
+          131
         </td>
         <td>
-          4985
+          4983
           -
-          5076
+          5074
         </td>
         <td>
           ApplyToImplicitArgs
@@ -725,15 +724,15 @@
         </td>
       </tr><tr>
         <td>
-          134
+          133
         </td>
         <td>
-          139
+          132
         </td>
         <td>
-          5226
+          5224
           -
-          5275
+          5273
         </td>
         <td>
           Apply
@@ -746,15 +745,15 @@
         </td>
       </tr><tr>
         <td>
-          135
+          134
         </td>
         <td>
-          140
+          133
         </td>
         <td>
-          5283
+          5281
           -
-          5365
+          5363
         </td>
         <td>
           ApplyToImplicitArgs

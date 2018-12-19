@@ -29,17 +29,15 @@
 </span>5 <span style=''>  *
 </span>6 <span style=''>  * @author Chiara Volonnino
 </span>7 <span style=''>  */
-</span>8 <span style=''>
-</span>9 <span style=''>object AuthenticationUrl {
-</span>10 <span style=''>  
-</span>11 <span style=''>    private val GeneralPath = </span><span style='background: #AEF1AE'>&quot;/api/authentication&quot;</span><span style=''>
-</span>12 <span style=''>
-</span>13 <span style=''>    val RegisterApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/register&quot;</span><span style=''>
-</span>14 <span style=''>    val LoginApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/login&quot;</span><span style=''>
-</span>15 <span style=''>    val LogoutApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/logout&quot;</span><span style=''>
-</span>16 <span style=''>    val DeleteApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/delete&quot;</span><span style=''> // DA CANCELLARE
-</span>17 <span style=''>    val ValidationTokenApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/validationToken&quot;</span><span style=''>
-</span>18 <span style=''>}
+</span>8 <span style=''>object AuthenticationUrl {
+</span>9 <span style=''>  
+</span>10 <span style=''>    private val GeneralPath = </span><span style='background: #AEF1AE'>&quot;/api/authentication&quot;</span><span style=''>
+</span>11 <span style=''>
+</span>12 <span style=''>    val RegisterApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/register&quot;</span><span style=''>
+</span>13 <span style=''>    val LoginApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/login&quot;</span><span style=''>
+</span>14 <span style=''>    val LogoutApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/logout&quot;</span><span style=''>
+</span>15 <span style=''>    val ValidationTokenApi = </span><span style='background: #AEF1AE'>s&quot;$GeneralPath/validationToken&quot;</span><span style=''>
+</span>16 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -53,15 +51,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          11
+          10
         </td>
         <td>
-          260
+          267
         </td>
         <td>
-          227
+          225
           -
-          248
+          246
         </td>
         <td>
           Literal
@@ -74,15 +72,78 @@
         </td>
       </tr><tr>
         <td>
-          13
+          12
         </td>
         <td>
-          262
+          271
         </td>
         <td>
-          288
+          272
           -
-          298
+          296
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.StringContext.s
+        </td>
+        <td style="background: #AEF1AE">
+          scala.StringContext.apply(&quot;&quot;, &quot;/register&quot;).s(AuthenticationUrl.this.GeneralPath)
+        </td>
+      </tr><tr>
+        <td>
+          12
+        </td>
+        <td>
+          268
+        </td>
+        <td>
+          274
+          -
+          275
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          12
+        </td>
+        <td>
+          270
+        </td>
+        <td>
+          275
+          -
+          286
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.utils.AuthenticationUrl.GeneralPath
+        </td>
+        <td style="background: #AEF1AE">
+          AuthenticationUrl.this.GeneralPath
+        </td>
+      </tr><tr>
+        <td>
+          12
+        </td>
+        <td>
+          269
+        </td>
+        <td>
+          286
+          -
+          296
         </td>
         <td>
           Literal
@@ -98,54 +159,12 @@
           13
         </td>
         <td>
-          261
-        </td>
-        <td>
-          276
-          -
-          277
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;&quot;
-        </td>
-      </tr><tr>
-        <td>
-          13
-        </td>
-        <td>
-          264
-        </td>
-        <td>
           274
+        </td>
+        <td>
+          320
           -
-          298
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.StringContext.s
-        </td>
-        <td style="background: #AEF1AE">
-          scala.StringContext.apply(&quot;&quot;, &quot;/register&quot;).s(AuthenticationUrl.this.GeneralPath)
-        </td>
-      </tr><tr>
-        <td>
-          13
-        </td>
-        <td>
-          263
-        </td>
-        <td>
-          277
-          -
-          288
+          331
         </td>
         <td>
           Select
@@ -158,15 +177,36 @@
         </td>
       </tr><tr>
         <td>
-          14
+          13
         </td>
         <td>
-          265
+          273
         </td>
         <td>
-          321
+          331
           -
-          322
+          338
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;/login&quot;
+        </td>
+      </tr><tr>
+        <td>
+          13
+        </td>
+        <td>
+          272
+        </td>
+        <td>
+          319
+          -
+          320
         </td>
         <td>
           Literal
@@ -179,15 +219,15 @@
         </td>
       </tr><tr>
         <td>
-          14
+          13
         </td>
         <td>
-          268
+          275
         </td>
         <td>
-          319
+          317
           -
-          340
+          338
         </td>
         <td>
           Apply
@@ -203,75 +243,12 @@
           14
         </td>
         <td>
-          267
+          277
         </td>
         <td>
-          322
+          374
           -
-          333
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.utils.AuthenticationUrl.GeneralPath
-        </td>
-        <td style="background: #AEF1AE">
-          AuthenticationUrl.this.GeneralPath
-        </td>
-      </tr><tr>
-        <td>
-          14
-        </td>
-        <td>
-          266
-        </td>
-        <td>
-          333
-          -
-          340
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;/login&quot;
-        </td>
-      </tr><tr>
-        <td>
-          15
-        </td>
-        <td>
-          271
-        </td>
-        <td>
-          365
-          -
-          376
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.utils.AuthenticationUrl.GeneralPath
-        </td>
-        <td style="background: #AEF1AE">
-          AuthenticationUrl.this.GeneralPath
-        </td>
-      </tr><tr>
-        <td>
-          15
-        </td>
-        <td>
-          270
-        </td>
-        <td>
-          376
-          -
-          384
+          382
         </td>
         <td>
           Literal
@@ -284,15 +261,36 @@
         </td>
       </tr><tr>
         <td>
-          15
+          14
         </td>
         <td>
-          272
+          276
         </td>
         <td>
           362
           -
-          384
+          363
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          14
+        </td>
+        <td>
+          279
+        </td>
+        <td>
+          360
+          -
+          382
         </td>
         <td>
           Apply
@@ -305,99 +303,15 @@
         </td>
       </tr><tr>
         <td>
-          15
+          14
         </td>
         <td>
-          269
+          278
         </td>
         <td>
-          364
+          363
           -
-          365
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;&quot;
-        </td>
-      </tr><tr>
-        <td>
-          16
-        </td>
-        <td>
-          274
-        </td>
-        <td>
-          420
-          -
-          428
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;/delete&quot;
-        </td>
-      </tr><tr>
-        <td>
-          16
-        </td>
-        <td>
-          276
-        </td>
-        <td>
-          406
-          -
-          428
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.StringContext.s
-        </td>
-        <td style="background: #AEF1AE">
-          scala.StringContext.apply(&quot;&quot;, &quot;/delete&quot;).s(AuthenticationUrl.this.GeneralPath)
-        </td>
-      </tr><tr>
-        <td>
-          16
-        </td>
-        <td>
-          273
-        </td>
-        <td>
-          408
-          -
-          409
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;&quot;
-        </td>
-      </tr><tr>
-        <td>
-          16
-        </td>
-        <td>
-          275
-        </td>
-        <td>
-          409
-          -
-          420
+          374
         </td>
         <td>
           Select
@@ -410,15 +324,36 @@
         </td>
       </tr><tr>
         <td>
-          17
+          15
         </td>
         <td>
           280
         </td>
         <td>
-          476
+          415
           -
-          507
+          416
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #AEF1AE">
+          &quot;&quot;
+        </td>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          283
+        </td>
+        <td>
+          413
+          -
+          444
         </td>
         <td>
           Apply
@@ -431,36 +366,15 @@
         </td>
       </tr><tr>
         <td>
-          17
+          15
         </td>
         <td>
-          277
+          282
         </td>
         <td>
-          478
+          416
           -
-          479
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #AEF1AE">
-          &quot;&quot;
-        </td>
-      </tr><tr>
-        <td>
-          17
-        </td>
-        <td>
-          279
-        </td>
-        <td>
-          479
-          -
-          490
+          427
         </td>
         <td>
           Select
@@ -473,15 +387,15 @@
         </td>
       </tr><tr>
         <td>
-          17
+          15
         </td>
         <td>
-          278
+          281
         </td>
         <td>
-          490
+          427
           -
-          507
+          444
         </td>
         <td>
           Literal

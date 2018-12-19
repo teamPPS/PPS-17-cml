@@ -24,23 +24,39 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.services.authentication
 </span>2 <span style=''>
-</span>3 <span style=''>trait TokenStorage {
-</span>4 <span style=''>
-</span>5 <span style=''>  def setUserJWTToken(token: String)
-</span>6 <span style=''>
-</span>7 <span style=''>  def getUserJWTToken:String
-</span>8 <span style=''>}
+</span>3 <span style=''>/**
+</span>4 <span style=''>  * This interface utils for storage token in client side
+</span>5 <span style=''>  * @author ecavina
+</span>6 <span style=''>  */
+</span>7 <span style=''>
+</span>8 <span style=''>trait TokenStorage {
 </span>9 <span style=''>
-</span>10 <span style=''>object TokenStorage extends TokenStorage {
-</span>11 <span style=''>
-</span>12 <span style=''>  private var userToken: String = _
-</span>13 <span style=''>
-</span>14 <span style=''>  override def setUserJWTToken(token: String): Unit = </span><span style='background: #F0ADAD'>userToken = token</span><span style=''>
+</span>10 <span style=''>  /**
+</span>11 <span style=''>    * Set a user's token
+</span>12 <span style=''>    * @param token token
+</span>13 <span style=''>    */
+</span>14 <span style=''>  def setUserJWTToken(token: String)
 </span>15 <span style=''>
-</span>16 <span style=''>  override def getUserJWTToken: String = </span><span style='background: #F0ADAD'>userToken</span><span style=''>
-</span>17 <span style=''>}
-</span>18 <span style=''>
-</span>19 <span style=''>
+</span>16 <span style=''>  /**
+</span>17 <span style=''>    * Get user's token
+</span>18 <span style=''>    * @return user's token
+</span>19 <span style=''>    */
+</span>20 <span style=''>  def getUserJWTToken: String
+</span>21 <span style=''>}
+</span>22 <span style=''>
+</span>23 <span style=''>/**
+</span>24 <span style=''>  * Object implements TokenStorage
+</span>25 <span style=''>  */
+</span>26 <span style=''>object TokenStorage extends TokenStorage {
+</span>27 <span style=''>
+</span>28 <span style=''>  private var userToken: String = _
+</span>29 <span style=''>
+</span>30 <span style=''>  override def setUserJWTToken(token: String): Unit = </span><span style='background: #AEF1AE'>userToken = token</span><span style=''>
+</span>31 <span style=''>
+</span>32 <span style=''>  override def getUserJWTToken: String = </span><span style='background: #AEF1AE'>userToken</span><span style=''>
+</span>33 <span style=''>}
+</span>34 <span style=''>
+</span>35 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -54,15 +70,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          14
+          30
         </td>
         <td>
-          972
+          1039
         </td>
         <td>
-          277
+          552
           -
-          294
+          569
         </td>
         <td>
           Apply
@@ -70,20 +86,20 @@
         <td>
           cml.services.authentication.TokenStorage.userToken_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           TokenStorage.this.userToken_=(token)
         </td>
       </tr><tr>
         <td>
-          16
+          32
         </td>
         <td>
-          973
+          1040
         </td>
         <td>
-          339
+          614
           -
-          348
+          623
         </td>
         <td>
           Select
@@ -91,7 +107,7 @@
         <td>
           cml.services.authentication.TokenStorage.userToken
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           TokenStorage.this.userToken
         </td>
       </tr>

@@ -170,21 +170,21 @@
                         <a class="trait" href="JsonMaker.html" title="Trait to generate a new json"></a>
                         <a href="JsonMaker.html" title="Trait to generate a new json">JsonMaker</a>
                       </li><li class="current-entities indented2">
+                        <a class="object" href="JsonReader$.html" title="Object implements JsonJsonReader[A,B]"></a>
+                        <a class="trait" href="JsonReader.html" title="Utility to get information from a Json file"></a>
+                        <a href="JsonReader.html" title="Utility to get information from a Json file">JsonReader</a>
+                      </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="object" href="ModelConfig$.html" title=""></a>
-                        <a href="ModelConfig$.html" title="">ModelConfig</a>
+                        <a class="object" href="ModelConfig$.html" title="Utils for model configuration"></a>
+                        <a href="ModelConfig$.html" title="Utils for model configuration">ModelConfig</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="class" href="MoneyJson.html" title="This class creates a new json for Money resource by given fields"></a>
                         <a href="MoneyJson.html" title="This class creates a new json for Money resource by given fields">MoneyJson</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="class" href="PositionJson.html" title=""></a>
-                        <a href="PositionJson.html" title="">PositionJson</a>
-                      </li><li class="current-entities indented2">
-                        <span class="separator"></span>
-                        <a class="object" href="ViewConfig$.html" title=""></a>
-                        <a href="ViewConfig$.html" title="">ViewConfig</a>
+                        <a class="object" href="ViewConfig$.html" title="Utils for view configuration"></a>
+                        <a href="ViewConfig$.html" title="Utils for view configuration">ViewConfig</a>
                       </li><li name="cml.view" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="view"></a><a id="view:view"></a>
       <span class="permalink">
@@ -295,7 +295,7 @@
         <a title="This class creates a new json for a Creature by given fields" href="CreatureJson.html"><span class="name">CreatureJson</span></a><span class="params">(<span name="creatureName">creatureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="creatureLevel">creatureLevel: <span class="extype" name="scala.Int">Int</span></span>, <span name="creatureType">creatureType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="s">s: <a href="../model/base/Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></span>)</span><span class="result"> extends <a href="JsonMaker.html" class="extype" name="cml.utils.JsonMaker">JsonMaker</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
-      <p class="shortcomment cmt">This class creates a new json for a Creature by given fields</p><div class="fullcomment"><div class="comment cmt"><p>This class creates a new json for a Creature by given fields</p></div><dl class="paramcmts block"><dt class="param">creatureName</dt><dd class="cmt"><p>type of creature</p></dd><dt class="param">creatureLevel</dt><dd class="cmt"><p>level of the creature</p></dd></dl></div>
+      <p class="shortcomment cmt">This class creates a new json for a Creature by given fields</p><div class="fullcomment"><div class="comment cmt"><p>This class creates a new json for a Creature by given fields</p></div><dl class="paramcmts block"><dt class="param">creatureName</dt><dd class="cmt"><p>type of creature</p></dd><dt class="param">creatureLevel</dt><dd class="cmt"><p>level of the creature</p></dd><dt class="param">s</dt><dd class="cmt"><p>structure the creature is living in</p></dd></dl></div>
     </li><li name="cml.utils.FoodJson" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="FoodJsonextendsJsonMakerwithProductwithSerializable"></a><a id="FoodJson:FoodJson"></a>
       <span class="permalink">
@@ -344,6 +344,22 @@
       </span>
       
       <p class="shortcomment cmt">Trait to generate a new json</p>
+    </li><li name="cml.utils.JsonReader" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="JsonReader[A,B]extendsAnyRef"></a><a id="JsonReader[A,B]:JsonReader[A,B]"></a>
+      <span class="permalink">
+      <a href="../../cml/utils/index.html#JsonReader[A,B]extendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="Utility to get information from a Json file" href="JsonReader.html"><span class="name">JsonReader</span></a><span class="tparams">[<span name="A">A</span>, <span name="B">B</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Utility to get information from a Json file</p><div class="fullcomment"><div class="comment cmt"><p>Utility to get information from a Json file</p></div><dl class="paramcmts block"><dt class="tparam">A</dt><dd class="cmt"><p>json object representation</p></dd><dt class="tparam">B</dt><dd class="cmt"><p>field id representation</p></dd></dl></div>
     </li><li name="cml.utils.MoneyJson" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="MoneyJsonextendsJsonMakerwithProductwithSerializable"></a><a id="MoneyJson:MoneyJson"></a>
       <span class="permalink">
@@ -360,22 +376,6 @@
       </span>
       
       <p class="shortcomment cmt">This class creates a new json for Money resource by given fields</p><div class="fullcomment"><div class="comment cmt"><p>This class creates a new json for Money resource by given fields</p></div><dl class="paramcmts block"><dt class="param">amount</dt><dd class="cmt"><p>of money</p></dd></dl></div>
-    </li><li name="cml.utils.PositionJson" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="PositionJsonextendsJsonMakerwithProductwithSerializable"></a><a id="PositionJson:PositionJson"></a>
-      <span class="permalink">
-      <a href="../../cml/utils/index.html#PositionJsonextendsJsonMakerwithProductwithSerializable" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="PositionJson.html"><span class="name">PositionJson</span></a><span class="params">(<span name="structType">structType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="x">x: <span class="extype" name="scala.Int">Int</span></span>, <span name="y">y: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="JsonMaker.html" class="extype" name="cml.utils.JsonMaker">JsonMaker</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      
-      
     </li></ol>
             </div>
 
@@ -384,7 +384,24 @@
         <div class="values members">
               <h3>Value Members</h3>
               <ol>
-                <li name="cml.utils.ModelConfig" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+                <li name="cml.utils.JsonReader" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JsonReader"></a><a id="JsonReader:JsonReader"></a>
+      <span class="permalink">
+      <a href="../../cml/utils/index.html#JsonReader" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="Object implements JsonJsonReader[A,B]" href="JsonReader$.html"><span class="name">JsonReader</span></a><span class="result"> extends <a href="JsonReader.html" class="extype" name="cml.utils.JsonReader">JsonReader</a>[<span class="extype" name="play.api.libs.json.JsValue">JsValue</span>, <span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Object implements JsonJsonReader[A,B]
+</p>
+    </li><li name="cml.utils.ModelConfig" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ModelConfig"></a><a id="ModelConfig:ModelConfig"></a>
       <span class="permalink">
       <a href="../../cml/utils/index.html#ModelConfig" title="Permalink">
@@ -396,10 +413,11 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="ModelConfig$.html"><span class="name">ModelConfig</span></a>
+        <a title="Utils for model configuration" href="ModelConfig$.html"><span class="name">ModelConfig</span></a>
       </span>
       
-      
+      <p class="shortcomment cmt">Utils for model configuration
+</p>
     </li><li name="cml.utils.ViewConfig" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ViewConfig"></a><a id="ViewConfig:ViewConfig"></a>
       <span class="permalink">
@@ -412,10 +430,11 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a title="" href="ViewConfig$.html"><span class="name">ViewConfig</span></a>
+        <a title="Utils for view configuration" href="ViewConfig$.html"><span class="name">ViewConfig</span></a>
       </span>
       
-      
+      <p class="shortcomment cmt">Utils for view configuration
+</p>
     </li>
               </ol>
             </div>

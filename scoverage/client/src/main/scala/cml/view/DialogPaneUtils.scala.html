@@ -1,0 +1,459 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\view\DialogPaneUtils.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.view
+</span>2 <span style=''>
+</span>3 <span style=''>import java.util.Optional
+</span>4 <span style=''>import javafx.scene.control.{Alert, ButtonType}
+</span>5 <span style=''>import javafx.scene.control.Alert.AlertType
+</span>6 <span style=''>
+</span>7 <span style=''>/**
+</span>8 <span style=''>  * This class create  a confirmation dialog
+</span>9 <span style=''>  *
+</span>10 <span style=''>  * @author Chiara Volonnino
+</span>11 <span style=''>  */
+</span>12 <span style=''>
+</span>13 <span style=''>case class DialogPaneUtils() {
+</span>14 <span style=''>
+</span>15 <span style=''>  val ConfirmationDialogTitle = </span><span style='background: #F0ADAD'>&quot;Confirmation Dialog&quot;</span><span style=''>
+</span>16 <span style=''>  val ConfirmationDialogContentTest = </span><span style='background: #F0ADAD'>&quot;Are you sure want to confirm?&quot;</span><span style=''>
+</span>17 <span style=''>  val InformationDialogTitle = </span><span style='background: #F0ADAD'>&quot;Information Dialog&quot;</span><span style=''>
+</span>18 <span style=''>  var alert: Alert = _
+</span>19 <span style=''>
+</span>20 <span style=''>  def createConfirmationPane(headerText: String): Unit = {
+</span>21 <span style=''>    </span><span style='background: #F0ADAD'>alert = new Alert(AlertType.CONFIRMATION) {
+</span>22 <span style=''></span><span style='background: #F0ADAD'>      setTitle(ConfirmationDialogTitle)
+</span>23 <span style=''></span><span style='background: #F0ADAD'>      setHeaderText(headerText)
+</span>24 <span style=''></span><span style='background: #F0ADAD'>      setContentText(ConfirmationDialogContentTest)
+</span>25 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>26 <span style=''>  }
+</span>27 <span style=''>
+</span>28 <span style=''>  def crateInformationPane(headerText: String, contentTest: String): Unit = {
+</span>29 <span style=''>    </span><span style='background: #F0ADAD'>alert = new Alert(AlertType.INFORMATION) {
+</span>30 <span style=''></span><span style='background: #F0ADAD'>      setTitle(InformationDialogTitle)
+</span>31 <span style=''></span><span style='background: #F0ADAD'>      setHeaderText(headerText)
+</span>32 <span style=''></span><span style='background: #F0ADAD'>      setContentText(contentTest)
+</span>33 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>34 <span style=''>  }
+</span>35 <span style=''>
+</span>36 <span style=''>  def showPane(): Optional[ButtonType] = {
+</span>37 <span style=''>    </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
+</span>38 <span style=''>  }
+</span>39 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          15
+        </td>
+        <td>
+          1198
+        </td>
+        <td>
+          303
+          -
+          324
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Confirmation Dialog&quot;
+        </td>
+      </tr><tr>
+        <td>
+          16
+        </td>
+        <td>
+          1199
+        </td>
+        <td>
+          364
+          -
+          395
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Are you sure want to confirm?&quot;
+        </td>
+      </tr><tr>
+        <td>
+          17
+        </td>
+        <td>
+          1200
+        </td>
+        <td>
+          428
+          -
+          448
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Information Dialog&quot;
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          1207
+        </td>
+        <td>
+          540
+          -
+          717
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.alert_=
+        </td>
+        <td style="background: #F0ADAD">
+          DialogPaneUtils.this.alert_=({
+  final class $anon extends javafx.scene.control.Alert {
+    def &lt;init&gt;(): &lt;$anon: javafx.scene.control.Alert&gt; = {
+      $anon.super.&lt;init&gt;(CONFIRMATION);
+      ()
+    };
+    $anon.this.setTitle(DialogPaneUtils.this.ConfirmationDialogTitle);
+    $anon.this.setHeaderText(headerText);
+    $anon.this.setContentText(DialogPaneUtils.this.ConfirmationDialogContentTest)
+  };
+  new $anon()
+})
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          1206
+        </td>
+        <td>
+          548
+          -
+          551
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          1201
+        </td>
+        <td>
+          600
+          -
+          623
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.ConfirmationDialogTitle
+        </td>
+        <td style="background: #F0ADAD">
+          DialogPaneUtils.this.ConfirmationDialogTitle
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          1202
+        </td>
+        <td>
+          591
+          -
+          624
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setTitle
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setTitle(DialogPaneUtils.this.ConfirmationDialogTitle)
+        </td>
+      </tr><tr>
+        <td>
+          23
+        </td>
+        <td>
+          1203
+        </td>
+        <td>
+          632
+          -
+          657
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setHeaderText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setHeaderText(headerText)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          1205
+        </td>
+        <td>
+          665
+          -
+          710
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setContentText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setContentText(DialogPaneUtils.this.ConfirmationDialogContentTest)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          1204
+        </td>
+        <td>
+          680
+          -
+          709
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.ConfirmationDialogContentTest
+        </td>
+        <td style="background: #F0ADAD">
+          DialogPaneUtils.this.ConfirmationDialogContentTest
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          1213
+        </td>
+        <td>
+          809
+          -
+          966
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.alert_=
+        </td>
+        <td style="background: #F0ADAD">
+          DialogPaneUtils.this.alert_=({
+  final class $anon extends javafx.scene.control.Alert {
+    def &lt;init&gt;(): &lt;$anon: javafx.scene.control.Alert&gt; = {
+      $anon.super.&lt;init&gt;(INFORMATION);
+      ()
+    };
+    $anon.this.setTitle(DialogPaneUtils.this.InformationDialogTitle);
+    $anon.this.setHeaderText(headerText);
+    $anon.this.setContentText(contentTest)
+  };
+  new $anon()
+})
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          1212
+        </td>
+        <td>
+          817
+          -
+          820
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          1209
+        </td>
+        <td>
+          859
+          -
+          891
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setTitle
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setTitle(DialogPaneUtils.this.InformationDialogTitle)
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          1208
+        </td>
+        <td>
+          868
+          -
+          890
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.InformationDialogTitle
+        </td>
+        <td style="background: #F0ADAD">
+          DialogPaneUtils.this.InformationDialogTitle
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          1210
+        </td>
+        <td>
+          899
+          -
+          924
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setHeaderText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setHeaderText(headerText)
+        </td>
+      </tr><tr>
+        <td>
+          32
+        </td>
+        <td>
+          1211
+        </td>
+        <td>
+          932
+          -
+          959
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.setContentText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setContentText(contentTest)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          1214
+        </td>
+        <td>
+          1023
+          -
+          1042
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Dialog.showAndWait
+        </td>
+        <td style="background: #F0ADAD">
+          DialogPaneUtils.this.alert.showAndWait()
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

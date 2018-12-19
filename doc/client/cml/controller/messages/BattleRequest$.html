@@ -147,8 +147,8 @@
                         <a href="VillageRequest$.html" title="Village request messages">VillageRequest</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="VillageResponse$.html" title=""></a>
-                        <a href="VillageResponse$.html" title="">VillageResponse</a>
+                        <a class="object" href="VillageResponse$.html" title="Village response message"></a>
+                        <a href="VillageResponse$.html" title="Village response message">VillageResponse</a>
                       </li>
               </ul>
             </div>
@@ -246,6 +246,22 @@
       </span>
       
       
+    </li><li name="cml.controller.messages.BattleRequest.CreatureRequire" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CreatureRequireextendsBattleRequest.BattleRequestwithProductwithSerializable"></a><a id="CreatureRequire:CreatureRequire"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/BattleRequest$.html#CreatureRequireextendsBattleRequest.BattleRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Require creature image for sent of your challenger" href="BattleRequest$$CreatureRequire.html"><span class="name">CreatureRequire</span></a><span class="params">(<span name="creature">creature: <span class="extype" name="scala.Option">Option</span>[<a href="../../model/base/Creature.html" class="extype" name="cml.model.base.Creature">Creature</a>]</span>)</span><span class="result"> extends <a href="BattleRequest$$BattleRequest.html" class="extype" name="cml.controller.messages.BattleRequest.BattleRequest">BattleRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Require creature image for sent of your challenger</p><div class="fullcomment"><div class="comment cmt"><p>Require creature image for sent of your challenger</p></div><dl class="paramcmts block"><dt class="param">creature</dt><dd class="cmt"><p>Option[Creature]</p></dd></dl></div>
     </li><li name="cml.controller.messages.BattleRequest.ExistChallenger" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ExistChallengerextendsBattleRequest.BattleRequestwithProductwithSerializable"></a><a id="ExistChallenger:ExistChallenger"></a>
       <span class="permalink">
@@ -280,6 +296,22 @@
       
       <p class="shortcomment cmt">Request exit into list of wait challenger
 </p>
+    </li><li name="cml.controller.messages.BattleRequest.NotifierExit" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="NotifierExitextendsBattleRequest.BattleRequestwithProductwithSerializable"></a><a id="NotifierExit:NotifierExit"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/BattleRequest$.html#NotifierExitextendsBattleRequest.BattleRequestwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Require notify that the actor has left to the arena view" href="BattleRequest$$NotifierExit.html"><span class="name">NotifierExit</span></a><span class="params">(<span name="actor">actor: <span class="extype" name="akka.actor.ActorRef">ActorRef</span></span>)</span><span class="result"> extends <a href="BattleRequest$$BattleRequest.html" class="extype" name="cml.controller.messages.BattleRequest.BattleRequest">BattleRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      
+      <p class="shortcomment cmt">Require notify that the actor has left to the arena view</p><div class="fullcomment"><div class="comment cmt"><p>Require notify that the actor has left to the arena view</p></div><dl class="paramcmts block"><dt class="param">actor</dt><dd class="cmt"><p>actor identifier</p></dd></dl></div>
     </li><li name="cml.controller.messages.BattleRequest.RequireEnterInArena" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RequireEnterInArenaextendsBattleRequest.BattleRequestwithProductwithSerializable"></a><a id="RequireEnterInArena:RequireEnterInArena"></a>
       <span class="permalink">
@@ -292,10 +324,10 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="Request to add user into a list for require enter in battle arena" href="BattleRequest$$RequireEnterInArena.html"><span class="name">RequireEnterInArena</span></a><span class="params">()</span><span class="result"> extends <a href="BattleRequest$$BattleRequest.html" class="extype" name="cml.controller.messages.BattleRequest.BattleRequest">BattleRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="Request to add user into a list to require enter in battle arena" href="BattleRequest$$RequireEnterInArena.html"><span class="name">RequireEnterInArena</span></a><span class="params">()</span><span class="result"> extends <a href="BattleRequest$$BattleRequest.html" class="extype" name="cml.controller.messages.BattleRequest.BattleRequest">BattleRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
-      <p class="shortcomment cmt">Request to add user into a list for require enter in battle arena
+      <p class="shortcomment cmt">Request to add user into a list to require enter in battle arena
 </p>
     </li><li name="cml.controller.messages.BattleRequest.SceneInfo" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SceneInfoextendsBattleRequest.BattleRequestwithProductwithSerializable"></a><a id="SceneInfo:SceneInfo"></a>
@@ -327,10 +359,11 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a title="" href="BattleRequest$$SwitchInArenaRequest.html"><span class="name">SwitchInArenaRequest</span></a><span class="params">()</span><span class="result"> extends <a href="BattleRequest$$BattleRequest.html" class="extype" name="cml.controller.messages.BattleRequest.BattleRequest">BattleRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a title="Request to switch to Arena View" href="BattleRequest$$SwitchInArenaRequest.html"><span class="name">SwitchInArenaRequest</span></a><span class="params">()</span><span class="result"> extends <a href="BattleRequest$$BattleRequest.html" class="extype" name="cml.controller.messages.BattleRequest.BattleRequest">BattleRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
-      
+      <p class="shortcomment cmt">Request to switch to Arena View
+</p>
     </li></ol>
             </div>
 

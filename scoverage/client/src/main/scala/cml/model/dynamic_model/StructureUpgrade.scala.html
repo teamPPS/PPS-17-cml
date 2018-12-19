@@ -27,7 +27,7 @@
 </span>3 <span style=''>import cml.model.base.Structure
 </span>4 <span style=''>import cml.utils.ModelConfig.ModelClass.{CAVE_CLASS, FARM_CLASS, HABITAT_CLASS}
 </span>5 <span style=''>import cml.utils.ModelConfig.StructureType.{CAVE, FARM}
-</span>6 <span style=''>import cml.utils.{BuildingJson, HabitatJson, PositionJson}
+</span>6 <span style=''>import cml.utils.{BuildingJson, HabitatJson}
 </span>7 <span style=''>import play.api.libs.json.JsValue
 </span>8 <span style=''>
 </span>9 <span style=''>/**
@@ -35,39 +35,35 @@
 </span>11 <span style=''>  */
 </span>12 <span style=''>trait Upgrade extends UpgradeCreature {
 </span>13 <span style=''>  def structureJson: JsValue
-</span>14 <span style=''>  def positionJson: JsValue
-</span>15 <span style=''>}
-</span>16 <span style=''>
-</span>17 <span style=''>/**
-</span>18 <span style=''>  * Upgrade a structure level
-</span>19 <span style=''>  * @param s structure to upgrade
-</span>20 <span style=''>  */
-</span>21 <span style=''>case class StructureUpgrade(s: Structure) extends Upgrade {
-</span>22 <span style=''>
-</span>23 <span style=''>  private var jsonStructure: JsValue = _
-</span>24 <span style=''>  private var jsonCreature: JsValue = _
-</span>25 <span style=''>  private var jsonPosition: JsValue = _
-</span>26 <span style=''>
-</span>27 <span style=''>  </span><span style='background: #F0ADAD'>s.levelUp()</span><span style=''>
-</span>28 <span style=''>  </span><span style='background: #F0ADAD'>s.getClass.getName</span><span style=''> match {
-</span>29 <span style=''>    case FARM_CLASS =&gt;
-</span>30 <span style=''>      </span><span style='background: #F0ADAD'>jsonStructure = BuildingJson(FARM, s.level, s.position).json</span><span style=''>
-</span>31 <span style=''>      </span><span style='background: #F0ADAD'>jsonPosition = PositionJson(&quot;BUILDING&quot;, s.position.x, s.position.y).json</span><span style=''>
-</span>32 <span style=''>    case CAVE_CLASS =&gt;
-</span>33 <span style=''>      </span><span style='background: #F0ADAD'>jsonStructure = BuildingJson(CAVE, s.level, s.position).json</span><span style=''>
-</span>34 <span style=''>      </span><span style='background: #F0ADAD'>jsonPosition = PositionJson(&quot;BUILDING&quot;, s.position.x, s.position.y).json</span><span style=''>
-</span>35 <span style=''>    case HABITAT_CLASS =&gt;
-</span>36 <span style=''>      if(</span><span style='background: #F0ADAD'>s.creatures != null &amp;&amp; s.creatures.nonEmpty</span><span style=''>)</span><span style='background: #F0ADAD'>{
-</span>37 <span style=''></span><span style='background: #F0ADAD'>        jsonStructure = HabitatJson(s.habitatElement, s.level, s.position).json
-</span>38 <span style=''></span><span style='background: #F0ADAD'>        jsonPosition = PositionJson(&quot;HABITAT&quot;, s.position.x, s.position.y).json
-</span>39 <span style=''></span><span style='background: #F0ADAD'>        jsonCreature = CreatureUpgrade(s.creatures.head, s).creatureJson
-</span>40 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>41 <span style=''>  }
-</span>42 <span style=''>
-</span>43 <span style=''>  override def structureJson: JsValue = </span><span style='background: #F0ADAD'>jsonStructure</span><span style=''>
-</span>44 <span style=''>  override def creatureJson: JsValue = </span><span style='background: #F0ADAD'>jsonCreature</span><span style=''>
-</span>45 <span style=''>  override def positionJson: JsValue = </span><span style='background: #F0ADAD'>jsonPosition</span><span style=''>
-</span>46 <span style=''>}
+</span>14 <span style=''>}
+</span>15 <span style=''>
+</span>16 <span style=''>/**
+</span>17 <span style=''>  * Upgrade a structure level
+</span>18 <span style=''>  * @param s structure to upgrade
+</span>19 <span style=''>  */
+</span>20 <span style=''>case class StructureUpgrade(s: Structure) extends Upgrade {
+</span>21 <span style=''>
+</span>22 <span style=''>  private var jsonStructure: JsValue = _
+</span>23 <span style=''>  private var jsonCreature: Option[JsValue] = _
+</span>24 <span style=''>
+</span>25 <span style=''>  </span><span style='background: #AEF1AE'>s.levelUp()</span><span style=''>
+</span>26 <span style=''>  </span><span style='background: #AEF1AE'>s.getClass.getName</span><span style=''> match {
+</span>27 <span style=''>    case FARM_CLASS =&gt;
+</span>28 <span style=''>      </span><span style='background: #AEF1AE'>jsonStructure = BuildingJson(FARM, s.level, s.position).json</span><span style=''>
+</span>29 <span style=''>      </span><span style='background: #AEF1AE'>jsonCreature = Option.empty</span><span style=''>
+</span>30 <span style=''>    case CAVE_CLASS =&gt;
+</span>31 <span style=''>      </span><span style='background: #AEF1AE'>jsonStructure = BuildingJson(CAVE, s.level, s.position).json</span><span style=''>
+</span>32 <span style=''>      </span><span style='background: #AEF1AE'>jsonCreature = Option.empty</span><span style=''>
+</span>33 <span style=''>    case HABITAT_CLASS =&gt;
+</span>34 <span style=''>      if(</span><span style='background: #AEF1AE'>s.creatures.nonEmpty</span><span style=''>)</span><span style='background: #AEF1AE'>{
+</span>35 <span style=''></span><span style='background: #AEF1AE'>        jsonCreature = CreatureUpgrade(s.creatures.get.head, s).creatureJson
+</span>36 <span style=''></span><span style='background: #AEF1AE'>        jsonStructure = HabitatJson(s.habitatElement.get, s.level, s.position).json
+</span>37 <span style=''></span><span style='background: #AEF1AE'>      }</span><span style=''> else </span><span style='background: #F0ADAD'>jsonCreature = Option.empty</span><span style=''>
+</span>38 <span style=''>  }
+</span>39 <span style=''>
+</span>40 <span style=''>  override def structureJson: JsValue = </span><span style='background: #AEF1AE'>jsonStructure</span><span style=''>
+</span>41 <span style=''>  override def creatureJson: Option[JsValue] = </span><span style='background: #AEF1AE'>jsonCreature</span><span style=''>
+</span>42 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -81,15 +77,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          27
+          25
         </td>
         <td>
-          850
+          956
         </td>
         <td>
-          717
+          641
           -
-          728
+          652
         </td>
         <td>
           Apply
@@ -97,20 +93,20 @@
         <td>
           cml.model.base.Structure.levelUp
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.s.levelUp()
         </td>
       </tr><tr>
         <td>
-          28
+          26
         </td>
         <td>
-          851
+          957
         </td>
         <td>
-          732
+          656
           -
-          750
+          674
         </td>
         <td>
           Apply
@@ -118,62 +114,20 @@
         <td>
           java.lang.Class.getName
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.s.getClass().getName()
         </td>
       </tr><tr>
         <td>
-          30
+          28
         </td>
         <td>
-          855
+          959
         </td>
         <td>
-          806
+          749
           -
-          850
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.BuildingJson.json
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.FARM, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          854
-        </td>
-        <td>
-          834
-          -
-          844
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Structure.position
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position
-        </td>
-      </tr><tr>
-        <td>
-          30
-        </td>
-        <td>
-          853
-        </td>
-        <td>
-          825
-          -
-          832
+          756
         </td>
         <td>
           Select
@@ -181,20 +135,20 @@
         <td>
           cml.model.base.Structure.level
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.s.level
         </td>
       </tr><tr>
         <td>
-          30
+          28
         </td>
         <td>
-          856
+          962
         </td>
         <td>
-          790
+          714
           -
-          850
+          774
         </td>
         <td>
           Apply
@@ -202,20 +156,20 @@
         <td>
           cml.model.dynamic_model.StructureUpgrade.jsonStructure_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.jsonStructure_=(cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.FARM, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json)
         </td>
       </tr><tr>
         <td>
-          30
+          28
         </td>
         <td>
-          852
+          958
         </td>
         <td>
-          819
+          743
           -
-          823
+          747
         </td>
         <td>
           Select
@@ -223,209 +177,20 @@
         <td>
           cml.utils.ModelConfig.StructureType.FARM
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           cml.utils.ModelConfig.StructureType.FARM
         </td>
       </tr><tr>
         <td>
-          31
+          28
         </td>
         <td>
-          857
+          961
         </td>
         <td>
-          886
+          730
           -
-          896
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;BUILDING&quot;
-        </td>
-      </tr><tr>
-        <td>
-          31
-        </td>
-        <td>
-          860
-        </td>
-        <td>
-          873
-          -
-          930
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.PositionJson.json
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.PositionJson.apply(&quot;BUILDING&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json
-        </td>
-      </tr><tr>
-        <td>
-          31
-        </td>
-        <td>
-          859
-        </td>
-        <td>
-          912
-          -
-          924
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Position.y
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position.y
-        </td>
-      </tr><tr>
-        <td>
-          31
-        </td>
-        <td>
-          858
-        </td>
-        <td>
-          898
-          -
-          910
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Position.x
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position.x
-        </td>
-      </tr><tr>
-        <td>
-          31
-        </td>
-        <td>
-          861
-        </td>
-        <td>
-          858
-          -
-          930
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.dynamic_model.StructureUpgrade.jsonPosition_=
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonPosition_=(cml.utils.PositionJson.apply(&quot;BUILDING&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json)
-        </td>
-      </tr><tr>
-        <td>
-          33
-        </td>
-        <td>
-          864
-        </td>
-        <td>
-          1006
-          -
-          1016
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Structure.position
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position
-        </td>
-      </tr><tr>
-        <td>
-          33
-        </td>
-        <td>
-          863
-        </td>
-        <td>
-          997
-          -
-          1004
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Structure.level
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.level
-        </td>
-      </tr><tr>
-        <td>
-          33
-        </td>
-        <td>
-          866
-        </td>
-        <td>
-          962
-          -
-          1022
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.dynamic_model.StructureUpgrade.jsonStructure_=
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonStructure_=(cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.CAVE, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json)
-        </td>
-      </tr><tr>
-        <td>
-          33
-        </td>
-        <td>
-          862
-        </td>
-        <td>
-          991
-          -
-          995
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.ModelConfig.StructureType.CAVE
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.ModelConfig.StructureType.CAVE
-        </td>
-      </tr><tr>
-        <td>
-          33
-        </td>
-        <td>
-          865
-        </td>
-        <td>
-          978
-          -
-          1022
+          774
         </td>
         <td>
           Select
@@ -433,297 +198,20 @@
         <td>
           cml.utils.BuildingJson.json
         </td>
-        <td style="background: #F0ADAD">
-          cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.CAVE, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json
+        <td style="background: #AEF1AE">
+          cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.FARM, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json
         </td>
       </tr><tr>
         <td>
-          34
+          28
         </td>
         <td>
-          869
+          960
         </td>
         <td>
-          1084
+          758
           -
-          1096
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Position.y
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position.y
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          871
-        </td>
-        <td>
-          1030
-          -
-          1102
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.dynamic_model.StructureUpgrade.jsonPosition_=
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonPosition_=(cml.utils.PositionJson.apply(&quot;BUILDING&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json)
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          868
-        </td>
-        <td>
-          1070
-          -
-          1082
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Position.x
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position.x
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          867
-        </td>
-        <td>
-          1058
-          -
-          1068
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;BUILDING&quot;
-        </td>
-      </tr><tr>
-        <td>
-          34
-        </td>
-        <td>
-          870
-        </td>
-        <td>
-          1045
-          -
-          1102
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.PositionJson.json
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.PositionJson.apply(&quot;BUILDING&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          891
-        </td>
-        <td>
-          1137
-          -
-          1137
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          873
-        </td>
-        <td>
-          1163
-          -
-          1183
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.collection.TraversableOnce.nonEmpty
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.creatures.nonEmpty
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          872
-        </td>
-        <td>
-          1155
-          -
-          1159
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          null
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          890
-        </td>
-        <td>
-          1137
-          -
-          1137
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          889
-        </td>
-        <td>
-          1184
-          -
-          1430
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          {
-  StructureUpgrade.this.jsonStructure_=(cml.utils.HabitatJson.apply(StructureUpgrade.this.s.habitatElement, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json);
-  StructureUpgrade.this.jsonPosition_=(cml.utils.PositionJson.apply(&quot;HABITAT&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json);
-  StructureUpgrade.this.jsonCreature_=(CreatureUpgrade.apply(StructureUpgrade.this.s.creatures.head, StructureUpgrade.this.s).creatureJson)
-}
-        </td>
-      </tr><tr>
-        <td>
-          36
-        </td>
-        <td>
-          874
-        </td>
-        <td>
-          1140
-          -
-          1183
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Boolean.&amp;&amp;
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.creatures.!=(null).&amp;&amp;(StructureUpgrade.this.s.creatures.nonEmpty)
-        </td>
-      </tr><tr>
-        <td>
-          37
-        </td>
-        <td>
-          875
-        </td>
-        <td>
-          1223
-          -
-          1239
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Structure.habitatElement
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.habitatElement
-        </td>
-      </tr><tr>
-        <td>
-          37
-        </td>
-        <td>
-          878
-        </td>
-        <td>
-          1211
-          -
-          1266
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.HabitatJson.json
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.HabitatJson.apply(StructureUpgrade.this.s.habitatElement, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json
-        </td>
-      </tr><tr>
-        <td>
-          37
-        </td>
-        <td>
-          877
-        </td>
-        <td>
-          1250
-          -
-          1260
+          768
         </td>
         <td>
           Select
@@ -731,41 +219,125 @@
         <td>
           cml.model.base.Structure.position
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.s.position
         </td>
       </tr><tr>
         <td>
-          37
+          29
         </td>
         <td>
-          876
+          964
         </td>
         <td>
-          1241
+          782
           -
-          1248
+          809
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.StructureUpgrade.jsonCreature_=
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.jsonCreature_=(scala.Option.empty[Nothing])
+        </td>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          963
+        </td>
+        <td>
+          797
+          -
+          809
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.Option.empty
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Option.empty[Nothing]
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          968
+        </td>
+        <td>
+          857
+          -
+          901
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Structure.level
+          cml.utils.BuildingJson.json
         </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.level
+        <td style="background: #AEF1AE">
+          cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.CAVE, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json
         </td>
       </tr><tr>
         <td>
-          37
+          31
         </td>
         <td>
-          879
+          965
         </td>
         <td>
-          1195
+          870
           -
-          1266
+          874
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ModelConfig.StructureType.CAVE
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.ModelConfig.StructureType.CAVE
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          967
+        </td>
+        <td>
+          885
+          -
+          895
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Structure.position
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.position
+        </td>
+      </tr><tr>
+        <td>
+          31
+        </td>
+        <td>
+          969
+        </td>
+        <td>
+          841
+          -
+          901
         </td>
         <td>
           Apply
@@ -773,146 +345,128 @@
         <td>
           cml.model.dynamic_model.StructureUpgrade.jsonStructure_=
         </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonStructure_=(cml.utils.HabitatJson.apply(StructureUpgrade.this.s.habitatElement, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json)
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.jsonStructure_=(cml.utils.BuildingJson.apply(cml.utils.ModelConfig.StructureType.CAVE, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json)
         </td>
       </tr><tr>
         <td>
-          38
+          31
         </td>
         <td>
-          882
+          966
         </td>
         <td>
-          1329
+          876
           -
-          1341
+          883
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Position.y
+          cml.model.base.Structure.level
         </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position.y
-        </td>
-      </tr><tr>
-        <td>
-          38
-        </td>
-        <td>
-          881
-        </td>
-        <td>
-          1315
-          -
-          1327
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Position.x
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.position.x
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.level
         </td>
       </tr><tr>
         <td>
-          38
+          32
         </td>
         <td>
-          884
+          971
         </td>
         <td>
-          1276
+          909
           -
-          1347
+          936
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.model.dynamic_model.StructureUpgrade.jsonPosition_=
+          cml.model.dynamic_model.StructureUpgrade.jsonCreature_=
         </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonPosition_=(cml.utils.PositionJson.apply(&quot;HABITAT&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json)
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.jsonCreature_=(scala.Option.empty[Nothing])
         </td>
       </tr><tr>
         <td>
-          38
+          32
         </td>
         <td>
-          880
+          970
         </td>
         <td>
-          1304
+          924
           -
-          1313
+          936
         </td>
         <td>
-          Literal
+          TypeApply
+        </td>
+        <td>
+          scala.Option.empty
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Option.empty[Nothing]
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          982
+        </td>
+        <td>
+          995
+          -
+          1168
+        </td>
+        <td>
+          Block
         </td>
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
-          &quot;HABITAT&quot;
+        <td style="background: #AEF1AE">
+          {
+  StructureUpgrade.this.jsonCreature_=(CreatureUpgrade.apply(StructureUpgrade.this.s.creatures.get.head, StructureUpgrade.this.s).creatureJson);
+  StructureUpgrade.this.jsonStructure_=(cml.utils.HabitatJson.apply(StructureUpgrade.this.s.habitatElement.get, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json)
+}
         </td>
       </tr><tr>
         <td>
-          38
+          34
         </td>
         <td>
-          883
+          972
         </td>
         <td>
-          1291
+          974
           -
-          1347
+          994
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.utils.PositionJson.json
+          scala.Option.nonEmpty
         </td>
-        <td style="background: #F0ADAD">
-          cml.utils.PositionJson.apply(&quot;HABITAT&quot;, StructureUpgrade.this.s.position.x, StructureUpgrade.this.s.position.y).json
-        </td>
-      </tr><tr>
-        <td>
-          39
-        </td>
-        <td>
-          887
-        </td>
-        <td>
-          1372
-          -
-          1421
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.dynamic_model.CreatureUpgrade.creatureJson
-        </td>
-        <td style="background: #F0ADAD">
-          CreatureUpgrade.apply(StructureUpgrade.this.s.creatures.head, StructureUpgrade.this.s).creatureJson
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.creatures.nonEmpty
         </td>
       </tr><tr>
         <td>
-          39
+          35
         </td>
         <td>
-          886
+          974
         </td>
         <td>
-          1406
+          1059
           -
-          1407
+          1060
         </td>
         <td>
           Select
@@ -920,20 +474,20 @@
         <td>
           cml.model.dynamic_model.StructureUpgrade.s
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.s
         </td>
       </tr><tr>
         <td>
-          39
+          35
         </td>
         <td>
-          885
+          973
         </td>
         <td>
-          1388
+          1037
           -
-          1404
+          1057
         </td>
         <td>
           Select
@@ -941,20 +495,209 @@
         <td>
           scala.collection.mutable.MutableList.head
         </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.s.creatures.head
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.creatures.get.head
         </td>
       </tr><tr>
         <td>
-          39
+          35
         </td>
         <td>
-          888
+          976
         </td>
         <td>
-          1357
+          1006
           -
-          1421
+          1074
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.StructureUpgrade.jsonCreature_=
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.jsonCreature_=(CreatureUpgrade.apply(StructureUpgrade.this.s.creatures.get.head, StructureUpgrade.this.s).creatureJson)
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          975
+        </td>
+        <td>
+          1021
+          -
+          1074
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.dynamic_model.CreatureUpgrade.creatureJson
+        </td>
+        <td style="background: #AEF1AE">
+          CreatureUpgrade.apply(StructureUpgrade.this.s.creatures.get.head, StructureUpgrade.this.s).creatureJson
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          977
+        </td>
+        <td>
+          1112
+          -
+          1132
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Option.get
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.habitatElement.get
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          980
+        </td>
+        <td>
+          1100
+          -
+          1159
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.HabitatJson.json
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.HabitatJson.apply(StructureUpgrade.this.s.habitatElement.get, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          979
+        </td>
+        <td>
+          1143
+          -
+          1153
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Structure.position
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.position
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          978
+        </td>
+        <td>
+          1134
+          -
+          1141
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Structure.level
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.s.level
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          981
+        </td>
+        <td>
+          1084
+          -
+          1159
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.dynamic_model.StructureUpgrade.jsonStructure_=
+        </td>
+        <td style="background: #AEF1AE">
+          StructureUpgrade.this.jsonStructure_=(cml.utils.HabitatJson.apply(StructureUpgrade.this.s.habitatElement.get, StructureUpgrade.this.s.level, StructureUpgrade.this.s.position).json)
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          983
+        </td>
+        <td>
+          1189
+          -
+          1201
+        </td>
+        <td>
+          TypeApply
+        </td>
+        <td>
+          scala.Option.empty
+        </td>
+        <td style="background: #F0ADAD">
+          scala.Option.empty[Nothing]
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          985
+        </td>
+        <td>
+          1174
+          -
+          1201
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.model.dynamic_model.StructureUpgrade.jsonCreature_=
+        </td>
+        <td style="background: #F0ADAD">
+          StructureUpgrade.this.jsonCreature_=(scala.Option.empty[Nothing])
+        </td>
+      </tr><tr>
+        <td>
+          37
+        </td>
+        <td>
+          984
+        </td>
+        <td>
+          1174
+          -
+          1201
         </td>
         <td>
           Apply
@@ -963,19 +706,19 @@
           cml.model.dynamic_model.StructureUpgrade.jsonCreature_=
         </td>
         <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonCreature_=(CreatureUpgrade.apply(StructureUpgrade.this.s.creatures.head, StructureUpgrade.this.s).creatureJson)
+          StructureUpgrade.this.jsonCreature_=(scala.Option.empty[Nothing])
         </td>
       </tr><tr>
         <td>
-          43
+          40
         </td>
         <td>
-          892
+          986
         </td>
         <td>
-          1479
+          1250
           -
-          1492
+          1263
         </td>
         <td>
           Select
@@ -983,20 +726,20 @@
         <td>
           cml.model.dynamic_model.StructureUpgrade.jsonStructure
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.jsonStructure
         </td>
       </tr><tr>
         <td>
-          44
+          41
         </td>
         <td>
-          893
+          987
         </td>
         <td>
-          1533
+          1312
           -
-          1545
+          1324
         </td>
         <td>
           Select
@@ -1004,29 +747,8 @@
         <td>
           cml.model.dynamic_model.StructureUpgrade.jsonCreature
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           StructureUpgrade.this.jsonCreature
-        </td>
-      </tr><tr>
-        <td>
-          45
-        </td>
-        <td>
-          894
-        </td>
-        <td>
-          1586
-          -
-          1598
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.dynamic_model.StructureUpgrade.jsonPosition
-        </td>
-        <td style="background: #F0ADAD">
-          StructureUpgrade.this.jsonPosition
         </td>
       </tr>
     </table>

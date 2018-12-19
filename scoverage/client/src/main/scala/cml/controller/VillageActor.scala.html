@@ -24,88 +24,86 @@
           <div class="tab-pane active" id="codegrid">
             <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.controller
 </span>2 <span style=''>
-</span>3 <span style=''>import akka.actor.{Actor, ActorRef, ActorSelection}
+</span>3 <span style=''>import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection}
 </span>4 <span style=''>import cml.controller.actor.utils.ViewMessage.ViewVillageMessage._
-</span>5 <span style=''>import cml.controller.fx.VillageViewController
-</span>6 <span style=''>import cml.controller.messages.VillageRequest._
-</span>7 <span style=''>import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
-</span>8 <span style=''>import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
-</span>9 <span style=''>import javafx.application.Platform
-</span>10 <span style=''>
-</span>11 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
-</span>12 <span style=''>import scala.language.implicitConversions
-</span>13 <span style=''>import scala.util.{Failure, Success}
-</span>14 <span style=''>
+</span>5 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
+</span>6 <span style=''>import cml.controller.fx.VillageViewController
+</span>7 <span style=''>import cml.controller.messages.VillageRequest._
+</span>8 <span style=''>import cml.controller.messages.VillageResponse.{CreateVillageSuccess, VillageFailure}
+</span>9 <span style=''>import cml.services.village.VillageServiceVertx.VillageServiceVertxImpl
+</span>10 <span style=''>import javafx.application.Platform
+</span>11 <span style=''>
+</span>12 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
+</span>13 <span style=''>import scala.language.implicitConversions
+</span>14 <span style=''>import scala.util.{Failure, Success}
 </span>15 <span style=''>
-</span>16 <span style=''>/**
-</span>17 <span style=''>  * Class that implements the actor which manages the village interaction with user
-</span>18 <span style=''>  * @author Monica Gondolini
-</span>19 <span style=''>  */
-</span>20 <span style=''>class VillageActor() extends Actor{
-</span>21 <span style=''>
-</span>22 <span style=''>  val villageVertx = </span><span style='background: #F0ADAD'>VillageServiceVertxImpl()</span><span style=''>
-</span>23 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>context.actorSelection(&quot;/user/AuthenticationActor&quot;)</span><span style=''>
-</span>24 <span style=''>
-</span>25 <span style=''>  /**
-</span>26 <span style=''>    * @return village behaviour
-</span>27 <span style=''>    */
-</span>28 <span style=''>  override def receive: Receive = {
-</span>29 <span style=''>
-</span>30 <span style=''>    case CreateVillage() =&gt;
-</span>31 <span style=''>      val senderActor: ActorRef = </span><span style='background: #F0ADAD'>sender</span><span style=''>
-</span>32 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.createVillage().onComplete {
-</span>33 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>34 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
-</span>35 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure create village&quot;)
-</span>36 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; senderActor ! CreateVillageSuccess()
-</span>37 <span style=''></span><span style='background: #F0ADAD'>          }
-</span>38 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; senderActor ! VillageFailure(createFailure)
-</span>39 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>40 <span style=''>
-</span>41 <span style=''>    case EnterVillage(controller) =&gt;
-</span>42 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.enterVillage().onComplete {
-</span>43 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>44 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
-</span>45 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure entering in village&quot;)
-</span>46 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; Platform.runLater(() =&gt; controller.setGridAndHandlers(httpResponse))
-</span>47 <span style=''></span><span style='background: #F0ADAD'>          }
-</span>48 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; authenticationActor ! VillageFailure(enterFailure)
-</span>49 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>50 <span style=''>
-</span>51 <span style=''>    case UpdateVillage(update) =&gt;
-</span>52 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.updateVillage(update).onComplete {
-</span>53 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>54 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
-</span>55 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure to update village&quot;)
-</span>56 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; println(&quot;Update Done&quot;)
-</span>57 <span style=''></span><span style='background: #F0ADAD'>          }
-</span>58 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; println(exception)
-</span>59 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>60 <span style=''>
-</span>61 <span style=''>    case SetUpdateVillage(update) =&gt;
-</span>62 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.setUpdateVillage(update).onComplete {
-</span>63 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>64 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
-</span>65 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure to set update village&quot;)
-</span>66 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; println(&quot;Update Set Done&quot;)
-</span>67 <span style=''></span><span style='background: #F0ADAD'>          }
-</span>68 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; println(exception)
-</span>69 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>70 <span style=''>
-</span>71 <span style=''>    case DeleteVillage(controller) =&gt;
-</span>72 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.deleteVillageAndUser().onComplete {
-</span>73 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
-</span>74 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
-</span>75 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; println(&quot;Failure to delete village&quot;)
-</span>76 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; deleteSucceedOnGui(controller)
-</span>77 <span style=''></span><span style='background: #F0ADAD'>              println(&quot;Deletion Done&quot;)
-</span>78 <span style=''></span><span style='background: #F0ADAD'>          }
-</span>79 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; println(exception)
-</span>80 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>81 <span style=''>  }
-</span>82 <span style=''>
-</span>83 <span style=''>  def deleteSucceedOnGui(controller: VillageViewController): Unit = </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; controller.openAuthenticationView())</span><span style=''>
-</span>84 <span style=''>}
+</span>16 <span style=''>
+</span>17 <span style=''>/**
+</span>18 <span style=''>  * Class that implements the actor which manages the village interaction with user
+</span>19 <span style=''>  * @author Monica Gondolini
+</span>20 <span style=''>  */
+</span>21 <span style=''>class VillageActor() extends Actor with ActorLogging{
+</span>22 <span style=''>
+</span>23 <span style=''>  val villageVertx = </span><span style='background: #F0ADAD'>VillageServiceVertxImpl()</span><span style=''>
+</span>24 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>context actorSelection AuthenticationActorPath</span><span style=''>
+</span>25 <span style=''>
+</span>26 <span style=''>  override def receive: Receive = {
+</span>27 <span style=''>
+</span>28 <span style=''>    case CreateVillage() =&gt;
+</span>29 <span style=''>      val senderActor: ActorRef = </span><span style='background: #F0ADAD'>sender</span><span style=''>
+</span>30 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.createVillage().onComplete {
+</span>31 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>32 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>33 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; log.info(&quot;Failure create village&quot;)
+</span>34 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; senderActor ! CreateVillageSuccess()
+</span>35 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>36 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; senderActor ! VillageFailure(createFailure)
+</span>37 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>38 <span style=''>
+</span>39 <span style=''>    case EnterVillage(controller) =&gt;
+</span>40 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.enterVillage().onComplete {
+</span>41 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>42 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>43 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; log.info(&quot;Failure entering in village&quot;)
+</span>44 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; Platform.runLater(() =&gt; controller.setGridAndHandlers(httpResponse))
+</span>45 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>46 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; authenticationActor ! VillageFailure(enterFailure)
+</span>47 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>48 <span style=''>
+</span>49 <span style=''>    case UpdateVillage(update) =&gt;
+</span>50 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.updateVillage(update).onComplete {
+</span>51 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>52 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>53 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; log.info(&quot;Failure to update village&quot;)
+</span>54 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; log.info(&quot;Update Done&quot;)
+</span>55 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>56 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; log.error(&quot;exception&quot;, exception)
+</span>57 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>58 <span style=''>
+</span>59 <span style=''>    case SetUpdateVillage(update) =&gt;
+</span>60 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.setUpdateVillage(update).onComplete {
+</span>61 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>62 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>63 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; log.info(&quot;Failure to set update village&quot;)
+</span>64 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; log.info(&quot;Update Set Done&quot;)
+</span>65 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>66 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; log.error(&quot;exception&quot;, exception)
+</span>67 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>68 <span style=''>
+</span>69 <span style=''>    case DeleteVillage(controller) =&gt;
+</span>70 <span style=''>      </span><span style='background: #F0ADAD'>villageVertx.deleteVillageAndUser().onComplete {
+</span>71 <span style=''></span><span style='background: #F0ADAD'>        case Success(httpResponse) =&gt;
+</span>72 <span style=''></span><span style='background: #F0ADAD'>          httpResponse match {
+</span>73 <span style=''></span><span style='background: #F0ADAD'>            case &quot;Not a valid request&quot; =&gt; log.info(&quot;Failure to delete village&quot;)
+</span>74 <span style=''></span><span style='background: #F0ADAD'>            case _ =&gt; log.info(&quot;Deletion Done&quot;)
+</span>75 <span style=''></span><span style='background: #F0ADAD'>              deleteSucceedOnGui(controller)
+</span>76 <span style=''></span><span style='background: #F0ADAD'>          }
+</span>77 <span style=''></span><span style='background: #F0ADAD'>        case Failure(exception) =&gt; log.error(&quot;exception&quot;, exception)
+</span>78 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>79 <span style=''>  }
+</span>80 <span style=''>
+</span>81 <span style=''>  def deleteSucceedOnGui(controller: VillageViewController): Unit = </span><span style='background: #F0ADAD'>Platform.runLater(() =&gt; controller.openAuthenticationView())</span><span style=''>
+</span>82 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -119,15 +117,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          22
+          23
         </td>
         <td>
-          171
+          203
         </td>
         <td>
-          772
+          884
           -
-          797
+          909
         </td>
         <td>
           Apply
@@ -140,15 +138,15 @@
         </td>
       </tr><tr>
         <td>
-          23
+          24
         </td>
         <td>
-          172
+          205
         </td>
         <td>
-          843
+          955
           -
-          894
+          1001
         </td>
         <td>
           Apply
@@ -157,19 +155,40 @@
           akka.actor.ActorRefFactory.actorSelection
         </td>
         <td style="background: #F0ADAD">
-          VillageActor.this.context.actorSelection(&quot;/user/AuthenticationActor&quot;)
+          VillageActor.this.context.actorSelection(cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath)
         </td>
       </tr><tr>
         <td>
-          28
+          24
         </td>
         <td>
-          205
+          204
         </td>
         <td>
-          980
+          978
           -
-          980
+          1001
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          238
+        </td>
+        <td>
+          1039
+          -
+          1039
         </td>
         <td>
           Apply
@@ -182,15 +201,15 @@
         </td>
       </tr><tr>
         <td>
-          31
+          29
         </td>
         <td>
-          173
+          206
         </td>
         <td>
-          1048
+          1107
           -
-          1054
+          1113
         </td>
         <td>
           Apply
@@ -203,15 +222,15 @@
         </td>
       </tr><tr>
         <td>
-          32
+          30
         </td>
         <td>
-          182
+          215
         </td>
         <td>
-          1062
+          1121
           -
-          1413
+          1473
         </td>
         <td>
           ApplyToImplicitArgs
@@ -222,7 +241,7 @@
         <td style="background: #F0ADAD">
           VillageActor.this.villageVertx.createVillage().onComplete[Unit](((x0$1: scala.util.Try[String]) =&gt; x0$1 match {
   case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
-    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure create village&quot;)
+    case &quot;Not a valid request&quot; =&gt; VillageActor.this.log.info(&quot;Failure create village&quot;)
     case _ =&gt; actor.this.`package`.actorRef2Scala(senderActor).!(cml.controller.messages.VillageResponse.CreateVillageSuccess.apply())(VillageActor.this.self)
   }
   case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; actor.this.`package`.actorRef2Scala(senderActor).!(cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.createFailure))(VillageActor.this.self)
@@ -230,36 +249,36 @@
         </td>
       </tr><tr>
         <td>
-          35
+          33
         </td>
         <td>
-          174
+          207
         </td>
         <td>
-          1218
+          1277
           -
-          1251
+          1311
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Failure create village&quot;)
+          VillageActor.this.log.info(&quot;Failure create village&quot;)
         </td>
       </tr><tr>
         <td>
-          36
+          34
         </td>
         <td>
-          176
+          209
         </td>
         <td>
-          1287
+          1347
           -
-          1287
+          1347
         </td>
         <td>
           Select
@@ -272,15 +291,15 @@
         </td>
       </tr><tr>
         <td>
-          36
+          34
         </td>
         <td>
-          175
+          208
         </td>
         <td>
-          1289
+          1349
           -
-          1311
+          1371
         </td>
         <td>
           Apply
@@ -293,15 +312,15 @@
         </td>
       </tr><tr>
         <td>
-          36
+          34
         </td>
         <td>
-          177
+          210
         </td>
         <td>
-          1275
+          1335
           -
-          1311
+          1371
         </td>
         <td>
           ApplyToImplicitArgs
@@ -314,15 +333,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          36
         </td>
         <td>
-          178
+          211
         </td>
         <td>
-          1390
+          1450
           -
-          1403
+          1463
         </td>
         <td>
           Select
@@ -335,15 +354,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          36
         </td>
         <td>
-          181
+          214
         </td>
         <td>
-          1361
+          1421
           -
-          1404
+          1464
         </td>
         <td>
           ApplyToImplicitArgs
@@ -356,15 +375,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          36
         </td>
         <td>
-          180
+          213
         </td>
         <td>
-          1373
+          1433
           -
-          1373
+          1433
         </td>
         <td>
           Select
@@ -377,15 +396,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          36
         </td>
         <td>
-          179
+          212
         </td>
         <td>
-          1375
+          1435
           -
-          1404
+          1464
         </td>
         <td>
           Apply
@@ -398,15 +417,15 @@
         </td>
       </tr><tr>
         <td>
-          42
+          40
         </td>
         <td>
-          191
+          224
         </td>
         <td>
-          1461
+          1521
           -
-          1855
+          1916
         </td>
         <td>
           ApplyToImplicitArgs
@@ -417,7 +436,7 @@
         <td style="background: #F0ADAD">
           VillageActor.this.villageVertx.enterVillage().onComplete[Unit](((x0$2: scala.util.Try[String]) =&gt; x0$2 match {
   case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
-    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure entering in village&quot;)
+    case &quot;Not a valid request&quot; =&gt; VillageActor.this.log.info(&quot;Failure entering in village&quot;)
     case _ =&gt; javafx.application.Platform.runLater((() =&gt; controller.setGridAndHandlers(httpResponse)))
   }
   case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; actor.this.ActorSelection.toScala(VillageActor.this.authenticationActor).!(cml.controller.messages.VillageResponse.VillageFailure.apply(cml.controller.actor.utils.ViewMessage.ViewVillageMessage.enterFailure))(VillageActor.this.self)
@@ -425,36 +444,36 @@
         </td>
       </tr><tr>
         <td>
-          45
+          43
         </td>
         <td>
-          183
+          216
         </td>
         <td>
-          1616
+          1676
           -
-          1654
+          1715
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Failure entering in village&quot;)
+          VillageActor.this.log.info(&quot;Failure entering in village&quot;)
         </td>
       </tr><tr>
         <td>
-          46
+          44
         </td>
         <td>
-          185
+          218
         </td>
         <td>
-          1678
+          1739
           -
-          1746
+          1807
         </td>
         <td>
           Apply
@@ -467,15 +486,15 @@
         </td>
       </tr><tr>
         <td>
-          46
+          44
         </td>
         <td>
-          184
+          217
         </td>
         <td>
-          1702
+          1763
           -
-          1745
+          1806
         </td>
         <td>
           Apply
@@ -488,15 +507,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          46
         </td>
         <td>
-          187
+          220
         </td>
         <td>
-          1833
+          1894
           -
-          1845
+          1906
         </td>
         <td>
           Select
@@ -509,15 +528,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          46
         </td>
         <td>
-          190
+          223
         </td>
         <td>
-          1796
+          1857
           -
-          1846
+          1907
         </td>
         <td>
           ApplyToImplicitArgs
@@ -530,36 +549,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          46
         </td>
         <td>
-          189
+          219
         </td>
         <td>
-          1816
+          1857
           -
-          1816
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          akka.actor.Actor.self
-        </td>
-        <td style="background: #F0ADAD">
-          VillageActor.this.self
-        </td>
-      </tr><tr>
-        <td>
-          48
-        </td>
-        <td>
-          186
-        </td>
-        <td>
-          1796
-          -
-          1815
+          1876
         </td>
         <td>
           Select
@@ -572,15 +570,36 @@
         </td>
       </tr><tr>
         <td>
-          48
+          46
         </td>
         <td>
-          188
+          222
         </td>
         <td>
-          1818
+          1877
           -
-          1846
+          1877
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          akka.actor.Actor.self
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.self
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          221
+        </td>
+        <td>
+          1879
+          -
+          1907
         </td>
         <td>
           Apply
@@ -593,15 +612,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          50
         </td>
         <td>
-          195
+          228
         </td>
         <td>
-          1900
+          1961
           -
-          2221
+          2299
         </td>
         <td>
           ApplyToImplicitArgs
@@ -612,86 +631,86 @@
         <td style="background: #F0ADAD">
           VillageActor.this.villageVertx.updateVillage(update).onComplete[Unit](((x0$3: scala.util.Try[String]) =&gt; x0$3 match {
   case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
-    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure to update village&quot;)
-    case _ =&gt; scala.Predef.println(&quot;Update Done&quot;)
+    case &quot;Not a valid request&quot; =&gt; VillageActor.this.log.info(&quot;Failure to update village&quot;)
+    case _ =&gt; VillageActor.this.log.info(&quot;Update Done&quot;)
   }
-  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; scala.Predef.println(exception)
+  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; VillageActor.this.log.error(&quot;exception&quot;, exception)
 }))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
-          55
+          53
         </td>
         <td>
-          192
+          225
         </td>
         <td>
-          2062
+          2123
           -
-          2098
+          2160
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Failure to update village&quot;)
+          VillageActor.this.log.info(&quot;Failure to update village&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          54
+        </td>
+        <td>
+          226
+        </td>
+        <td>
+          2184
+          -
+          2207
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.log.info(&quot;Update Done&quot;)
         </td>
       </tr><tr>
         <td>
           56
         </td>
         <td>
-          193
+          227
         </td>
         <td>
-          2122
+          2257
           -
-          2144
+          2290
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.error
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Update Done&quot;)
+          VillageActor.this.log.error(&quot;exception&quot;, exception)
         </td>
       </tr><tr>
         <td>
-          58
+          60
         </td>
         <td>
-          194
+          232
         </td>
         <td>
-          2194
+          2347
           -
-          2212
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(exception)
-        </td>
-      </tr><tr>
-        <td>
-          62
-        </td>
-        <td>
-          199
-        </td>
-        <td>
-          2269
-          -
-          2601
+          2696
         </td>
         <td>
           ApplyToImplicitArgs
@@ -702,86 +721,86 @@
         <td style="background: #F0ADAD">
           VillageActor.this.villageVertx.setUpdateVillage(update).onComplete[Unit](((x0$4: scala.util.Try[String]) =&gt; x0$4 match {
   case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
-    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure to set update village&quot;)
-    case _ =&gt; scala.Predef.println(&quot;Update Set Done&quot;)
+    case &quot;Not a valid request&quot; =&gt; VillageActor.this.log.info(&quot;Failure to set update village&quot;)
+    case _ =&gt; VillageActor.this.log.info(&quot;Update Set Done&quot;)
   }
-  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; scala.Predef.println(exception)
+  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; VillageActor.this.log.error(&quot;exception&quot;, exception)
 }))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
-          65
+          63
         </td>
         <td>
-          196
+          229
         </td>
         <td>
-          2434
+          2512
           -
-          2474
+          2553
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Failure to set update village&quot;)
+          VillageActor.this.log.info(&quot;Failure to set update village&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          64
+        </td>
+        <td>
+          230
+        </td>
+        <td>
+          2577
+          -
+          2604
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.log.info(&quot;Update Set Done&quot;)
         </td>
       </tr><tr>
         <td>
           66
         </td>
         <td>
-          197
+          231
         </td>
         <td>
-          2498
+          2654
           -
-          2524
+          2687
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.error
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Update Set Done&quot;)
+          VillageActor.this.log.error(&quot;exception&quot;, exception)
         </td>
       </tr><tr>
         <td>
-          68
+          70
         </td>
         <td>
-          198
+          237
         </td>
         <td>
-          2574
+          2745
           -
-          2592
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(exception)
-        </td>
-      </tr><tr>
-        <td>
-          72
-        </td>
-        <td>
-          204
-        </td>
-        <td>
-          2650
-          -
-          3020
+          3132
         </td>
         <td>
           ApplyToImplicitArgs
@@ -792,47 +811,68 @@
         <td style="background: #F0ADAD">
           VillageActor.this.villageVertx.deleteVillageAndUser().onComplete[Unit](((x0$5: scala.util.Try[String]) =&gt; x0$5 match {
   case (value: String)scala.util.Success[String]((httpResponse @ _)) =&gt; httpResponse match {
-    case &quot;Not a valid request&quot; =&gt; scala.Predef.println(&quot;Failure to delete village&quot;)
+    case &quot;Not a valid request&quot; =&gt; VillageActor.this.log.info(&quot;Failure to delete village&quot;)
     case _ =&gt; {
-      VillageActor.this.deleteSucceedOnGui(controller);
-      scala.Predef.println(&quot;Deletion Done&quot;)
+      VillageActor.this.log.info(&quot;Deletion Done&quot;);
+      VillageActor.this.deleteSucceedOnGui(controller)
     }
   }
-  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; scala.Predef.println(exception)
+  case (exception: Throwable)scala.util.Failure[String]((exception @ _)) =&gt; VillageActor.this.log.error(&quot;exception&quot;, exception)
 }))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          233
+        </td>
+        <td>
+          2908
+          -
+          2945
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.log.info(&quot;Failure to delete village&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          234
+        </td>
+        <td>
+          2969
+          -
+          2994
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          akka.event.LoggingAdapter.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageActor.this.log.info(&quot;Deletion Done&quot;)
         </td>
       </tr><tr>
         <td>
           75
         </td>
         <td>
-          200
+          235
         </td>
         <td>
-          2813
+          3010
           -
-          2849
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Failure to delete village&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          76
-        </td>
-        <td>
-          201
-        </td>
-        <td>
-          2873
-          -
-          2903
+          3040
         </td>
         <td>
           Apply
@@ -848,54 +888,33 @@
           77
         </td>
         <td>
-          202
+          236
         </td>
         <td>
-          2919
+          3090
           -
-          2943
+          3123
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.event.LoggingAdapter.error
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Deletion Done&quot;)
+          VillageActor.this.log.error(&quot;exception&quot;, exception)
         </td>
       </tr><tr>
         <td>
-          79
+          81
         </td>
         <td>
-          203
+          240
         </td>
         <td>
-          2993
+          3209
           -
-          3011
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(exception)
-        </td>
-      </tr><tr>
-        <td>
-          83
-        </td>
-        <td>
-          207
-        </td>
-        <td>
-          3097
-          -
-          3157
+          3269
         </td>
         <td>
           Apply
@@ -908,15 +927,15 @@
         </td>
       </tr><tr>
         <td>
-          83
+          81
         </td>
         <td>
-          206
+          239
         </td>
         <td>
-          3121
+          3233
           -
-          3156
+          3268
         </td>
         <td>
           Apply

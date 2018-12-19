@@ -118,15 +118,15 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="cml.model">model</a></dd></dl></div>
     </li><li class="current-entities indented3">
-                        <a class="object" href="Cave$.html" title=""></a>
+                        <a class="object" href="Cave$.html" title="Define implicit Cave structure"></a>
                         <a class="class" href="Cave.html" title="Implementation of building structure Cave"></a>
                         <a href="Cave.html" title="Implementation of building structure Cave">Cave</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Creature$.html" title=""></a>
+                        <a class="object" href="Creature$.html" title="Object define general creature"></a>
                         <a class="trait" href="Creature.html" title="This trait defines a base creature"></a>
                         <a href="Creature.html" title="This trait defines a base creature">Creature</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Farm$.html" title=""></a>
+                        <a class="object" href="Farm$.html" title="Define implicit Farm structure"></a>
                         <a class="class" href="Farm.html" title="Implementation of building structure Farm"></a>
                         <a href="Farm.html" title="Implementation of building structure Farm">Farm</a>
                       </li><li class="current-entities indented3">
@@ -135,12 +135,16 @@
                         <a href="Food.html" title="Implementation of resource food">Food</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="Habitat$.html" title=""></a>
-                        <a href="Habitat$.html" title="">Habitat</a>
+                        <a class="object" href="Habitat$.html" title="Object define habitat structure"></a>
+                        <a href="Habitat$.html" title="Object define habitat structure">Habitat</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Money.html" title="Implementation on resource money"></a>
                         <a href="Money.html" title="Implementation on resource money">Money</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="PopulateVillageMapStrategy$.html" title="This object can contains different strategy to populate a user village map"></a>
+                        <a href="PopulateVillageMapStrategy$.html" title="This object can contains different strategy to populate a user village map">PopulateVillageMapStrategy</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Position$.html" title=""></a>
                         <a class="class" href="Position.html" title="Represents a position in the village grid"></a>
@@ -332,6 +336,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="cml.model.base.VillageMap#createVillage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="createVillage[A](howToPopulate:A=&gt;Unit)(villageInfo:A):Unit"></a><a id="createVillage[A]((A)⇒Unit)(A):Unit"></a>
+      <span class="permalink">
+      <a href="../../../cml/model/base/VillageMap$.html#createVillage[A](howToPopulate:A=&gt;Unit)(villageInfo:A):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">createVillage</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="howToPopulate">howToPopulate: (<span class="extype" name="cml.model.base.VillageMap.createVillage.A">A</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span name="villageInfo">villageInfo: <span class="extype" name="cml.model.base.VillageMap.createVillage.A">A</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -425,9 +445,9 @@
               
         </dd></dl></div>
     </li><li name="cml.model.base.VillageMap#initVillage" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="initVillage(structures:scala.collection.mutable.MutableList[cml.model.base.Structure],gold:Int,food:Int,user:String):Unit"></a><a id="initVillage(MutableList[Structure],Int,Int,String):Unit"></a>
+      <a id="initVillage(structures:scala.collection.mutable.MutableList[cml.model.base.Structure],gold:Int,food:Int,villageName:String):Unit"></a><a id="initVillage(MutableList[Structure],Int,Int,String):Unit"></a>
       <span class="permalink">
-      <a href="../../../cml/model/base/VillageMap$.html#initVillage(structures:scala.collection.mutable.MutableList[cml.model.base.Structure],gold:Int,food:Int,user:String):Unit" title="Permalink">
+      <a href="../../../cml/model/base/VillageMap$.html#initVillage(structures:scala.collection.mutable.MutableList[cml.model.base.Structure],gold:Int,food:Int,villageName:String):Unit" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -436,7 +456,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">initVillage</span><span class="params">(<span name="structures">structures: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>, <span name="gold">gold: <span class="extype" name="scala.Int">Int</span></span>, <span name="food">food: <span class="extype" name="scala.Int">Int</span></span>, <span name="user">user: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">initVillage</span><span class="params">(<span name="structures">structures: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a>]</span>, <span name="gold">gold: <span class="extype" name="scala.Int">Int</span></span>, <span name="food">food: <span class="extype" name="scala.Int">Int</span></span>, <span name="villageName">villageName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
       

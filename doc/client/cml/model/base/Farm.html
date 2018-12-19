@@ -118,15 +118,15 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="cml.model">model</a></dd></dl></div>
     </li><li class="current-entities indented3">
-                        <a class="object" href="Cave$.html" title=""></a>
+                        <a class="object" href="Cave$.html" title="Define implicit Cave structure"></a>
                         <a class="class" href="Cave.html" title="Implementation of building structure Cave"></a>
                         <a href="Cave.html" title="Implementation of building structure Cave">Cave</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Creature$.html" title=""></a>
+                        <a class="object" href="Creature$.html" title="Object define general creature"></a>
                         <a class="trait" href="Creature.html" title="This trait defines a base creature"></a>
                         <a href="Creature.html" title="This trait defines a base creature">Creature</a>
                       </li><li class="current-entities indented3">
-                        <a class="object" href="Farm$.html" title=""></a>
+                        <a class="object" href="Farm$.html" title="Define implicit Farm structure"></a>
                         <a class="class" href="" title="Implementation of building structure Farm"></a>
                         <a href="" title="Implementation of building structure Farm">Farm</a>
                       </li><li class="current-entities indented3">
@@ -135,12 +135,16 @@
                         <a href="Food.html" title="Implementation of resource food">Food</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
-                        <a class="object" href="Habitat$.html" title=""></a>
-                        <a href="Habitat$.html" title="">Habitat</a>
+                        <a class="object" href="Habitat$.html" title="Object define habitat structure"></a>
+                        <a href="Habitat$.html" title="Object define habitat structure">Habitat</a>
                       </li><li class="current-entities indented3">
                         <span class="separator"></span>
                         <a class="class" href="Money.html" title="Implementation on resource money"></a>
                         <a href="Money.html" title="Implementation on resource money">Money</a>
+                      </li><li class="current-entities indented3">
+                        <span class="separator"></span>
+                        <a class="object" href="PopulateVillageMapStrategy$.html" title="This object can contains different strategy to populate a user village map"></a>
+                        <a href="PopulateVillageMapStrategy$.html" title="This object can contains different strategy to populate a user village map">PopulateVillageMapStrategy</a>
                       </li><li class="current-entities indented3">
                         <a class="object" href="Position$.html" title=""></a>
                         <a class="class" href="Position.html" title="Represents a position in the village grid"></a>
@@ -400,9 +404,9 @@
               
         </dd></dl></div>
     </li><li name="cml.model.base.Farm#creatures" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="creatures:scala.collection.mutable.MutableList[cml.model.base.Creature]"></a><a id="creatures:MutableList[Creature]"></a>
+      <a id="creatures:Option[scala.collection.mutable.MutableList[cml.model.base.Creature]]"></a><a id="creatures:Option[MutableList[Creature]]"></a>
       <span class="permalink">
-      <a href="../../../cml/model/base/Farm.html#creatures:scala.collection.mutable.MutableList[cml.model.base.Creature]" title="Permalink">
+      <a href="../../../cml/model/base/Farm.html#creatures:Option[scala.collection.mutable.MutableList[cml.model.base.Creature]]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -411,7 +415,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">creatures</span><span class="result">: <span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Creature.html" class="extype" name="cml.model.base.Creature">Creature</a>]</span>
+        <span class="name">creatures</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.collection.mutable.MutableList">MutableList</span>[<a href="Creature.html" class="extype" name="cml.model.base.Creature">Creature</a>]]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.model.base.Farm">Farm</a> → <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></dd></dl></div>
@@ -489,9 +493,9 @@
               
         </dd></dl></div>
     </li><li name="cml.model.base.Farm#habitatElement" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="habitatElement:String"></a>
+      <a id="habitatElement:Option[String]"></a>
       <span class="permalink">
-      <a href="../../../cml/model/base/Farm.html#habitatElement:String" title="Permalink">
+      <a href="../../../cml/model/base/Farm.html#habitatElement:Option[String]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -500,7 +504,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">habitatElement</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">habitatElement</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.model.base.Farm">Farm</a> → <a href="Structure.html" class="extype" name="cml.model.base.Structure">Structure</a></dd></dl></div>

@@ -145,12 +145,8 @@
                         <a href="" title="Success response to receive attack">AttackSuccess</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ArenaResponse$$HelloChallengerSuccess.html" title=""></a>
-                        <a href="ArenaResponse$$HelloChallengerSuccess.html" title="">HelloChallengerSuccess</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="class" href="ArenaResponse$$RequireTurnSuccess.html" title=""></a>
-                        <a href="ArenaResponse$$RequireTurnSuccess.html" title="">RequireTurnSuccess</a>
+                        <a class="class" href="ArenaResponse$$RequireTurnSuccess.html" title="Response if users turn is correctly management"></a>
+                        <a href="ArenaResponse$$RequireTurnSuccess.html" title="Response if users turn is correctly management">RequireTurnSuccess</a>
                       </li>
               </ul>
             </div>
@@ -174,13 +170,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">AttackSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaResponse$$ArenaResponse.html" class="extype" name="cml.controller.messages.ArenaResponse.ArenaResponse">ArenaResponse</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">AttackSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="isProtected">isProtected: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="turnValue">turnValue: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaResponse$$ArenaResponse.html" class="extype" name="cml.controller.messages.ArenaResponse.ArenaResponse">ArenaResponse</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Success response to receive attack
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Success response to receive attack</p></div><dl class="paramcmts block"><dt class="param">attackPower</dt><dd class="cmt"><p>is user creature power attack</p></dd><dt class="param">isProtected</dt><dd class="cmt"><p>flag represent if user creature is protected or not</p></dd><dt class="param">turnValue</dt><dd class="cmt"><p>turn value</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -230,10 +225,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="cml.controller.messages.ArenaResponse.AttackSuccess#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(attackPower:Int):cml.controller.messages.ArenaResponse.AttackSuccess"></a><a id="&lt;init&gt;:AttackSuccess"></a>
+              <ol><li name="cml.controller.messages.ArenaResponse.AttackSuccess#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(attackPower:Int,isProtected:Boolean,turnValue:Int):cml.controller.messages.ArenaResponse.AttackSuccess"></a><a id="&lt;init&gt;:AttackSuccess"></a>
       <span class="permalink">
-      <a href="../../../cml/controller/messages/ArenaResponse$$AttackSuccess.html#&lt;init&gt;(attackPower:Int):cml.controller.messages.ArenaResponse.AttackSuccess" title="Permalink">
+      <a href="../../../cml/controller/messages/ArenaResponse$$AttackSuccess.html#&lt;init&gt;(attackPower:Int,isProtected:Boolean,turnValue:Int):cml.controller.messages.ArenaResponse.AttackSuccess" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -242,10 +237,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AttackSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">AttackSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="isProtected">isProtected: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="turnValue">turnValue: <span class="extype" name="scala.Int">Int</span></span>)</span>
       </span>
       
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">attackPower</dt><dd class="cmt"><p>is user creature power attack</p></dd><dt class="param">isProtected</dt><dd class="cmt"><p>flag represent if user creature is protected or not</p></dd><dt class="param">turnValue</dt><dd class="cmt"><p>turn value</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -433,6 +428,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="cml.controller.messages.ArenaResponse.AttackSuccess#isProtected" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="isProtected:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaResponse$$AttackSuccess.html#isProtected:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isProtected</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -503,6 +514,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="cml.controller.messages.ArenaResponse.AttackSuccess#turnValue" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="turnValue:Int"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaResponse$$AttackSuccess.html#turnValue:Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">turnValue</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">

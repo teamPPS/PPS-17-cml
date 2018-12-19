@@ -29,28 +29,30 @@
 </span>5 <span style=''>/**
 </span>6 <span style=''>  * Case class representing the current state of the user's village
 </span>7 <span style=''>  * @author ecavina, Monica Gondolini
-</span>8 <span style=''>  * @param villageStructure
-</span>9 <span style=''>  * @param gold
-</span>10 <span style=''>  * @param food
-</span>11 <span style=''>  * @param username
+</span>8 <span style=''>  * @param villageStructure list of structures componing the village
+</span>9 <span style=''>  * @param gold amount of user's gold resource
+</span>10 <span style=''>  * @param food amount of user's food resource
+</span>11 <span style=''>  * @param villageName village's username
 </span>12 <span style=''>  */
-</span>13 <span style=''>case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var username: String)
+</span>13 <span style=''>case class VillageMap (villageStructure: mutable.MutableList[Structure], var gold: Int, var food: Int, var villageName: String)
 </span>14 <span style=''>
 </span>15 <span style=''>object VillageMap {
 </span>16 <span style=''>
-</span>17 <span style=''>  private var _instance : Option[VillageMap] = </span><span style='background: #F0ADAD'>Option.empty</span><span style=''>
+</span>17 <span style=''>  private var _instance : Option[VillageMap] = </span><span style='background: #AEF1AE'>Option.empty</span><span style=''>
 </span>18 <span style=''>
-</span>19 <span style=''>  def initVillage(structures: mutable.MutableList[Structure], gold: Int, food: Int, user: String): Unit = {
-</span>20 <span style=''>    </span><span style='background: #F0ADAD'>_instance = Option(VillageMap(structures, gold, food, user))</span><span style=''>
+</span>19 <span style=''>  def initVillage(structures: mutable.MutableList[Structure], gold: Int, food: Int, villageName: String): Unit = {
+</span>20 <span style=''>    </span><span style='background: #AEF1AE'>_instance = Option(VillageMap(structures, gold, food, villageName))</span><span style=''>
 </span>21 <span style=''>  }
 </span>22 <span style=''>
-</span>23 <span style=''>  def instance(): Option[VillageMap] = {
-</span>24 <span style=''>    if (</span><span style='background: #F0ADAD'>_instance.isEmpty</span><span style=''>)
-</span>25 <span style=''>      </span><span style='background: #F0ADAD'>initVillage(mutable.MutableList[Structure](), 0, 0, &quot;default&quot;)</span><span style=''>
-</span>26 <span style=''>    </span><span style='background: #F0ADAD'>_instance</span><span style=''>
-</span>27 <span style=''>  }
-</span>28 <span style=''>
-</span>29 <span style=''>}
+</span>23 <span style=''>  def createVillage[A](howToPopulate: A =&gt; Unit)(villageInfo: A): Unit = </span><span style='background: #F0ADAD'>howToPopulate(villageInfo)</span><span style=''>
+</span>24 <span style=''>
+</span>25 <span style=''>  def instance(): Option[VillageMap] = {
+</span>26 <span style=''>    if (</span><span style='background: #AEF1AE'>_instance.isEmpty</span><span style=''>)
+</span>27 <span style=''>      </span><span style='background: #AEF1AE'>initVillage(mutable.MutableList[Structure](), 0, 0, &quot;default&quot;)</span><span style=''>
+</span>28 <span style=''>    </span><span style='background: #AEF1AE'>_instance</span><span style=''>
+</span>29 <span style=''>  }
+</span>30 <span style=''>
+</span>31 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -67,12 +69,12 @@
           17
         </td>
         <td>
-          692
+          796
         </td>
         <td>
-          462
+          590
           -
-          474
+          602
         </td>
         <td>
           TypeApply
@@ -80,7 +82,7 @@
         <td>
           scala.Option.empty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.Option.empty[Nothing]
         </td>
       </tr><tr>
@@ -88,12 +90,12 @@
           20
         </td>
         <td>
-          693
+          797
         </td>
         <td>
-          610
+          745
           -
-          650
+          792
         </td>
         <td>
           Apply
@@ -101,20 +103,20 @@
         <td>
           cml.model.base.VillageMap.apply
         </td>
-        <td style="background: #F0ADAD">
-          VillageMap.apply(structures, gold, food, user)
+        <td style="background: #AEF1AE">
+          VillageMap.apply(structures, gold, food, villageName)
         </td>
       </tr><tr>
         <td>
           20
         </td>
         <td>
-          695
+          799
         </td>
         <td>
-          591
+          726
           -
-          651
+          793
         </td>
         <td>
           Apply
@@ -122,20 +124,20 @@
         <td>
           cml.model.base.VillageMap._instance_=
         </td>
-        <td style="background: #F0ADAD">
-          VillageMap.this._instance_=(scala.Option.apply[cml.model.base.VillageMap](VillageMap.apply(structures, gold, food, user)))
+        <td style="background: #AEF1AE">
+          VillageMap.this._instance_=(scala.Option.apply[cml.model.base.VillageMap](VillageMap.apply(structures, gold, food, villageName)))
         </td>
       </tr><tr>
         <td>
           20
         </td>
         <td>
-          694
+          798
         </td>
         <td>
-          603
+          738
           -
-          651
+          793
         </td>
         <td>
           Apply
@@ -143,20 +145,41 @@
         <td>
           scala.Option.apply
         </td>
-        <td style="background: #F0ADAD">
-          scala.Option.apply[cml.model.base.VillageMap](VillageMap.apply(structures, gold, food, user))
+        <td style="background: #AEF1AE">
+          scala.Option.apply[cml.model.base.VillageMap](VillageMap.apply(structures, gold, food, villageName))
         </td>
       </tr><tr>
         <td>
-          24
+          23
         </td>
         <td>
-          696
+          800
         </td>
         <td>
-          710
+          875
           -
-          727
+          901
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Function1.apply
+        </td>
+        <td style="background: #F0ADAD">
+          howToPopulate.apply(villageInfo)
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          801
+        </td>
+        <td>
+          955
+          -
+          972
         </td>
         <td>
           Select
@@ -164,20 +187,20 @@
         <td>
           scala.Option.isEmpty
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           VillageMap.this._instance.isEmpty
         </td>
       </tr><tr>
         <td>
-          24
+          26
         </td>
         <td>
-          704
+          809
         </td>
         <td>
-          706
+          951
           -
-          706
+          951
         </td>
         <td>
           Block
@@ -185,20 +208,20 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           ()
         </td>
       </tr><tr>
         <td>
-          24
+          26
         </td>
         <td>
-          703
+          808
         </td>
         <td>
-          706
+          951
           -
-          706
+          951
         </td>
         <td>
           Literal
@@ -206,20 +229,20 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           ()
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          699
+          804
         </td>
         <td>
-          785
+          1030
           -
-          786
+          1031
         </td>
         <td>
           Literal
@@ -227,41 +250,41 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           0
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          702
+          803
         </td>
         <td>
-          736
+          1027
           -
-          798
+          1028
         </td>
         <td>
-          Block
+          Literal
         </td>
         <td>
-          cml.model.base.VillageMap.initVillage
+          &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
-          VillageMap.this.initVillage(scala.collection.mutable.MutableList.apply[cml.model.base.Structure](), 0, 0, &quot;default&quot;)
+        <td style="background: #AEF1AE">
+          0
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          701
+          806
         </td>
         <td>
-          736
+          981
           -
-          798
+          1043
         </td>
         <td>
           Apply
@@ -269,41 +292,20 @@
         <td>
           cml.model.base.VillageMap.initVillage
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           VillageMap.this.initVillage(scala.collection.mutable.MutableList.apply[cml.model.base.Structure](), 0, 0, &quot;default&quot;)
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          698
+          802
         </td>
         <td>
-          782
+          993
           -
-          783
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          0
-        </td>
-      </tr><tr>
-        <td>
-          25
-        </td>
-        <td>
-          697
-        </td>
-        <td>
-          748
-          -
-          780
+          1025
         </td>
         <td>
           Apply
@@ -311,20 +313,20 @@
         <td>
           scala.collection.generic.GenericCompanion.apply
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           scala.collection.mutable.MutableList.apply[cml.model.base.Structure]()
         </td>
       </tr><tr>
         <td>
-          25
+          27
         </td>
         <td>
-          700
+          805
         </td>
         <td>
-          788
+          1033
           -
-          797
+          1042
         </td>
         <td>
           Literal
@@ -332,20 +334,41 @@
         <td>
           &lt;nosymbol&gt;
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           &quot;default&quot;
         </td>
       </tr><tr>
         <td>
-          26
+          27
         </td>
         <td>
-          705
+          807
         </td>
         <td>
-          804
+          981
           -
-          813
+          1043
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          cml.model.base.VillageMap.initVillage
+        </td>
+        <td style="background: #AEF1AE">
+          VillageMap.this.initVillage(scala.collection.mutable.MutableList.apply[cml.model.base.Structure](), 0, 0, &quot;default&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          28
+        </td>
+        <td>
+          810
+        </td>
+        <td>
+          1049
+          -
+          1058
         </td>
         <td>
           Select
@@ -353,7 +376,7 @@
         <td>
           cml.model.base.VillageMap._instance
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           VillageMap.this._instance
         </td>
       </tr>

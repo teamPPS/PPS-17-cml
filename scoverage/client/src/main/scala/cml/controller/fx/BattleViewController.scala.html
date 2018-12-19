@@ -26,135 +26,129 @@
 </span>2 <span style=''>
 </span>3 <span style=''>import java.io.File
 </span>4 <span style=''>
-</span>5 <span style=''>import akka.actor.{ActorSystem, Props}
+</span>5 <span style=''>import akka.actor.{ActorRef, ActorSystem, Props}
 </span>6 <span style=''>import cml.controller.BattleActor
 </span>7 <span style=''>import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
-</span>8 <span style=''>import cml.model.base.{Creature, VillageMap}
-</span>9 <span style=''>import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
-</span>10 <span style=''>import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
-</span>11 <span style=''>import cml.utils.ViewConfig._
-</span>12 <span style=''>import cml.view.ViewSwitch
-</span>13 <span style=''>import com.typesafe.config.ConfigFactory
-</span>14 <span style=''>import javafx.collections.{FXCollections, ObservableList}
-</span>15 <span style=''>import akka.actor.{ActorRef, ActorSystem, Props}
-</span>16 <span style=''>import cml.controller.messages.BattleRequest.SceneInfo
-</span>17 <span style=''>import javafx.fxml.FXML
-</span>18 <span style=''>import javafx.scene.control.Alert.AlertType
-</span>19 <span style=''>import javafx.scene.control.{ListView, _}
-</span>20 <span style=''>import javafx.scene.image.ImageView
-</span>21 <span style=''>import javafx.scene.layout.Pane
+</span>8 <span style=''>import cml.controller.messages.BattleRequest.SceneInfo
+</span>9 <span style=''>import cml.model.base.{Creature, VillageMap}
+</span>10 <span style=''>import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
+</span>11 <span style=''>import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
+</span>12 <span style=''>import cml.utils.ViewConfig._
+</span>13 <span style=''>import cml.view.{DialogPaneUtils, ViewSwitch}
+</span>14 <span style=''>import com.typesafe.config.ConfigFactory
+</span>15 <span style=''>import javafx.collections.{FXCollections, ObservableList}
+</span>16 <span style=''>import javafx.fxml.FXML
+</span>17 <span style=''>import javafx.scene.control.{ListView, _}
+</span>18 <span style=''>import javafx.scene.image.ImageView
+</span>19 <span style=''>import javafx.scene.layout.Pane
+</span>20 <span style=''>
+</span>21 <span style=''>import scala.collection.mutable
 </span>22 <span style=''>
-</span>23 <span style=''>import scala.collection.mutable
-</span>24 <span style=''>
-</span>25 <span style=''>
-</span>26 <span style=''>/**
-</span>27 <span style=''>  * Controller class for graphic battle view
-</span>28 <span style=''>  *
-</span>29 <span style=''>  * @author Chiara Volonnino
-</span>30 <span style=''>  * @author (edited by) Monica Gondolini
-</span>31 <span style=''>  */
+</span>23 <span style=''>
+</span>24 <span style=''>/**
+</span>25 <span style=''>  * Controller class for graphic battle view
+</span>26 <span style=''>  *
+</span>27 <span style=''>  * @author Chiara Volonnino
+</span>28 <span style=''>  * @author (edited by) Monica Gondolini
+</span>29 <span style=''>  */
+</span>30 <span style=''>
+</span>31 <span style=''>class BattleViewController {
 </span>32 <span style=''>
-</span>33 <span style=''>class BattleViewController {
+</span>33 <span style=''>  var battleActor: ActorRef = _
 </span>34 <span style=''>
-</span>35 <span style=''>  var battleActor: ActorRef = _
-</span>36 <span style=''>
-</span>37 <span style=''>  import java.util.Locale
-</span>38 <span style=''>  </span><span style='background: #F0ADAD'>Locale.setDefault(Locale.ENGLISH)</span><span style=''>
-</span>39 <span style=''>
-</span>40 <span style=''>  @FXML var exitButton: Button = _
-</span>41 <span style=''>  @FXML var creatureViewPane: Pane = _
-</span>42 <span style=''>  @FXML var creatureList: ListView[Creature] = _
-</span>43 <span style=''>  @FXML var creatureImage: ImageView = _
-</span>44 <span style=''>  @FXML var creatureSelectionPane: Pane = _
-</span>45 <span style=''>  @FXML var creatureArea: TextArea = _
-</span>46 <span style=''>  @FXML var playButton: Button = _
-</span>47 <span style=''>
-</span>48 <span style=''>  val village: VillageMap = </span><span style='background: #F0ADAD'>VillageMap.instance().get</span><span style=''>
-</span>49 <span style=''>  var creatures: mutable.MutableList[Creature] = _
-</span>50 <span style=''>  var obsCreatures: ObservableList[Creature] = </span><span style='background: #F0ADAD'>FXCollections.observableArrayList()</span><span style=''>
-</span>51 <span style=''>  var selectedCreature: Option[Creature] = </span><span style='background: #F0ADAD'>Creature.selectedCreature</span><span style=''>
+</span>35 <span style=''>  import java.util.Locale
+</span>36 <span style=''>  </span><span style='background: #F0ADAD'>Locale.setDefault(Locale.ENGLISH)</span><span style=''>
+</span>37 <span style=''>
+</span>38 <span style=''>  @FXML var exitButton: Button = _
+</span>39 <span style=''>  @FXML var creatureViewPane: Pane = _
+</span>40 <span style=''>  @FXML var creatureList: ListView[Creature] = _
+</span>41 <span style=''>  @FXML var creatureImage: ImageView = _
+</span>42 <span style=''>  @FXML var creatureSelectionPane: Pane = _
+</span>43 <span style=''>  @FXML var creatureArea: TextArea = _
+</span>44 <span style=''>  @FXML var playButton: Button = _
+</span>45 <span style=''>
+</span>46 <span style=''>  val village: VillageMap = </span><span style='background: #F0ADAD'>VillageMap.instance().get</span><span style=''>
+</span>47 <span style=''>  var creatures: mutable.MutableList[Creature] = _
+</span>48 <span style=''>  var obsCreatures: ObservableList[Creature] = </span><span style='background: #F0ADAD'>FXCollections.observableArrayList()</span><span style=''>
+</span>49 <span style=''>  var selectedCreature: Option[Creature] = </span><span style='background: #F0ADAD'>Creature.selectedCreature</span><span style=''>
+</span>50 <span style=''>
+</span>51 <span style=''>  def initialize(): Unit = {
 </span>52 <span style=''>
-</span>53 <span style=''>  def initialize(): Unit = {
-</span>54 <span style=''>
-</span>55 <span style=''>    </span><span style='background: #F0ADAD'>for (s &lt;- village.villageStructure) {
-</span>56 <span style=''></span><span style='background: #F0ADAD'>      if (s.creatures != null &amp;&amp; s.creatures.nonEmpty) {
-</span>57 <span style=''></span><span style='background: #F0ADAD'>        creatures = s.creatures
-</span>58 <span style=''></span><span style='background: #F0ADAD'>        obsCreatures add creatures.head
-</span>59 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
-</span>60 <span style=''>    }
-</span>61 <span style=''>
-</span>62 <span style=''>    </span><span style='background: #F0ADAD'>creatureList.setItems(obsCreatures)</span><span style=''>
-</span>63 <span style=''>    </span><span style='background: #F0ADAD'>creatureList.setCellFactory(_ =&gt; new ListCell[Creature]() {
-</span>64 <span style=''></span><span style='background: #F0ADAD'>      override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
-</span>65 <span style=''></span><span style='background: #F0ADAD'>        super.updateItem(creature, empty)
-</span>66 <span style=''></span><span style='background: #F0ADAD'>        if (empty || creature == null || creature.creatureType == null) setText(null)
-</span>67 <span style=''></span><span style='background: #F0ADAD'>        else setText(creature.name + &quot;, &quot; + creature.creatureType)
-</span>68 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>69 <span style=''></span><span style='background: #F0ADAD'>    })</span><span style=''>
-</span>70 <span style=''>
-</span>71 <span style=''>    </span><span style='background: #F0ADAD'>creatureList.setOnMouseClicked(_ =&gt; {
-</span>72 <span style=''></span><span style='background: #F0ADAD'>      selectedCreature = Some(creatureList.getSelectionModel.getSelectedItem)
-</span>73 <span style=''></span><span style='background: #F0ADAD'>      Creature.setSelectedCreature(selectedCreature)
-</span>74 <span style=''></span><span style='background: #F0ADAD'>
-</span>75 <span style=''></span><span style='background: #F0ADAD'>      selectedCreature match {
-</span>76 <span style=''></span><span style='background: #F0ADAD'>        case None =&gt; throw new NoSuchElementException
-</span>77 <span style=''></span><span style='background: #F0ADAD'>        case _ =&gt; setCreatureImage(selectedCreature.get)
-</span>78 <span style=''></span><span style='background: #F0ADAD'>          creatureArea setText displayText(selectedCreature.get.name, selectedCreature.get.creatureType,
-</span>79 <span style=''></span><span style='background: #F0ADAD'>            selectedCreature.get.level, selectedCreature.get.attackValue)
-</span>80 <span style=''></span><span style='background: #F0ADAD'>          playButton setDisable false
-</span>81 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>82 <span style=''></span><span style='background: #F0ADAD'>    })</span><span style=''>
-</span>83 <span style=''>  }
-</span>84 <span style=''>
-</span>85 <span style=''>  @FXML
-</span>86 <span style=''>  def exitOption(): Unit = {
-</span>87 <span style=''>    </span><span style='background: #F0ADAD'>selectedCreature = None</span><span style=''>
-</span>88 <span style=''>    </span><span style='background: #F0ADAD'>Creature.setSelectedCreature(selectedCreature)</span><span style=''>
-</span>89 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, exitButton.getScene)</span><span style=''>
-</span>90 <span style=''>  }
-</span>91 <span style=''>
-</span>92 <span style=''>  @FXML
-</span>93 <span style=''>  def startGame(): Unit = {
-</span>94 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.CONFIRMATION) {
-</span>95 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Confirmation Dialog&quot;)</span><span style=''>
-</span>96 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(selectedCreature.get.name + &quot;, &quot; + selectedCreature.get.creatureType +&quot;\nLevel: &quot; + selectedCreature.get.level)</span><span style=''>
-</span>97 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Are you sure want to confirm?&quot;)</span><span style=''>
-</span>98 <span style=''>    }
-</span>99 <span style=''>
-</span>100 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
-</span>101 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) </span><span style='background: #F0ADAD'>{
-</span>102 <span style=''></span><span style='background: #F0ADAD'>      createBattleActor()
-</span>103 <span style=''></span><span style='background: #F0ADAD'>      battleActor ! SceneInfo(exitButton.getScene)
-</span>104 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
-</span>105 <span style=''>  }
-</span>106 <span style=''>
-</span>107 <span style=''>  private def createBattleActor(): Unit ={
-</span>108 <span style=''>    val configFile = </span><span style='background: #F0ADAD'>getClass.getClassLoader.getResource(Configuration).getFile</span><span style=''>
-</span>109 <span style=''>    val config = </span><span style='background: #F0ADAD'>ConfigFactory.parseFile(new File(configFile))</span><span style=''>
-</span>110 <span style=''>    val system = </span><span style='background: #F0ADAD'>ActorSystem(&quot;LocalContext&quot;, config)</span><span style=''>
-</span>111 <span style=''>    </span><span style='background: #F0ADAD'>battleActor = system.actorOf(Props[BattleActor], name=Name)</span><span style=''>
-</span>112 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;------ BattleActor is ready&quot;)</span><span style=''>
-</span>113 <span style=''>  }
+</span>53 <span style=''>    </span><span style='background: #F0ADAD'>for (s &lt;- village.villageStructure) {
+</span>54 <span style=''></span><span style='background: #F0ADAD'>      if (s.creatures.nonEmpty &amp;&amp; s.creatures.get.nonEmpty) {
+</span>55 <span style=''></span><span style='background: #F0ADAD'>        creatures = s.creatures.get
+</span>56 <span style=''></span><span style='background: #F0ADAD'>        obsCreatures add creatures.head
+</span>57 <span style=''></span><span style='background: #F0ADAD'>      }</span><span style=''>
+</span>58 <span style=''>    }
+</span>59 <span style=''>
+</span>60 <span style=''>    </span><span style='background: #F0ADAD'>creatureList.setItems(obsCreatures)</span><span style=''>
+</span>61 <span style=''>    </span><span style='background: #F0ADAD'>creatureList.setCellFactory(_ =&gt; new ListCell[Creature]() {
+</span>62 <span style=''></span><span style='background: #F0ADAD'>      override protected def updateItem(creature: Creature, empty: Boolean): Unit = {
+</span>63 <span style=''></span><span style='background: #F0ADAD'>        super.updateItem(creature, empty)
+</span>64 <span style=''></span><span style='background: #F0ADAD'>        if (empty || creature == null || creature.creatureType == null) setText(null)
+</span>65 <span style=''></span><span style='background: #F0ADAD'>        else setText(creature.name + &quot;, &quot; + creature.creatureType)
+</span>66 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>67 <span style=''></span><span style='background: #F0ADAD'>    })</span><span style=''>
+</span>68 <span style=''>
+</span>69 <span style=''>    </span><span style='background: #F0ADAD'>creatureList.setOnMouseClicked(_ =&gt; {
+</span>70 <span style=''></span><span style='background: #F0ADAD'>      selectedCreature = Some(creatureList.getSelectionModel.getSelectedItem)
+</span>71 <span style=''></span><span style='background: #F0ADAD'>      Creature.setSelectedCreature(selectedCreature)
+</span>72 <span style=''></span><span style='background: #F0ADAD'>
+</span>73 <span style=''></span><span style='background: #F0ADAD'>      selectedCreature match {
+</span>74 <span style=''></span><span style='background: #F0ADAD'>        case None =&gt; throw new NoSuchElementException
+</span>75 <span style=''></span><span style='background: #F0ADAD'>        case _ =&gt; setCreatureImage(selectedCreature.get)
+</span>76 <span style=''></span><span style='background: #F0ADAD'>          creatureArea setText displayText(selectedCreature.get.name, selectedCreature.get.creatureType,
+</span>77 <span style=''></span><span style='background: #F0ADAD'>            selectedCreature.get.level, selectedCreature.get.attackValue)
+</span>78 <span style=''></span><span style='background: #F0ADAD'>          playButton setDisable false
+</span>79 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>80 <span style=''></span><span style='background: #F0ADAD'>    })</span><span style=''>
+</span>81 <span style=''>  }
+</span>82 <span style=''>
+</span>83 <span style=''>  @FXML
+</span>84 <span style=''>  def exitOption(): Unit = {
+</span>85 <span style=''>    </span><span style='background: #F0ADAD'>selectedCreature = None</span><span style=''>
+</span>86 <span style=''>    </span><span style='background: #F0ADAD'>Creature.setSelectedCreature(selectedCreature)</span><span style=''>
+</span>87 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(VillageWindow.path, exitButton.getScene)</span><span style=''>
+</span>88 <span style=''>  }
+</span>89 <span style=''>
+</span>90 <span style=''>  @FXML
+</span>91 <span style=''>  def startGame(): Unit = {
+</span>92 <span style=''>    val headerText = </span><span style='background: #F0ADAD'>selectedCreature.get.name + &quot;, &quot; + selectedCreature.get.creatureType +&quot;\nLevel: &quot; + selectedCreature.get.level</span><span style=''>
+</span>93 <span style=''>    val alert = </span><span style='background: #F0ADAD'>DialogPaneUtils()</span><span style=''>
+</span>94 <span style=''>    </span><span style='background: #F0ADAD'>alert.createConfirmationPane(headerText)</span><span style=''>
+</span>95 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showPane()</span><span style=''>
+</span>96 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) </span><span style='background: #F0ADAD'>{
+</span>97 <span style=''></span><span style='background: #F0ADAD'>      createBattleActor()
+</span>98 <span style=''></span><span style='background: #F0ADAD'>      battleActor ! SceneInfo(exitButton.getScene)
+</span>99 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>100 <span style=''>  }
+</span>101 <span style=''>
+</span>102 <span style=''>  private def createBattleActor(): Unit ={
+</span>103 <span style=''>    val configFile = </span><span style='background: #F0ADAD'>getClass.getClassLoader.getResource(Configuration).getFile</span><span style=''>
+</span>104 <span style=''>    val config = </span><span style='background: #F0ADAD'>ConfigFactory.parseFile(new File(configFile))</span><span style=''>
+</span>105 <span style=''>    val system = </span><span style='background: #F0ADAD'>ActorSystem(&quot;LocalContext&quot;, config)</span><span style=''>
+</span>106 <span style=''>    </span><span style='background: #F0ADAD'>battleActor = system.actorOf(Props[BattleActor], name=Name)</span><span style=''>
+</span>107 <span style=''>  }
+</span>108 <span style=''>
+</span>109 <span style=''>  private def displayText(name: String, creatureType: String, level: Int, attackValue: Int): String = {
+</span>110 <span style=''>    val text = </span><span style='background: #F0ADAD'>&quot;Name: &quot; + name +
+</span>111 <span style=''></span><span style='background: #F0ADAD'>      &quot;\nType: &quot; + creatureType +&quot;\n&quot; +
+</span>112 <span style=''></span><span style='background: #F0ADAD'>      &quot;Creature level: &quot; + level +
+</span>113 <span style=''></span><span style='background: #F0ADAD'>      &quot;\nAttack Value: &quot; + attackValue</span><span style=''>
 </span>114 <span style=''>
-</span>115 <span style=''>  private def displayText(name: String, creatureType: String, level: Int, attackValue: Int): String = {
-</span>116 <span style=''>    val text = </span><span style='background: #F0ADAD'>&quot;Name: &quot; + name +
-</span>117 <span style=''></span><span style='background: #F0ADAD'>      &quot;\nType: &quot; + creatureType +&quot;\n&quot; +
-</span>118 <span style=''></span><span style='background: #F0ADAD'>      &quot;Creature level: &quot; + level +
-</span>119 <span style=''></span><span style='background: #F0ADAD'>      &quot;\nAttack Value: &quot; + attackValue</span><span style=''>
-</span>120 <span style=''>
-</span>121 <span style=''>    text
-</span>122 <span style=''>  }
-</span>123 <span style=''>
-</span>124 <span style=''>  private def setCreatureImage(selection: Creature): Unit = {
-</span>125 <span style=''>    </span><span style='background: #F0ADAD'>selection.creatureType</span><span style=''> match {
-</span>126 <span style=''>      case DRAGON =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage dragonImage</span><span style=''>
-</span>127 <span style=''>      case GOLEM =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage golemImage</span><span style=''>
-</span>128 <span style=''>      case GRIFFIN =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage griffinImage</span><span style=''>
-</span>129 <span style=''>      case WATERDEMON =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage waterdemonImage</span><span style=''>
-</span>130 <span style=''>    }
-</span>131 <span style=''>  }
-</span>132 <span style=''>
-</span>133 <span style=''>}
+</span>115 <span style=''>    text
+</span>116 <span style=''>  }
+</span>117 <span style=''>
+</span>118 <span style=''>  private def setCreatureImage(selection: Creature): Unit = {
+</span>119 <span style=''>    </span><span style='background: #F0ADAD'>selection.creatureType</span><span style=''> match {
+</span>120 <span style=''>      case DRAGON =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage dragonImage</span><span style=''>
+</span>121 <span style=''>      case GOLEM =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage golemImage</span><span style=''>
+</span>122 <span style=''>      case GRIFFIN =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage griffinImage</span><span style=''>
+</span>123 <span style=''>      case WATERDEMON =&gt; </span><span style='background: #F0ADAD'>creatureImage setImage waterdemonImage</span><span style=''>
+</span>124 <span style=''>    }
+</span>125 <span style=''>  }
+</span>126 <span style=''>
+</span>127 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -168,15 +162,36 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          38
+          36
         </td>
         <td>
-          382
+          454
         </td>
         <td>
-          1134
+          1086
           -
-          1167
+          1100
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          java.util.Locale.ENGLISH
+        </td>
+        <td style="background: #F0ADAD">
+          java.util.Locale.ENGLISH
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          455
+        </td>
+        <td>
+          1068
+          -
+          1101
         </td>
         <td>
           Apply
@@ -189,36 +204,15 @@
         </td>
       </tr><tr>
         <td>
-          38
+          46
         </td>
         <td>
-          381
+          456
         </td>
         <td>
-          1152
+          1424
           -
-          1166
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          java.util.Locale.ENGLISH
-        </td>
-        <td style="background: #F0ADAD">
-          java.util.Locale.ENGLISH
-        </td>
-      </tr><tr>
-        <td>
-          48
-        </td>
-        <td>
-          383
-        </td>
-        <td>
-          1490
-          -
-          1515
+          1449
         </td>
         <td>
           Select
@@ -231,15 +225,15 @@
         </td>
       </tr><tr>
         <td>
-          50
+          48
         </td>
         <td>
-          384
+          457
         </td>
         <td>
-          1616
+          1550
           -
-          1651
+          1585
         </td>
         <td>
           Apply
@@ -252,15 +246,15 @@
         </td>
       </tr><tr>
         <td>
-          51
+          49
         </td>
         <td>
-          385
+          458
         </td>
         <td>
-          1696
+          1630
           -
-          1721
+          1655
         </td>
         <td>
           Select
@@ -273,15 +267,15 @@
         </td>
       </tr><tr>
         <td>
-          55
+          53
         </td>
         <td>
-          396
+          468
         </td>
         <td>
-          1761
+          1695
           -
-          1939
+          1882
         </td>
         <td>
           Apply
@@ -290,9 +284,9 @@
           scala.collection.LinearSeqOptimized.foreach
         </td>
         <td style="background: #F0ADAD">
-          BattleViewController.this.village.villageStructure.foreach[AnyVal](((s: cml.model.base.Structure) =&gt; if (s.creatures.!=(null).&amp;&amp;(s.creatures.nonEmpty))
+          BattleViewController.this.village.villageStructure.foreach[AnyVal](((s: cml.model.base.Structure) =&gt; if (s.creatures.nonEmpty.&amp;&amp;(s.creatures.get.nonEmpty))
   {
-    BattleViewController.this.creatures_=(s.creatures);
+    BattleViewController.this.creatures_=(s.creatures.get);
     BattleViewController.this.obsCreatures.add(BattleViewController.this.creatures.head)
   }
 else
@@ -300,36 +294,15 @@ else
         </td>
       </tr><tr>
         <td>
-          56
+          54
         </td>
         <td>
-          394
+          460
         </td>
         <td>
-          1806
+          1744
           -
-          1806
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          56
-        </td>
-        <td>
-          388
-        </td>
-        <td>
-          1810
-          -
-          1853
+          1792
         </td>
         <td>
           Apply
@@ -338,40 +311,19 @@ else
           scala.Boolean.&amp;&amp;
         </td>
         <td style="background: #F0ADAD">
-          s.creatures.!=(null).&amp;&amp;(s.creatures.nonEmpty)
+          s.creatures.nonEmpty.&amp;&amp;(s.creatures.get.nonEmpty)
         </td>
       </tr><tr>
         <td>
-          56
+          54
         </td>
         <td>
-          387
+          465
         </td>
         <td>
-          1833
+          1794
           -
-          1853
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.collection.TraversableOnce.nonEmpty
-        </td>
-        <td style="background: #F0ADAD">
-          s.creatures.nonEmpty
-        </td>
-      </tr><tr>
-        <td>
-          56
-        </td>
-        <td>
-          393
-        </td>
-        <td>
-          1855
-          -
-          1939
+          1882
         </td>
         <td>
           Block
@@ -381,42 +333,42 @@ else
         </td>
         <td style="background: #F0ADAD">
           {
-  BattleViewController.this.creatures_=(s.creatures);
+  BattleViewController.this.creatures_=(s.creatures.get);
   BattleViewController.this.obsCreatures.add(BattleViewController.this.creatures.head)
 }
         </td>
       </tr><tr>
         <td>
-          56
+          54
         </td>
         <td>
-          386
+          459
         </td>
         <td>
-          1825
+          1768
           -
-          1829
+          1792
         </td>
         <td>
-          Literal
+          Select
         </td>
         <td>
-          &lt;nosymbol&gt;
+          scala.collection.TraversableOnce.nonEmpty
         </td>
         <td style="background: #F0ADAD">
-          null
+          s.creatures.get.nonEmpty
         </td>
       </tr><tr>
         <td>
-          56
+          54
         </td>
         <td>
-          395
+          467
         </td>
         <td>
-          1806
+          1740
           -
-          1806
+          1740
         </td>
         <td>
           Block
@@ -429,15 +381,36 @@ else
         </td>
       </tr><tr>
         <td>
-          57
+          54
         </td>
         <td>
-          390
+          466
         </td>
         <td>
-          1866
+          1740
           -
-          1889
+          1740
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          55
+        </td>
+        <td>
+          462
+        </td>
+        <td>
+          1805
+          -
+          1832
         </td>
         <td>
           Apply
@@ -446,40 +419,40 @@ else
           cml.controller.fx.BattleViewController.creatures_=
         </td>
         <td style="background: #F0ADAD">
-          BattleViewController.this.creatures_=(s.creatures)
+          BattleViewController.this.creatures_=(s.creatures.get)
         </td>
       </tr><tr>
         <td>
-          57
+          55
         </td>
         <td>
-          389
+          461
         </td>
         <td>
-          1878
+          1817
           -
-          1889
+          1832
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.Structure.creatures
+          scala.Option.get
         </td>
         <td style="background: #F0ADAD">
-          s.creatures
+          s.creatures.get
         </td>
       </tr><tr>
         <td>
-          58
+          56
         </td>
         <td>
-          391
+          463
         </td>
         <td>
-          1916
+          1859
           -
-          1930
+          1873
         </td>
         <td>
           Select
@@ -492,15 +465,15 @@ else
         </td>
       </tr><tr>
         <td>
-          58
+          56
         </td>
         <td>
-          392
+          464
         </td>
         <td>
-          1899
+          1842
           -
-          1930
+          1873
         </td>
         <td>
           Apply
@@ -513,15 +486,15 @@ else
         </td>
       </tr><tr>
         <td>
-          62
+          60
         </td>
         <td>
-          397
+          469
         </td>
         <td>
-          1976
+          1919
           -
-          1988
+          1931
         </td>
         <td>
           Select
@@ -534,15 +507,15 @@ else
         </td>
       </tr><tr>
         <td>
-          62
+          60
         </td>
         <td>
-          398
+          470
         </td>
         <td>
-          1954
+          1897
           -
-          1989
+          1932
         </td>
         <td>
           Apply
@@ -555,15 +528,15 @@ else
         </td>
       </tr><tr>
         <td>
-          63
+          61
         </td>
         <td>
-          411
+          483
         </td>
         <td>
-          1995
+          1938
           -
-          2356
+          2299
         </td>
         <td>
           Apply
@@ -591,15 +564,15 @@ else
         </td>
       </tr><tr>
         <td>
-          63
+          61
         </td>
         <td>
-          410
+          482
         </td>
         <td>
-          2028
+          1971
           -
-          2031
+          1974
         </td>
         <td>
           Apply
@@ -612,15 +585,15 @@ else
         </td>
       </tr><tr>
         <td>
-          65
+          63
         </td>
         <td>
-          399
+          471
         </td>
         <td>
-          2151
+          2094
           -
-          2184
+          2127
         </td>
         <td>
           Apply
@@ -633,15 +606,15 @@ else
         </td>
       </tr><tr>
         <td>
-          66
+          64
         </td>
         <td>
-          400
+          472
         </td>
         <td>
-          2207
+          2150
           -
-          2223
+          2166
         </td>
         <td>
           Apply
@@ -654,36 +627,15 @@ else
         </td>
       </tr><tr>
         <td>
-          66
+          64
         </td>
         <td>
-          403
+          474
         </td>
         <td>
-          2258
+          2141
           -
-          2271
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Labeled.setText
-        </td>
-        <td style="background: #F0ADAD">
-          $anon.this.setText(null)
-        </td>
-      </tr><tr>
-        <td>
-          66
-        </td>
-        <td>
-          402
-        </td>
-        <td>
-          2198
-          -
-          2256
+          2199
         </td>
         <td>
           Apply
@@ -696,15 +648,15 @@ else
         </td>
       </tr><tr>
         <td>
-          66
+          64
         </td>
         <td>
-          401
+          473
         </td>
         <td>
-          2227
+          2170
           -
-          2256
+          2199
         </td>
         <td>
           Apply
@@ -717,15 +669,15 @@ else
         </td>
       </tr><tr>
         <td>
-          66
+          64
         </td>
         <td>
-          404
+          476
         </td>
         <td>
-          2258
+          2201
           -
-          2271
+          2214
         </td>
         <td>
           Block
@@ -738,15 +690,36 @@ else
         </td>
       </tr><tr>
         <td>
-          67
+          64
         </td>
         <td>
-          406
+          475
         </td>
         <td>
-          2317
+          2201
           -
-          2338
+          2214
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.Labeled.setText
+        </td>
+        <td style="background: #F0ADAD">
+          $anon.this.setText(null)
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          478
+        </td>
+        <td>
+          2260
+          -
+          2281
         </td>
         <td>
           Select
@@ -759,15 +732,15 @@ else
         </td>
       </tr><tr>
         <td>
-          67
+          65
         </td>
         <td>
-          409
+          481
         </td>
         <td>
-          2286
+          2229
           -
-          2339
+          2282
         </td>
         <td>
           Block
@@ -780,36 +753,15 @@ else
         </td>
       </tr><tr>
         <td>
-          67
+          65
         </td>
         <td>
-          405
+          480
         </td>
         <td>
-          2310
+          2229
           -
-          2314
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;, &quot;
-        </td>
-      </tr><tr>
-        <td>
-          67
-        </td>
-        <td>
-          408
-        </td>
-        <td>
-          2286
-          -
-          2339
+          2282
         </td>
         <td>
           Apply
@@ -822,15 +774,36 @@ else
         </td>
       </tr><tr>
         <td>
-          67
+          65
         </td>
         <td>
-          407
+          477
         </td>
         <td>
-          2294
+          2253
           -
-          2338
+          2257
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;, &quot;
+        </td>
+      </tr><tr>
+        <td>
+          65
+        </td>
+        <td>
+          479
+        </td>
+        <td>
+          2237
+          -
+          2281
         </td>
         <td>
           Apply
@@ -843,15 +816,15 @@ else
         </td>
       </tr><tr>
         <td>
-          71
+          69
         </td>
         <td>
-          428
+          500
         </td>
         <td>
-          2364
+          2307
           -
-          2918
+          2861
         </td>
         <td>
           Apply
@@ -875,36 +848,15 @@ else
         </td>
       </tr><tr>
         <td>
-          72
+          70
         </td>
         <td>
-          412
+          486
         </td>
         <td>
-          2433
+          2352
           -
-          2479
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.SelectionModel.getSelectedItem
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.creatureList.getSelectionModel().getSelectedItem()
-        </td>
-      </tr><tr>
-        <td>
-          72
-        </td>
-        <td>
-          414
-        </td>
-        <td>
-          2409
-          -
-          2480
+          2423
         </td>
         <td>
           Apply
@@ -917,15 +869,15 @@ else
         </td>
       </tr><tr>
         <td>
-          72
+          70
         </td>
         <td>
-          413
+          485
         </td>
         <td>
-          2428
+          2371
           -
-          2480
+          2423
         </td>
         <td>
           Apply
@@ -938,15 +890,36 @@ else
         </td>
       </tr><tr>
         <td>
-          73
+          70
         </td>
         <td>
-          415
+          484
         </td>
         <td>
-          2517
+          2376
           -
-          2533
+          2422
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.control.SelectionModel.getSelectedItem
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.creatureList.getSelectionModel().getSelectedItem()
+        </td>
+      </tr><tr>
+        <td>
+          71
+        </td>
+        <td>
+          487
+        </td>
+        <td>
+          2460
+          -
+          2476
         </td>
         <td>
           Select
@@ -959,15 +932,15 @@ else
         </td>
       </tr><tr>
         <td>
-          73
+          71
         </td>
         <td>
-          416
+          488
         </td>
         <td>
-          2488
+          2431
           -
-          2534
+          2477
         </td>
         <td>
           Apply
@@ -980,15 +953,15 @@ else
         </td>
       </tr><tr>
         <td>
-          75
+          73
         </td>
         <td>
-          417
+          489
         </td>
         <td>
-          2544
+          2487
           -
-          2560
+          2503
         </td>
         <td>
           Select
@@ -1001,15 +974,15 @@ else
         </td>
       </tr><tr>
         <td>
-          76
+          74
         </td>
         <td>
-          418
+          490
         </td>
         <td>
-          2591
+          2534
           -
-          2623
+          2566
         </td>
         <td>
           Throw
@@ -1022,15 +995,15 @@ else
         </td>
       </tr><tr>
         <td>
-          77
+          75
         </td>
         <td>
-          420
+          492
         </td>
         <td>
-          2643
+          2586
           -
-          2681
+          2624
         </td>
         <td>
           Apply
@@ -1043,15 +1016,15 @@ else
         </td>
       </tr><tr>
         <td>
-          77
+          75
         </td>
         <td>
-          419
+          491
         </td>
         <td>
-          2660
+          2603
           -
-          2680
+          2623
         </td>
         <td>
           Select
@@ -1064,36 +1037,15 @@ else
         </td>
       </tr><tr>
         <td>
-          78
+          76
         </td>
         <td>
-          421
+          498
         </td>
         <td>
-          2726
+          2636
           -
-          2751
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Creature.name
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature.get.name
-        </td>
-      </tr><tr>
-        <td>
-          78
-        </td>
-        <td>
-          426
-        </td>
-        <td>
-          2693
-          -
-          2862
+          2805
         </td>
         <td>
           Apply
@@ -1106,36 +1058,15 @@ else
         </td>
       </tr><tr>
         <td>
-          78
+          76
         </td>
         <td>
-          422
+          497
         </td>
         <td>
-          2753
+          2657
           -
-          2786
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Creature.creatureType
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature.get.creatureType
-        </td>
-      </tr><tr>
-        <td>
-          78
-        </td>
-        <td>
-          425
-        </td>
-        <td>
-          2714
-          -
-          2862
+          2805
         </td>
         <td>
           Apply
@@ -1148,309 +1079,15 @@ else
         </td>
       </tr><tr>
         <td>
-          79
+          76
         </td>
         <td>
-          424
+          494
         </td>
         <td>
-          2829
+          2696
           -
-          2861
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Creature.attackValue
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature.get.attackValue
-        </td>
-      </tr><tr>
-        <td>
-          79
-        </td>
-        <td>
-          423
-        </td>
-        <td>
-          2801
-          -
-          2827
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Creature.level
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature.get.level
-        </td>
-      </tr><tr>
-        <td>
-          80
-        </td>
-        <td>
-          427
-        </td>
-        <td>
-          2874
-          -
-          2901
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.Node.setDisable
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.playButton.setDisable(false)
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          430
-        </td>
-        <td>
-          2970
-          -
-          2993
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.fx.BattleViewController.selectedCreature_=
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature_=(scala.None)
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          429
-        </td>
-        <td>
-          2989
-          -
-          2993
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.None
-        </td>
-        <td style="background: #F0ADAD">
-          scala.None
-        </td>
-      </tr><tr>
-        <td>
-          88
-        </td>
-        <td>
-          432
-        </td>
-        <td>
-          2999
-          -
-          3045
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.setSelectedCreature
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.Creature.setSelectedCreature(BattleViewController.this.selectedCreature)
-        </td>
-      </tr><tr>
-        <td>
-          88
-        </td>
-        <td>
-          431
-        </td>
-        <td>
-          3028
-          -
-          3044
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.BattleViewController.selectedCreature
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          433
-        </td>
-        <td>
-          3071
-          -
-          3089
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.ViewConfig.VillageWindow.path
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.ViewConfig.VillageWindow.path
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          435
-        </td>
-        <td>
-          3051
-          -
-          3111
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.view.ViewSwitch.activate
-        </td>
-        <td style="background: #F0ADAD">
-          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, BattleViewController.this.exitButton.getScene())
-        </td>
-      </tr><tr>
-        <td>
-          89
-        </td>
-        <td>
-          434
-        </td>
-        <td>
-          3091
-          -
-          3110
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.Node.getScene
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.exitButton.getScene()
-        </td>
-      </tr><tr>
-        <td>
-          94
-        </td>
-        <td>
-          444
-        </td>
-        <td>
-          3174
-          -
-          3177
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.fx.BattleViewController.$anon.&lt;init&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          new $anon()
-        </td>
-      </tr><tr>
-        <td>
-          95
-        </td>
-        <td>
-          436
-        </td>
-        <td>
-          3217
-          -
-          3248
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Dialog.setTitle
-        </td>
-        <td style="background: #F0ADAD">
-          $anon.this.setTitle(&quot;Confirmation Dialog&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          442
-        </td>
-        <td>
-          3256
-          -
-          3381
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Dialog.setHeaderText
-        </td>
-        <td style="background: #F0ADAD">
-          $anon.this.setHeaderText(BattleViewController.this.selectedCreature.get.name.+(&quot;, &quot;).+(BattleViewController.this.selectedCreature.get.creatureType).+(&quot;\nLevel: &quot;).+(BattleViewController.this.selectedCreature.get.level))
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          439
-        </td>
-        <td>
-          3340
-          -
-          3351
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;\nLevel: &quot;
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          438
-        </td>
-        <td>
-          3305
-          -
-          3338
+          2729
         </td>
         <td>
           Select
@@ -1463,57 +1100,57 @@ else
         </td>
       </tr><tr>
         <td>
-          96
+          76
         </td>
         <td>
-          441
+          493
         </td>
         <td>
-          3270
+          2669
           -
-          3380
+          2694
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          java.lang.String.+
+          cml.model.base.Creature.name
         </td>
         <td style="background: #F0ADAD">
-          BattleViewController.this.selectedCreature.get.name.+(&quot;, &quot;).+(BattleViewController.this.selectedCreature.get.creatureType).+(&quot;\nLevel: &quot;).+(BattleViewController.this.selectedCreature.get.level)
+          BattleViewController.this.selectedCreature.get.name
         </td>
       </tr><tr>
         <td>
-          96
+          77
         </td>
         <td>
-          437
+          496
         </td>
         <td>
-          3298
+          2772
           -
-          3302
+          2804
         </td>
         <td>
-          Literal
+          Select
         </td>
         <td>
-          &lt;nosymbol&gt;
+          cml.model.base.Creature.attackValue
         </td>
         <td style="background: #F0ADAD">
-          &quot;, &quot;
+          BattleViewController.this.selectedCreature.get.attackValue
         </td>
       </tr><tr>
         <td>
-          96
+          77
         </td>
         <td>
-          440
+          495
         </td>
         <td>
-          3354
+          2744
           -
-          3380
+          2770
         </td>
         <td>
           Select
@@ -1526,78 +1163,183 @@ else
         </td>
       </tr><tr>
         <td>
-          97
+          78
         </td>
         <td>
-          443
+          499
         </td>
         <td>
-          3389
+          2817
           -
-          3436
+          2844
         </td>
         <td>
           Apply
         </td>
         <td>
-          javafx.scene.control.Dialog.setContentText
+          javafx.scene.Node.setDisable
         </td>
         <td style="background: #F0ADAD">
-          $anon.this.setContentText(&quot;Are you sure want to confirm?&quot;)
+          BattleViewController.this.playButton.setDisable(false)
         </td>
       </tr><tr>
         <td>
-          100
+          85
         </td>
         <td>
-          445
+          501
         </td>
         <td>
-          3464
+          2932
           -
-          3483
+          2936
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          85
+        </td>
+        <td>
+          502
+        </td>
+        <td>
+          2913
+          -
+          2936
         </td>
         <td>
           Apply
         </td>
         <td>
-          javafx.scene.control.Dialog.showAndWait
+          cml.controller.fx.BattleViewController.selectedCreature_=
         </td>
         <td style="background: #F0ADAD">
-          alert.showAndWait()
+          BattleViewController.this.selectedCreature_=(scala.None)
         </td>
       </tr><tr>
         <td>
-          101
+          86
         </td>
         <td>
-          448
+          504
         </td>
         <td>
-          3493
+          2942
           -
-          3542
+          2988
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Boolean.&amp;&amp;
+          cml.model.base.Creature.setSelectedCreature
         </td>
         <td style="background: #F0ADAD">
-          result.isPresent().&amp;&amp;(result.get().==(javafx.scene.control.ButtonType.OK))
+          cml.model.base.Creature.setSelectedCreature(BattleViewController.this.selectedCreature)
         </td>
       </tr><tr>
         <td>
-          101
+          86
         </td>
         <td>
-          457
+          503
         </td>
         <td>
-          3489
+          2971
           -
-          3489
+          2987
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.BattleViewController.selectedCreature
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.selectedCreature
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          505
+        </td>
+        <td>
+          3014
+          -
+          3032
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ViewConfig.VillageWindow.path
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ViewConfig.VillageWindow.path
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          507
+        </td>
+        <td>
+          2994
+          -
+          3054
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.VillageWindow.path, BattleViewController.this.exitButton.getScene())
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          506
+        </td>
+        <td>
+          3034
+          -
+          3053
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.exitButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          508
+        </td>
+        <td>
+          3150
+          -
+          3154
         </td>
         <td>
           Literal
@@ -1606,19 +1348,166 @@ else
           &lt;nosymbol&gt;
         </td>
         <td style="background: #F0ADAD">
-          ()
+          &quot;, &quot;
         </td>
       </tr><tr>
         <td>
-          101
+          92
         </td>
         <td>
-          447
+          510
         </td>
         <td>
-          3513
+          3192
           -
-          3542
+          3203
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;\nLevel: &quot;
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          512
+        </td>
+        <td>
+          3122
+          -
+          3232
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.lang.String.+
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.selectedCreature.get.name.+(&quot;, &quot;).+(BattleViewController.this.selectedCreature.get.creatureType).+(&quot;\nLevel: &quot;).+(BattleViewController.this.selectedCreature.get.level)
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          509
+        </td>
+        <td>
+          3157
+          -
+          3190
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.creatureType
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.selectedCreature.get.creatureType
+        </td>
+      </tr><tr>
+        <td>
+          92
+        </td>
+        <td>
+          511
+        </td>
+        <td>
+          3206
+          -
+          3232
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.level
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.selectedCreature.get.level
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          513
+        </td>
+        <td>
+          3250
+          -
+          3267
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.DialogPaneUtils.apply()
+        </td>
+      </tr><tr>
+        <td>
+          94
+        </td>
+        <td>
+          514
+        </td>
+        <td>
+          3273
+          -
+          3313
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.createConfirmationPane
+        </td>
+        <td style="background: #F0ADAD">
+          alert.createConfirmationPane(headerText)
+        </td>
+      </tr><tr>
+        <td>
+          95
+        </td>
+        <td>
+          515
+        </td>
+        <td>
+          3332
+          -
+          3348
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.DialogPaneUtils.showPane
+        </td>
+        <td style="background: #F0ADAD">
+          alert.showPane()
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          517
+        </td>
+        <td>
+          3378
+          -
+          3407
         </td>
         <td>
           Apply
@@ -1631,15 +1520,99 @@ else
         </td>
       </tr><tr>
         <td>
-          101
+          96
         </td>
         <td>
-          456
+          516
         </td>
         <td>
-          3544
+          3394
           -
-          3631
+          3407
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          javafx.scene.control.ButtonType.OK
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.scene.control.ButtonType.OK
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          528
+        </td>
+        <td>
+          3354
+          -
+          3354
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          518
+        </td>
+        <td>
+          3358
+          -
+          3407
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Boolean.&amp;&amp;
+        </td>
+        <td style="background: #F0ADAD">
+          result.isPresent().&amp;&amp;(result.get().==(javafx.scene.control.ButtonType.OK))
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          527
+        </td>
+        <td>
+          3354
+          -
+          3354
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          96
+        </td>
+        <td>
+          526
+        </td>
+        <td>
+          3409
+          -
+          3496
         </td>
         <td>
           Block
@@ -1660,57 +1633,15 @@ else
         </td>
       </tr><tr>
         <td>
-          101
+          97
         </td>
         <td>
-          446
+          519
         </td>
         <td>
-          3529
+          3418
           -
-          3542
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          javafx.scene.control.ButtonType.OK
-        </td>
-        <td style="background: #F0ADAD">
-          javafx.scene.control.ButtonType.OK
-        </td>
-      </tr><tr>
-        <td>
-          101
-        </td>
-        <td>
-          458
-        </td>
-        <td>
-          3489
-          -
-          3489
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          102
-        </td>
-        <td>
-          449
-        </td>
-        <td>
-          3553
-          -
-          3572
+          3437
         </td>
         <td>
           Apply
@@ -1723,15 +1654,78 @@ else
         </td>
       </tr><tr>
         <td>
-          103
+          98
         </td>
         <td>
-          451
+          523
         </td>
         <td>
-          3580
+          3459
           -
-          3591
+          3489
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.BattleRequest.SceneInfo.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.BattleRequest.SceneInfo.apply(BattleViewController.this.exitButton.getScene())
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          525
+        </td>
+        <td>
+          3445
+          -
+          3489
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorRef.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!(x$3)(x$4)
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          522
+        </td>
+        <td>
+          3469
+          -
+          3488
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.Node.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          BattleViewController.this.exitButton.getScene()
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          521
+        </td>
+        <td>
+          3445
+          -
+          3456
         </td>
         <td>
           ApplyImplicitView
@@ -1744,15 +1738,15 @@ else
         </td>
       </tr><tr>
         <td>
-          103
+          98
         </td>
         <td>
-          454
+          524
         </td>
         <td>
-          3592
+          3457
           -
-          3592
+          3457
         </td>
         <td>
           Apply
@@ -1765,15 +1759,15 @@ else
         </td>
       </tr><tr>
         <td>
-          103
+          98
         </td>
         <td>
-          450
+          520
         </td>
         <td>
-          3580
+          3445
           -
-          3591
+          3456
         </td>
         <td>
           Select
@@ -1789,75 +1783,12 @@ else
           103
         </td>
         <td>
-          453
+          529
         </td>
         <td>
-          3594
+          3570
           -
-          3624
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.messages.BattleRequest.SceneInfo.apply
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.messages.BattleRequest.SceneInfo.apply(BattleViewController.this.exitButton.getScene())
-        </td>
-      </tr><tr>
-        <td>
-          103
-        </td>
-        <td>
-          452
-        </td>
-        <td>
-          3604
-          -
-          3623
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.Node.getScene
-        </td>
-        <td style="background: #F0ADAD">
-          BattleViewController.this.exitButton.getScene()
-        </td>
-      </tr><tr>
-        <td>
-          103
-        </td>
-        <td>
-          455
-        </td>
-        <td>
-          3580
-          -
-          3624
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorRef.!
-        </td>
-        <td style="background: #F0ADAD">
-          qual$1.!(x$3)(x$4)
-        </td>
-      </tr><tr>
-        <td>
-          108
-        </td>
-        <td>
-          459
-        </td>
-        <td>
-          3705
-          -
-          3763
+          3628
         </td>
         <td>
           Apply
@@ -1870,36 +1801,15 @@ else
         </td>
       </tr><tr>
         <td>
-          109
+          104
         </td>
         <td>
-          460
+          531
         </td>
         <td>
-          3806
+          3647
           -
-          3826
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.io.File.&lt;init&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          new java.io.File(configFile)
-        </td>
-      </tr><tr>
-        <td>
-          109
-        </td>
-        <td>
-          461
-        </td>
-        <td>
-          3782
-          -
-          3827
+          3692
         </td>
         <td>
           Apply
@@ -1912,15 +1822,36 @@ else
         </td>
       </tr><tr>
         <td>
-          110
+          104
         </td>
         <td>
-          462
+          530
         </td>
         <td>
-          3846
+          3671
           -
-          3881
+          3691
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          java.io.File.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new java.io.File(configFile)
+        </td>
+      </tr><tr>
+        <td>
+          105
+        </td>
+        <td>
+          532
+        </td>
+        <td>
+          3711
+          -
+          3746
         </td>
         <td>
           Apply
@@ -1933,15 +1864,36 @@ else
         </td>
       </tr><tr>
         <td>
-          111
+          106
         </td>
         <td>
-          463
+          534
         </td>
         <td>
-          3916
+          3806
           -
-          3934
+          3810
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name
+        </td>
+      </tr><tr>
+        <td>
+          106
+        </td>
+        <td>
+          533
+        </td>
+        <td>
+          3781
+          -
+          3799
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1954,57 +1906,15 @@ else
         </td>
       </tr><tr>
         <td>
-          111
+          106
         </td>
         <td>
-          465
+          536
         </td>
         <td>
-          3901
+          3752
           -
-          3946
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          akka.actor.ActorRefFactory.actorOf
-        </td>
-        <td style="background: #F0ADAD">
-          system.actorOf(akka.actor.Props.apply[cml.controller.BattleActor]()((ClassTag.apply[cml.controller.BattleActor](classOf[cml.controller.BattleActor]): scala.reflect.ClassTag[cml.controller.BattleActor])), cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name)
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          464
-        </td>
-        <td>
-          3941
-          -
-          3945
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          466
-        </td>
-        <td>
-          3887
-          -
-          3946
+          3811
         </td>
         <td>
           Apply
@@ -2017,36 +1927,36 @@ else
         </td>
       </tr><tr>
         <td>
-          112
+          106
         </td>
         <td>
-          467
+          535
         </td>
         <td>
-          3952
+          3766
           -
-          3990
+          3811
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          akka.actor.ActorRefFactory.actorOf
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;------ BattleActor is ready&quot;)
+          system.actorOf(akka.actor.Props.apply[cml.controller.BattleActor]()((ClassTag.apply[cml.controller.BattleActor](classOf[cml.controller.BattleActor]): scala.reflect.ClassTag[cml.controller.BattleActor])), cml.controller.actor.utils.ActorUtils.BattleActorInfo.Name)
         </td>
       </tr><tr>
         <td>
-          119
+          113
         </td>
         <td>
-          468
+          537
         </td>
         <td>
-          4119
+          3940
           -
-          4253
+          4074
         </td>
         <td>
           Apply
@@ -2059,15 +1969,15 @@ else
         </td>
       </tr><tr>
         <td>
-          125
+          119
         </td>
         <td>
-          469
+          538
         </td>
         <td>
-          4341
+          4162
           -
-          4363
+          4184
         </td>
         <td>
           Select
@@ -2080,15 +1990,15 @@ else
         </td>
       </tr><tr>
         <td>
-          126
+          120
         </td>
         <td>
-          471
+          540
         </td>
         <td>
-          4394
+          4215
           -
-          4428
+          4249
         </td>
         <td>
           Apply
@@ -2101,15 +2011,15 @@ else
         </td>
       </tr><tr>
         <td>
-          126
+          120
         </td>
         <td>
-          470
+          539
         </td>
         <td>
-          4417
+          4238
           -
-          4428
+          4249
         </td>
         <td>
           Select
@@ -2122,15 +2032,15 @@ else
         </td>
       </tr><tr>
         <td>
-          127
+          121
         </td>
         <td>
-          472
+          541
         </td>
         <td>
-          4473
+          4294
           -
-          4483
+          4304
         </td>
         <td>
           Select
@@ -2143,15 +2053,15 @@ else
         </td>
       </tr><tr>
         <td>
-          127
+          121
         </td>
         <td>
-          473
+          542
         </td>
         <td>
-          4450
+          4271
           -
-          4483
+          4304
         </td>
         <td>
           Apply
@@ -2164,15 +2074,15 @@ else
         </td>
       </tr><tr>
         <td>
-          128
+          122
         </td>
         <td>
-          474
+          543
         </td>
         <td>
-          4530
+          4351
           -
-          4542
+          4363
         </td>
         <td>
           Select
@@ -2185,15 +2095,15 @@ else
         </td>
       </tr><tr>
         <td>
-          128
+          122
         </td>
         <td>
-          475
+          544
         </td>
         <td>
-          4507
+          4328
           -
-          4542
+          4363
         </td>
         <td>
           Apply
@@ -2206,15 +2116,15 @@ else
         </td>
       </tr><tr>
         <td>
-          129
+          123
         </td>
         <td>
-          477
+          546
         </td>
         <td>
-          4569
+          4390
           -
-          4607
+          4428
         </td>
         <td>
           Apply
@@ -2227,15 +2137,15 @@ else
         </td>
       </tr><tr>
         <td>
-          129
+          123
         </td>
         <td>
-          476
+          545
         </td>
         <td>
-          4592
+          4413
           -
-          4607
+          4428
         </td>
         <td>
           Select

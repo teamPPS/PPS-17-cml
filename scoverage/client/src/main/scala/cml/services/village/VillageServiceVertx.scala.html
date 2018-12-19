@@ -28,127 +28,132 @@
 </span>4 <span style=''>import cml.services.authentication.TokenStorage
 </span>5 <span style=''>import cml.services.village.utils.VillageUrl.{SetUpdateAPI, VillagesAPI}
 </span>6 <span style=''>import io.netty.handler.codec.http.{HttpHeaderNames, HttpResponseStatus}
-</span>7 <span style=''>import io.vertx.lang.scala.json.JsonObject
-</span>8 <span style=''>import io.vertx.scala.core.Vertx
-</span>9 <span style=''>import io.vertx.scala.ext.web.client.WebClient
-</span>10 <span style=''>import play.api.libs.json.JsValue
-</span>11 <span style=''>
-</span>12 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
-</span>13 <span style=''>import scala.concurrent.Future
-</span>14 <span style=''>
+</span>7 <span style=''>import io.vertx.core.logging.{Logger, LoggerFactory}
+</span>8 <span style=''>import io.vertx.lang.scala.json.JsonObject
+</span>9 <span style=''>import io.vertx.scala.core.Vertx
+</span>10 <span style=''>import io.vertx.scala.ext.web.client.WebClient
+</span>11 <span style=''>import play.api.libs.json.JsValue
+</span>12 <span style=''>
+</span>13 <span style=''>import scala.concurrent.ExecutionContext.Implicits.global
+</span>14 <span style=''>import scala.concurrent.Future
 </span>15 <span style=''>
-</span>16 <span style=''>/**
-</span>17 <span style=''>  * This trait describes the Village Vertx client
-</span>18 <span style=''>  * @author Monica Gondolini
-</span>19 <span style=''>  * @author (modified by) Chiara Volonnino
-</span>20 <span style=''>  */
-</span>21 <span style=''>trait VillageServiceVertx {
-</span>22 <span style=''>
-</span>23 <span style=''>  /**
-</span>24 <span style=''>    * Create a user village
-</span>25 <span style=''>    * @return successful or failed creation
-</span>26 <span style=''>    */
-</span>27 <span style=''>  def createVillage(): Future[String]
-</span>28 <span style=''>
-</span>29 <span style=''>  /**
-</span>30 <span style=''>    * Enter the user's village
-</span>31 <span style=''>    * @return successful or failed enter
-</span>32 <span style=''>    */
-</span>33 <span style=''>  def enterVillage(): Future[String]
-</span>34 <span style=''>
-</span>35 <span style=''>  /**
-</span>36 <span style=''>    * Update the user's village
-</span>37 <span style=''>    * @param update what to update
-</span>38 <span style=''>    * @return successful or failed update
-</span>39 <span style=''>    */
-</span>40 <span style=''>  def updateVillage(update: JsValue): Future[String]
-</span>41 <span style=''>
-</span>42 <span style=''>  /**
-</span>43 <span style=''>    * Update existing items in the user's village
-</span>44 <span style=''>    * @param update values to update
-</span>45 <span style=''>    * @return successful or failed update
-</span>46 <span style=''>    */
-</span>47 <span style=''>  def setUpdateVillage(update: JsValue): Future[String]
-</span>48 <span style=''>
-</span>49 <span style=''>  /**
-</span>50 <span style=''>    * Delete the user's village
-</span>51 <span style=''>    * @return successful or failed deletion
-</span>52 <span style=''>    */
-</span>53 <span style=''>  def deleteVillageAndUser(): Future[String]
-</span>54 <span style=''>
-</span>55 <span style=''>}
-</span>56 <span style=''>
-</span>57 <span style=''>object VillageServiceVertx{
-</span>58 <span style=''>
-</span>59 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
-</span>60 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
-</span>61 <span style=''>
-</span>62 <span style=''>  val successfulCreationResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
-</span>63 <span style=''>  val successfulResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
-</span>64 <span style=''>
+</span>16 <span style=''>
+</span>17 <span style=''>/**
+</span>18 <span style=''>  * This trait describes the Village Vertx client
+</span>19 <span style=''>  * @author Monica Gondolini
+</span>20 <span style=''>  * @author (modified by) Chiara Volonnino
+</span>21 <span style=''>  */
+</span>22 <span style=''>trait VillageServiceVertx {
+</span>23 <span style=''>
+</span>24 <span style=''>  /**
+</span>25 <span style=''>    * Create a user village
+</span>26 <span style=''>    * @return successful or failed creation
+</span>27 <span style=''>    */
+</span>28 <span style=''>  def createVillage(): Future[String]
+</span>29 <span style=''>
+</span>30 <span style=''>  /**
+</span>31 <span style=''>    * Enter the user's village
+</span>32 <span style=''>    * @return successful or failed enter
+</span>33 <span style=''>    */
+</span>34 <span style=''>  def enterVillage(): Future[String]
+</span>35 <span style=''>
+</span>36 <span style=''>  /**
+</span>37 <span style=''>    * Update the user's village
+</span>38 <span style=''>    * @param update what to update
+</span>39 <span style=''>    * @return successful or failed update
+</span>40 <span style=''>    */
+</span>41 <span style=''>  def updateVillage(update: JsValue): Future[String]
+</span>42 <span style=''>
+</span>43 <span style=''>  /**
+</span>44 <span style=''>    * Update existing items in the user's village
+</span>45 <span style=''>    * @param update values to update
+</span>46 <span style=''>    * @return successful or failed update
+</span>47 <span style=''>    */
+</span>48 <span style=''>  def setUpdateVillage(update: JsValue): Future[String]
+</span>49 <span style=''>
+</span>50 <span style=''>  /**
+</span>51 <span style=''>    * Delete the user's village
+</span>52 <span style=''>    * @return successful or failed deletion
+</span>53 <span style=''>    */
+</span>54 <span style=''>  def deleteVillageAndUser(): Future[String]
+</span>55 <span style=''>
+</span>56 <span style=''>}
+</span>57 <span style=''>
+</span>58 <span style=''>object VillageServiceVertx{
+</span>59 <span style=''>
+</span>60 <span style=''>  val vertx: Vertx = </span><span style='background: #F0ADAD'>Vertx.vertx()</span><span style=''>
+</span>61 <span style=''>  var client: WebClient = </span><span style='background: #F0ADAD'>WebClient.create(vertx)</span><span style=''>
+</span>62 <span style=''>
+</span>63 <span style=''>  val successfulCreationResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.CREATED.code</span><span style=''>
+</span>64 <span style=''>  val successfulResponse: Int = </span><span style='background: #F0ADAD'>HttpResponseStatus.OK.code</span><span style=''>
 </span>65 <span style=''>
-</span>66 <span style=''>  def apply(): VillageServiceVertx = </span><span style='background: #F0ADAD'>VillageServiceVertxImpl()</span><span style=''>
+</span>66 <span style=''>  val log: Logger = </span><span style='background: #F0ADAD'>LoggerFactory.getLogger(&quot;Village Service&quot;)</span><span style=''>
 </span>67 <span style=''>
-</span>68 <span style=''>  /**
-</span>69 <span style=''>    * This class implements the Village Vertx Client
-</span>70 <span style=''>    */
-</span>71 <span style=''>  case class VillageServiceVertxImpl() extends VillageServiceVertx{
-</span>72 <span style=''>
-</span>73 <span style=''>    override def createVillage(): Future[String] = {
-</span>74 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending create village request&quot;)</span><span style=''>
-</span>75 <span style=''>      </span><span style='background: #F0ADAD'>client.post(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
-</span>76 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-</span>77 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>78 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
-</span>79 <span style=''></span><span style='background: #F0ADAD'>          case `successfulCreationResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>80 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; println(r.statusCode() + r.statusMessage());&quot;Not a valid request&quot;
-</span>81 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>82 <span style=''>    }
-</span>83 <span style=''>
-</span>84 <span style=''>    override def enterVillage(): Future[String] = {
-</span>85 <span style=''>      </span><span style='background: #F0ADAD'>println(s&quot;sending enter village request&quot;)</span><span style=''>
-</span>86 <span style=''>      </span><span style='background: #F0ADAD'>client.get(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
-</span>87 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-</span>88 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>89 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
-</span>90 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>91 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; println(r.statusCode() + r.statusMessage());&quot;Not a valid request&quot;
-</span>92 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>93 <span style=''>    }
-</span>94 <span style=''>
-</span>95 <span style=''>    override def updateVillage(update: JsValue): Future[String] = {
-</span>96 <span style=''>      val updateJsonObj = </span><span style='background: #F0ADAD'>new JsonObject(update.toString())</span><span style=''>
-</span>97 <span style=''>      </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
-</span>98 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-</span>99 <span style=''></span><span style='background: #F0ADAD'>        .sendJsonFuture(updateJsonObj)
-</span>100 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode() match {
-</span>101 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>102 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; println(r.statusCode() + r.statusMessage());&quot;Not a valid request&quot;
-</span>103 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>104 <span style=''>    }
-</span>105 <span style=''>
-</span>106 <span style=''>    override def setUpdateVillage(update: JsValue): Future[String] = {
-</span>107 <span style=''>      val updateJsonObj = </span><span style='background: #F0ADAD'>new JsonObject(update.toString())</span><span style=''>
-</span>108 <span style=''>      </span><span style='background: #F0ADAD'>client.put(AuthenticationServicePort, ServiceHostForRequest, SetUpdateAPI)
-</span>109 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-</span>110 <span style=''></span><span style='background: #F0ADAD'>        .sendJsonFuture(updateJsonObj)
-</span>111 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode() match {
-</span>112 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>113 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; println(r.statusCode() + r.statusMessage());&quot;Not a valid request&quot;
-</span>114 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>115 <span style=''>    }
-</span>116 <span style=''>
-</span>117 <span style=''>    override def deleteVillageAndUser(): Future[String] = {
-</span>118 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(AuthenticationServicePort, ServiceHostForRequest, VillagesAPI)
-</span>119 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
-</span>120 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
-</span>121 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
-</span>122 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
-</span>123 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; println(r.statusCode() + r.statusMessage());&quot;Not a valid request&quot;
-</span>124 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
-</span>125 <span style=''>    }
-</span>126 <span style=''>  }
-</span>127 <span style=''>}
+</span>68 <span style=''>  def apply(): VillageServiceVertx = </span><span style='background: #F0ADAD'>VillageServiceVertxImpl()</span><span style=''>
+</span>69 <span style=''>
+</span>70 <span style=''>  /**
+</span>71 <span style=''>    * This class implements the Village Vertx Client
+</span>72 <span style=''>    */
+</span>73 <span style=''>  case class VillageServiceVertxImpl() extends VillageServiceVertx{
+</span>74 <span style=''>
+</span>75 <span style=''>    override def createVillage(): Future[String] = {
+</span>76 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;sending create village request&quot;, None)</span><span style=''>
+</span>77 <span style=''>      </span><span style='background: #F0ADAD'>client.post(ServicePort, ServiceHostForRequest, VillagesAPI)
+</span>78 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+</span>79 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>80 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
+</span>81 <span style=''></span><span style='background: #F0ADAD'>          case `successfulCreationResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>82 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; log.error(r.statusCode() + r.statusMessage(), None);&quot;Not a valid request&quot;
+</span>83 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>84 <span style=''>    }
+</span>85 <span style=''>
+</span>86 <span style=''>    override def enterVillage(): Future[String] = {
+</span>87 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;sending enter village request&quot;, None)</span><span style=''>
+</span>88 <span style=''>      </span><span style='background: #F0ADAD'>client.get(ServicePort, ServiceHostForRequest, VillagesAPI)
+</span>89 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+</span>90 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>91 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
+</span>92 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>93 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; log.error(r.statusCode() + r.statusMessage(), None);&quot;Not a valid request&quot;
+</span>94 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>95 <span style=''>    }
+</span>96 <span style=''>
+</span>97 <span style=''>    override def updateVillage(update: JsValue): Future[String] = {
+</span>98 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;sending update village request&quot;, None)</span><span style=''>
+</span>99 <span style=''>      val updateJsonObj = </span><span style='background: #F0ADAD'>new JsonObject(update.toString())</span><span style=''>
+</span>100 <span style=''>      </span><span style='background: #F0ADAD'>client.put(ServicePort, ServiceHostForRequest, VillagesAPI)
+</span>101 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+</span>102 <span style=''></span><span style='background: #F0ADAD'>        .sendJsonFuture(updateJsonObj)
+</span>103 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode() match {
+</span>104 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>105 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; log.error(r.statusCode() + r.statusMessage(), None);&quot;Not a valid request&quot;
+</span>106 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>107 <span style=''>    }
+</span>108 <span style=''>
+</span>109 <span style=''>    override def setUpdateVillage(update: JsValue): Future[String] = {
+</span>110 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;sending set update village request&quot;, None)</span><span style=''>
+</span>111 <span style=''>      val updateJsonObj = </span><span style='background: #F0ADAD'>new JsonObject(update.toString())</span><span style=''>
+</span>112 <span style=''>      </span><span style='background: #F0ADAD'>client.put(ServicePort, ServiceHostForRequest, SetUpdateAPI)
+</span>113 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+</span>114 <span style=''></span><span style='background: #F0ADAD'>        .sendJsonFuture(updateJsonObj)
+</span>115 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode() match {
+</span>116 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>117 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; log.error(r.statusCode() + r.statusMessage(), None);&quot;Not a valid request&quot;
+</span>118 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>119 <span style=''>    }
+</span>120 <span style=''>
+</span>121 <span style=''>    override def deleteVillageAndUser(): Future[String] = {
+</span>122 <span style=''>      </span><span style='background: #F0ADAD'>log.info(&quot;sending village and account deletion request&quot;, None)</span><span style=''>
+</span>123 <span style=''>      </span><span style='background: #F0ADAD'>client.delete(ServicePort, ServiceHostForRequest, VillagesAPI)
+</span>124 <span style=''></span><span style='background: #F0ADAD'>        .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenStorage.getUserJWTToken)
+</span>125 <span style=''></span><span style='background: #F0ADAD'>        .sendFuture
+</span>126 <span style=''></span><span style='background: #F0ADAD'>        .map(r =&gt; r.statusCode match {
+</span>127 <span style=''></span><span style='background: #F0ADAD'>          case `successfulResponse` =&gt; r.bodyAsString().getOrElse(&quot;&quot;)
+</span>128 <span style=''></span><span style='background: #F0ADAD'>          case _ =&gt; log.error(r.statusCode() + r.statusMessage(), None);&quot;Not a valid request&quot;
+</span>129 <span style=''></span><span style='background: #F0ADAD'>        })</span><span style=''>
+</span>130 <span style=''>    }
+</span>131 <span style=''>  }
+</span>132 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -162,15 +167,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          59
+          60
         </td>
         <td>
-          974
+          1041
         </td>
         <td>
-          1546
+          1600
           -
-          1559
+          1613
         </td>
         <td>
           Apply
@@ -183,15 +188,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          61
         </td>
         <td>
-          976
+          1043
         </td>
         <td>
-          1587
+          1641
           -
-          1610
+          1664
         </td>
         <td>
           Apply
@@ -204,15 +209,15 @@
         </td>
       </tr><tr>
         <td>
-          60
+          61
         </td>
         <td>
-          975
+          1042
         </td>
         <td>
-          1604
+          1658
           -
-          1609
+          1663
         </td>
         <td>
           Select
@@ -225,15 +230,15 @@
         </td>
       </tr><tr>
         <td>
-          62
+          63
         </td>
         <td>
-          977
+          1044
         </td>
         <td>
-          1654
+          1708
           -
-          1685
+          1739
         </td>
         <td>
           Apply
@@ -246,15 +251,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          64
         </td>
         <td>
-          978
+          1045
         </td>
         <td>
-          1719
+          1773
           -
-          1745
+          1799
         </td>
         <td>
           Apply
@@ -270,12 +275,33 @@
           66
         </td>
         <td>
-          979
+          1046
         </td>
         <td>
-          1788
+          1823
           -
-          1813
+          1865
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.LoggerFactory.getLogger
+        </td>
+        <td style="background: #F0ADAD">
+          io.vertx.core.logging.LoggerFactory.getLogger(&quot;Village Service&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          68
+        </td>
+        <td>
+          1047
+        </td>
+        <td>
+          1906
+          -
+          1931
         </td>
         <td>
           Apply
@@ -288,57 +314,78 @@
         </td>
       </tr><tr>
         <td>
-          74
+          76
         </td>
         <td>
-          980
+          1049
         </td>
         <td>
-          2025
+          2178
           -
-          2058
+          2182
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          1048
+        </td>
+        <td>
+          2144
+          -
+          2176
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;sending create village request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          76
+        </td>
+        <td>
+          1050
+        </td>
+        <td>
+          2135
+          -
+          2183
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.StringContext.s
+          io.vertx.core.logging.Logger.info
         </td>
         <td style="background: #F0ADAD">
-          scala.StringContext.apply(&quot;sending create village request&quot;).s()
+          VillageServiceVertx.this.log.info(&quot;sending create village request&quot;, scala.None)
         </td>
       </tr><tr>
         <td>
-          74
+          77
         </td>
         <td>
-          981
+          1052
         </td>
         <td>
-          2017
+          2216
           -
-          2059
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending create village request&quot;).s())
-        </td>
-      </tr><tr>
-        <td>
-          75
-        </td>
-        <td>
-          983
-        </td>
-        <td>
-          2106
-          -
-          2127
+          2237
         </td>
         <td>
           Select
@@ -351,36 +398,36 @@
         </td>
       </tr><tr>
         <td>
-          75
+          77
         </td>
         <td>
-          982
+          1051
         </td>
         <td>
-          2079
+          2203
           -
-          2104
+          2214
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
       </tr><tr>
         <td>
-          75
+          77
         </td>
         <td>
-          984
+          1053
         </td>
         <td>
-          2129
+          2239
           -
-          2140
+          2250
         </td>
         <td>
           Select
@@ -393,15 +440,15 @@
         </td>
       </tr><tr>
         <td>
-          76
+          78
         </td>
         <td>
-          986
+          1055
         </td>
         <td>
-          2204
+          2314
           -
-          2232
+          2342
         </td>
         <td>
           Select
@@ -414,15 +461,15 @@
         </td>
       </tr><tr>
         <td>
-          76
+          78
         </td>
         <td>
-          985
+          1054
         </td>
         <td>
-          2162
+          2272
           -
-          2202
+          2312
         </td>
         <td>
           Apply
@@ -435,36 +482,15 @@
         </td>
       </tr><tr>
         <td>
-          78
+          80
         </td>
         <td>
-          987
+          1063
         </td>
         <td>
-          2274
+          2191
           -
-          2286
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusCode
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode()
-        </td>
-      </tr><tr>
-        <td>
-          78
-        </td>
-        <td>
-          993
-        </td>
-        <td>
-          2067
-          -
-          2472
+          2590
         </td>
         <td>
           ApplyToImplicitArgs
@@ -473,25 +499,46 @@
           scala.concurrent.Future.map
         </td>
         <td style="background: #F0ADAD">
-          VillageServiceVertx.this.client.post(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+          VillageServiceVertx.this.client.post(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
   case VillageServiceVertx.this.successfulCreationResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
   case _ =&gt; {
-    scala.Predef.println(r.statusCode().+(r.statusMessage()));
+    VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None);
     &quot;Not a valid request&quot;
   }
 }))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
-          79
+          80
         </td>
         <td>
-          988
+          1056
         </td>
         <td>
-          2343
+          2384
           -
-          2373
+          2396
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          81
+        </td>
+        <td>
+          1057
+        </td>
+        <td>
+          2453
+          -
+          2483
         </td>
         <td>
           Apply
@@ -504,36 +551,36 @@
         </td>
       </tr><tr>
         <td>
-          80
+          82
         </td>
         <td>
-          992
+          1061
         </td>
         <td>
-          2439
+          2505
           -
-          2460
+          2556
         </td>
         <td>
-          Literal
+          Apply
         </td>
         <td>
-          &lt;nosymbol&gt;
+          io.vertx.core.logging.Logger.error
         </td>
         <td style="background: #F0ADAD">
-          &quot;Not a valid request&quot;
+          VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None)
         </td>
       </tr><tr>
         <td>
-          80
+          82
         </td>
         <td>
-          989
+          1058
         </td>
         <td>
-          2420
+          2532
           -
-          2437
+          2549
         </td>
         <td>
           Apply
@@ -546,36 +593,36 @@
         </td>
       </tr><tr>
         <td>
-          80
+          82
         </td>
         <td>
-          991
+          1060
         </td>
         <td>
-          2395
+          2551
           -
-          2438
+          2555
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          scala.Predef.println
+          scala.None
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(r.statusCode().+(r.statusMessage()))
+          scala.None
         </td>
       </tr><tr>
         <td>
-          80
+          82
         </td>
         <td>
-          990
+          1059
         </td>
         <td>
-          2403
+          2515
           -
-          2437
+          2549
         </td>
         <td>
           Apply
@@ -588,57 +635,120 @@
         </td>
       </tr><tr>
         <td>
-          85
+          82
         </td>
         <td>
-          995
+          1062
         </td>
         <td>
-          2542
+          2557
           -
-          2583
+          2578
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Not a valid request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          1064
+        </td>
+        <td>
+          2669
+          -
+          2700
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;sending enter village request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          1066
+        </td>
+        <td>
+          2660
+          -
+          2707
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          io.vertx.core.logging.Logger.info
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(scala.StringContext.apply(&quot;sending enter village request&quot;).s())
+          VillageServiceVertx.this.log.info(&quot;sending enter village request&quot;, scala.None)
         </td>
       </tr><tr>
         <td>
-          85
+          87
         </td>
         <td>
-          994
+          1065
         </td>
         <td>
-          2550
+          2702
           -
-          2582
+          2706
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          scala.StringContext.s
+          scala.None
         </td>
         <td style="background: #F0ADAD">
-          scala.StringContext.apply(&quot;sending enter village request&quot;).s()
+          scala.None
         </td>
       </tr><tr>
         <td>
-          86
+          88
         </td>
         <td>
-          998
+          1067
         </td>
         <td>
-          2652
+          2726
           -
-          2663
+          2737
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+      </tr><tr>
+        <td>
+          88
+        </td>
+        <td>
+          1069
+        </td>
+        <td>
+          2762
+          -
+          2773
         </td>
         <td>
           Select
@@ -651,15 +761,15 @@
         </td>
       </tr><tr>
         <td>
-          86
+          88
         </td>
         <td>
-          997
+          1068
         </td>
         <td>
-          2629
+          2739
           -
-          2650
+          2760
         </td>
         <td>
           Select
@@ -672,57 +782,15 @@
         </td>
       </tr><tr>
         <td>
-          86
+          89
         </td>
         <td>
-          996
+          1070
         </td>
         <td>
-          2602
+          2795
           -
-          2627
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          1000
-        </td>
-        <td>
-          2727
-          -
-          2755
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          999
-        </td>
-        <td>
-          2685
-          -
-          2725
+          2835
         </td>
         <td>
           Apply
@@ -738,12 +806,60 @@
           89
         </td>
         <td>
-          1001
+          1071
         </td>
         <td>
-          2797
+          2837
           -
-          2809
+          2865
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          1079
+        </td>
+        <td>
+          2715
+          -
+          3105
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.client.get(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; {
+    VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None);
+    &quot;Not a valid request&quot;
+  }
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          91
+        </td>
+        <td>
+          1072
+        </td>
+        <td>
+          2907
+          -
+          2919
         </td>
         <td>
           Apply
@@ -756,42 +872,15 @@
         </td>
       </tr><tr>
         <td>
-          89
+          92
         </td>
         <td>
-          1007
+          1073
         </td>
         <td>
-          2591
+          2968
           -
-          2987
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.map
-        </td>
-        <td style="background: #F0ADAD">
-          VillageServiceVertx.this.client.get(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
-  case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
-  case _ =&gt; {
-    scala.Predef.println(r.statusCode().+(r.statusMessage()));
-    &quot;Not a valid request&quot;
-  }
-}))(scala.concurrent.ExecutionContext.Implicits.global)
-        </td>
-      </tr><tr>
-        <td>
-          90
-        </td>
-        <td>
-          1002
-        </td>
-        <td>
-          2858
-          -
-          2888
+          2998
         </td>
         <td>
           Apply
@@ -804,15 +893,36 @@
         </td>
       </tr><tr>
         <td>
-          91
+          93
         </td>
         <td>
-          1004
+          1076
         </td>
         <td>
-          2918
+          3066
           -
-          2952
+          3070
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          93
+        </td>
+        <td>
+          1075
+        </td>
+        <td>
+          3030
+          -
+          3064
         </td>
         <td>
           Apply
@@ -825,15 +935,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          93
         </td>
         <td>
-          1006
+          1078
         </td>
         <td>
-          2954
+          3072
           -
-          2975
+          3093
         </td>
         <td>
           Literal
@@ -846,15 +956,15 @@
         </td>
       </tr><tr>
         <td>
-          91
+          93
         </td>
         <td>
-          1003
+          1074
         </td>
         <td>
-          2935
+          3047
           -
-          2952
+          3064
         </td>
         <td>
           Apply
@@ -867,36 +977,99 @@
         </td>
       </tr><tr>
         <td>
-          91
+          93
         </td>
         <td>
-          1005
+          1077
         </td>
         <td>
-          2910
+          3020
           -
-          2953
+          3071
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          io.vertx.core.logging.Logger.error
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(r.statusCode().+(r.statusMessage()))
+          VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None)
         </td>
       </tr><tr>
         <td>
-          96
+          98
         </td>
         <td>
-          1009
+          1082
         </td>
         <td>
-          3093
+          3191
           -
-          3126
+          3239
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.log.info(&quot;sending update village request&quot;, scala.None)
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          1081
+        </td>
+        <td>
+          3234
+          -
+          3238
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          98
+        </td>
+        <td>
+          1080
+        </td>
+        <td>
+          3200
+          -
+          3232
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;sending update village request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          1084
+        </td>
+        <td>
+          3267
+          -
+          3300
         </td>
         <td>
           Apply
@@ -909,15 +1082,15 @@
         </td>
       </tr><tr>
         <td>
-          96
+          99
         </td>
         <td>
-          1008
+          1083
         </td>
         <td>
-          3108
+          3282
           -
-          3125
+          3299
         </td>
         <td>
           Apply
@@ -930,36 +1103,36 @@
         </td>
       </tr><tr>
         <td>
-          97
+          100
         </td>
         <td>
-          1010
+          1085
         </td>
         <td>
-          3145
+          3319
           -
-          3170
+          3330
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
         <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
       </tr><tr>
         <td>
-          97
+          100
         </td>
         <td>
-          1012
+          1087
         </td>
         <td>
-          3195
+          3355
           -
-          3206
+          3366
         </td>
         <td>
           Select
@@ -972,15 +1145,15 @@
         </td>
       </tr><tr>
         <td>
-          97
+          100
         </td>
         <td>
-          1011
+          1086
         </td>
         <td>
-          3172
+          3332
           -
-          3193
+          3353
         </td>
         <td>
           Select
@@ -990,108 +1163,108 @@
         </td>
         <td style="background: #F0ADAD">
           cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          1013
-        </td>
-        <td>
-          3228
-          -
-          3268
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.netty.util.AsciiString.toString
-        </td>
-        <td style="background: #F0ADAD">
-          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          1014
-        </td>
-        <td>
-          3270
-          -
-          3298
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-      </tr><tr>
-        <td>
-          100
-        </td>
-        <td>
-          1015
-        </td>
-        <td>
-          3359
-          -
-          3373
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusCode
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode()
-        </td>
-      </tr><tr>
-        <td>
-          100
-        </td>
-        <td>
-          1021
-        </td>
-        <td>
-          3134
-          -
-          3551
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.map
-        </td>
-        <td style="background: #F0ADAD">
-          VillageServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendJsonFuture(updateJsonObj).map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
-  case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
-  case _ =&gt; {
-    scala.Predef.println(r.statusCode().+(r.statusMessage()));
-    &quot;Not a valid request&quot;
-  }
-}))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
           101
         </td>
         <td>
-          1016
+          1088
         </td>
         <td>
-          3422
+          3388
           -
-          3452
+          3428
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          101
+        </td>
+        <td>
+          1089
+        </td>
+        <td>
+          3430
+          -
+          3458
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+      </tr><tr>
+        <td>
+          103
+        </td>
+        <td>
+          1097
+        </td>
+        <td>
+          3308
+          -
+          3719
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendJsonFuture(updateJsonObj).map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; {
+    VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None);
+    &quot;Not a valid request&quot;
+  }
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          103
+        </td>
+        <td>
+          1090
+        </td>
+        <td>
+          3519
+          -
+          3533
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          1091
+        </td>
+        <td>
+          3582
+          -
+          3612
         </td>
         <td>
           Apply
@@ -1104,36 +1277,36 @@
         </td>
       </tr><tr>
         <td>
-          102
+          105
         </td>
         <td>
-          1019
+          1094
         </td>
         <td>
-          3474
+          3680
           -
-          3517
+          3684
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          scala.Predef.println
+          scala.None
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(r.statusCode().+(r.statusMessage()))
+          scala.None
         </td>
       </tr><tr>
         <td>
-          102
+          105
         </td>
         <td>
-          1018
+          1093
         </td>
         <td>
-          3482
+          3644
           -
-          3516
+          3678
         </td>
         <td>
           Apply
@@ -1146,15 +1319,15 @@
         </td>
       </tr><tr>
         <td>
-          102
+          105
         </td>
         <td>
-          1020
+          1096
         </td>
         <td>
-          3518
+          3686
           -
-          3539
+          3707
         </td>
         <td>
           Literal
@@ -1167,15 +1340,15 @@
         </td>
       </tr><tr>
         <td>
-          102
+          105
         </td>
         <td>
-          1017
+          1092
         </td>
         <td>
-          3499
+          3661
           -
-          3516
+          3678
         </td>
         <td>
           Apply
@@ -1188,36 +1361,99 @@
         </td>
       </tr><tr>
         <td>
-          107
+          105
         </td>
         <td>
-          1022
+          1095
         </td>
         <td>
-          3675
+          3634
           -
-          3692
+          3685
         </td>
         <td>
           Apply
         </td>
         <td>
-          play.api.libs.json.JsValue.toString
+          io.vertx.core.logging.Logger.error
         </td>
         <td style="background: #F0ADAD">
-          update.toString()
+          VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None)
         </td>
       </tr><tr>
         <td>
-          107
+          110
         </td>
         <td>
-          1023
+          1100
         </td>
         <td>
-          3660
+          3808
           -
-          3693
+          3860
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.log.info(&quot;sending set update village request&quot;, scala.None)
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          1099
+        </td>
+        <td>
+          3855
+          -
+          3859
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          110
+        </td>
+        <td>
+          1098
+        </td>
+        <td>
+          3817
+          -
+          3853
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;sending set update village request&quot;
+        </td>
+      </tr><tr>
+        <td>
+          111
+        </td>
+        <td>
+          1102
+        </td>
+        <td>
+          3888
+          -
+          3921
         </td>
         <td>
           Apply
@@ -1230,357 +1466,99 @@
         </td>
       </tr><tr>
         <td>
-          108
+          111
         </td>
         <td>
-          1025
+          1101
         </td>
         <td>
-          3739
+          3903
           -
-          3760
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-      </tr><tr>
-        <td>
-          108
-        </td>
-        <td>
-          1024
-        </td>
-        <td>
-          3712
-          -
-          3737
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-      </tr><tr>
-        <td>
-          108
-        </td>
-        <td>
-          1026
-        </td>
-        <td>
-          3762
-          -
-          3774
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.village.utils.VillageUrl.SetUpdateAPI
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.village.utils.VillageUrl.SetUpdateAPI
-        </td>
-      </tr><tr>
-        <td>
-          109
-        </td>
-        <td>
-          1028
-        </td>
-        <td>
-          3838
-          -
-          3866
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-      </tr><tr>
-        <td>
-          109
-        </td>
-        <td>
-          1027
-        </td>
-        <td>
-          3796
-          -
-          3836
+          3920
         </td>
         <td>
           Apply
         </td>
         <td>
-          io.netty.util.AsciiString.toString
+          play.api.libs.json.JsValue.toString
         </td>
         <td style="background: #F0ADAD">
-          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          1029
-        </td>
-        <td>
-          3927
-          -
-          3941
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusCode
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode()
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          1035
-        </td>
-        <td>
-          3701
-          -
-          4119
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.concurrent.Future.map
-        </td>
-        <td style="background: #F0ADAD">
-          VillageServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.SetUpdateAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendJsonFuture(updateJsonObj).map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
-  case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
-  case _ =&gt; {
-    scala.Predef.println(r.statusCode().+(r.statusMessage()));
-    &quot;Not a valid request&quot;
-  }
-}))(scala.concurrent.ExecutionContext.Implicits.global)
+          update.toString()
         </td>
       </tr><tr>
         <td>
           112
         </td>
         <td>
-          1030
+          1105
         </td>
         <td>
-          3990
+          3976
           -
-          4020
+          3988
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          scala.Option.getOrElse
+          cml.services.village.utils.VillageUrl.SetUpdateAPI
         </td>
         <td style="background: #F0ADAD">
-          r.bodyAsString().getOrElse[String](&quot;&quot;)
+          cml.services.village.utils.VillageUrl.SetUpdateAPI
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          1104
+        </td>
+        <td>
+          3953
+          -
+          3974
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          112
+        </td>
+        <td>
+          1103
+        </td>
+        <td>
+          3940
+          -
+          3951
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServicePort
         </td>
       </tr><tr>
         <td>
           113
         </td>
         <td>
-          1031
+          1106
         </td>
         <td>
-          4067
+          4010
           -
-          4084
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusMessage
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusMessage()
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          1034
-        </td>
-        <td>
-          4086
-          -
-          4107
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Not a valid request&quot;
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          1033
-        </td>
-        <td>
-          4042
-          -
-          4085
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(r.statusCode().+(r.statusMessage()))
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          1032
-        </td>
-        <td>
           4050
-          -
-          4084
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.+
-        </td>
-        <td style="background: #F0ADAD">
-          r.statusCode().+(r.statusMessage())
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          1037
-        </td>
-        <td>
-          4238
-          -
-          4259
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          1036
-        </td>
-        <td>
-          4211
-          -
-          4236
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-        <td style="background: #F0ADAD">
-          cml.core.utils.NetworkConfiguration.AuthenticationServicePort
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          1038
-        </td>
-        <td>
-          4261
-          -
-          4272
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.village.utils.VillageUrl.VillagesAPI
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.village.utils.VillageUrl.VillagesAPI
-        </td>
-      </tr><tr>
-        <td>
-          119
-        </td>
-        <td>
-          1040
-        </td>
-        <td>
-          4336
-          -
-          4364
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-        <td style="background: #F0ADAD">
-          cml.services.authentication.TokenStorage.getUserJWTToken
-        </td>
-      </tr><tr>
-        <td>
-          119
-        </td>
-        <td>
-          1039
-        </td>
-        <td>
-          4294
-          -
-          4334
         </td>
         <td>
           Apply
@@ -1593,15 +1571,36 @@
         </td>
       </tr><tr>
         <td>
-          121
+          113
         </td>
         <td>
-          1047
+          1107
         </td>
         <td>
-          4197
+          4052
           -
-          4596
+          4080
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+      </tr><tr>
+        <td>
+          115
+        </td>
+        <td>
+          1115
+        </td>
+        <td>
+          3929
+          -
+          4341
         </td>
         <td>
           ApplyToImplicitArgs
@@ -1610,25 +1609,25 @@
           scala.concurrent.Future.map
         </td>
         <td style="background: #F0ADAD">
-          VillageServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.AuthenticationServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+          VillageServiceVertx.this.client.put(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.SetUpdateAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendJsonFuture(updateJsonObj).map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
   case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
   case _ =&gt; {
-    scala.Predef.println(r.statusCode().+(r.statusMessage()));
+    VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None);
     &quot;Not a valid request&quot;
   }
 }))(scala.concurrent.ExecutionContext.Implicits.global)
         </td>
       </tr><tr>
         <td>
-          121
+          115
         </td>
         <td>
-          1041
+          1108
         </td>
         <td>
-          4406
+          4141
           -
-          4418
+          4155
         </td>
         <td>
           Apply
@@ -1641,15 +1640,15 @@
         </td>
       </tr><tr>
         <td>
-          122
+          116
         </td>
         <td>
-          1042
+          1109
         </td>
         <td>
-          4467
+          4204
           -
-          4497
+          4234
         </td>
         <td>
           Apply
@@ -1662,36 +1661,36 @@
         </td>
       </tr><tr>
         <td>
-          123
+          117
         </td>
         <td>
-          1043
+          1111
         </td>
         <td>
-          4544
+          4266
           -
-          4561
+          4300
         </td>
         <td>
           Apply
         </td>
         <td>
-          io.vertx.scala.ext.web.client.HttpResponse.statusMessage
+          scala.Int.+
         </td>
         <td style="background: #F0ADAD">
-          r.statusMessage()
+          r.statusCode().+(r.statusMessage())
         </td>
       </tr><tr>
         <td>
-          123
+          117
         </td>
         <td>
-          1046
+          1114
         </td>
         <td>
-          4563
+          4308
           -
-          4584
+          4329
         </td>
         <td>
           Literal
@@ -1704,36 +1703,315 @@
         </td>
       </tr><tr>
         <td>
-          123
+          117
         </td>
         <td>
-          1045
+          1110
         </td>
         <td>
-          4519
+          4283
           -
-          4562
+          4300
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Predef.println
+          io.vertx.scala.ext.web.client.HttpResponse.statusMessage
         </td>
         <td style="background: #F0ADAD">
-          scala.Predef.println(r.statusCode().+(r.statusMessage()))
+          r.statusMessage()
+        </td>
+      </tr><tr>
+        <td>
+          117
+        </td>
+        <td>
+          1113
+        </td>
+        <td>
+          4256
+          -
+          4307
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.error
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None)
+        </td>
+      </tr><tr>
+        <td>
+          117
+        </td>
+        <td>
+          1112
+        </td>
+        <td>
+          4302
+          -
+          4306
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          122
+        </td>
+        <td>
+          1118
+        </td>
+        <td>
+          4419
+          -
+          4481
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.info
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.log.info(&quot;sending village and account deletion request&quot;, scala.None)
+        </td>
+      </tr><tr>
+        <td>
+          122
+        </td>
+        <td>
+          1117
+        </td>
+        <td>
+          4476
+          -
+          4480
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          122
+        </td>
+        <td>
+          1116
+        </td>
+        <td>
+          4428
+          -
+          4474
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;sending village and account deletion request&quot;
         </td>
       </tr><tr>
         <td>
           123
         </td>
         <td>
-          1044
+          1120
         </td>
         <td>
-          4527
+          4516
           -
-          4561
+          4537
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServiceHostForRequest
+        </td>
+      </tr><tr>
+        <td>
+          123
+        </td>
+        <td>
+          1119
+        </td>
+        <td>
+          4503
+          -
+          4514
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+        <td style="background: #F0ADAD">
+          cml.core.utils.NetworkConfiguration.ServicePort
+        </td>
+      </tr><tr>
+        <td>
+          123
+        </td>
+        <td>
+          1121
+        </td>
+        <td>
+          4539
+          -
+          4550
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.village.utils.VillageUrl.VillagesAPI
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.village.utils.VillageUrl.VillagesAPI
+        </td>
+      </tr><tr>
+        <td>
+          124
+        </td>
+        <td>
+          1123
+        </td>
+        <td>
+          4614
+          -
+          4642
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+        <td style="background: #F0ADAD">
+          cml.services.authentication.TokenStorage.getUserJWTToken
+        </td>
+      </tr><tr>
+        <td>
+          124
+        </td>
+        <td>
+          1122
+        </td>
+        <td>
+          4572
+          -
+          4612
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.netty.util.AsciiString.toString
+        </td>
+        <td style="background: #F0ADAD">
+          io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString()
+        </td>
+      </tr><tr>
+        <td>
+          126
+        </td>
+        <td>
+          1124
+        </td>
+        <td>
+          4684
+          -
+          4696
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusCode
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusCode()
+        </td>
+      </tr><tr>
+        <td>
+          126
+        </td>
+        <td>
+          1131
+        </td>
+        <td>
+          4489
+          -
+          4882
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          scala.concurrent.Future.map
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.client.delete(cml.core.utils.NetworkConfiguration.ServicePort, cml.core.utils.NetworkConfiguration.ServiceHostForRequest, cml.services.village.utils.VillageUrl.VillagesAPI).putHeader(io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION.toString(), cml.services.authentication.TokenStorage.getUserJWTToken).sendFuture().map[String](((r: io.vertx.scala.ext.web.client.HttpResponse[io.vertx.core.buffer.Buffer]) =&gt; r.statusCode() match {
+  case VillageServiceVertx.this.successfulResponse =&gt; r.bodyAsString().getOrElse[String](&quot;&quot;)
+  case _ =&gt; {
+    VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None);
+    &quot;Not a valid request&quot;
+  }
+}))(scala.concurrent.ExecutionContext.Implicits.global)
+        </td>
+      </tr><tr>
+        <td>
+          127
+        </td>
+        <td>
+          1125
+        </td>
+        <td>
+          4745
+          -
+          4775
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.getOrElse
+        </td>
+        <td style="background: #F0ADAD">
+          r.bodyAsString().getOrElse[String](&quot;&quot;)
+        </td>
+      </tr><tr>
+        <td>
+          128
+        </td>
+        <td>
+          1127
+        </td>
+        <td>
+          4807
+          -
+          4841
         </td>
         <td>
           Apply
@@ -1743,6 +2021,90 @@
         </td>
         <td style="background: #F0ADAD">
           r.statusCode().+(r.statusMessage())
+        </td>
+      </tr><tr>
+        <td>
+          128
+        </td>
+        <td>
+          1126
+        </td>
+        <td>
+          4824
+          -
+          4841
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.scala.ext.web.client.HttpResponse.statusMessage
+        </td>
+        <td style="background: #F0ADAD">
+          r.statusMessage()
+        </td>
+      </tr><tr>
+        <td>
+          128
+        </td>
+        <td>
+          1129
+        </td>
+        <td>
+          4797
+          -
+          4848
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          io.vertx.core.logging.Logger.error
+        </td>
+        <td style="background: #F0ADAD">
+          VillageServiceVertx.this.log.error(r.statusCode().+(r.statusMessage()), scala.None)
+        </td>
+      </tr><tr>
+        <td>
+          128
+        </td>
+        <td>
+          1128
+        </td>
+        <td>
+          4843
+          -
+          4847
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.None
+        </td>
+        <td style="background: #F0ADAD">
+          scala.None
+        </td>
+      </tr><tr>
+        <td>
+          128
+        </td>
+        <td>
+          1130
+        </td>
+        <td>
+          4849
+          -
+          4870
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          &quot;Not a valid request&quot;
         </td>
       </tr>
     </table>

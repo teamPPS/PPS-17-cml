@@ -33,7 +33,7 @@
 </span>9 <span style=''>  */
 </span>10 <span style=''>
 </span>11 <span style=''>trait UpgradeCreature {
-</span>12 <span style=''>  def creatureJson: JsValue
+</span>12 <span style=''>  def creatureJson: Option[JsValue]
 </span>13 <span style=''>}
 </span>14 <span style=''>
 </span>15 <span style=''>/**
@@ -42,10 +42,10 @@
 </span>18 <span style=''>  */
 </span>19 <span style=''>case class CreatureUpgrade(creature: Creature, habitat: Structure) extends UpgradeCreature {
 </span>20 <span style=''>
-</span>21 <span style=''>  </span><span style='background: #F0ADAD'>creature levelUp()</span><span style=''>
-</span>22 <span style=''>  private val json: JsValue = </span><span style='background: #F0ADAD'>CreatureJson(creature name, creature.currentLevel, creature.creatureType, habitat) json</span><span style=''>
+</span>21 <span style=''>  </span><span style='background: #AEF1AE'>creature levelUp()</span><span style=''>
+</span>22 <span style=''>  private val json: JsValue = </span><span style='background: #AEF1AE'>CreatureJson(creature name, creature.currentLevel, creature.creatureType, habitat) json</span><span style=''>
 </span>23 <span style=''>
-</span>24 <span style=''>  override def creatureJson: JsValue = </span><span style='background: #F0ADAD'>json</span><span style=''>
+</span>24 <span style=''>  override def creatureJson: Option[JsValue] = </span><span style='background: #AEF1AE'>Option(json)</span><span style=''>
 </span>25 <span style=''>}
 </span></pre>
           </div>
@@ -63,12 +63,12 @@
           21
         </td>
         <td>
-          814
+          919
         </td>
         <td>
-          428
+          436
           -
-          446
+          454
         </td>
         <td>
           Apply
@@ -76,7 +76,7 @@
         <td>
           cml.model.base.Creature.levelUp
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           CreatureUpgrade.this.creature.levelUp()
         </td>
       </tr><tr>
@@ -84,54 +84,12 @@
           22
         </td>
         <td>
-          819
+          923
         </td>
         <td>
-          478
+          560
           -
-          565
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.CreatureJson.json
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.CreatureJson.apply(CreatureUpgrade.this.creature.name, CreatureUpgrade.this.creature.currentLevel, CreatureUpgrade.this.creature.creatureType, CreatureUpgrade.this.habitat).json
-        </td>
-      </tr><tr>
-        <td>
-          22
-        </td>
-        <td>
-          815
-        </td>
-        <td>
-          491
-          -
-          504
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Creature.name
-        </td>
-        <td style="background: #F0ADAD">
-          CreatureUpgrade.this.creature.name
-        </td>
-      </tr><tr>
-        <td>
-          22
-        </td>
-        <td>
-          818
-        </td>
-        <td>
-          552
-          -
-          559
+          567
         </td>
         <td>
           Select
@@ -139,7 +97,7 @@
         <td>
           cml.model.dynamic_model.CreatureUpgrade.habitat
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           CreatureUpgrade.this.habitat
         </td>
       </tr><tr>
@@ -147,12 +105,33 @@
           22
         </td>
         <td>
-          817
+          920
         </td>
         <td>
-          529
+          499
           -
-          550
+          512
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.Creature.name
+        </td>
+        <td style="background: #AEF1AE">
+          CreatureUpgrade.this.creature.name
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          922
+        </td>
+        <td>
+          537
+          -
+          558
         </td>
         <td>
           Select
@@ -160,7 +139,7 @@
         <td>
           cml.model.base.Creature.creatureType
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           CreatureUpgrade.this.creature.creatureType
         </td>
       </tr><tr>
@@ -168,12 +147,12 @@
           22
         </td>
         <td>
-          816
+          921
         </td>
         <td>
-          506
+          514
           -
-          527
+          535
         </td>
         <td>
           Select
@@ -181,20 +160,62 @@
         <td>
           cml.model.base.Creature.currentLevel
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           CreatureUpgrade.this.creature.currentLevel
+        </td>
+      </tr><tr>
+        <td>
+          22
+        </td>
+        <td>
+          924
+        </td>
+        <td>
+          486
+          -
+          573
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.CreatureJson.json
+        </td>
+        <td style="background: #AEF1AE">
+          cml.utils.CreatureJson.apply(CreatureUpgrade.this.creature.name, CreatureUpgrade.this.creature.currentLevel, CreatureUpgrade.this.creature.creatureType, CreatureUpgrade.this.habitat).json
         </td>
       </tr><tr>
         <td>
           24
         </td>
         <td>
-          820
+          926
         </td>
         <td>
-          608
+          624
           -
-          612
+          636
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Option.apply
+        </td>
+        <td style="background: #AEF1AE">
+          scala.Option.apply[play.api.libs.json.JsValue](CreatureUpgrade.this.json)
+        </td>
+      </tr><tr>
+        <td>
+          24
+        </td>
+        <td>
+          925
+        </td>
+        <td>
+          631
+          -
+          635
         </td>
         <td>
           Select
@@ -202,7 +223,7 @@
         <td>
           cml.model.dynamic_model.CreatureUpgrade.json
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           CreatureUpgrade.this.json
         </td>
       </tr>

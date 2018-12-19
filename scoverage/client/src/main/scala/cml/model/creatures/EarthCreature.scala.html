@@ -31,8 +31,8 @@
 </span>7 <span style=''>
 </span>8 <span style=''>/**
 </span>9 <span style=''>  * This class models a golem
-</span>10 <span style=''>  * @param creatureName name of the golem
-</span>11 <span style=''>  * @param creatureLevel set the golem level
+</span>10 <span style=''>  * @param creature_name name of the golem
+</span>11 <span style=''>  * @param creature_level set the golem level
 </span>12 <span style=''>  * @author Filippo Portolani
 </span>13 <span style=''>  */
 </span>14 <span style=''>case class EarthCreature(creature_name: String, creature_level: Int) extends Creature {
@@ -45,7 +45,7 @@
 </span>21 <span style=''>  }
 </span>22 <span style=''>
 </span>23 <span style=''>  /**
-</span>24 <span style=''>    * Golem earns 15 more damage instead of 10
+</span>24 <span style=''>    * Golem earns 15 more damage points instead of 10
 </span>25 <span style=''>    */
 </span>26 <span style=''>
 </span>27 <span style=''>  override def setAttack(): Unit = {
@@ -60,9 +60,9 @@
 </span>36 <span style=''>  override def element: String = </span><span style='background: #AEF1AE'>_element</span><span style=''>
 </span>37 <span style=''>
 </span>38 <span style=''>  override def level: Int = {
-</span>39 <span style=''>    if(</span><span style='background: #F0ADAD'>currentLevel &lt; creature_level</span><span style=''>)
-</span>40 <span style=''>      </span><span style='background: #F0ADAD'>currentLevel = creature_level</span><span style=''>
-</span>41 <span style=''>    </span><span style='background: #F0ADAD'>currentLevel</span><span style=''>
+</span>39 <span style=''>    if(</span><span style='background: #AEF1AE'>currentLevel &lt; creature_level</span><span style=''>)
+</span>40 <span style=''>      </span><span style='background: #AEF1AE'>currentLevel = creature_level</span><span style=''>
+</span>41 <span style=''>    </span><span style='background: #AEF1AE'>currentLevel</span><span style=''>
 </span>42 <span style=''>  }
 </span>43 <span style=''>
 </span>44 <span style=''>  override def attackPower: Int = </span><span style='background: #AEF1AE'>attackValue</span><span style=''>
@@ -72,7 +72,7 @@
 </span>48 <span style=''>    </span><span style='background: #AEF1AE'>setAttack()</span><span style=''>
 </span>49 <span style=''>  }
 </span>50 <span style=''>
-</span>51 <span style=''>  override def name: String = </span><span style='background: #F0ADAD'>creature_name</span><span style=''>
+</span>51 <span style=''>  override def name: String = </span><span style='background: #AEF1AE'>creature_name</span><span style=''>
 </span>52 <span style=''>
 </span>53 <span style=''>  override def creatureType: String = </span><span style='background: #F0ADAD'>GOLEM</span><span style=''>
 </span>54 <span style=''>}
@@ -97,12 +97,12 @@
           16
         </td>
         <td>
-          733
+          838
         </td>
         <td>
-          466
+          468
           -
-          471
+          473
         </td>
         <td>
           Select
@@ -118,33 +118,12 @@
           19
         </td>
         <td>
-          735
+          839
         </td>
         <td>
-          515
+          517
           -
-          532
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.currentLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          EarthCreature.this.currentLevel_=(EarthCreature.this.currentLevel.+(1))
-        </td>
-      </tr><tr>
-        <td>
-          19
-        </td>
-        <td>
-          734
-        </td>
-        <td>
-          515
-          -
-          532
+          534
         </td>
         <td>
           Apply
@@ -157,15 +136,36 @@
         </td>
       </tr><tr>
         <td>
+          19
+        </td>
+        <td>
+          840
+        </td>
+        <td>
+          517
+          -
+          534
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          EarthCreature.this.currentLevel_=(EarthCreature.this.currentLevel.+(1))
+        </td>
+      </tr><tr>
+        <td>
           20
         </td>
         <td>
-          736
+          841
         </td>
         <td>
-          538
+          540
           -
-          549
+          551
         </td>
         <td>
           Apply
@@ -181,12 +181,12 @@
           28
         </td>
         <td>
-          737
+          842
         </td>
         <td>
-          665
+          674
           -
-          677
+          686
         </td>
         <td>
           Select
@@ -202,54 +202,54 @@
           29
         </td>
         <td>
-          738
+          844
         </td>
         <td>
-          704
+          713
           -
-          721
+          730
         </td>
         <td>
           Apply
         </td>
         <td>
-          scala.Int.+
+          cml.model.base.Creature.attackValue_=
         </td>
         <td style="background: #AEF1AE">
-          EarthCreature.this.attackValue.+(15)
+          EarthCreature.this.attackValue_=(EarthCreature.this.attackValue.+(15))
         </td>
       </tr><tr>
         <td>
           29
         </td>
         <td>
-          739
+          843
         </td>
         <td>
-          704
+          713
           -
-          721
+          730
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.model.base.Creature.attackValue_=
+          scala.Int.+
         </td>
         <td style="background: #AEF1AE">
-          EarthCreature.this.attackValue_=(EarthCreature.this.attackValue.+(15))
+          EarthCreature.this.attackValue.+(15)
         </td>
       </tr><tr>
         <td>
           30
         </td>
         <td>
-          741
+          846
         </td>
         <td>
-          740
+          749
           -
-          757
+          766
         </td>
         <td>
           Apply
@@ -265,12 +265,12 @@
           30
         </td>
         <td>
-          740
+          845
         </td>
         <td>
-          740
+          749
           -
-          757
+          766
         </td>
         <td>
           Apply
@@ -286,12 +286,12 @@
           31
         </td>
         <td>
-          743
+          848
         </td>
         <td>
-          776
+          785
           -
-          793
+          802
         </td>
         <td>
           Apply
@@ -307,12 +307,12 @@
           31
         </td>
         <td>
-          742
+          847
         </td>
         <td>
-          776
+          785
           -
-          793
+          802
         </td>
         <td>
           Apply
@@ -328,12 +328,12 @@
           32
         </td>
         <td>
-          744
+          849
         </td>
         <td>
-          808
+          817
           -
-          810
+          819
         </td>
         <td>
           Literal
@@ -349,12 +349,12 @@
           36
         </td>
         <td>
-          745
+          850
         </td>
         <td>
-          861
+          870
           -
-          869
+          878
         </td>
         <td>
           Select
@@ -370,33 +370,12 @@
           39
         </td>
         <td>
-          747
+          857
         </td>
         <td>
-          911
+          917
           -
-          940
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Int.&lt;
-        </td>
-        <td style="background: #F0ADAD">
-          EarthCreature.this.currentLevel.&lt;(EarthCreature.this.creature_level)
-        </td>
-      </tr><tr>
-        <td>
-          39
-        </td>
-        <td>
-          752
-        </td>
-        <td>
-          908
-          -
-          908
+          917
         </td>
         <td>
           Block
@@ -412,12 +391,12 @@
           39
         </td>
         <td>
-          746
+          851
         </td>
         <td>
-          926
+          935
           -
-          940
+          949
         </td>
         <td>
           Select
@@ -425,7 +404,7 @@
         <td>
           cml.model.creatures.EarthCreature.creature_level
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           EarthCreature.this.creature_level
         </td>
       </tr><tr>
@@ -433,12 +412,12 @@
           39
         </td>
         <td>
-          751
+          856
         </td>
         <td>
-          908
+          917
           -
-          908
+          917
         </td>
         <td>
           Literal
@@ -451,15 +430,36 @@
         </td>
       </tr><tr>
         <td>
+          39
+        </td>
+        <td>
+          852
+        </td>
+        <td>
+          920
+          -
+          949
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Int.&lt;
+        </td>
+        <td style="background: #AEF1AE">
+          EarthCreature.this.currentLevel.&lt;(EarthCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
           40
         </td>
         <td>
-          750
+          855
         </td>
         <td>
-          949
+          958
           -
-          978
+          987
         </td>
         <td>
           Block
@@ -467,7 +467,7 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           EarthCreature.this.currentLevel_=(EarthCreature.this.creature_level)
         </td>
       </tr><tr>
@@ -475,12 +475,12 @@
           40
         </td>
         <td>
-          749
+          854
         </td>
         <td>
-          949
+          958
           -
-          978
+          987
         </td>
         <td>
           Apply
@@ -488,7 +488,7 @@
         <td>
           cml.model.base.Creature.currentLevel_=
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           EarthCreature.this.currentLevel_=(EarthCreature.this.creature_level)
         </td>
       </tr><tr>
@@ -496,12 +496,12 @@
           40
         </td>
         <td>
-          748
+          853
         </td>
         <td>
-          964
+          973
           -
-          978
+          987
         </td>
         <td>
           Select
@@ -509,7 +509,7 @@
         <td>
           cml.model.creatures.EarthCreature.creature_level
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           EarthCreature.this.creature_level
         </td>
       </tr><tr>
@@ -517,12 +517,12 @@
           41
         </td>
         <td>
-          753
+          858
         </td>
         <td>
-          984
+          993
           -
-          996
+          1005
         </td>
         <td>
           Select
@@ -530,7 +530,7 @@
         <td>
           cml.model.base.Creature.currentLevel
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           EarthCreature.this.currentLevel
         </td>
       </tr><tr>
@@ -538,12 +538,12 @@
           44
         </td>
         <td>
-          754
+          859
         </td>
         <td>
-          1039
+          1048
           -
-          1050
+          1059
         </td>
         <td>
           Select
@@ -559,33 +559,12 @@
           47
         </td>
         <td>
-          756
+          860
         </td>
         <td>
-          1099
+          1123
           -
-          1128
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.Creature.currentLevel_=
-        </td>
-        <td style="background: #AEF1AE">
-          EarthCreature.this.currentLevel_=(EarthCreature.this.creature_level)
-        </td>
-      </tr><tr>
-        <td>
-          47
-        </td>
-        <td>
-          755
-        </td>
-        <td>
-          1114
-          -
-          1128
+          1137
         </td>
         <td>
           Select
@@ -598,15 +577,36 @@
         </td>
       </tr><tr>
         <td>
+          47
+        </td>
+        <td>
+          861
+        </td>
+        <td>
+          1108
+          -
+          1137
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.model.base.Creature.currentLevel_=
+        </td>
+        <td style="background: #AEF1AE">
+          EarthCreature.this.currentLevel_=(EarthCreature.this.creature_level)
+        </td>
+      </tr><tr>
+        <td>
           48
         </td>
         <td>
-          757
+          862
         </td>
         <td>
-          1134
+          1143
           -
-          1145
+          1154
         </td>
         <td>
           Apply
@@ -622,12 +622,12 @@
           51
         </td>
         <td>
-          758
+          863
         </td>
         <td>
-          1184
+          1193
           -
-          1197
+          1206
         </td>
         <td>
           Select
@@ -635,7 +635,7 @@
         <td>
           cml.model.creatures.EarthCreature.creature_name
         </td>
-        <td style="background: #F0ADAD">
+        <td style="background: #AEF1AE">
           EarthCreature.this.creature_name
         </td>
       </tr><tr>
@@ -643,12 +643,12 @@
           53
         </td>
         <td>
-          759
+          864
         </td>
         <td>
-          1239
+          1248
           -
-          1244
+          1253
         </td>
         <td>
           Select

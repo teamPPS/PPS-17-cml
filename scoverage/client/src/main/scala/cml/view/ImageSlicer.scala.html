@@ -27,32 +27,40 @@
 </span>3 <span style=''>import javafx.scene.image.Image
 </span>4 <span style=''>import javafx.scene.canvas.Canvas
 </span>5 <span style=''>
-</span>6 <span style=''>class ImageSlicer(val img: Image, val xAmount: Int, val yAmount: Int) {
-</span>7 <span style=''>
-</span>8 <span style=''>  val sliceWidth: Double = </span><span style='background: #F0ADAD'>img.getWidth / xAmount</span><span style=''>
-</span>9 <span style=''>  val sliceHeight: Double = </span><span style='background: #F0ADAD'>img.getHeight / yAmount</span><span style=''>
-</span>10 <span style=''>
-</span>11 <span style=''>  def sliceAt(x: Int, y: Int): Canvas = {
-</span>12 <span style=''>    val canvas = </span><span style='background: #F0ADAD'>new Canvas(sliceWidth, sliceHeight)</span><span style=''>
-</span>13 <span style=''>    val grContext = </span><span style='background: #F0ADAD'>canvas.getGraphicsContext2D</span><span style=''>
-</span>14 <span style=''>
-</span>15 <span style=''>    val (sourceX, sourceY) = coordinatesOfSliceAt(x, y)
-</span>16 <span style=''>    val (destX, destY) = (0, 0)
-</span>17 <span style=''>
-</span>18 <span style=''>    </span><span style='background: #F0ADAD'>grContext.drawImage(img,
-</span>19 <span style=''></span><span style='background: #F0ADAD'>      sourceX, sourceY, sliceWidth, sliceHeight,
-</span>20 <span style=''></span><span style='background: #F0ADAD'>      destX, destY, sliceWidth, sliceHeight)</span><span style=''>
-</span>21 <span style=''>
-</span>22 <span style=''>    canvas
-</span>23 <span style=''>  }
-</span>24 <span style=''>
-</span>25 <span style=''>  def coordinatesOfSliceAt(x: Int, y: Int): (Int, Int) = {
-</span>26 <span style=''>    val coordX = (</span><span style='background: #F0ADAD'>(x - 1) * sliceWidth).toInt</span><span style=''>
-</span>27 <span style=''>    val coordY = (</span><span style='background: #F0ADAD'>(y - 1) * sliceHeight).toInt</span><span style=''>
-</span>28 <span style=''>    </span><span style='background: #F0ADAD'>(coordX, coordY)</span><span style=''>
-</span>29 <span style=''>  }
-</span>30 <span style=''>
-</span>31 <span style=''>}
+</span>6 <span style=''>/**
+</span>7 <span style=''>  * This class utils for managements slicer image
+</span>8 <span style=''>  * @author ecavina
+</span>9 <span style=''>  *
+</span>10 <span style=''>  * @param img Image in input
+</span>11 <span style=''>  * @param xAmount x coordinate
+</span>12 <span style=''>  * @param yAmount y coordinate
+</span>13 <span style=''>  */
+</span>14 <span style=''>class ImageSlicer(val img: Image, val xAmount: Int, val yAmount: Int) {
+</span>15 <span style=''>
+</span>16 <span style=''>  val sliceWidth: Double = </span><span style='background: #F0ADAD'>img.getWidth / xAmount</span><span style=''>
+</span>17 <span style=''>  val sliceHeight: Double = </span><span style='background: #F0ADAD'>img.getHeight / yAmount</span><span style=''>
+</span>18 <span style=''>
+</span>19 <span style=''>  def sliceAt(x: Int, y: Int): Canvas = {
+</span>20 <span style=''>    val canvas = </span><span style='background: #F0ADAD'>new Canvas(sliceWidth, sliceHeight)</span><span style=''>
+</span>21 <span style=''>    val grContext = </span><span style='background: #F0ADAD'>canvas.getGraphicsContext2D</span><span style=''>
+</span>22 <span style=''>
+</span>23 <span style=''>    val (sourceX, sourceY) = coordinatesOfSliceAt(x, y)
+</span>24 <span style=''>    val (destX, destY) = (0, 0)
+</span>25 <span style=''>
+</span>26 <span style=''>    </span><span style='background: #F0ADAD'>grContext.drawImage(img,
+</span>27 <span style=''></span><span style='background: #F0ADAD'>      sourceX, sourceY, sliceWidth, sliceHeight,
+</span>28 <span style=''></span><span style='background: #F0ADAD'>      destX, destY, sliceWidth, sliceHeight)</span><span style=''>
+</span>29 <span style=''>
+</span>30 <span style=''>    canvas
+</span>31 <span style=''>  }
+</span>32 <span style=''>
+</span>33 <span style=''>  def coordinatesOfSliceAt(x: Int, y: Int): (Int, Int) = {
+</span>34 <span style=''>    val coordX = (</span><span style='background: #F0ADAD'>(x - 1) * sliceWidth).toInt</span><span style=''>
+</span>35 <span style=''>    val coordY = (</span><span style='background: #F0ADAD'>(y - 1) * sliceHeight).toInt</span><span style=''>
+</span>36 <span style=''>    </span><span style='background: #F0ADAD'>(coordX, coordY)</span><span style=''>
+</span>37 <span style=''>  }
+</span>38 <span style=''>
+</span>39 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -66,15 +74,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          8
+          16
         </td>
         <td>
-          1428
+          1512
         </td>
         <td>
-          192
+          377
           -
-          214
+          399
         </td>
         <td>
           Apply
@@ -87,15 +95,15 @@
         </td>
       </tr><tr>
         <td>
-          8
+          16
         </td>
         <td>
-          1427
+          1511
         </td>
         <td>
-          207
+          392
           -
-          214
+          399
         </td>
         <td>
           Select
@@ -108,36 +116,15 @@
         </td>
       </tr><tr>
         <td>
-          9
+          17
         </td>
         <td>
-          1429
+          1514
         </td>
         <td>
-          260
+          429
           -
-          267
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.view.ImageSlicer.yAmount
-        </td>
-        <td style="background: #F0ADAD">
-          ImageSlicer.this.yAmount
-        </td>
-      </tr><tr>
-        <td>
-          9
-        </td>
-        <td>
-          1430
-        </td>
-        <td>
-          244
-          -
-          267
+          452
         </td>
         <td>
           Apply
@@ -150,36 +137,36 @@
         </td>
       </tr><tr>
         <td>
-          12
+          17
         </td>
         <td>
-          1432
+          1513
         </td>
         <td>
-          354
+          445
           -
-          365
+          452
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.view.ImageSlicer.sliceHeight
+          cml.view.ImageSlicer.yAmount
         </td>
         <td style="background: #F0ADAD">
-          ImageSlicer.this.sliceHeight
+          ImageSlicer.this.yAmount
         </td>
       </tr><tr>
         <td>
-          12
+          20
         </td>
         <td>
-          1431
+          1515
         </td>
         <td>
-          342
+          527
           -
-          352
+          537
         </td>
         <td>
           Select
@@ -192,15 +179,15 @@
         </td>
       </tr><tr>
         <td>
-          12
+          20
         </td>
         <td>
-          1433
+          1517
         </td>
         <td>
-          331
+          516
           -
-          366
+          551
         </td>
         <td>
           Apply
@@ -213,15 +200,36 @@
         </td>
       </tr><tr>
         <td>
-          13
+          20
         </td>
         <td>
-          1434
+          1516
         </td>
         <td>
-          388
+          539
           -
-          415
+          550
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.ImageSlicer.sliceHeight
+        </td>
+        <td style="background: #F0ADAD">
+          ImageSlicer.this.sliceHeight
+        </td>
+      </tr><tr>
+        <td>
+          21
+        </td>
+        <td>
+          1518
+        </td>
+        <td>
+          573
+          -
+          600
         </td>
         <td>
           Apply
@@ -234,36 +242,15 @@
         </td>
       </tr><tr>
         <td>
-          15
+          23
         </td>
         <td>
-          1436
+          1519
         </td>
         <td>
-          437
+          613
           -
-          437
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.Tuple2._2
-        </td>
-        <td style="background: #F0ADAD">
-          x$1._2
-        </td>
-      </tr><tr>
-        <td>
-          15
-        </td>
-        <td>
-          1435
-        </td>
-        <td>
-          428
-          -
-          428
+          613
         </td>
         <td>
           Select
@@ -276,15 +263,15 @@
         </td>
       </tr><tr>
         <td>
-          16
+          23
         </td>
         <td>
-          1438
+          1520
         </td>
         <td>
-          492
+          622
           -
-          492
+          622
         </td>
         <td>
           Select
@@ -293,19 +280,19 @@
           scala.Tuple2._2
         </td>
         <td style="background: #F0ADAD">
-          x$2._2
+          x$1._2
         </td>
       </tr><tr>
         <td>
-          16
+          24
         </td>
         <td>
-          1437
+          1521
         </td>
         <td>
-          485
+          670
           -
-          485
+          670
         </td>
         <td>
           Select
@@ -318,15 +305,36 @@
         </td>
       </tr><tr>
         <td>
-          18
+          24
         </td>
         <td>
-          1448
+          1522
         </td>
         <td>
-          515
+          677
           -
-          635
+          677
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Tuple2._2
+        </td>
+        <td style="background: #F0ADAD">
+          x$2._2
+        </td>
+      </tr><tr>
+        <td>
+          26
+        </td>
+        <td>
+          1532
+        </td>
+        <td>
+          700
+          -
+          820
         </td>
         <td>
           Apply
@@ -339,15 +347,15 @@
         </td>
       </tr><tr>
         <td>
-          18
+          26
         </td>
         <td>
-          1439
+          1523
         </td>
         <td>
-          535
+          720
           -
-          538
+          723
         </td>
         <td>
           Select
@@ -360,36 +368,36 @@
         </td>
       </tr><tr>
         <td>
-          19
+          27
         </td>
         <td>
-          1441
+          1527
         </td>
         <td>
-          556
+          762
           -
-          563
+          773
         </td>
         <td>
           Select
         </td>
         <td>
-          scala.Int.toDouble
+          cml.view.ImageSlicer.sliceHeight
         </td>
         <td style="background: #F0ADAD">
-          sourceY.toDouble
+          ImageSlicer.this.sliceHeight
         </td>
       </tr><tr>
         <td>
-          19
+          27
         </td>
         <td>
-          1440
+          1524
         </td>
         <td>
-          547
+          732
           -
-          554
+          739
         </td>
         <td>
           Select
@@ -402,36 +410,15 @@
         </td>
       </tr><tr>
         <td>
-          19
+          27
         </td>
         <td>
-          1443
+          1526
         </td>
         <td>
-          577
+          750
           -
-          588
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.view.ImageSlicer.sliceHeight
-        </td>
-        <td style="background: #F0ADAD">
-          ImageSlicer.this.sliceHeight
-        </td>
-      </tr><tr>
-        <td>
-          19
-        </td>
-        <td>
-          1442
-        </td>
-        <td>
-          565
-          -
-          575
+          760
         </td>
         <td>
           Select
@@ -444,57 +431,15 @@
         </td>
       </tr><tr>
         <td>
-          20
+          27
         </td>
         <td>
-          1447
+          1525
         </td>
         <td>
-          623
+          741
           -
-          634
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.view.ImageSlicer.sliceHeight
-        </td>
-        <td style="background: #F0ADAD">
-          ImageSlicer.this.sliceHeight
-        </td>
-      </tr><tr>
-        <td>
-          20
-        </td>
-        <td>
-          1446
-        </td>
-        <td>
-          611
-          -
-          621
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.view.ImageSlicer.sliceWidth
-        </td>
-        <td style="background: #F0ADAD">
-          ImageSlicer.this.sliceWidth
-        </td>
-      </tr><tr>
-        <td>
-          20
-        </td>
-        <td>
-          1445
-        </td>
-        <td>
-          604
-          -
-          609
+          748
         </td>
         <td>
           Select
@@ -503,19 +448,19 @@
           scala.Int.toDouble
         </td>
         <td style="background: #F0ADAD">
-          destY.toDouble
+          sourceY.toDouble
         </td>
       </tr><tr>
         <td>
-          20
+          28
         </td>
         <td>
-          1444
+          1528
         </td>
         <td>
-          597
+          782
           -
-          602
+          787
         </td>
         <td>
           Select
@@ -528,15 +473,15 @@
         </td>
       </tr><tr>
         <td>
-          26
+          28
         </td>
         <td>
-          1450
+          1530
         </td>
         <td>
-          746
+          796
           -
-          756
+          806
         </td>
         <td>
           Select
@@ -549,99 +494,36 @@
         </td>
       </tr><tr>
         <td>
-          26
+          28
         </td>
         <td>
-          1449
+          1529
         </td>
         <td>
-          741
-          -
-          742
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          1
-        </td>
-      </tr><tr>
-        <td>
-          26
-        </td>
-        <td>
-          1451
-        </td>
-        <td>
-          736
-          -
-          763
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.Double.toInt
-        </td>
-        <td style="background: #F0ADAD">
-          x.-(1).*(ImageSlicer.this.sliceWidth).toInt
-        </td>
-      </tr><tr>
-        <td>
-          27
-        </td>
-        <td>
-          1452
-        </td>
-        <td>
-          788
-          -
           789
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          1
-        </td>
-      </tr><tr>
-        <td>
-          27
-        </td>
-        <td>
-          1454
-        </td>
-        <td>
-          783
           -
-          811
+          794
         </td>
         <td>
           Select
         </td>
         <td>
-          scala.Double.toInt
+          scala.Int.toDouble
         </td>
         <td style="background: #F0ADAD">
-          y.-(1).*(ImageSlicer.this.sliceHeight).toInt
+          destY.toDouble
         </td>
       </tr><tr>
         <td>
-          27
+          28
         </td>
         <td>
-          1453
+          1531
         </td>
         <td>
-          793
+          808
           -
-          804
+          819
         </td>
         <td>
           Select
@@ -654,15 +536,141 @@
         </td>
       </tr><tr>
         <td>
-          28
+          34
         </td>
         <td>
-          1455
+          1533
         </td>
         <td>
-          817
+          926
           -
-          833
+          927
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          1
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          1535
+        </td>
+        <td>
+          921
+          -
+          948
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Double.toInt
+        </td>
+        <td style="background: #F0ADAD">
+          x.-(1).*(ImageSlicer.this.sliceWidth).toInt
+        </td>
+      </tr><tr>
+        <td>
+          34
+        </td>
+        <td>
+          1534
+        </td>
+        <td>
+          931
+          -
+          941
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.ImageSlicer.sliceWidth
+        </td>
+        <td style="background: #F0ADAD">
+          ImageSlicer.this.sliceWidth
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          1536
+        </td>
+        <td>
+          973
+          -
+          974
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          1
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          1538
+        </td>
+        <td>
+          968
+          -
+          996
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          scala.Double.toInt
+        </td>
+        <td style="background: #F0ADAD">
+          y.-(1).*(ImageSlicer.this.sliceHeight).toInt
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          1537
+        </td>
+        <td>
+          978
+          -
+          989
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.ImageSlicer.sliceHeight
+        </td>
+        <td style="background: #F0ADAD">
+          ImageSlicer.this.sliceHeight
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          1539
+        </td>
+        <td>
+          1002
+          -
+          1018
         </td>
         <td>
           Apply

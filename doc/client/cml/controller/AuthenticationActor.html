@@ -151,8 +151,8 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="cml.controller">controller</a></dd></dl></div>
     </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="class" href="ArenaActor.html" title=""></a>
-                        <a href="ArenaActor.html" title="">ArenaActor</a>
+                        <a class="class" href="ArenaActor.html" title="That class implements the actor which manages the arena process"></a>
+                        <a href="ArenaActor.html" title="That class implements the actor which manages the arena process">ArenaActor</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
                         <a class="class" href="" title="Class that implements the actor which manages the authentication process"></a>
@@ -188,7 +188,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">AuthenticationActor</span><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span></span>
+        <span class="name">AuthenticationActor</span><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <span class="extype" name="akka.actor.ActorLogging">ActorLogging</span></span>
       </span>
       </h4>
 
@@ -198,7 +198,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="akka.actor.Actor">Actor</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="akka.actor.ActorLogging">ActorLogging</span>, <span class="extype" name="akka.actor.Actor">Actor</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -224,7 +224,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="cml.controller.AuthenticationActor"><span>AuthenticationActor</span></li><li class="in" name="akka.actor.Actor"><span>Actor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="cml.controller.AuthenticationActor"><span>AuthenticationActor</span></li><li class="in" name="akka.actor.ActorLogging"><span>ActorLogging</span></li><li class="in" name="akka.actor.Actor"><span>Actor</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -536,7 +536,7 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Actor</dd></dl></div>
-    </li><li name="cml.controller.AuthenticationActor#disableButtons" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="cml.controller.AuthenticationActor#disableButtons" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="disableButtons(b:Boolean):Unit"></a><a id="disableButtons(Boolean):Unit"></a>
       <span class="permalink">
       <a href="../../cml/controller/AuthenticationActor.html#disableButtons(b:Boolean):Unit" title="Permalink">
@@ -551,10 +551,8 @@
         <span class="name">disableButtons</span><span class="params">(<span name="b">b: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <p class="shortcomment cmt">Switches on and off GUI buttons
-</p><div class="fullcomment"><div class="comment cmt"><p>Switches on and off GUI buttons
-</p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>boolean</p></dd></dl></div>
-    </li><li name="cml.controller.AuthenticationActor#displayMsg" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      
+    </li><li name="cml.controller.AuthenticationActor#displayMsg" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="displayMsg(m:String):Unit"></a><a id="displayMsg(String):Unit"></a>
       <span class="permalink">
       <a href="../../cml/controller/AuthenticationActor.html#displayMsg(m:String):Unit" title="Permalink">
@@ -569,9 +567,7 @@
         <span class="name">displayMsg</span><span class="params">(<span name="m">m: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <p class="shortcomment cmt">Displays text on the GUI through a label
-</p><div class="fullcomment"><div class="comment cmt"><p>Displays text on the GUI through a label
-</p></div><dl class="paramcmts block"><dt class="param">m</dt><dd class="cmt"><p>message to show</p></dd></dl></div>
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -680,6 +676,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="akka.actor.ActorLogging#log" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="log:akka.event.LoggingAdapter"></a><a id="log:LoggingAdapter"></a>
+      <span class="permalink">
+      <a href="../../cml/controller/AuthenticationActor.html#log:akka.event.LoggingAdapter" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">log</span><span class="result">: <span class="extype" name="akka.event.LoggingAdapter">LoggingAdapter</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ActorLogging</dd></dl></div>
     </li><li name="cml.controller.AuthenticationActor#loginSucceedOnGui" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="loginSucceedOnGui():Unit"></a>
       <span class="permalink">
@@ -695,8 +707,7 @@
         <span class="name">loginSucceedOnGui</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       
-      <p class="shortcomment cmt">Open Village View after login successful
-</p>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -1061,7 +1072,9 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="akka.actor.Actor">
+        <div class="parent" name="akka.actor.ActorLogging">
+              <h3>Inherited from <span class="extype" name="akka.actor.ActorLogging">ActorLogging</span></h3>
+            </div><div class="parent" name="akka.actor.Actor">
               <h3>Inherited from <span class="extype" name="akka.actor.Actor">Actor</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>

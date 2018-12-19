@@ -145,12 +145,8 @@
                         <a href="ArenaResponse$$AttackSuccess.html" title="Success response to receive attack">AttackSuccess</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ArenaResponse$$HelloChallengerSuccess.html" title=""></a>
-                        <a href="ArenaResponse$$HelloChallengerSuccess.html" title="">HelloChallengerSuccess</a>
-                      </li><li class="current-entities indented4">
-                        <span class="separator"></span>
-                        <a class="class" href="" title=""></a>
-                        <a href="" title="">RequireTurnSuccess</a>
+                        <a class="class" href="" title="Response if users turn is correctly management"></a>
+                        <a href="" title="Response if users turn is correctly management">RequireTurnSuccess</a>
                       </li>
               </ul>
             </div>
@@ -174,12 +170,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">RequireTurnSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="turn">turn: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaResponse$$ArenaResponse.html" class="extype" name="cml.controller.messages.ArenaResponse.ArenaResponse">ArenaResponse</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">RequireTurnSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="isProtection">isProtection: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="turnValue">turnValue: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaResponse$$ArenaResponse.html" class="extype" name="cml.controller.messages.ArenaResponse.ArenaResponse">ArenaResponse</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Response if users turn is correctly management</p></div><dl class="paramcmts block"><dt class="param">attackPower</dt><dd class="cmt"><p>is user creature power attack</p></dd><dt class="param">isProtection</dt><dd class="cmt"><p>flag represent if user creature is protected or not</p></dd><dt class="param">turnValue</dt><dd class="cmt"><p>turn value</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -229,10 +225,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="cml.controller.messages.ArenaResponse.RequireTurnSuccess#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(attackPower:Int,turn:Int):cml.controller.messages.ArenaResponse.RequireTurnSuccess"></a><a id="&lt;init&gt;:RequireTurnSuccess"></a>
+              <ol><li name="cml.controller.messages.ArenaResponse.RequireTurnSuccess#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(attackPower:Int,isProtection:Boolean,turnValue:Int):cml.controller.messages.ArenaResponse.RequireTurnSuccess"></a><a id="&lt;init&gt;:RequireTurnSuccess"></a>
       <span class="permalink">
-      <a href="../../../cml/controller/messages/ArenaResponse$$RequireTurnSuccess.html#&lt;init&gt;(attackPower:Int,turn:Int):cml.controller.messages.ArenaResponse.RequireTurnSuccess" title="Permalink">
+      <a href="../../../cml/controller/messages/ArenaResponse$$RequireTurnSuccess.html#&lt;init&gt;(attackPower:Int,isProtection:Boolean,turnValue:Int):cml.controller.messages.ArenaResponse.RequireTurnSuccess" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -241,10 +237,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RequireTurnSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="turn">turn: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">RequireTurnSuccess</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="isProtection">isProtection: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="turnValue">turnValue: <span class="extype" name="scala.Int">Int</span></span>)</span>
       </span>
       
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">attackPower</dt><dd class="cmt"><p>is user creature power attack</p></dd><dt class="param">isProtection</dt><dd class="cmt"><p>flag represent if user creature is protected or not</p></dd><dt class="param">turnValue</dt><dd class="cmt"><p>turn value</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -432,6 +428,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="cml.controller.messages.ArenaResponse.RequireTurnSuccess#isProtection" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="isProtection:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaResponse$$RequireTurnSuccess.html#isProtection:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isProtection</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -502,10 +514,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="cml.controller.messages.ArenaResponse.RequireTurnSuccess#turn" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="turn:Int"></a>
+    </li><li name="cml.controller.messages.ArenaResponse.RequireTurnSuccess#turnValue" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="turnValue:Int"></a>
       <span class="permalink">
-      <a href="../../../cml/controller/messages/ArenaResponse$$RequireTurnSuccess.html#turn:Int" title="Permalink">
+      <a href="../../../cml/controller/messages/ArenaResponse$$RequireTurnSuccess.html#turnValue:Int" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -514,7 +526,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">turn</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">turnValue</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       
       

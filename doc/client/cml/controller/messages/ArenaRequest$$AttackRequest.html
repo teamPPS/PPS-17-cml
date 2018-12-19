@@ -145,16 +145,20 @@
                         <a href="ArenaRequest$$ArenaRequest.html" title="">ArenaRequest</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="" title="Request for attack the challenger"></a>
-                        <a href="" title="Request for attack the challenger">AttackRequest</a>
+                        <a class="class" href="" title="Request for attack challenger"></a>
+                        <a href="" title="Request for attack challenger">AttackRequest</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ArenaRequest$$ControllerRefRequest.html" title=""></a>
-                        <a href="ArenaRequest$$ControllerRefRequest.html" title="">ControllerRefRequest</a>
+                        <a class="class" href="ArenaRequest$$ChallengerCreatureRequire.html" title=""></a>
+                        <a href="ArenaRequest$$ChallengerCreatureRequire.html" title="">ChallengerCreatureRequire</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
-                        <a class="class" href="ArenaRequest$$RequireTurnRequest.html" title=""></a>
-                        <a href="ArenaRequest$$RequireTurnRequest.html" title="">RequireTurnRequest</a>
+                        <a class="class" href="ArenaRequest$$ControllerRefRequest.html" title="Request for ArenaViewController identifier"></a>
+                        <a href="ArenaRequest$$ControllerRefRequest.html" title="Request for ArenaViewController identifier">ControllerRefRequest</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="ArenaRequest$$RequireTurnRequest.html" title="Request for management turn in battle"></a>
+                        <a href="ArenaRequest$$RequireTurnRequest.html" title="Request for management turn in battle">RequireTurnRequest</a>
                       </li><li class="current-entities indented4">
                         <span class="separator"></span>
                         <a class="class" href="ArenaRequest$$StopRequest.html" title="Request for stopping Actor"></a>
@@ -182,13 +186,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">AttackRequest</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">AttackRequest</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="isProtected">isProtected: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="ArenaRequest$$ArenaRequest.html" class="extype" name="cml.controller.messages.ArenaRequest.ArenaRequest">ArenaRequest</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Request for attack the challenger
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Request for attack challenger</p></div><dl class="paramcmts block"><dt class="param">attackPower</dt><dd class="cmt"><p>is user creature power attack</p></dd><dt class="param">isProtected</dt><dd class="cmt"><p>flag represent if user creature is protected or not</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
@@ -238,10 +241,10 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="cml.controller.messages.ArenaRequest.AttackRequest#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(attackPower:Int):cml.controller.messages.ArenaRequest.AttackRequest"></a><a id="&lt;init&gt;:AttackRequest"></a>
+              <ol><li name="cml.controller.messages.ArenaRequest.AttackRequest#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(attackPower:Int,isProtected:Boolean):cml.controller.messages.ArenaRequest.AttackRequest"></a><a id="&lt;init&gt;:AttackRequest"></a>
       <span class="permalink">
-      <a href="../../../cml/controller/messages/ArenaRequest$$AttackRequest.html#&lt;init&gt;(attackPower:Int):cml.controller.messages.ArenaRequest.AttackRequest" title="Permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$$AttackRequest.html#&lt;init&gt;(attackPower:Int,isProtected:Boolean):cml.controller.messages.ArenaRequest.AttackRequest" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -250,10 +253,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">AttackRequest</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">AttackRequest</span><span class="params">(<span name="attackPower">attackPower: <span class="extype" name="scala.Int">Int</span></span>, <span name="isProtected">isProtected: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">attackPower</dt><dd class="cmt"><p>is user creature power attack</p></dd><dt class="param">isProtected</dt><dd class="cmt"><p>flag represent if user creature is protected or not</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -441,6 +444,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="cml.controller.messages.ArenaRequest.AttackRequest#isProtected" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="isProtected:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../cml/controller/messages/ArenaRequest$$AttackRequest.html#isProtected:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isProtected</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">

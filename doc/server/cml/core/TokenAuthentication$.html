@@ -123,8 +123,8 @@
                         <a href="RouterVerticle.html" title="This is abstract class implements RouterVerticle.">RouterVerticle</a>
                       </li><li class="current-entities indented2">
                         <span class="separator"></span>
-                        <a class="trait" href="RoutingOperation.html" title="This trait is useful to implement AuthenticationVerticle"></a>
-                        <a href="RoutingOperation.html" title="This trait is useful to implement AuthenticationVerticle">RoutingOperation</a>
+                        <a class="trait" href="RoutingOperation.html" title="This trait is useful to implement services"></a>
+                        <a href="RoutingOperation.html" title="This trait is useful to implement services">RoutingOperation</a>
                       </li><li class="current-entities indented2">
                         <a class="object" href="" title=""></a>
                         <a class="trait" href="TokenAuthentication.html" title="This trait defines and manages tokens useful for authentication."></a>
@@ -311,9 +311,7 @@
         <span class="name">authenticationToken</span><span class="params">(<span name="token">token: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a JWT header for http request
-</p><div class="fullcomment"><div class="comment cmt"><p>Create a JWT header for http request
-</p></div><dl class="paramcmts block"><dt class="param">token</dt><dd class="cmt"><p>is token to read</p></dd><dt>returns</dt><dd class="cmt"><p>header or None</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
+      <p class="shortcomment cmt">Create a JWT header for http request</p><div class="fullcomment"><div class="comment cmt"><p>Create a JWT header for http request</p></div><dl class="paramcmts block"><dt class="param">token</dt><dd class="cmt"><p>is token to read</p></dd><dt>returns</dt><dd class="cmt"><p>header or None</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
     </li><li name="cml.core.TokenAuthentication#base64Authentication" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="base64Authentication(username:String,password:String):Option[String]"></a><a id="base64Authentication(String,String):Option[String]"></a>
       <span class="permalink">
@@ -329,9 +327,7 @@
         <span class="name">base64Authentication</span><span class="params">(<span name="username">username: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="password">password: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Create a header for http request
-</p><div class="fullcomment"><div class="comment cmt"><p>Create a header for http request
-</p></div><dl class="paramcmts block"><dt class="param">username</dt><dd class="cmt"><p>is username of user</p></dd><dt class="param">password</dt><dd class="cmt"><p>is a password for authentication</p></dd><dt>returns</dt><dd class="cmt"><p>header for a request or None</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
+      <p class="shortcomment cmt">Create a header for http request</p><div class="fullcomment"><div class="comment cmt"><p>Create a header for http request</p></div><dl class="paramcmts block"><dt class="param">username</dt><dd class="cmt"><p>is username of user</p></dd><dt class="param">password</dt><dd class="cmt"><p>is a password for authentication</p></dd><dt>returns</dt><dd class="cmt"><p>header for a request or None</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
     </li><li name="cml.core.TokenAuthentication#checkAuthenticationToken" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="checkAuthenticationToken(header:String):Option[String]"></a><a id="checkAuthenticationToken(String):Option[String]"></a>
       <span class="permalink">
@@ -347,9 +343,7 @@
         <span class="name">checkAuthenticationToken</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       
-      <p class="shortcomment cmt">Check handler and return token for handler request
-</p><div class="fullcomment"><div class="comment cmt"><p>Check handler and return token for handler request
-</p></div><dl class="paramcmts block"><dt class="param">header</dt><dd class="cmt"><p>for a request</p></dd><dt>returns</dt><dd class="cmt"><p>token corresponds to the handler request</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
+      <p class="shortcomment cmt">Check handler and return token for handler request</p><div class="fullcomment"><div class="comment cmt"><p>Check handler and return token for handler request</p></div><dl class="paramcmts block"><dt class="param">header</dt><dd class="cmt"><p>for a request</p></dd><dt>returns</dt><dd class="cmt"><p>token corresponds to the handler request</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
     </li><li name="cml.core.TokenAuthentication#checkBase64Authentication" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="checkBase64Authentication(header:String):Option[(String,String)]"></a><a id="checkBase64Authentication(String):Option[(String,String)]"></a>
       <span class="permalink">
@@ -365,9 +359,7 @@
         <span class="name">checkBase64Authentication</span><span class="params">(<span name="header">header: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
       </span>
       
-      <p class="shortcomment cmt">Check username and password for a request
-</p><div class="fullcomment"><div class="comment cmt"><p>Check username and password for a request
-</p></div><dl class="paramcmts block"><dt class="param">header</dt><dd class="cmt"><p>is header for http request</p></dd><dt>returns</dt><dd class="cmt"><p>username and password or none</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
+      <p class="shortcomment cmt">Check username and password for a request</p><div class="fullcomment"><div class="comment cmt"><p>Check username and password for a request</p></div><dl class="paramcmts block"><dt class="param">header</dt><dd class="cmt"><p>is header for http request</p></dd><dt>returns</dt><dd class="cmt"><p>username and password or none</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a> → <a href="TokenAuthentication.html" class="extype" name="cml.core.TokenAuthentication">TokenAuthentication</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a><a id="clone():AnyRef"></a>
       <span class="permalink">

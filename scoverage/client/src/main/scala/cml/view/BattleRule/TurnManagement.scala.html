@@ -1,0 +1,581 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title id="title">
+          src\main\scala\cml\view\BattleRule\TurnManagement.scala.html
+        </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/css/theme.default.min.css" type="text/css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.20.1/js/jquery.tablesorter.min.js"></script><link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" type="text/css"/><script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script><script type="text/javascript">
+        $(document).ready(function() {$(".tablesorter").tablesorter();});
+      </script>
+        <style>
+          table.codegrid { font-family: monospace; font-size: 12px; width: auto!important; }table.statementlist { width: auto!important; font-size: 13px; } table.codegrid td { padding: 0!important; border: 0!important } table td.linenumber { width: 40px!important; } 
+        </style>
+      </head>
+      <body style="font-family: monospace;">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="#codegrid" data-toggle="tab">Codegrid</a>
+          </li>
+          <li>
+            <a href="#statementlist" data-toggle="tab">Statement List</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="codegrid">
+            <pre style='font-size: 12pt; font-family: courier;'>1 <span style=''>package cml.view.BattleRule
+</span>2 <span style=''>
+</span>3 <span style=''>/**
+</span>4 <span style=''>  * This class utils for management battle turn
+</span>5 <span style=''>  *
+</span>6 <span style=''>  * @author Chiara Volonnino
+</span>7 <span style=''>  */
+</span>8 <span style=''>
+</span>9 <span style=''>trait TurnManagement {
+</span>10 <span style=''>
+</span>11 <span style=''>  /**
+</span>12 <span style=''>    * Initialize turn value
+</span>13 <span style=''>    */
+</span>14 <span style=''>  def initialization(): Unit
+</span>15 <span style=''>
+</span>16 <span style=''>  /**
+</span>17 <span style=''>    * Management users turn
+</span>18 <span style=''>    * @param turn current turn
+</span>19 <span style=''>    */
+</span>20 <span style=''>  def changeTurn(turn: Int):Int
+</span>21 <span style=''>
+</span>22 <span style=''>}
+</span>23 <span style=''>
+</span>24 <span style=''>/**
+</span>25 <span style=''>  * This class implements trait TurnManagement
+</span>26 <span style=''>  */
+</span>27 <span style=''>case class TurnManagementImpl() extends TurnManagement {
+</span>28 <span style=''>
+</span>29 <span style=''>  private val First: Int = </span><span style='background: #F0ADAD'>0</span><span style=''>
+</span>30 <span style=''>  private val Second: Int = </span><span style='background: #F0ADAD'>1</span><span style=''>
+</span>31 <span style=''>  private var turn_ : Int = _
+</span>32 <span style=''>  private var isFirst: Boolean = _
+</span>33 <span style=''>
+</span>34 <span style=''>  override def initialization(): Unit = {
+</span>35 <span style=''>    </span><span style='background: #F0ADAD'>turn_ = 0</span><span style=''>
+</span>36 <span style=''>    </span><span style='background: #F0ADAD'>isFirst = true</span><span style=''>
+</span>37 <span style=''>  }
+</span>38 <span style=''>
+</span>39 <span style=''>  override def changeTurn(turn: Int): Int = {
+</span>40 <span style=''>    if(</span><span style='background: #F0ADAD'>isFirst &amp;&amp; turn.equals(First)</span><span style=''>) </span><span style='background: #F0ADAD'>{
+</span>41 <span style=''></span><span style='background: #F0ADAD'>      turn_ = Second
+</span>42 <span style=''></span><span style='background: #F0ADAD'>      isFirst = false
+</span>43 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>44 <span style=''>    if(</span><span style='background: #F0ADAD'>!isFirst &amp;&amp; turn.equals(Second)</span><span style=''>) </span><span style='background: #F0ADAD'>{
+</span>45 <span style=''></span><span style='background: #F0ADAD'>      turn_ = First
+</span>46 <span style=''></span><span style='background: #F0ADAD'>      isFirst = true
+</span>47 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>48 <span style=''>    </span><span style='background: #F0ADAD'>turn_</span><span style=''>
+</span>49 <span style=''>  }
+</span>50 <span style=''>
+</span>51 <span style=''>}
+</span></pre>
+          </div>
+          <div class="tab-pane" id="statementlist">
+            <table cellspacing="0" cellpadding="0" class="table statementlist">
+      <tr>
+        <th>Line</th>
+        <th>Stmt Id</th>
+        <th>Pos</th>
+        <th>Tree</th>
+        <th>Symbol</th>
+        <th>Code</th>
+      </tr><tr>
+        <td>
+          29
+        </td>
+        <td>
+          1175
+        </td>
+        <td>
+          492
+          -
+          493
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          0
+        </td>
+      </tr><tr>
+        <td>
+          30
+        </td>
+        <td>
+          1176
+        </td>
+        <td>
+          523
+          -
+          524
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          1
+        </td>
+      </tr><tr>
+        <td>
+          35
+        </td>
+        <td>
+          1177
+        </td>
+        <td>
+          642
+          -
+          651
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.turn__=
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.turn__=(0)
+        </td>
+      </tr><tr>
+        <td>
+          36
+        </td>
+        <td>
+          1178
+        </td>
+        <td>
+          657
+          -
+          671
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.isFirst_=
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.isFirst_=(true)
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          1187
+        </td>
+        <td>
+          731
+          -
+          731
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          1186
+        </td>
+        <td>
+          731
+          -
+          731
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          1180
+        </td>
+        <td>
+          745
+          -
+          763
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          turn.equals(TurnManagementImpl.this.First)
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          1185
+        </td>
+        <td>
+          765
+          -
+          818
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  TurnManagementImpl.this.turn__=(TurnManagementImpl.this.Second);
+  TurnManagementImpl.this.isFirst_=(false)
+}
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          1179
+        </td>
+        <td>
+          757
+          -
+          762
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.First
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.First
+        </td>
+      </tr><tr>
+        <td>
+          40
+        </td>
+        <td>
+          1181
+        </td>
+        <td>
+          734
+          -
+          763
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Boolean.&amp;&amp;
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.isFirst.&amp;&amp;(turn.equals(TurnManagementImpl.this.First))
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          1183
+        </td>
+        <td>
+          774
+          -
+          788
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.turn__=
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.turn__=(TurnManagementImpl.this.Second)
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          1182
+        </td>
+        <td>
+          782
+          -
+          788
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.Second
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.Second
+        </td>
+      </tr><tr>
+        <td>
+          42
+        </td>
+        <td>
+          1184
+        </td>
+        <td>
+          796
+          -
+          811
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.isFirst_=
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.isFirst_=(false)
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1196
+        </td>
+        <td>
+          824
+          -
+          824
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1195
+        </td>
+        <td>
+          824
+          -
+          824
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1189
+        </td>
+        <td>
+          839
+          -
+          858
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.equals
+        </td>
+        <td style="background: #F0ADAD">
+          turn.equals(TurnManagementImpl.this.Second)
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1194
+        </td>
+        <td>
+          860
+          -
+          911
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  TurnManagementImpl.this.turn__=(TurnManagementImpl.this.First);
+  TurnManagementImpl.this.isFirst_=(true)
+}
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1188
+        </td>
+        <td>
+          851
+          -
+          857
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.Second
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.Second
+        </td>
+      </tr><tr>
+        <td>
+          44
+        </td>
+        <td>
+          1190
+        </td>
+        <td>
+          827
+          -
+          858
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Boolean.&amp;&amp;
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.isFirst.unary_!.&amp;&amp;(turn.equals(TurnManagementImpl.this.Second))
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          1192
+        </td>
+        <td>
+          869
+          -
+          882
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.turn__=
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.turn__=(TurnManagementImpl.this.First)
+        </td>
+      </tr><tr>
+        <td>
+          45
+        </td>
+        <td>
+          1191
+        </td>
+        <td>
+          877
+          -
+          882
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.First
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.First
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          1193
+        </td>
+        <td>
+          890
+          -
+          904
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.isFirst_=
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.isFirst_=(true)
+        </td>
+      </tr><tr>
+        <td>
+          48
+        </td>
+        <td>
+          1197
+        </td>
+        <td>
+          917
+          -
+          922
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.view.BattleRule.TurnManagementImpl.turn_
+        </td>
+        <td style="background: #F0ADAD">
+          TurnManagementImpl.this.turn_
+        </td>
+      </tr>
+    </table>
+          </div>
+        </div>
+      </body>
+    </html>

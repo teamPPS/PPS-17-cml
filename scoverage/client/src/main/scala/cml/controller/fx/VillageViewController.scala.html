@@ -26,159 +26,109 @@
 </span>2 <span style=''>
 </span>3 <span style=''>import akka.actor.ActorSelection
 </span>4 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorSystemInfo._
-</span>5 <span style=''>import cml.controller.messages.AuthenticationRequest.Logout
-</span>6 <span style=''>import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
-</span>7 <span style=''>import cml.model.base.Habitat.Habitat
-</span>8 <span style=''>import cml.model.base.{Cave, Farm, Structure, VillageMap}
-</span>9 <span style=''>import cml.model.creatures.{FireCreature, EarthCreature, AirCreature, WaterCreature}
-</span>10 <span style=''>import cml.schema.Village
-</span>11 <span style=''>import cml.utils.ModelConfig
-</span>12 <span style=''>import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
-</span>13 <span style=''>import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
-</span>14 <span style=''>import javafx.animation.AnimationTimer
-</span>15 <span style=''>import javafx.fxml.FXML
-</span>16 <span style=''>import javafx.scene.control.Alert.AlertType
-</span>17 <span style=''>import javafx.scene.control._
-</span>18 <span style=''>import javafx.scene.layout.{GridPane, Pane}
-</span>19 <span style=''>import play.api.libs.json._
-</span>20 <span style=''>
-</span>21 <span style=''>import scala.collection.mutable
-</span>22 <span style=''>
-</span>23 <span style=''>class VillageViewController {
-</span>24 <span style=''>
-</span>25 <span style=''>  @FXML var playerLevelLabel: Label = _
-</span>26 <span style=''>  @FXML var goldLabel: Label = _
-</span>27 <span style=''>  @FXML var foodLabel: Label = _
-</span>28 <span style=''>  @FXML var deleteMenuItem: MenuItem = _
-</span>29 <span style=''>  @FXML var logoutMenuItem: MenuItem = _
-</span>30 <span style=''>  @FXML var selectionInfo: TextArea = _
-</span>31 <span style=''>  @FXML var battleButton: Button = _
-</span>32 <span style=''>  @FXML var levelUpButton: Button = _
-</span>33 <span style=''>  @FXML var takeButton: Button = _
-</span>34 <span style=''>  @FXML var addCreatureButton: Button = _
-</span>35 <span style=''>  @FXML var upgradePane: Pane = _
-</span>36 <span style=''>  @FXML var areaPane: Pane = _
-</span>37 <span style=''>  @FXML var villagePane: ScrollPane = _
-</span>38 <span style=''>  @FXML var buildingsGrid: ScrollPane = _
-</span>39 <span style=''>  @FXML var menuButton: MenuButton = _
-</span>40 <span style=''>  var villageMap: GridPane = _
-</span>41 <span style=''>  var buildingsMenu: GridPane = _
-</span>42 <span style=''>
-</span>43 <span style=''>  val villageActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection &quot;/user/VillageActor&quot;</span><span style=''>
-</span>44 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection &quot;/user/AuthenticationActor&quot;</span><span style=''>
-</span>45 <span style=''>  var updateResourcesTimer: AnimationTimer = _
-</span>46 <span style=''>
-</span>47 <span style=''>  def initialize(): Unit = {
-</span>48 <span style=''>    </span><span style='background: #F0ADAD'>villageActor ! EnterVillage(this)</span><span style=''>
-</span>49 <span style=''>  }
-</span>50 <span style=''>
+</span>5 <span style=''>import cml.controller.actor.utils.ActorUtils.ActorPath.{AuthenticationActorPath, VillageActorPath}
+</span>6 <span style=''>import cml.controller.messages.AuthenticationRequest.Logout
+</span>7 <span style=''>import cml.controller.messages.VillageRequest.{DeleteVillage, EnterVillage}
+</span>8 <span style=''>import cml.model.base._
+</span>9 <span style=''>import cml.utils.ViewConfig.{AuthenticationWindow, BattleWindow}
+</span>10 <span style=''>import cml.view.{BaseGridInitializer, ConcreteHandlerSetup, ViewSwitch}
+</span>11 <span style=''>import javafx.animation.AnimationTimer
+</span>12 <span style=''>import javafx.fxml.FXML
+</span>13 <span style=''>import javafx.scene.control.Alert.AlertType
+</span>14 <span style=''>import javafx.scene.control._
+</span>15 <span style=''>import javafx.scene.layout.{GridPane, Pane}
+</span>16 <span style=''>
+</span>17 <span style=''>/**
+</span>18 <span style=''>  * FX Controller for Village View
+</span>19 <span style=''>  *
+</span>20 <span style=''>  * @author ecavina
+</span>21 <span style=''>  */
+</span>22 <span style=''>class VillageViewController {
+</span>23 <span style=''>
+</span>24 <span style=''>  @FXML var playerLevelLabel: Label = _
+</span>25 <span style=''>  @FXML var goldLabel: Label = _
+</span>26 <span style=''>  @FXML var foodLabel: Label = _
+</span>27 <span style=''>  @FXML var deleteMenuItem: MenuItem = _
+</span>28 <span style=''>  @FXML var logoutMenuItem: MenuItem = _
+</span>29 <span style=''>  @FXML var selectionInfo: TextArea = _
+</span>30 <span style=''>  @FXML var battleButton: Button = _
+</span>31 <span style=''>  @FXML var levelUpButton: Button = _
+</span>32 <span style=''>  @FXML var takeButton: Button = _
+</span>33 <span style=''>  @FXML var addCreatureButton: Button = _
+</span>34 <span style=''>  @FXML var upgradePane: Pane = _
+</span>35 <span style=''>  @FXML var areaPane: Pane = _
+</span>36 <span style=''>  @FXML var villagePane: ScrollPane = _
+</span>37 <span style=''>  @FXML var buildingsGrid: ScrollPane = _
+</span>38 <span style=''>  @FXML var menuButton: MenuButton = _
+</span>39 <span style=''>  var villageMap: GridPane = _
+</span>40 <span style=''>  var buildingsMenu: GridPane = _
+</span>41 <span style=''>  val villageActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection VillageActorPath</span><span style=''>
+</span>42 <span style=''>  val authenticationActor: ActorSelection = </span><span style='background: #F0ADAD'>system actorSelection AuthenticationActorPath</span><span style=''>
+</span>43 <span style=''>  var updateResourcesTimer: AnimationTimer = _
+</span>44 <span style=''>
+</span>45 <span style=''>  val timeToUpdate: (Long, Long) =&gt; Boolean =
+</span>46 <span style=''>    (now: Long, lastUpdate: Long) =&gt; </span><span style='background: #F0ADAD'>(now - lastUpdate) / 1000000 &gt; 10000</span><span style=''>
+</span>47 <span style=''>
+</span>48 <span style=''>  def initialize(): Unit = {
+</span>49 <span style=''>    </span><span style='background: #F0ADAD'>villageActor ! EnterVillage(this)</span><span style=''>
+</span>50 <span style=''>  }
 </span>51 <span style=''>
 </span>52 <span style=''>  @FXML def goToBattle(): Unit = </span><span style='background: #F0ADAD'>ViewSwitch.activate(BattleWindow.path, battleButton.getScene)</span><span style=''>
 </span>53 <span style=''>
 </span>54 <span style=''>  @FXML def logout(): Unit =  </span><span style='background: #F0ADAD'>logoutSystem()</span><span style=''>
 </span>55 <span style=''>
 </span>56 <span style=''>  @FXML def deleteAccount(): Unit = {
-</span>57 <span style=''>    val alert = </span><span style='background: #F0ADAD'>new</span><span style=''> Alert(AlertType.CONFIRMATION) {
-</span>58 <span style=''>      </span><span style='background: #F0ADAD'>setTitle(&quot;Confirmation Dialog&quot;)</span><span style=''>
-</span>59 <span style=''>      </span><span style='background: #F0ADAD'>setHeaderText(&quot;Delete Account&quot;)</span><span style=''>
-</span>60 <span style=''>      </span><span style='background: #F0ADAD'>setContentText(&quot;Are you sure want to confirm?&quot;)</span><span style=''>
-</span>61 <span style=''>    }
+</span>57 <span style=''>    val result = </span><span style='background: #F0ADAD'>new Alert(AlertType.CONFIRMATION) {
+</span>58 <span style=''></span><span style='background: #F0ADAD'>      setTitle(&quot;Confirmation Dialog&quot;)
+</span>59 <span style=''></span><span style='background: #F0ADAD'>      setHeaderText(&quot;Delete Account&quot;)
+</span>60 <span style=''></span><span style='background: #F0ADAD'>      setContentText(&quot;Are you sure want to confirm?&quot;)
+</span>61 <span style=''></span><span style='background: #F0ADAD'>    }.showAndWait()</span><span style=''>
 </span>62 <span style=''>
-</span>63 <span style=''>    val result = </span><span style='background: #F0ADAD'>alert.showAndWait()</span><span style=''>
-</span>64 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) {
-</span>65 <span style=''>      </span><span style='background: #F0ADAD'>villageActor ! DeleteVillage(this)</span><span style=''>
-</span>66 <span style=''>    }
-</span>67 <span style=''>  }
-</span>68 <span style=''>
-</span>69 <span style=''>  def setGridAndHandlers(jsonUserVillage: String): Unit = {
-</span>70 <span style=''>
-</span>71 <span style=''>    val json: JsValue = </span><span style='background: #F0ADAD'>Json.parse(jsonUserVillage)</span><span style=''> //TODO tutto dentro a JsonMaker o  comunque utils?
-</span>72 <span style=''>    val gold = (</span><span style='background: #F0ADAD'>json \ Village.GOLD_FIELD).get.toString()</span><span style=''>
-</span>73 <span style=''>    val food = (</span><span style='background: #F0ADAD'>json \ Village.FOOD_FIELD).get.toString()</span><span style=''>
-</span>74 <span style=''>    val villageName = (</span><span style='background: #F0ADAD'>json \ Village.VILLAGE_NAME_FIELD).get.toString()</span><span style=''>
+</span>63 <span style=''>    if (</span><span style='background: #F0ADAD'>result.isPresent &amp;&amp; result.get() == ButtonType.OK</span><span style=''>) {
+</span>64 <span style=''>      </span><span style='background: #F0ADAD'>villageActor ! DeleteVillage(this)</span><span style=''>
+</span>65 <span style=''>    }
+</span>66 <span style=''>  }
+</span>67 <span style=''>
+</span>68 <span style=''>  def setGridAndHandlers(jsonUserVillage: String): Unit = {
+</span>69 <span style=''>
+</span>70 <span style=''>    </span><span style='background: #F0ADAD'>VillageMap.createVillage(PopulateVillageMapStrategy.populateVillageFromJson)(jsonUserVillage)</span><span style=''>
+</span>71 <span style=''>
+</span>72 <span style=''>    </span><span style='background: #F0ADAD'>playerLevelLabel.setText(VillageMap.instance().get.villageName)</span><span style=''>
+</span>73 <span style=''>    </span><span style='background: #F0ADAD'>goldLabel.setText(VillageMap.instance().get.gold.toString)</span><span style=''>
+</span>74 <span style=''>    </span><span style='background: #F0ADAD'>foodLabel.setText(VillageMap.instance().get.food.toString)</span><span style=''>
 </span>75 <span style=''>
-</span>76 <span style=''>    </span><span style='background: #F0ADAD'>playerLevelLabel.setText(villageName)</span><span style=''>
-</span>77 <span style=''>    </span><span style='background: #F0ADAD'>goldLabel.setText(gold)</span><span style=''>
-</span>78 <span style=''>    </span><span style='background: #F0ADAD'>foodLabel.setText(food)</span><span style=''>
-</span>79 <span style=''>
+</span>76 <span style=''>    </span><span style='background: #F0ADAD'>villageMap = new GridPane</span><span style=''>
+</span>77 <span style=''>    </span><span style='background: #F0ADAD'>BaseGridInitializer.initializeVillage(villageMap)</span><span style=''>
+</span>78 <span style=''>    </span><span style='background: #F0ADAD'>villagePane setContent villageMap</span><span style=''>
+</span>79 <span style=''>    </span><span style='background: #F0ADAD'>ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)</span><span style=''>
 </span>80 <span style=''>
-</span>81 <span style=''>    val buildings = (</span><span style='background: #F0ADAD'>json \\ Village.SINGLE_BUILDING_FIELD).map(_.as[JsObject])</span><span style=''>
-</span>82 <span style=''>    </span><span style='background: #F0ADAD'>VillageMap.initVillage(mutable.MutableList[Structure](), gold.toInt, food.toInt, villageName)</span><span style=''>
-</span>83 <span style=''>    </span><span style='background: #F0ADAD'>for (
-</span>84 <span style=''></span><span style='background: #F0ADAD'>      building &lt;- buildings;
-</span>85 <span style=''></span><span style='background: #F0ADAD'>      buildType &lt;- building \\ Village.BUILDING_TYPE_FIELD;
-</span>86 <span style=''></span><span style='background: #F0ADAD'>      specificStructure = buildType.as[String] match {
-</span>87 <span style=''></span><span style='background: #F0ADAD'>        case ModelConfig.StructureType.CAVE =&gt; building.as[Cave]
-</span>88 <span style=''></span><span style='background: #F0ADAD'>        case ModelConfig.StructureType.FARM =&gt; building.as[Farm]
-</span>89 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>90 <span style=''></span><span style='background: #F0ADAD'>    ) yield VillageMap.instance().get.villageStructure += specificStructure</span><span style=''>
-</span>91 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Buildings ricevute dal server: &quot; + VillageMap.instance().get.villageStructure)</span><span style=''>
-</span>92 <span style=''>
-</span>93 <span style=''>    val habitats = (</span><span style='background: #F0ADAD'>json \\ Village.SINGLE_HABITAT_FIELD).map(_.as[JsObject])</span><span style=''>
-</span>94 <span style=''>    //TODO unire questi for comprehnsion ???
-</span>95 <span style=''>    </span><span style='background: #F0ADAD'>for (
-</span>96 <span style=''></span><span style='background: #F0ADAD'>      habitat &lt;- habitats;
-</span>97 <span style=''></span><span style='background: #F0ADAD'>      specificHabitat = habitat.as[Habitat];
-</span>98 <span style=''></span><span style='background: #F0ADAD'>      creature &lt;- (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]);
-</span>99 <span style=''></span><span style='background: #F0ADAD'>      creatureType &lt;- creature \\ Village.CREATURE_TYPE_FIELD;
-</span>100 <span style=''></span><span style='background: #F0ADAD'>      specificCreature = creatureType.as[String] match {
-</span>101 <span style=''></span><span style='background: #F0ADAD'>        case ModelConfig.Creature.DRAGON =&gt; creature.as[FireCreature]
-</span>102 <span style=''></span><span style='background: #F0ADAD'>        case ModelConfig.Creature.GOLEM =&gt; creature.as[EarthCreature]
-</span>103 <span style=''></span><span style='background: #F0ADAD'>        case ModelConfig.Creature.GRIFFIN =&gt; creature.as[AirCreature]
-</span>104 <span style=''></span><span style='background: #F0ADAD'>        case ModelConfig.Creature.WATERDEMON =&gt; creature.as[WaterCreature]
-</span>105 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>106 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>107 <span style=''></span><span style='background: #F0ADAD'>      specificHabitat.creatureList += specificCreature
-</span>108 <span style=''></span><span style='background: #F0ADAD'>      VillageMap.instance().get.villageStructure += specificHabitat
-</span>109 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
-</span>110 <span style=''>    </span><span style='background: #F0ADAD'>for (
-</span>111 <span style=''></span><span style='background: #F0ADAD'>      habitat &lt;- habitats;
-</span>112 <span style=''></span><span style='background: #F0ADAD'>      if (habitat \\ Village.SINGLE_CREATURE_FIELD).map(_.as[JsObject]).isEmpty;
-</span>113 <span style=''></span><span style='background: #F0ADAD'>      specificHabitat = habitat.as[Habitat]
-</span>114 <span style=''></span><span style='background: #F0ADAD'>    ) yield {
-</span>115 <span style=''></span><span style='background: #F0ADAD'>      VillageMap.instance().get.villageStructure += specificHabitat</span><span style=''>
-</span>116 <span style=''>    }
-</span>117 <span style=''>
-</span>118 <span style=''>    </span><span style='background: #F0ADAD'>println(&quot;Buildings e Habitat ricevuti dal server: &quot; + VillageMap.instance().get.villageStructure)</span><span style=''>
-</span>119 <span style=''>
-</span>120 <span style=''>    </span><span style='background: #F0ADAD'>villageMap = new GridPane</span><span style=''>
-</span>121 <span style=''>    </span><span style='background: #F0ADAD'>BaseGridInitializer.initializeVillage(villageMap)</span><span style=''>
-</span>122 <span style=''>    </span><span style='background: #F0ADAD'>villagePane setContent villageMap</span><span style=''>
-</span>123 <span style=''>
-</span>124 <span style=''>
-</span>125 <span style=''>    </span><span style='background: #F0ADAD'>ConcreteHandlerSetup.setupVillageHandlers(villageMap, this)</span><span style=''>
-</span>126 <span style=''>
-</span>127 <span style=''>    </span><span style='background: #F0ADAD'>buildingsMenu = new GridPane</span><span style=''>
-</span>128 <span style=''>    </span><span style='background: #F0ADAD'>BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)</span><span style=''>
-</span>129 <span style=''>    </span><span style='background: #F0ADAD'>buildingsGrid setContent buildingsMenu</span><span style=''>
-</span>130 <span style=''>    </span><span style='background: #F0ADAD'>ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)</span><span style=''>
-</span>131 <span style=''>
-</span>132 <span style=''>    </span><span style='background: #F0ADAD'>updateResourcesTimer = new AnimationTimer() {
-</span>133 <span style=''></span><span style='background: #F0ADAD'>
-</span>134 <span style=''></span><span style='background: #F0ADAD'>      var lastUpdate = 0L
-</span>135 <span style=''></span><span style='background: #F0ADAD'>
-</span>136 <span style=''></span><span style='background: #F0ADAD'>      override def handle(now: Long): Unit = {
-</span>137 <span style=''></span><span style='background: #F0ADAD'>        if((now - lastUpdate) / 1000000 &gt; 2000) {
-</span>138 <span style=''></span><span style='background: #F0ADAD'>          val villageStructures = VillageMap.instance().get.villageStructure
-</span>139 <span style=''></span><span style='background: #F0ADAD'>          villageStructures.foreach(s =&gt; s.resource.inc(s.level))
-</span>140 <span style=''></span><span style='background: #F0ADAD'>          lastUpdate = now
-</span>141 <span style=''></span><span style='background: #F0ADAD'>        }
-</span>142 <span style=''></span><span style='background: #F0ADAD'>      }
-</span>143 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
-</span>144 <span style=''>    </span><span style='background: #F0ADAD'>updateResourcesTimer.start()</span><span style=''>
-</span>145 <span style=''>  }
-</span>146 <span style=''>
-</span>147 <span style=''>  def openAuthenticationView():Unit = </span><span style='background: #F0ADAD'>ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)</span><span style=''>
-</span>148 <span style=''>
-</span>149 <span style=''>  def logoutSystem(): Unit = {
-</span>150 <span style=''>    </span><span style='background: #F0ADAD'>updateResourcesTimer.stop()</span><span style=''>
-</span>151 <span style=''>    </span><span style='background: #F0ADAD'>authenticationActor ! Logout()</span><span style=''>
-</span>152 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)</span><span style=''>
-</span>153 <span style=''>//        System.exit(0)
-</span>154 <span style=''>//        println(&quot;Bye!&quot;)
-</span>155 <span style=''>  }
-</span>156 <span style=''>
-</span>157 <span style=''>}
+</span>81 <span style=''>    </span><span style='background: #F0ADAD'>buildingsMenu = new GridPane</span><span style=''>
+</span>82 <span style=''>    </span><span style='background: #F0ADAD'>BaseGridInitializer.initializeBuildingsMenu(buildingsMenu)</span><span style=''>
+</span>83 <span style=''>    </span><span style='background: #F0ADAD'>buildingsGrid setContent buildingsMenu</span><span style=''>
+</span>84 <span style=''>    </span><span style='background: #F0ADAD'>ConcreteHandlerSetup.setupBuildingsHandlers(buildingsMenu, this)</span><span style=''>
+</span>85 <span style=''>
+</span>86 <span style=''>    </span><span style='background: #F0ADAD'>updateResourcesTimer = new AnimationTimer() {
+</span>87 <span style=''></span><span style='background: #F0ADAD'>      var lastUpdate = 0L
+</span>88 <span style=''></span><span style='background: #F0ADAD'>      override def handle(now: Long): Unit = {
+</span>89 <span style=''></span><span style='background: #F0ADAD'>        if(timeToUpdate(now, lastUpdate)) {
+</span>90 <span style=''></span><span style='background: #F0ADAD'>          VillageMap.instance().get.villageStructure.foreach(s =&gt; s.resource.inc(s.level))
+</span>91 <span style=''></span><span style='background: #F0ADAD'>          lastUpdate = now
+</span>92 <span style=''></span><span style='background: #F0ADAD'>        }
+</span>93 <span style=''></span><span style='background: #F0ADAD'>      }
+</span>94 <span style=''></span><span style='background: #F0ADAD'>    }</span><span style=''>
+</span>95 <span style=''>    </span><span style='background: #F0ADAD'>updateResourcesTimer.start()</span><span style=''>
+</span>96 <span style=''>  }
+</span>97 <span style=''>
+</span>98 <span style=''>  def openAuthenticationView(): Unit =
+</span>99 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(AuthenticationWindow.path, deleteMenuItem.getParentPopup.getOwnerWindow.getScene)</span><span style=''>
+</span>100 <span style=''>
+</span>101 <span style=''>  def logoutSystem(): Unit = {
+</span>102 <span style=''>    </span><span style='background: #F0ADAD'>updateResourcesTimer.stop()</span><span style=''>
+</span>103 <span style=''>    </span><span style='background: #F0ADAD'>authenticationActor ! Logout()</span><span style=''>
+</span>104 <span style=''>    </span><span style='background: #F0ADAD'>ViewSwitch.activate(AuthenticationWindow.path, logoutMenuItem.getParentPopup.getOwnerWindow.getScene)</span><span style=''>
+</span>105 <span style=''>  }
+</span>106 <span style=''>
+</span>107 <span style=''>}
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -192,15 +142,36 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          43
+          41
         </td>
         <td>
-          478
+          597
         </td>
         <td>
-          1617
+          1530
           -
-          1659
+          1546
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ActorUtils.ActorPath.VillageActorPath
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.ActorPath.VillageActorPath
+        </td>
+      </tr><tr>
+        <td>
+          41
+        </td>
+        <td>
+          598
+        </td>
+        <td>
+          1508
+          -
+          1546
         </td>
         <td>
           Apply
@@ -209,19 +180,19 @@
           akka.actor.ActorRefFactory.actorSelection
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(&quot;/user/VillageActor&quot;)
+          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(cml.controller.actor.utils.ActorUtils.ActorPath.VillageActorPath)
         </td>
       </tr><tr>
         <td>
-          44
+          42
         </td>
         <td>
-          479
+          600
         </td>
         <td>
-          1705
+          1592
           -
-          1754
+          1637
         </td>
         <td>
           Apply
@@ -230,19 +201,61 @@
           akka.actor.ActorRefFactory.actorSelection
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(&quot;/user/AuthenticationActor&quot;)
+          cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system.actorSelection(cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath)
         </td>
       </tr><tr>
         <td>
-          48
+          42
         </td>
         <td>
-          481
+          599
         </td>
         <td>
-          1840
+          1614
           -
-          1852
+          1637
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.actor.utils.ActorUtils.ActorPath.AuthenticationActorPath
+        </td>
+      </tr><tr>
+        <td>
+          46
+        </td>
+        <td>
+          601
+        </td>
+        <td>
+          1773
+          -
+          1809
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Long.&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          now.-(lastUpdate)./(1000000).&gt;(10000)
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          603
+        </td>
+        <td>
+          1847
+          -
+          1859
         </td>
         <td>
           ApplyImplicitView
@@ -255,15 +268,36 @@
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          480
+          606
         </td>
         <td>
-          1840
+          1847
           -
-          1852
+          1880
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$1.!(x$1)(x$2)
+        </td>
+      </tr><tr>
+        <td>
+          49
+        </td>
+        <td>
+          602
+        </td>
+        <td>
+          1847
+          -
+          1859
         </td>
         <td>
           Select
@@ -276,15 +310,15 @@
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          483
+          605
         </td>
         <td>
-          1853
+          1860
           -
-          1853
+          1860
         </td>
         <td>
           Apply
@@ -293,19 +327,19 @@
           akka.actor.ScalaActorSelection.!$default$2
         </td>
         <td style="background: #F0ADAD">
-          qual$1.!$default$2(x$9)
+          qual$1.!$default$2(x$1)
         </td>
       </tr><tr>
         <td>
-          48
+          49
         </td>
         <td>
-          482
+          604
         </td>
         <td>
-          1855
+          1862
           -
-          1873
+          1880
         </td>
         <td>
           Apply
@@ -318,36 +352,15 @@
         </td>
       </tr><tr>
         <td>
-          48
-        </td>
-        <td>
-          484
-        </td>
-        <td>
-          1840
-          -
-          1873
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!
-        </td>
-        <td style="background: #F0ADAD">
-          qual$1.!(x$9)(x$10)
-        </td>
-      </tr><tr>
-        <td>
           52
         </td>
         <td>
-          487
+          609
         </td>
         <td>
-          1917
+          1922
           -
-          1978
+          1983
         </td>
         <td>
           Apply
@@ -363,12 +376,12 @@
           52
         </td>
         <td>
-          486
+          608
         </td>
         <td>
-          1956
+          1961
           -
-          1977
+          1982
         </td>
         <td>
           Apply
@@ -384,12 +397,12 @@
           52
         </td>
         <td>
-          485
+          607
         </td>
         <td>
-          1937
+          1942
           -
-          1954
+          1959
         </td>
         <td>
           Select
@@ -405,12 +418,12 @@
           54
         </td>
         <td>
-          488
+          610
         </td>
         <td>
-          2012
+          2017
           -
-          2026
+          2031
         </td>
         <td>
           Apply
@@ -423,99 +436,15 @@
         </td>
       </tr><tr>
         <td>
-          57
+          61
         </td>
         <td>
-          492
+          611
         </td>
         <td>
-          2085
+          2091
           -
-          2088
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.fx.VillageViewController.$anon.&lt;init&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          new $anon()
-        </td>
-      </tr><tr>
-        <td>
-          58
-        </td>
-        <td>
-          489
-        </td>
-        <td>
-          2128
-          -
-          2159
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Dialog.setTitle
-        </td>
-        <td style="background: #F0ADAD">
-          $anon.this.setTitle(&quot;Confirmation Dialog&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          59
-        </td>
-        <td>
-          490
-        </td>
-        <td>
-          2167
-          -
-          2198
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Dialog.setHeaderText
-        </td>
-        <td style="background: #F0ADAD">
-          $anon.this.setHeaderText(&quot;Delete Account&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          60
-        </td>
-        <td>
-          491
-        </td>
-        <td>
-          2206
-          -
-          2253
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Dialog.setContentText
-        </td>
-        <td style="background: #F0ADAD">
-          $anon.this.setContentText(&quot;Are you sure want to confirm?&quot;)
-        </td>
-      </tr><tr>
-        <td>
-          63
-        </td>
-        <td>
-          493
-        </td>
-        <td>
-          2281
-          -
-          2300
+          2280
         </td>
         <td>
           Apply
@@ -524,19 +453,72 @@
           javafx.scene.control.Dialog.showAndWait
         </td>
         <td style="background: #F0ADAD">
-          alert.showAndWait()
+          {
+  final class $anon extends javafx.scene.control.Alert {
+    def &lt;init&gt;(): &lt;$anon: javafx.scene.control.Alert&gt; = {
+      $anon.super.&lt;init&gt;(CONFIRMATION);
+      ()
+    };
+    $anon.this.setTitle(&quot;Confirmation Dialog&quot;);
+    $anon.this.setHeaderText(&quot;Delete Account&quot;);
+    $anon.this.setContentText(&quot;Are you sure want to confirm?&quot;)
+  };
+  new $anon()
+}.showAndWait()
         </td>
       </tr><tr>
         <td>
-          64
+          63
         </td>
         <td>
-          496
+          621
         </td>
         <td>
-          2310
+          2288
           -
-          2359
+          2288
+        </td>
+        <td>
+          Literal
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          612
+        </td>
+        <td>
+          2328
+          -
+          2341
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          javafx.scene.control.ButtonType.OK
+        </td>
+        <td style="background: #F0ADAD">
+          javafx.scene.control.ButtonType.OK
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          614
+        </td>
+        <td>
+          2292
+          -
+          2341
         </td>
         <td>
           Apply
@@ -549,15 +531,36 @@
         </td>
       </tr><tr>
         <td>
-          64
+          63
         </td>
         <td>
-          495
+          622
         </td>
         <td>
-          2330
+          2288
           -
-          2359
+          2288
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          63
+        </td>
+        <td>
+          613
+        </td>
+        <td>
+          2312
+          -
+          2341
         </td>
         <td>
           Apply
@@ -573,138 +576,33 @@
           64
         </td>
         <td>
-          504
+          618
         </td>
         <td>
-          2306
+          2365
           -
-          2306
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          64
-        </td>
-        <td>
-          503
-        </td>
-        <td>
-          2306
-          -
-          2306
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          64
-        </td>
-        <td>
-          494
-        </td>
-        <td>
-          2346
-          -
-          2359
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          javafx.scene.control.ButtonType.OK
-        </td>
-        <td style="background: #F0ADAD">
-          javafx.scene.control.ButtonType.OK
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          499
-        </td>
-        <td>
-          2385
-          -
-          2404
+          2365
         </td>
         <td>
           Apply
         </td>
         <td>
-          cml.controller.messages.VillageRequest.DeleteVillage.apply
+          akka.actor.ScalaActorSelection.!$default$2
         </td>
         <td style="background: #F0ADAD">
-          cml.controller.messages.VillageRequest.DeleteVillage.apply(this)
+          qual$2.!$default$2(x$3)
         </td>
       </tr><tr>
         <td>
-          65
+          64
         </td>
         <td>
-          498
+          615
         </td>
         <td>
-          2370
+          2352
           -
-          2382
-        </td>
-        <td>
-          ApplyImplicitView
-        </td>
-        <td>
-          akka.actor.ActorSelection.toScala
-        </td>
-        <td style="background: #F0ADAD">
-          actor.this.ActorSelection.toScala(VillageViewController.this.villageActor)
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          501
-        </td>
-        <td>
-          2370
-          -
-          2404
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!
-        </td>
-        <td style="background: #F0ADAD">
-          qual$2.!(x$11)(x$12)
-        </td>
-      </tr><tr>
-        <td>
-          65
-        </td>
-        <td>
-          497
-        </td>
-        <td>
-          2370
-          -
-          2382
+          2364
         </td>
         <td>
           Select
@@ -717,36 +615,36 @@
         </td>
       </tr><tr>
         <td>
-          65
+          64
         </td>
         <td>
-          500
+          617
         </td>
         <td>
-          2383
+          2367
           -
-          2383
+          2386
         </td>
         <td>
           Apply
         </td>
         <td>
-          akka.actor.ScalaActorSelection.!$default$2
+          cml.controller.messages.VillageRequest.DeleteVillage.apply
         </td>
         <td style="background: #F0ADAD">
-          qual$2.!$default$2(x$11)
+          cml.controller.messages.VillageRequest.DeleteVillage.apply(this)
         </td>
       </tr><tr>
         <td>
-          65
+          64
         </td>
         <td>
-          502
+          620
         </td>
         <td>
-          2370
+          2352
           -
-          2404
+          2386
         </td>
         <td>
           Block
@@ -757,1851 +655,234 @@
         <td style="background: #F0ADAD">
           {
   &lt;artifact&gt; val qual$2: akka.actor.ScalaActorSelection = actor.this.ActorSelection.toScala(VillageViewController.this.villageActor);
-  &lt;artifact&gt; val x$11: cml.controller.messages.VillageRequest.DeleteVillage = cml.controller.messages.VillageRequest.DeleteVillage.apply(this);
-  &lt;artifact&gt; val x$12: akka.actor.ActorRef = qual$2.!$default$2(x$11);
-  qual$2.!(x$11)(x$12)
+  &lt;artifact&gt; val x$3: cml.controller.messages.VillageRequest.DeleteVillage = cml.controller.messages.VillageRequest.DeleteVillage.apply(this);
+  &lt;artifact&gt; val x$4: akka.actor.ActorRef = qual$2.!$default$2(x$3);
+  qual$2.!(x$3)(x$4)
 }
         </td>
       </tr><tr>
         <td>
-          71
+          64
         </td>
         <td>
-          505
+          616
         </td>
         <td>
-          2507
+          2352
           -
-          2534
+          2364
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(VillageViewController.this.villageActor)
+        </td>
+      </tr><tr>
+        <td>
+          64
+        </td>
+        <td>
+          619
+        </td>
+        <td>
+          2352
+          -
+          2386
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$2.!(x$3)(x$4)
+        </td>
+      </tr><tr>
+        <td>
+          70
+        </td>
+        <td>
+          623
+        </td>
+        <td>
+          2469
+          -
+          2562
         </td>
         <td>
           Apply
         </td>
         <td>
-          play.api.libs.json.Json.parse
+          cml.model.base.VillageMap.createVillage
         </td>
         <td style="background: #F0ADAD">
-          play.api.libs.json.Json.parse(jsonUserVillage)
+          cml.model.base.VillageMap.createVillage[String]({
+  ((jsonVillage: String) =&gt; cml.model.base.PopulateVillageMapStrategy.populateVillageFromJson(jsonVillage))
+})(jsonUserVillage)
         </td>
       </tr><tr>
         <td>
           72
         </td>
         <td>
-          506
+          624
         </td>
         <td>
-          2603
+          2595
           -
-          2644
+          2632
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.model.base.VillageMap.villageName
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.villageName
+        </td>
+      </tr><tr>
+        <td>
+          72
+        </td>
+        <td>
+          625
+        </td>
+        <td>
+          2570
+          -
+          2633
         </td>
         <td>
           Apply
         </td>
         <td>
-          play.api.libs.json.JsValue.toString
+          javafx.scene.control.Labeled.setText
         </td>
         <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(json).\(cml.schema.Village.GOLD_FIELD).get.toString()
+          VillageViewController.this.playerLevelLabel.setText(cml.model.base.VillageMap.instance().get.villageName)
         </td>
       </tr><tr>
         <td>
           73
         </td>
         <td>
-          507
+          627
         </td>
         <td>
-          2662
+          2639
           -
-          2703
+          2697
         </td>
         <td>
           Apply
         </td>
         <td>
-          play.api.libs.json.JsValue.toString
+          javafx.scene.control.Labeled.setText
         </td>
         <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(json).\(cml.schema.Village.FOOD_FIELD).get.toString()
+          VillageViewController.this.goldLabel.setText(cml.model.base.VillageMap.instance().get.gold.toString())
+        </td>
+      </tr><tr>
+        <td>
+          73
+        </td>
+        <td>
+          626
+        </td>
+        <td>
+          2657
+          -
+          2696
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.toString
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.gold.toString()
         </td>
       </tr><tr>
         <td>
           74
         </td>
         <td>
-          508
+          629
         </td>
         <td>
-          2728
+          2703
           -
-          2777
+          2761
         </td>
         <td>
           Apply
         </td>
         <td>
-          play.api.libs.json.JsValue.toString
+          javafx.scene.control.Labeled.setText
         </td>
         <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(json).\(cml.schema.Village.VILLAGE_NAME_FIELD).get.toString()
+          VillageViewController.this.foodLabel.setText(cml.model.base.VillageMap.instance().get.food.toString())
+        </td>
+      </tr><tr>
+        <td>
+          74
+        </td>
+        <td>
+          628
+        </td>
+        <td>
+          2721
+          -
+          2760
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Any.toString
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.food.toString()
         </td>
       </tr><tr>
         <td>
           76
         </td>
         <td>
-          509
+          630
         </td>
         <td>
-          2785
+          2782
           -
-          2822
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Labeled.setText
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.playerLevelLabel.setText(villageName)
-        </td>
-      </tr><tr>
-        <td>
-          77
-        </td>
-        <td>
-          510
-        </td>
-        <td>
-          2828
-          -
-          2851
+          2794
         </td>
         <td>
           Apply
         </td>
         <td>
-          javafx.scene.control.Labeled.setText
+          javafx.scene.layout.GridPane.&lt;init&gt;
         </td>
         <td style="background: #F0ADAD">
-          VillageViewController.this.goldLabel.setText(gold)
+          new javafx.scene.layout.GridPane()
         </td>
       </tr><tr>
         <td>
-          78
+          76
         </td>
         <td>
-          511
+          631
         </td>
         <td>
-          2857
+          2769
           -
-          2880
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.control.Labeled.setText
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.foodLabel.setText(food)
-        </td>
-      </tr><tr>
-        <td>
-          81
-        </td>
-        <td>
-          514
-        </td>
-        <td>
-          2950
-          -
-          2964
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          x$1.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)
-        </td>
-      </tr><tr>
-        <td>
-          81
-        </td>
-        <td>
-          516
-        </td>
-        <td>
-          2907
-          -
-          2965
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.map
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(json).\\(cml.schema.Village.SINGLE_BUILDING_FIELD).map[play.api.libs.json.JsObject, Seq[play.api.libs.json.JsObject]](((x$1: play.api.libs.json.JsValue) =&gt; x$1.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)))(collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject])
-        </td>
-      </tr><tr>
-        <td>
-          81
-        </td>
-        <td>
-          513
-        </td>
-        <td>
-          2954
-          -
-          2954
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          play.api.libs.json.DefaultReads.JsObjectReads
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.Reads.JsObjectReads
-        </td>
-      </tr><tr>
-        <td>
-          81
-        </td>
-        <td>
-          512
-        </td>
-        <td>
-          2915
-          -
-          2944
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.SINGLE_BUILDING_FIELD
-        </td>
-        <td style="background: #F0ADAD">
-          cml.schema.Village.SINGLE_BUILDING_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          81
-        </td>
-        <td>
-          515
-        </td>
-        <td>
-          2949
-          -
-          2949
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          517
-        </td>
-        <td>
-          2994
-          -
-          3026
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.collection.generic.GenericCompanion.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.collection.mutable.MutableList.apply[cml.model.base.Structure]()
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          519
-        </td>
-        <td>
-          3040
-          -
-          3050
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.collection.immutable.StringLike.toInt
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.augmentString(food).toInt
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          518
-        </td>
-        <td>
-          3028
-          -
-          3038
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.collection.immutable.StringLike.toInt
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.augmentString(gold).toInt
-        </td>
-      </tr><tr>
-        <td>
-          82
-        </td>
-        <td>
-          520
-        </td>
-        <td>
-          2971
-          -
-          3064
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.model.base.VillageMap.initVillage
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.initVillage(scala.collection.mutable.MutableList.apply[cml.model.base.Structure](), scala.Predef.augmentString(gold).toInt, scala.Predef.augmentString(food).toInt, villageName)
-        </td>
-      </tr><tr>
-        <td>
-          84
-        </td>
-        <td>
-          534
-        </td>
-        <td>
-          3070
-          -
-          3440
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.flatMap
-        </td>
-        <td style="background: #F0ADAD">
-          buildings.flatMap[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((building: play.api.libs.json.JsObject) =&gt; json.this.JsValue.jsValueToJsLookup(building).\\(cml.schema.Village.BUILDING_TYPE_FIELD).map[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure), Seq[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)]](((buildType: play.api.libs.json.JsValue) =&gt; {
-  val specificStructure: Product with Serializable with cml.model.base.Structure = buildType.as[String](json.this.Reads.StringReads) match {
-    case cml.utils.ModelConfig.StructureType.CAVE =&gt; building.as[cml.model.base.Cave](base.this.Cave.caveReader)
-    case cml.utils.ModelConfig.StructureType.FARM =&gt; building.as[cml.model.base.Farm](base.this.Farm.farmReader)
-  };
-  scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure](buildType, specificStructure)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)]).map[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$2: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)) =&gt; (x$2: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure) @unchecked) match {
-  case (_1: play.api.libs.json.JsValue, _2: Product with Serializable with cml.model.base.Structure)(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)((buildType @ _), (specificStructure @ _)) =&gt; cml.model.base.VillageMap.instance().get.villageStructure.+=(specificStructure)
-}))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-        </td>
-      </tr><tr>
-        <td>
-          84
-        </td>
-        <td>
-          533
-        </td>
-        <td>
-          3092
-          -
-          3092
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]]
-        </td>
-      </tr><tr>
-        <td>
-          85
-        </td>
-        <td>
-          532
-        </td>
-        <td>
-          3113
-          -
-          3440
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.map
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(building).\\(cml.schema.Village.BUILDING_TYPE_FIELD).map[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure), Seq[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)]](((buildType: play.api.libs.json.JsValue) =&gt; {
-  val specificStructure: Product with Serializable with cml.model.base.Structure = buildType.as[String](json.this.Reads.StringReads) match {
-    case cml.utils.ModelConfig.StructureType.CAVE =&gt; building.as[cml.model.base.Cave](base.this.Cave.caveReader)
-    case cml.utils.ModelConfig.StructureType.FARM =&gt; building.as[cml.model.base.Farm](base.this.Farm.farmReader)
-  };
-  scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure](buildType, specificStructure)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)]).map[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$2: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)) =&gt; (x$2: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure) @unchecked) match {
-  case (_1: play.api.libs.json.JsValue, _2: Product with Serializable with cml.model.base.Structure)(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)((buildType @ _), (specificStructure @ _)) =&gt; cml.model.base.VillageMap.instance().get.villageStructure.+=(specificStructure)
-}))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-        </td>
-      </tr><tr>
-        <td>
-          85
-        </td>
-        <td>
-          528
-        </td>
-        <td>
-          3113
-          -
-          3113
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Tuple2.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure](buildType, specificStructure)
-        </td>
-      </tr><tr>
-        <td>
-          85
-        </td>
-        <td>
-          531
-        </td>
-        <td>
-          3123
-          -
-          3123
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]]
-        </td>
-      </tr><tr>
-        <td>
-          85
-        </td>
-        <td>
-          521
-        </td>
-        <td>
-          3138
-          -
-          3165
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.BUILDING_TYPE_FIELD
-        </td>
-        <td style="background: #F0ADAD">
-          cml.schema.Village.BUILDING_TYPE_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          85
-        </td>
-        <td>
-          529
-        </td>
-        <td>
-          3123
-          -
-          3123
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Structure)]
-        </td>
-      </tr><tr>
-        <td>
-          86
-        </td>
-        <td>
-          523
-        </td>
-        <td>
-          3194
-          -
-          3214
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          buildType.as[String](json.this.Reads.StringReads)
-        </td>
-      </tr><tr>
-        <td>
-          86
-        </td>
-        <td>
-          522
-        </td>
-        <td>
-          3206
-          -
-          3206
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          play.api.libs.json.DefaultReads.StringReads
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.Reads.StringReads
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          525
-        </td>
-        <td>
-          3271
-          -
-          3288
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          building.as[cml.model.base.Cave](base.this.Cave.caveReader)
-        </td>
-      </tr><tr>
-        <td>
-          87
-        </td>
-        <td>
-          524
-        </td>
-        <td>
-          3282
-          -
-          3282
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Cave.caveReader
-        </td>
-        <td style="background: #F0ADAD">
-          base.this.Cave.caveReader
-        </td>
-      </tr><tr>
-        <td>
-          88
-        </td>
-        <td>
-          527
-        </td>
-        <td>
-          3337
-          -
-          3354
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          building.as[cml.model.base.Farm](base.this.Farm.farmReader)
-        </td>
-      </tr><tr>
-        <td>
-          88
-        </td>
-        <td>
-          526
-        </td>
-        <td>
-          3348
-          -
-          3348
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Farm.farmReader
-        </td>
-        <td style="background: #F0ADAD">
-          base.this.Farm.farmReader
-        </td>
-      </tr><tr>
-        <td>
-          90
-        </td>
-        <td>
-          530
-        </td>
-        <td>
-          3377
-          -
-          3440
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.collection.mutable.MutableList.+=
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.instance().get.villageStructure.+=(specificStructure)
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          537
-        </td>
-        <td>
-          3454
-          -
-          3532
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.+
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Buildings ricevute dal server: &quot;.+(cml.model.base.VillageMap.instance().get.villageStructure)
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          536
-        </td>
-        <td>
-          3490
-          -
-          3532
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.VillageMap.villageStructure
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.instance().get.villageStructure
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          535
-        </td>
-        <td>
-          3454
-          -
-          3487
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Buildings ricevute dal server: &quot;
-        </td>
-      </tr><tr>
-        <td>
-          91
-        </td>
-        <td>
-          538
-        </td>
-        <td>
-          3446
-          -
-          3533
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Buildings ricevute dal server: &quot;.+(cml.model.base.VillageMap.instance().get.villageStructure))
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          541
-        </td>
-        <td>
-          3599
-          -
-          3613
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          x$3.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          540
-        </td>
-        <td>
-          3603
-          -
-          3603
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          play.api.libs.json.DefaultReads.JsObjectReads
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.Reads.JsObjectReads
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          543
-        </td>
-        <td>
-          3557
-          -
-          3614
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.map
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(json).\\(cml.schema.Village.SINGLE_HABITAT_FIELD).map[play.api.libs.json.JsObject, Seq[play.api.libs.json.JsObject]](((x$3: play.api.libs.json.JsValue) =&gt; x$3.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)))(collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject])
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          539
-        </td>
-        <td>
-          3565
-          -
-          3593
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.SINGLE_HABITAT_FIELD
-        </td>
-        <td style="background: #F0ADAD">
-          cml.schema.Village.SINGLE_HABITAT_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          93
-        </td>
-        <td>
-          542
-        </td>
-        <td>
-          3598
-          -
-          3598
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          546
-        </td>
-        <td>
-          3679
-          -
-          3679
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Tuple2.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Tuple2.apply[play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat](habitat, specificHabitat)
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          572
-        </td>
-        <td>
-          3666
-          -
-          4395
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.flatMap
-        </td>
-        <td style="background: #F0ADAD">
-          habitats.map[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat), Seq[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)]](((habitat: play.api.libs.json.JsObject) =&gt; {
-  val specificHabitat: cml.model.base.Habitat.Habitat = habitat.as[cml.model.base.Habitat.Habitat](base.this.Habitat.habitatReader);
-  scala.Tuple2.apply[play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat](habitat, specificHabitat)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)]).flatMap[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$6: (play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)) =&gt; (x$6: (play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat) @unchecked) match {
-  case (_1: play.api.libs.json.JsObject, _2: cml.model.base.Habitat.Habitat)(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)((habitat @ _), (specificHabitat @ _)) =&gt; json.this.JsValue.jsValueToJsLookup(habitat).\\(cml.schema.Village.SINGLE_CREATURE_FIELD).map[play.api.libs.json.JsObject, Seq[play.api.libs.json.JsObject]](((x$4: play.api.libs.json.JsValue) =&gt; x$4.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)))(collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]).flatMap[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((creature: play.api.libs.json.JsObject) =&gt; json.this.JsValue.jsValueToJsLookup(creature).\\(cml.schema.Village.CREATURE_TYPE_FIELD).map[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature), Seq[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]](((creatureType: play.api.libs.json.JsValue) =&gt; {
-  val specificCreature: Product with Serializable with cml.model.base.Creature = creatureType.as[String](json.this.Reads.StringReads) match {
-    case cml.utils.ModelConfig.Creature.DRAGON =&gt; creature.as[cml.model.creatures.FireCreature](creatures.this.FireCreature.reader)
-    case cml.utils.ModelConfig.Creature.GOLEM =&gt; creature.as[cml.model.creatures.EarthCreature](creatures.this.EarthCreature.reader)
-    case cml.utils.ModelConfig.Creature.GRIFFIN =&gt; creature.as[cml.model.creatures.AirCreature](creatures.this.AirCreature.reader)
-    case cml.utils.ModelConfig.Creature.WATERDEMON =&gt; creature.as[cml.model.creatures.WaterCreature](creatures.this.WaterCreature.reader)
-  };
-  scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature](creatureType, specificCreature)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]).map[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$5: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)) =&gt; (x$5: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature) @unchecked) match {
-    case (_1: play.api.libs.json.JsValue, _2: Product with Serializable with cml.model.base.Creature)(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)((creatureType @ _), (specificCreature @ _)) =&gt; {
-      specificHabitat.creatureList.+=(specificCreature);
-      cml.model.base.VillageMap.instance().get.villageStructure.+=(specificHabitat)
-    }
-  }))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-}))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          571
-        </td>
-        <td>
-          3687
-          -
-          3687
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]]
-        </td>
-      </tr><tr>
-        <td>
-          96
-        </td>
-        <td>
-          547
-        </td>
-        <td>
-          3687
-          -
-          3687
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)]
-        </td>
-      </tr><tr>
-        <td>
-          97
-        </td>
-        <td>
-          545
-        </td>
-        <td>
-          3725
-          -
-          3744
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          habitat.as[cml.model.base.Habitat.Habitat](base.this.Habitat.habitatReader)
-        </td>
-      </tr><tr>
-        <td>
-          97
-        </td>
-        <td>
-          544
-        </td>
-        <td>
-          3735
-          -
-          3735
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Habitat.habitatReader
-        </td>
-        <td style="background: #F0ADAD">
-          base.this.Habitat.habitatReader
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          550
-        </td>
-        <td>
-          3812
-          -
-          3826
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          x$4.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          549
-        </td>
-        <td>
-          3816
-          -
-          3816
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          play.api.libs.json.DefaultReads.JsObjectReads
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.Reads.JsObjectReads
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          570
-        </td>
-        <td>
-          3753
-          -
-          4395
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.flatMap
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(habitat).\\(cml.schema.Village.SINGLE_CREATURE_FIELD).map[play.api.libs.json.JsObject, Seq[play.api.libs.json.JsObject]](((x$4: play.api.libs.json.JsValue) =&gt; x$4.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)))(collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]).flatMap[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((creature: play.api.libs.json.JsObject) =&gt; json.this.JsValue.jsValueToJsLookup(creature).\\(cml.schema.Village.CREATURE_TYPE_FIELD).map[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature), Seq[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]](((creatureType: play.api.libs.json.JsValue) =&gt; {
-  val specificCreature: Product with Serializable with cml.model.base.Creature = creatureType.as[String](json.this.Reads.StringReads) match {
-    case cml.utils.ModelConfig.Creature.DRAGON =&gt; creature.as[cml.model.creatures.FireCreature](creatures.this.FireCreature.reader)
-    case cml.utils.ModelConfig.Creature.GOLEM =&gt; creature.as[cml.model.creatures.EarthCreature](creatures.this.EarthCreature.reader)
-    case cml.utils.ModelConfig.Creature.GRIFFIN =&gt; creature.as[cml.model.creatures.AirCreature](creatures.this.AirCreature.reader)
-    case cml.utils.ModelConfig.Creature.WATERDEMON =&gt; creature.as[cml.model.creatures.WaterCreature](creatures.this.WaterCreature.reader)
-  };
-  scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature](creatureType, specificCreature)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]).map[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$5: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)) =&gt; (x$5: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature) @unchecked) match {
-  case (_1: play.api.libs.json.JsValue, _2: Product with Serializable with cml.model.base.Creature)(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)((creatureType @ _), (specificCreature @ _)) =&gt; {
-    specificHabitat.creatureList.+=(specificCreature);
-    cml.model.base.VillageMap.instance().get.villageStructure.+=(specificHabitat)
-  }
-}))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          548
-        </td>
-        <td>
-          3777
-          -
-          3806
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.SINGLE_CREATURE_FIELD
-        </td>
-        <td style="background: #F0ADAD">
-          cml.schema.Village.SINGLE_CREATURE_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          569
-        </td>
-        <td>
-          3762
-          -
-          3762
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]]
-        </td>
-      </tr><tr>
-        <td>
-          98
-        </td>
-        <td>
-          551
-        </td>
-        <td>
-          3811
-          -
-          3811
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]
-        </td>
-      </tr><tr>
-        <td>
-          99
-        </td>
-        <td>
-          568
-        </td>
-        <td>
-          3836
-          -
-          4395
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.map
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(creature).\\(cml.schema.Village.CREATURE_TYPE_FIELD).map[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature), Seq[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]](((creatureType: play.api.libs.json.JsValue) =&gt; {
-  val specificCreature: Product with Serializable with cml.model.base.Creature = creatureType.as[String](json.this.Reads.StringReads) match {
-    case cml.utils.ModelConfig.Creature.DRAGON =&gt; creature.as[cml.model.creatures.FireCreature](creatures.this.FireCreature.reader)
-    case cml.utils.ModelConfig.Creature.GOLEM =&gt; creature.as[cml.model.creatures.EarthCreature](creatures.this.EarthCreature.reader)
-    case cml.utils.ModelConfig.Creature.GRIFFIN =&gt; creature.as[cml.model.creatures.AirCreature](creatures.this.AirCreature.reader)
-    case cml.utils.ModelConfig.Creature.WATERDEMON =&gt; creature.as[cml.model.creatures.WaterCreature](creatures.this.WaterCreature.reader)
-  };
-  scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature](creatureType, specificCreature)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]).map[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$5: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)) =&gt; (x$5: (play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature) @unchecked) match {
-  case (_1: play.api.libs.json.JsValue, _2: Product with Serializable with cml.model.base.Creature)(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)((creatureType @ _), (specificCreature @ _)) =&gt; {
-    specificHabitat.creatureList.+=(specificCreature);
-    cml.model.base.VillageMap.instance().get.villageStructure.+=(specificHabitat)
-  }
-}))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-        </td>
-      </tr><tr>
-        <td>
-          99
-        </td>
-        <td>
-          567
-        </td>
-        <td>
-          3849
-          -
-          3849
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]]
-        </td>
-      </tr><tr>
-        <td>
-          99
-        </td>
-        <td>
-          552
-        </td>
-        <td>
-          3864
-          -
-          3891
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.CREATURE_TYPE_FIELD
-        </td>
-        <td style="background: #F0ADAD">
-          cml.schema.Village.CREATURE_TYPE_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          99
-        </td>
-        <td>
-          564
-        </td>
-        <td>
-          3849
-          -
-          3849
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[(play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature)]
-        </td>
-      </tr><tr>
-        <td>
-          99
-        </td>
-        <td>
-          563
-        </td>
-        <td>
-          3836
-          -
-          3836
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Tuple2.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Tuple2.apply[play.api.libs.json.JsValue, Product with Serializable with cml.model.base.Creature](creatureType, specificCreature)
-        </td>
-      </tr><tr>
-        <td>
-          100
-        </td>
-        <td>
-          554
-        </td>
-        <td>
-          3919
-          -
-          3942
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          creatureType.as[String](json.this.Reads.StringReads)
-        </td>
-      </tr><tr>
-        <td>
-          100
-        </td>
-        <td>
-          553
-        </td>
-        <td>
-          3934
-          -
-          3934
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          play.api.libs.json.DefaultReads.StringReads
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.Reads.StringReads
-        </td>
-      </tr><tr>
-        <td>
-          101
-        </td>
-        <td>
-          555
-        </td>
-        <td>
-          4007
-          -
-          4007
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.creatures.FireCreature.reader
-        </td>
-        <td style="background: #F0ADAD">
-          creatures.this.FireCreature.reader
-        </td>
-      </tr><tr>
-        <td>
-          101
-        </td>
-        <td>
-          556
-        </td>
-        <td>
-          3996
-          -
-          4021
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          creature.as[cml.model.creatures.FireCreature](creatures.this.FireCreature.reader)
-        </td>
-      </tr><tr>
-        <td>
-          102
-        </td>
-        <td>
-          558
-        </td>
-        <td>
-          4066
-          -
-          4092
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          creature.as[cml.model.creatures.EarthCreature](creatures.this.EarthCreature.reader)
-        </td>
-      </tr><tr>
-        <td>
-          102
-        </td>
-        <td>
-          557
-        </td>
-        <td>
-          4077
-          -
-          4077
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.creatures.EarthCreature.reader
-        </td>
-        <td style="background: #F0ADAD">
-          creatures.this.EarthCreature.reader
-        </td>
-      </tr><tr>
-        <td>
-          103
-        </td>
-        <td>
-          559
-        </td>
-        <td>
-          4150
-          -
-          4150
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.creatures.AirCreature.reader
-        </td>
-        <td style="background: #F0ADAD">
-          creatures.this.AirCreature.reader
-        </td>
-      </tr><tr>
-        <td>
-          103
-        </td>
-        <td>
-          560
-        </td>
-        <td>
-          4139
-          -
-          4163
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          creature.as[cml.model.creatures.AirCreature](creatures.this.AirCreature.reader)
-        </td>
-      </tr><tr>
-        <td>
-          104
-        </td>
-        <td>
-          561
-        </td>
-        <td>
-          4224
-          -
-          4224
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.creatures.WaterCreature.reader
-        </td>
-        <td style="background: #F0ADAD">
-          creatures.this.WaterCreature.reader
-        </td>
-      </tr><tr>
-        <td>
-          104
-        </td>
-        <td>
-          562
-        </td>
-        <td>
-          4213
-          -
-          4239
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          creature.as[cml.model.creatures.WaterCreature](creatures.this.WaterCreature.reader)
-        </td>
-      </tr><tr>
-        <td>
-          107
-        </td>
-        <td>
-          565
-        </td>
-        <td>
-          4271
-          -
-          4319
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.collection.mutable.MutableList.+=
-        </td>
-        <td style="background: #F0ADAD">
-          specificHabitat.creatureList.+=(specificCreature)
-        </td>
-      </tr><tr>
-        <td>
-          108
-        </td>
-        <td>
-          566
-        </td>
-        <td>
-          4327
-          -
-          4388
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.collection.mutable.MutableList.+=
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.instance().get.villageStructure.+=(specificHabitat)
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          581
-        </td>
-        <td>
-          4422
-          -
-          4422
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)]
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          584
-        </td>
-        <td>
-          4401
-          -
-          4645
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          scala.collection.TraversableLike.map
-        </td>
-        <td style="background: #F0ADAD">
-          habitats.withFilter(((habitat: play.api.libs.json.JsObject) =&gt; json.this.JsValue.jsValueToJsLookup(habitat).\\(cml.schema.Village.SINGLE_CREATURE_FIELD).map[play.api.libs.json.JsObject, Seq[play.api.libs.json.JsObject]](((x$7: play.api.libs.json.JsValue) =&gt; x$7.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)))(collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]).isEmpty)).map[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat), Seq[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)]](((habitat: play.api.libs.json.JsObject) =&gt; {
-  val specificHabitat: cml.model.base.Habitat.Habitat = habitat.as[cml.model.base.Habitat.Habitat](base.this.Habitat.habitatReader);
-  scala.Tuple2.apply[play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat](habitat, specificHabitat)
-}))(collection.this.Seq.canBuildFrom[(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)]).map[scala.collection.mutable.MutableList[cml.model.base.Structure], Seq[scala.collection.mutable.MutableList[cml.model.base.Structure]]](((x$8: (play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)) =&gt; (x$8: (play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat) @unchecked) match {
-  case (_1: play.api.libs.json.JsObject, _2: cml.model.base.Habitat.Habitat)(play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat)((habitat @ _), (specificHabitat @ _)) =&gt; cml.model.base.VillageMap.instance().get.villageStructure.+=(specificHabitat)
-}))(collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]])
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          580
-        </td>
-        <td>
-          4414
-          -
-          4414
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Tuple2.apply
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Tuple2.apply[play.api.libs.json.JsObject, cml.model.base.Habitat.Habitat](habitat, specificHabitat)
-        </td>
-      </tr><tr>
-        <td>
-          111
-        </td>
-        <td>
-          583
-        </td>
-        <td>
-          4422
-          -
-          4422
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[scala.collection.mutable.MutableList[cml.model.base.Structure]]
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          577
-        </td>
-        <td>
-          4446
-          -
-          4515
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          scala.collection.SeqLike.isEmpty
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.JsValue.jsValueToJsLookup(habitat).\\(cml.schema.Village.SINGLE_CREATURE_FIELD).map[play.api.libs.json.JsObject, Seq[play.api.libs.json.JsObject]](((x$7: play.api.libs.json.JsValue) =&gt; x$7.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)))(collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]).isEmpty
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          576
-        </td>
-        <td>
-          4491
-          -
-          4491
-        </td>
-        <td>
-          TypeApply
-        </td>
-        <td>
-          scala.collection.Seq.canBuildFrom
-        </td>
-        <td style="background: #F0ADAD">
-          collection.this.Seq.canBuildFrom[play.api.libs.json.JsObject]
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          573
-        </td>
-        <td>
-          4457
-          -
-          4486
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.schema.Village.SINGLE_CREATURE_FIELD
-        </td>
-        <td style="background: #F0ADAD">
-          cml.schema.Village.SINGLE_CREATURE_FIELD
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          575
-        </td>
-        <td>
-          4492
-          -
-          4506
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          x$7.as[play.api.libs.json.JsObject](json.this.Reads.JsObjectReads)
-        </td>
-      </tr><tr>
-        <td>
-          112
-        </td>
-        <td>
-          574
-        </td>
-        <td>
-          4496
-          -
-          4496
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          play.api.libs.json.DefaultReads.JsObjectReads
-        </td>
-        <td style="background: #F0ADAD">
-          json.this.Reads.JsObjectReads
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          579
-        </td>
-        <td>
-          4542
-          -
-          4561
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          play.api.libs.json.JsReadable.as
-        </td>
-        <td style="background: #F0ADAD">
-          habitat.as[cml.model.base.Habitat.Habitat](base.this.Habitat.habitatReader)
-        </td>
-      </tr><tr>
-        <td>
-          113
-        </td>
-        <td>
-          578
-        </td>
-        <td>
-          4552
-          -
-          4552
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.Habitat.habitatReader
-        </td>
-        <td style="background: #F0ADAD">
-          base.this.Habitat.habitatReader
-        </td>
-      </tr><tr>
-        <td>
-          115
-        </td>
-        <td>
-          582
-        </td>
-        <td>
-          4584
-          -
-          4645
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.collection.mutable.MutableList.+=
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.instance().get.villageStructure.+=(specificHabitat)
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          585
-        </td>
-        <td>
-          4668
-          -
-          4711
-        </td>
-        <td>
-          Literal
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Buildings e Habitat ricevuti dal server: &quot;
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          588
-        </td>
-        <td>
-          4660
-          -
-          4757
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(&quot;Buildings e Habitat ricevuti dal server: &quot;.+(cml.model.base.VillageMap.instance().get.villageStructure))
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          587
-        </td>
-        <td>
-          4668
-          -
-          4756
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          java.lang.String.+
-        </td>
-        <td style="background: #F0ADAD">
-          &quot;Buildings e Habitat ricevuti dal server: &quot;.+(cml.model.base.VillageMap.instance().get.villageStructure)
-        </td>
-      </tr><tr>
-        <td>
-          118
-        </td>
-        <td>
-          586
-        </td>
-        <td>
-          4714
-          -
-          4756
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.model.base.VillageMap.villageStructure
-        </td>
-        <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.instance().get.villageStructure
-        </td>
-      </tr><tr>
-        <td>
-          120
-        </td>
-        <td>
-          590
-        </td>
-        <td>
-          4765
-          -
-          4790
+          2794
         </td>
         <td>
           Apply
@@ -2614,57 +895,15 @@
         </td>
       </tr><tr>
         <td>
-          120
+          77
         </td>
         <td>
-          589
+          633
         </td>
         <td>
-          4778
+          2800
           -
-          4790
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.layout.GridPane.&lt;init&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          new javafx.scene.layout.GridPane()
-        </td>
-      </tr><tr>
-        <td>
-          121
-        </td>
-        <td>
-          591
-        </td>
-        <td>
-          4834
-          -
-          4844
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.VillageViewController.villageMap
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.villageMap
-        </td>
-      </tr><tr>
-        <td>
-          121
-        </td>
-        <td>
-          592
-        </td>
-        <td>
-          4796
-          -
-          4845
+          2849
         </td>
         <td>
           Apply
@@ -2677,15 +916,36 @@
         </td>
       </tr><tr>
         <td>
-          122
+          77
         </td>
         <td>
-          594
+          632
         </td>
         <td>
-          4851
+          2838
           -
-          4884
+          2848
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.VillageViewController.villageMap
+        </td>
+        <td style="background: #F0ADAD">
+          VillageViewController.this.villageMap
+        </td>
+      </tr><tr>
+        <td>
+          78
+        </td>
+        <td>
+          635
+        </td>
+        <td>
+          2855
+          -
+          2888
         </td>
         <td>
           Apply
@@ -2698,15 +958,15 @@
         </td>
       </tr><tr>
         <td>
-          122
+          78
         </td>
         <td>
-          593
+          634
         </td>
         <td>
-          4874
+          2878
           -
-          4884
+          2888
         </td>
         <td>
           Select
@@ -2719,15 +979,36 @@
         </td>
       </tr><tr>
         <td>
-          125
+          79
         </td>
         <td>
-          596
+          636
         </td>
         <td>
-          4894
+          2936
           -
-          4953
+          2946
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.VillageViewController.villageMap
+        </td>
+        <td style="background: #F0ADAD">
+          VillageViewController.this.villageMap
+        </td>
+      </tr><tr>
+        <td>
+          79
+        </td>
+        <td>
+          637
+        </td>
+        <td>
+          2894
+          -
+          2953
         </td>
         <td>
           Apply
@@ -2740,57 +1021,15 @@
         </td>
       </tr><tr>
         <td>
-          125
+          81
         </td>
         <td>
-          595
+          639
         </td>
         <td>
-          4936
+          2961
           -
-          4946
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.VillageViewController.villageMap
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.villageMap
-        </td>
-      </tr><tr>
-        <td>
-          127
-        </td>
-        <td>
-          597
-        </td>
-        <td>
-          4977
-          -
-          4989
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.scene.layout.GridPane.&lt;init&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          new javafx.scene.layout.GridPane()
-        </td>
-      </tr><tr>
-        <td>
-          127
-        </td>
-        <td>
-          598
-        </td>
-        <td>
-          4961
-          -
-          4989
+          2989
         </td>
         <td>
           Apply
@@ -2803,15 +1042,36 @@
         </td>
       </tr><tr>
         <td>
-          128
+          81
         </td>
         <td>
-          600
+          638
         </td>
         <td>
-          4995
+          2977
           -
-          5053
+          2989
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.scene.layout.GridPane.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new javafx.scene.layout.GridPane()
+        </td>
+      </tr><tr>
+        <td>
+          82
+        </td>
+        <td>
+          641
+        </td>
+        <td>
+          2995
+          -
+          3053
         </td>
         <td>
           Apply
@@ -2824,15 +1084,15 @@
         </td>
       </tr><tr>
         <td>
-          128
+          82
         </td>
         <td>
-          599
+          640
         </td>
         <td>
-          5039
+          3039
           -
-          5052
+          3052
         </td>
         <td>
           Select
@@ -2845,15 +1105,36 @@
         </td>
       </tr><tr>
         <td>
-          129
+          83
         </td>
         <td>
-          602
+          642
         </td>
         <td>
-          5059
+          3084
           -
-          5097
+          3097
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.controller.fx.VillageViewController.buildingsMenu
+        </td>
+        <td style="background: #F0ADAD">
+          VillageViewController.this.buildingsMenu
+        </td>
+      </tr><tr>
+        <td>
+          83
+        </td>
+        <td>
+          643
+        </td>
+        <td>
+          3059
+          -
+          3097
         </td>
         <td>
           Apply
@@ -2866,57 +1147,15 @@
         </td>
       </tr><tr>
         <td>
-          129
+          84
         </td>
         <td>
-          601
+          645
         </td>
         <td>
-          5084
+          3103
           -
-          5097
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.VillageViewController.buildingsMenu
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.buildingsMenu
-        </td>
-      </tr><tr>
-        <td>
-          130
-        </td>
-        <td>
-          603
-        </td>
-        <td>
-          5147
-          -
-          5160
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.controller.fx.VillageViewController.buildingsMenu
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.buildingsMenu
-        </td>
-      </tr><tr>
-        <td>
-          130
-        </td>
-        <td>
-          604
-        </td>
-        <td>
-          5103
-          -
-          5167
+          3167
         </td>
         <td>
           Apply
@@ -2929,36 +1168,36 @@
         </td>
       </tr><tr>
         <td>
-          132
+          84
         </td>
         <td>
-          615
+          644
         </td>
         <td>
-          5198
+          3147
           -
-          5201
+          3160
         </td>
         <td>
-          Apply
+          Select
         </td>
         <td>
-          cml.controller.fx.VillageViewController.$anon.&lt;init&gt;
+          cml.controller.fx.VillageViewController.buildingsMenu
         </td>
         <td style="background: #F0ADAD">
-          new $anon()
+          VillageViewController.this.buildingsMenu
         </td>
       </tr><tr>
         <td>
-          132
+          86
         </td>
         <td>
-          616
+          657
         </td>
         <td>
-          5175
+          3175
           -
-          5550
+          3487
         </td>
         <td>
           Apply
@@ -2976,10 +1215,9 @@
     private[this] var lastUpdate: Long = 0L;
     &lt;accessor&gt; private def lastUpdate: Long = $anon.this.lastUpdate;
     &lt;accessor&gt; private def lastUpdate_=(x$1: Long): Unit = $anon.this.lastUpdate = x$1;
-    override def handle(now: Long): Unit = if (now.-($anon.this.lastUpdate)./(1000000).&gt;(2000))
+    override def handle(now: Long): Unit = if (VillageViewController.this.timeToUpdate.apply(now, $anon.this.lastUpdate))
       {
-        val villageStructures: scala.collection.mutable.MutableList[cml.model.base.Structure] = cml.model.base.VillageMap.instance().get.villageStructure;
-        villageStructures.foreach[Unit](((s: cml.model.base.Structure) =&gt; s.resource.inc(s.level)));
+        cml.model.base.VillageMap.instance().get.villageStructure.foreach[Unit](((s: cml.model.base.Structure) =&gt; s.resource.inc(s.level)));
         $anon.this.lastUpdate_=(now)
       }
     else
@@ -2990,15 +1228,36 @@
         </td>
       </tr><tr>
         <td>
-          134
+          86
         </td>
         <td>
-          605
+          656
         </td>
         <td>
-          5247
+          3198
           -
-          5249
+          3201
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.fx.VillageViewController.$anon.&lt;init&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          new $anon()
+        </td>
+      </tr><tr>
+        <td>
+          87
+        </td>
+        <td>
+          646
+        </td>
+        <td>
+          3245
+          -
+          3247
         </td>
         <td>
           Literal
@@ -3011,82 +1270,15 @@
         </td>
       </tr><tr>
         <td>
-          137
+          89
         </td>
         <td>
-          612
+          654
         </td>
         <td>
-          5349
+          3305
           -
-          5534
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          {
-  val villageStructures: scala.collection.mutable.MutableList[cml.model.base.Structure] = cml.model.base.VillageMap.instance().get.villageStructure;
-  villageStructures.foreach[Unit](((s: cml.model.base.Structure) =&gt; s.resource.inc(s.level)));
-  $anon.this.lastUpdate_=(now)
-}
-        </td>
-      </tr><tr>
-        <td>
-          137
-        </td>
-        <td>
-          606
-        </td>
-        <td>
-          5312
-          -
-          5347
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Long.&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          now.-($anon.this.lastUpdate)./(1000000).&gt;(2000)
-        </td>
-      </tr><tr>
-        <td>
-          137
-        </td>
-        <td>
-          614
-        </td>
-        <td>
-          5309
-          -
-          5309
-        </td>
-        <td>
-          Block
-        </td>
-        <td>
-          &lt;nosymbol&gt;
-        </td>
-        <td style="background: #F0ADAD">
-          ()
-        </td>
-      </tr><tr>
-        <td>
-          137
-        </td>
-        <td>
-          613
-        </td>
-        <td>
-          5309
-          -
-          5309
+          3305
         </td>
         <td>
           Literal
@@ -3099,36 +1291,123 @@
         </td>
       </tr><tr>
         <td>
-          138
+          89
         </td>
         <td>
-          607
+          648
         </td>
         <td>
-          5386
+          3308
           -
-          5428
+          3337
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.Function2.apply
+        </td>
+        <td style="background: #F0ADAD">
+          VillageViewController.this.timeToUpdate.apply(now, $anon.this.lastUpdate)
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          653
+        </td>
+        <td>
+          3339
+          -
+          3471
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          {
+  cml.model.base.VillageMap.instance().get.villageStructure.foreach[Unit](((s: cml.model.base.Structure) =&gt; s.resource.inc(s.level)));
+  $anon.this.lastUpdate_=(now)
+}
+        </td>
+      </tr><tr>
+        <td>
+          89
+        </td>
+        <td>
+          647
+        </td>
+        <td>
+          3326
+          -
+          3336
         </td>
         <td>
           Select
         </td>
         <td>
-          cml.model.base.VillageMap.villageStructure
+          cml.controller.fx.VillageViewController.$anon.lastUpdate
         </td>
         <td style="background: #F0ADAD">
-          cml.model.base.VillageMap.instance().get.villageStructure
+          $anon.this.lastUpdate
         </td>
       </tr><tr>
         <td>
-          139
+          89
         </td>
         <td>
-          609
+          655
         </td>
         <td>
-          5471
+          3305
           -
-          5494
+          3305
+        </td>
+        <td>
+          Block
+        </td>
+        <td>
+          &lt;nosymbol&gt;
+        </td>
+        <td style="background: #F0ADAD">
+          ()
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          651
+        </td>
+        <td>
+          3352
+          -
+          3432
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          scala.collection.LinearSeqOptimized.foreach
+        </td>
+        <td style="background: #F0ADAD">
+          cml.model.base.VillageMap.instance().get.villageStructure.foreach[Unit](((s: cml.model.base.Structure) =&gt; s.resource.inc(s.level)))
+        </td>
+      </tr><tr>
+        <td>
+          90
+        </td>
+        <td>
+          650
+        </td>
+        <td>
+          3408
+          -
+          3431
         </td>
         <td>
           Apply
@@ -3141,15 +1420,15 @@
         </td>
       </tr><tr>
         <td>
-          139
+          90
         </td>
         <td>
-          608
+          649
         </td>
         <td>
-          5486
+          3423
           -
-          5493
+          3430
         </td>
         <td>
           Select
@@ -3162,36 +1441,15 @@
         </td>
       </tr><tr>
         <td>
-          139
+          91
         </td>
         <td>
-          610
+          652
         </td>
         <td>
-          5440
+          3444
           -
-          5495
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.collection.LinearSeqOptimized.foreach
-        </td>
-        <td style="background: #F0ADAD">
-          villageStructures.foreach[Unit](((s: cml.model.base.Structure) =&gt; s.resource.inc(s.level)))
-        </td>
-      </tr><tr>
-        <td>
-          140
-        </td>
-        <td>
-          611
-        </td>
-        <td>
-          5507
-          -
-          5523
+          3460
         </td>
         <td>
           Apply
@@ -3204,15 +1462,15 @@
         </td>
       </tr><tr>
         <td>
-          144
+          95
         </td>
         <td>
-          617
+          658
         </td>
         <td>
-          5556
+          3493
           -
-          5584
+          3521
         </td>
         <td>
           Apply
@@ -3225,57 +1483,15 @@
         </td>
       </tr><tr>
         <td>
-          147
+          99
         </td>
         <td>
-          618
+          660
         </td>
         <td>
-          5651
+          3621
           -
-          5676
-        </td>
-        <td>
-          Select
-        </td>
-        <td>
-          cml.utils.ViewConfig.AuthenticationWindow.path
-        </td>
-        <td style="background: #F0ADAD">
-          cml.utils.ViewConfig.AuthenticationWindow.path
-        </td>
-      </tr><tr>
-        <td>
-          147
-        </td>
-        <td>
-          620
-        </td>
-        <td>
-          5631
-          -
-          5732
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.view.ViewSwitch.activate
-        </td>
-        <td style="background: #F0ADAD">
-          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.AuthenticationWindow.path, VillageViewController.this.deleteMenuItem.getParentPopup().getOwnerWindow().getScene())
-        </td>
-      </tr><tr>
-        <td>
-          147
-        </td>
-        <td>
-          619
-        </td>
-        <td>
-          5678
-          -
-          5731
+          3674
         </td>
         <td>
           Apply
@@ -3288,15 +1504,57 @@
         </td>
       </tr><tr>
         <td>
-          150
+          99
         </td>
         <td>
-          621
+          659
         </td>
         <td>
-          5772
+          3594
           -
-          5799
+          3619
+        </td>
+        <td>
+          Select
+        </td>
+        <td>
+          cml.utils.ViewConfig.AuthenticationWindow.path
+        </td>
+        <td style="background: #F0ADAD">
+          cml.utils.ViewConfig.AuthenticationWindow.path
+        </td>
+      </tr><tr>
+        <td>
+          99
+        </td>
+        <td>
+          661
+        </td>
+        <td>
+          3574
+          -
+          3675
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.view.ViewSwitch.activate
+        </td>
+        <td style="background: #F0ADAD">
+          cml.view.ViewSwitch.activate(cml.utils.ViewConfig.AuthenticationWindow.path, VillageViewController.this.deleteMenuItem.getParentPopup().getOwnerWindow().getScene())
+        </td>
+      </tr><tr>
+        <td>
+          102
+        </td>
+        <td>
+          662
+        </td>
+        <td>
+          3715
+          -
+          3742
         </td>
         <td>
           Apply
@@ -3309,78 +1567,15 @@
         </td>
       </tr><tr>
         <td>
-          151
+          103
         </td>
         <td>
-          624
+          663
         </td>
         <td>
-          5827
+          3748
           -
-          5835
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          cml.controller.messages.AuthenticationRequest.Logout.apply
-        </td>
-        <td style="background: #F0ADAD">
-          cml.controller.messages.AuthenticationRequest.Logout.apply()
-        </td>
-      </tr><tr>
-        <td>
-          151
-        </td>
-        <td>
-          623
-        </td>
-        <td>
-          5805
-          -
-          5824
-        </td>
-        <td>
-          ApplyImplicitView
-        </td>
-        <td>
-          akka.actor.ActorSelection.toScala
-        </td>
-        <td style="background: #F0ADAD">
-          actor.this.ActorSelection.toScala(VillageViewController.this.authenticationActor)
-        </td>
-      </tr><tr>
-        <td>
-          151
-        </td>
-        <td>
-          626
-        </td>
-        <td>
-          5805
-          -
-          5835
-        </td>
-        <td>
-          ApplyToImplicitArgs
-        </td>
-        <td>
-          akka.actor.ScalaActorSelection.!
-        </td>
-        <td style="background: #F0ADAD">
-          qual$3.!(x$13)(x$14)
-        </td>
-      </tr><tr>
-        <td>
-          151
-        </td>
-        <td>
-          622
-        </td>
-        <td>
-          5805
-          -
-          5824
+          3767
         </td>
         <td>
           Select
@@ -3393,15 +1588,15 @@
         </td>
       </tr><tr>
         <td>
-          151
+          103
         </td>
         <td>
-          625
+          666
         </td>
         <td>
-          5825
+          3768
           -
-          5825
+          3768
         </td>
         <td>
           Apply
@@ -3410,19 +1605,103 @@
           akka.actor.ScalaActorSelection.!$default$2
         </td>
         <td style="background: #F0ADAD">
-          qual$3.!$default$2(x$13)
+          qual$3.!$default$2(x$5)
         </td>
       </tr><tr>
         <td>
-          152
+          103
         </td>
         <td>
-          627
+          665
         </td>
         <td>
-          5861
+          3770
           -
-          5886
+          3778
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          cml.controller.messages.AuthenticationRequest.Logout.apply
+        </td>
+        <td style="background: #F0ADAD">
+          cml.controller.messages.AuthenticationRequest.Logout.apply()
+        </td>
+      </tr><tr>
+        <td>
+          103
+        </td>
+        <td>
+          664
+        </td>
+        <td>
+          3748
+          -
+          3767
+        </td>
+        <td>
+          ApplyImplicitView
+        </td>
+        <td>
+          akka.actor.ActorSelection.toScala
+        </td>
+        <td style="background: #F0ADAD">
+          actor.this.ActorSelection.toScala(VillageViewController.this.authenticationActor)
+        </td>
+      </tr><tr>
+        <td>
+          103
+        </td>
+        <td>
+          667
+        </td>
+        <td>
+          3748
+          -
+          3778
+        </td>
+        <td>
+          ApplyToImplicitArgs
+        </td>
+        <td>
+          akka.actor.ScalaActorSelection.!
+        </td>
+        <td style="background: #F0ADAD">
+          qual$3.!(x$5)(x$6)
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          669
+        </td>
+        <td>
+          3831
+          -
+          3884
+        </td>
+        <td>
+          Apply
+        </td>
+        <td>
+          javafx.stage.Window.getScene
+        </td>
+        <td style="background: #F0ADAD">
+          VillageViewController.this.logoutMenuItem.getParentPopup().getOwnerWindow().getScene()
+        </td>
+      </tr><tr>
+        <td>
+          104
+        </td>
+        <td>
+          668
+        </td>
+        <td>
+          3804
+          -
+          3829
         </td>
         <td>
           Select
@@ -3435,15 +1714,15 @@
         </td>
       </tr><tr>
         <td>
-          152
+          104
         </td>
         <td>
-          629
+          670
         </td>
         <td>
-          5841
+          3784
           -
-          5942
+          3885
         </td>
         <td>
           Apply
@@ -3453,27 +1732,6 @@
         </td>
         <td style="background: #F0ADAD">
           cml.view.ViewSwitch.activate(cml.utils.ViewConfig.AuthenticationWindow.path, VillageViewController.this.logoutMenuItem.getParentPopup().getOwnerWindow().getScene())
-        </td>
-      </tr><tr>
-        <td>
-          152
-        </td>
-        <td>
-          628
-        </td>
-        <td>
-          5888
-          -
-          5941
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          javafx.stage.Window.getScene
-        </td>
-        <td style="background: #F0ADAD">
-          VillageViewController.this.logoutMenuItem.getParentPopup().getOwnerWindow().getScene()
         </td>
       </tr>
     </table>

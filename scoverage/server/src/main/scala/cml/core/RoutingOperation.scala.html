@@ -30,7 +30,7 @@
 </span>6 <span style=''>import scala.concurrent.Future
 </span>7 <span style=''>
 </span>8 <span style=''>/**
-</span>9 <span style=''>  * This trait is useful to implement AuthenticationVerticle
+</span>9 <span style=''>  * This trait is useful to implement services
 </span>10 <span style=''>  *
 </span>11 <span style=''>  * @author Chiara Volonnino
 </span>12 <span style=''>  */
@@ -38,56 +38,54 @@
 </span>14 <span style=''>
 </span>15 <span style=''>  /**
 </span>16 <span style=''>    * Get the header of the request
-</span>17 <span style=''>    *
-</span>18 <span style=''>    * @param routingContext is implicit routing context
-</span>19 <span style=''>    * @return A Optional with the header or None
-</span>20 <span style=''>    */
-</span>21 <span style=''>  def getRequestAndHeader(implicit routingContext: RoutingContext): Option[String] = {
-</span>22 <span style=''>    </span><span style='background: #AEF1AE'>routingContext.request().getHeader(HttpHeaderNames.AUTHORIZATION.toString())</span><span style=''>
-</span>23 <span style=''>  }
-</span>24 <span style=''>
-</span>25 <span style=''>  /**
-</span>26 <span style=''>    * Get the body of the request as a String
-</span>27 <span style=''>    * @param routingContext implicit routing context
-</span>28 <span style=''>    * @return A Option with the body as String or None
-</span>29 <span style=''>    */
-</span>30 <span style=''>  def getRequestAndBody(implicit routingContext: RoutingContext): Option[String] = {
-</span>31 <span style=''>    </span><span style='background: #F0ADAD'>println(routingContext.getBodyAsString())</span><span style=''>
-</span>32 <span style=''>    </span><span style='background: #F0ADAD'>routingContext.getBodyAsString()</span><span style=''>
-</span>33 <span style=''>  }
-</span>34 <span style=''>
-</span>35 <span style=''>  /**
-</span>36 <span style=''>    * Get a response
-</span>37 <span style=''>    *
-</span>38 <span style=''>    * @param routingContext routing context
-</span>39 <span style=''>    * @return the response
-</span>40 <span style=''>    */
-</span>41 <span style=''>  def getResponse(implicit routingContext: RoutingContext): HttpServerResponse = {
-</span>42 <span style=''>    </span><span style='background: #AEF1AE'>routingContext.response</span><span style=''>
-</span>43 <span style=''>  }
-</span>44 <span style=''>
-</span>45 <span style=''>  /**
-</span>46 <span style=''>    * Send a response to client
-</span>47 <span style=''>    *
-</span>48 <span style=''>    * @param httpCode http code response
-</span>49 <span style=''>    * @param message to send to the client
-</span>50 <span style=''>    */
-</span>51 <span style=''>  def sendResponse(httpCode: HttpResponseStatus, message: String)(implicit routingContext: RoutingContext): Unit = {
-</span>52 <span style=''>    val code = </span><span style='background: #AEF1AE'>httpCode.code()</span><span style=''>
-</span>53 <span style=''>    </span><span style='background: #AEF1AE'>getResponse.setStatusCode(code).end(message)</span><span style=''>
-</span>54 <span style=''>  }
-</span>55 <span style=''>
-</span>56 <span style=''>
-</span>57 <span style=''>  //TODO abstract def validate(input: String): Future[String]  ---&gt; da spostare in altra classe
-</span>58 <span style=''>
-</span>59 <span style=''>  //TODO da implementare in VillageVerticle per controllo user - sicuro da modificare
-</span>60 <span style=''>  def checkAuthenticationHandler(implicit routingContext: RoutingContext): Future[String] =
-</span>61 <span style=''>    </span><span style='background: #F0ADAD'>getRequestAndHeader</span><span style=''> match {
-</span>62 <span style=''>      case Some(authenticationHeader) =&gt; </span><span style='background: #F0ADAD'>Future.successful(authenticationHeader)</span><span style=''>
-</span>63 <span style=''>      case None =&gt; </span><span style='background: #F0ADAD'>Future.failed(new Exception)</span><span style=''>
-</span>64 <span style=''>    }
-</span>65 <span style=''>}
-</span>66 <span style=''>
+</span>17 <span style=''>    * @param routingContext implicit routing context
+</span>18 <span style=''>    * @return A Optional with the header or None
+</span>19 <span style=''>    */
+</span>20 <span style=''>  def getRequestAndHeader(implicit routingContext: RoutingContext): Option[String] = {
+</span>21 <span style=''>    </span><span style='background: #AEF1AE'>routingContext.request().getHeader(HttpHeaderNames.AUTHORIZATION.toString())</span><span style=''>
+</span>22 <span style=''>  }
+</span>23 <span style=''>
+</span>24 <span style=''>  /**
+</span>25 <span style=''>    * Get the body of the request as a String
+</span>26 <span style=''>    * @param routingContext implicit routing context
+</span>27 <span style=''>    * @return A Option with the body as String or None
+</span>28 <span style=''>    */
+</span>29 <span style=''>  def getRequestAndBody(implicit routingContext: RoutingContext): Option[String] = {
+</span>30 <span style=''>    </span><span style='background: #F0ADAD'>routingContext.getBodyAsString()</span><span style=''>
+</span>31 <span style=''>  }
+</span>32 <span style=''>
+</span>33 <span style=''>  /**
+</span>34 <span style=''>    * Get a response
+</span>35 <span style=''>    * @param routingContext implicit routing context
+</span>36 <span style=''>    * @return the server response
+</span>37 <span style=''>    */
+</span>38 <span style=''>  def getResponse(implicit routingContext: RoutingContext): HttpServerResponse = {
+</span>39 <span style=''>    </span><span style='background: #AEF1AE'>routingContext.response</span><span style=''>
+</span>40 <span style=''>  }
+</span>41 <span style=''>
+</span>42 <span style=''>  /**
+</span>43 <span style=''>    * Send a response to client
+</span>44 <span style=''>    * @param httpCode http code response
+</span>45 <span style=''>    * @param message to send to the client
+</span>46 <span style=''>    * @param routingContext implicit routing context
+</span>47 <span style=''>    */
+</span>48 <span style=''>  def sendResponse(httpCode: HttpResponseStatus, message: String)(implicit routingContext: RoutingContext): Unit = {
+</span>49 <span style=''>    val code = </span><span style='background: #AEF1AE'>httpCode.code()</span><span style=''>
+</span>50 <span style=''>    </span><span style='background: #AEF1AE'>getResponse.setStatusCode(code).end(message)</span><span style=''>
+</span>51 <span style=''>  }
+</span>52 <span style=''>
+</span>53 <span style=''>  /**
+</span>54 <span style=''>    * Check if the handler is correct
+</span>55 <span style=''>    * @param routingContext implicit routing context
+</span>56 <span style=''>    * @return handler
+</span>57 <span style=''>    */
+</span>58 <span style=''>  def checkAuthenticationHandler(implicit routingContext: RoutingContext): Future[String] =
+</span>59 <span style=''>    </span><span style='background: #F0ADAD'>getRequestAndHeader</span><span style=''> match {
+</span>60 <span style=''>      case Some(authenticationHeader) =&gt; </span><span style='background: #F0ADAD'>Future.successful(authenticationHeader)</span><span style=''>
+</span>61 <span style=''>      case None =&gt; </span><span style='background: #F0ADAD'>Future.failed(new Exception)</span><span style=''>
+</span>62 <span style=''>    }
+</span>63 <span style=''>}
+</span>64 <span style=''>
 </span></pre>
           </div>
           <div class="tab-pane" id="statementlist">
@@ -101,15 +99,15 @@
         <th>Code</th>
       </tr><tr>
         <td>
-          22
+          21
         </td>
         <td>
-          35
+          31
         </td>
         <td>
-          620
+          596
           -
-          696
+          672
         </td>
         <td>
           Apply
@@ -122,15 +120,15 @@
         </td>
       </tr><tr>
         <td>
-          22
+          21
         </td>
         <td>
-          34
+          30
         </td>
         <td>
-          655
+          631
           -
-          695
+          671
         </td>
         <td>
           Apply
@@ -143,57 +141,15 @@
         </td>
       </tr><tr>
         <td>
-          31
+          30
         </td>
-        <td>
-          37
-        </td>
-        <td>
-          967
-          -
-          1008
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          scala.Predef.println
-        </td>
-        <td style="background: #F0ADAD">
-          scala.Predef.println(routingContext.getBodyAsString())
-        </td>
-      </tr><tr>
-        <td>
-          31
-        </td>
-        <td>
-          36
-        </td>
-        <td>
-          975
-          -
-          1007
-        </td>
-        <td>
-          Apply
-        </td>
-        <td>
-          io.vertx.scala.ext.web.RoutingContext.getBodyAsString
-        </td>
-        <td style="background: #F0ADAD">
-          routingContext.getBodyAsString()
-        </td>
-      </tr><tr>
         <td>
           32
         </td>
         <td>
-          38
-        </td>
-        <td>
-          1014
+          943
           -
-          1046
+          975
         </td>
         <td>
           Apply
@@ -206,15 +162,15 @@
         </td>
       </tr><tr>
         <td>
-          42
-        </td>
-        <td>
           39
         </td>
         <td>
-          1260
+          33
+        </td>
+        <td>
+          1198
           -
-          1283
+          1221
         </td>
         <td>
           Apply
@@ -227,15 +183,15 @@
         </td>
       </tr><tr>
         <td>
-          52
+          49
         </td>
         <td>
-          40
+          34
         </td>
         <td>
-          1566
+          1551
           -
-          1581
+          1566
         </td>
         <td>
           Apply
@@ -248,15 +204,15 @@
         </td>
       </tr><tr>
         <td>
-          53
+          50
         </td>
         <td>
-          41
+          35
         </td>
         <td>
-          1587
+          1572
           -
-          1631
+          1616
         </td>
         <td>
           Apply
@@ -269,15 +225,15 @@
         </td>
       </tr><tr>
         <td>
-          61
+          59
         </td>
         <td>
-          42
+          36
         </td>
         <td>
-          1925
+          1853
           -
-          1944
+          1872
         </td>
         <td>
           ApplyToImplicitArgs
@@ -290,15 +246,15 @@
         </td>
       </tr><tr>
         <td>
-          62
+          60
         </td>
         <td>
-          43
+          37
         </td>
         <td>
-          1995
+          1923
           -
-          2034
+          1962
         </td>
         <td>
           Apply
@@ -311,15 +267,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          61
         </td>
         <td>
-          44
+          38
         </td>
         <td>
-          2069
+          1997
           -
-          2082
+          2010
         </td>
         <td>
           Apply
@@ -332,15 +288,15 @@
         </td>
       </tr><tr>
         <td>
-          63
+          61
         </td>
         <td>
-          45
+          39
         </td>
         <td>
-          2055
+          1983
           -
-          2083
+          2011
         </td>
         <td>
           Apply
