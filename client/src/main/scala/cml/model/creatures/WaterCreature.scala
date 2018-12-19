@@ -7,8 +7,8 @@ import play.api.libs.json.Json
 
 /**
   * This class models a Water Demon
-  * @param creatureName name of the Water Demon
-  * @param creatureLevel set the Water Demon level
+  * @param creature_name name of the Water Demon
+  * @param creature_level set the Water Demon level
   * @author Filippo Portolani, (edited by) ecavina
   */
 

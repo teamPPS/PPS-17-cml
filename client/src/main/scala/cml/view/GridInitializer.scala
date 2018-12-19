@@ -29,10 +29,22 @@ trait GridInitializer {
 
 }
 
+/**
+  * Trait for setup grid pane
+  */
 trait Setup {
+
+  /**
+    * Configure a new grid
+    * @param grid grid id
+    * @return new grid configuration
+    */
   def configure(grid: GridPane): GridPane
 }
 
+/**
+  * Object setup village map
+  */
 object Setup {
 
   val MapSide = 10
@@ -42,13 +54,11 @@ object Setup {
 
       def createTile(description: String, set: Set[Tile]): ImageView =  {
         val image: ImageView = new ImageView()
-
         image.setImage(
           set.filter(t => t.description.equals(description))
             .head
             .imageSprite
-            .snapshot(new SnapshotParameters, null)
-        )
+            .snapshot(new SnapshotParameters, null))
         image
       }
 
@@ -59,7 +69,7 @@ object Setup {
           .imageSprite
           .snapshot(new SnapshotParameters(), null)
       )
-      val baseTile = terrainImage //TODO mettere a posto Tile.scala in modo che baseTile e Tile siano accumunabili ad un interfaccia comune
+      val baseTile = terrainImage
 
       loop(0, MapSide) foreach {
         case(x, y) =>
@@ -101,6 +111,9 @@ object Setup {
   }
 }
 
+/**
+  * Object for initialize a village grid
+  */
 object BaseGridInitializer extends GridInitializer {
 
   private def setupGrid(grid: GridPane, setup: Setup): Unit = {

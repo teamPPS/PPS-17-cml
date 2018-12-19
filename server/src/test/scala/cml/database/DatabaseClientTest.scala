@@ -3,68 +3,97 @@ package cml.database
 import java.util.concurrent.CountDownLatch
 
 import cml.database.utils.Configuration.DbConfig
-import cml.schema.User
-import cml.services.village.utils.VillageConfig.{Building, Creature, Habitat, Village}
-import org.scalatest.AsyncFunSuite
+import cml.schema.User.{USERNAME, PASSWORD}
+import cml.schema.Village._
+import org.scalatest.{AsyncFunSuite, BeforeAndAfter, BeforeAndAfterAll}
 import org.mongodb.scala.Document
-
-import scala.util.{Failure, Success}
 
 /**
   * Test for DatabaseClient class
   *
-  * @author Filippo Portolani
+  * @author Filippo Portolani, ecavina
   */
-class DatabaseClientTest extends AsyncFunSuite {
+class DatabaseClientTest extends AsyncFunSuite with BeforeAndAfter {
 
-//  test("testDatabaseConnection") {
-//
-//    val usersCollection: DatabaseClient = DatabaseClient(DbConfig.usersColl)
-//    val villageCollection: DatabaseClient = DatabaseClient(DbConfig.villageColl)
-//
-//    val doc: Document = Document("_id" -> 0, "name" -> "prova")
-//    val userDoc: Document = Document(User.USERNAME -> "CMLuser", User.PASSWORD -> "pps")
-//
-//    val villageDoc: Document = Document(Village.NAME -> "PPSvillage", Village.USERNAME -> "CMLuser", Village.FOOD -> 10, Village.GOLD -> 100,
-//      Village.BUILDING -> Document(Building.ID -> 0, Building.TYPE -> "farm", Building.LEVEL -> 0),
-//      Village.HABITAT -> Document(Habitat.ID -> 0, Habitat.LEVEL -> 0, Habitat.ELEMENT -> "fire",
-//        Habitat.CREATURE -> Document(Creature.ID -> 0, Creature.NAME -> "fireCreature", Creature.LEVEL -> 0, Creature.ELEMENT -> "fire")))
-//
-//    val updateQuery: Document = Document("$set" -> Document(User.USERNAME -> "PPS"))
-//
-//    val latch: CountDownLatch = new CountDownLatch(1)
-//
-//    usersCollection.insert(userDoc) onComplete {
-//      case Success(result) => println("Insertion SUCCESS " + result)
-//      case Failure(error) => println("Insertion FAILURE " + error)
-//    }
-//
-//    latch countDown()
-//
-//    //
-//    //    villageCollection.insert(villageDoc) onComplete{
-//    //      case Success(result) => println("Insertion SUCCESS "+result)
-//    //      case Failure(error) => println("Insertion FAILURE "+error)
-//    //    }
-//    //
-//    //    usersCollection.find(userDoc) onComplete {
-//    //      case Success(result) => println("Find SUCCESS "+result)
-//    //      case Failure(error) => println("Find FAILURE "+error)
-//    //    }
-//    //
-//    //    usersCollection.delete(userDoc) onComplete {
-//    //      case Success(result) => println("Deletion SUCCESS"+result)
-//    //      case Failure(error) => println("Deletion FAILURE"+error)
-//    //    }
-//    //
-//    //    usersCollection.update(userDoc, updateQuery) onComplete {
-//    //      case Success(result) => println("Update SUCCESS "+result)
-//    //      case Failure(error) => println("Update FAILURE "+error)
-//    //
-//    //    }
-//
-//    latch await()
-//    assert(1 == 1)
-//  }
+  var userCollection: DatabaseClient = _
+  var villageCollection: DatabaseClient = _
+  var latch: CountDownLatch = _
+  val username = "CMLUser"
+  val password = "cml"
+  val newBuildingPosition = "Position(200,200)"
+
+  val userDoc: Document = Document(
+    USERNAME -> username,
+    PASSWORD -> password
+  )
+
+  val userDocID: Document = Document(
+    USERNAME -> username
+  )
+
+  val villageDoc: Document = Document(
+    VILLAGE_NAME_FIELD -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
+    USERNAME -> username,
+    FOOD_FIELD -> 100,
+    GOLD_FIELD -> 100
+  )
+
+  val updatedVillageDoc: Document = Document(
+    VILLAGE_NAME_FIELD -> StringBuilder.newBuilder.append(username).append("'s village").toString(),
+    USERNAME -> username,
+    FOOD_FIELD -> 10,
+    GOLD_FIELD -> 10
+  )
+
+  val newVillageElement: Document = Document(
+    newBuildingPosition -> Document(
+      BUILDING_TYPE_FIELD -> "Farm",
+      BUILDING_LEVEL_FIELD -> 1
+    )
+  )
+
+  before {
+    userCollection = DatabaseClient(DbConfig.usersColl)
+    villageCollection = DatabaseClient(DbConfig.villageColl)
+  }
+
+  test("testing add new user with village to database and then clean") {
+    for {
+      res <- userCollection.delete(userDoc)
+      res1 <- userCollection.insert(userDoc)
+      res2 <- villageCollection.insert(villageDoc)
+      res3 <- userCollection.delete(userDoc)
+      res4 <- villageCollection.delete(userDocID)
+    } yield assert(
+      res1.equals("Insertion Completed") &
+      res2.equals("Insertion Completed") &
+      res3 > 0 &
+      res4 > 0
+    )
+  }
+
+  test("testing update existent village and then clean") {
+    for {
+      res <- villageCollection.delete(villageDoc)
+      res1 <- villageCollection.insert(villageDoc)
+      res2 <- villageCollection.setUpdate(villageDoc, updatedVillageDoc)
+      res3 <- villageCollection.find(userDocID)
+      res4 <- villageCollection.delete(userDocID)
+    } yield assert(
+      res3.toJson().contains("10")
+    )
+  }
+
+  test("testing add new element to existent village") {
+    for {
+      res <- villageCollection.delete(userDocID)
+      res1 <- villageCollection.insert(villageDoc)
+      res2 <- villageCollection.update(userDocID, newVillageElement)
+      res3 <- villageCollection.find(userDocID)
+      res4 <- villageCollection.delete(userDocID)
+    } yield assert(
+      res3.toJson().contains(newBuildingPosition)
+    )
+  }
 }
 

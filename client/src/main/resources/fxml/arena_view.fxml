@@ -33,11 +33,13 @@
       <center>
         <Pane prefHeight="446.0" prefWidth="757.0" BorderPane.alignment="CENTER">
           <children>
-            <ImageView fx:id="exitArenaButton" fitHeight="410.4375" fitWidth="700.4800239651942" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="arenaImageView" fitHeight="410.4375" fitWidth="700.4800239651942" pickOnBounds="true" preserveRatio="true">
               <image>
-                <Image url="@../image/arena_background.png" />
+                <Image url="@../image/arena_battle_background.jpg" />
               </image>
             </ImageView>
+                  <ImageView fx:id="yourCreature" fitHeight="150.0" fitWidth="200.0" layoutX="84.0" layoutY="141.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="enemyCreature" fitHeight="150.0" fitWidth="200.0" layoutX="413.0" layoutY="141.0" pickOnBounds="true" preserveRatio="true" />
           </children>
         </Pane>
       </center>
@@ -63,11 +65,6 @@
                     <Font name="System Bold Italic" size="40.0" />
                   </font>
                 </Label>
-                <Button fx:id="pauseButton" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#pauseOption" prefHeight="47.0" prefWidth="76.0" text="Pause" HBox.hgrow="ALWAYS">
-                  <HBox.margin>
-                    <Insets />
-                  </HBox.margin>
-                </Button>
                 <Button fx:id="exitButton" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#exitOption" prefHeight="47.0" prefWidth="76.0" text="Exit" HBox.hgrow="ALWAYS">
                   <HBox.margin>
                     <Insets right="20.0" />

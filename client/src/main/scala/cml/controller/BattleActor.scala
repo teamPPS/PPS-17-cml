@@ -1,12 +1,14 @@
 package cml.controller
 
-import cml.controller.messages.BattleRequest._
-import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, RequireEnterInArenaSuccess}
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
-import cml.controller.messages.ArenaRequest.{ActorRefRequest, AttackRequest, RequireTurnRequest, StopRequest}
-import cml.utils.ViewConfig.ArenaWindow
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
+import cml.controller.actor.utils.ActorUtils.RemoteActorInfo
+import cml.controller.messages.ArenaRequest._
 import cml.controller.messages.ArenaResponse.{AttackSuccess, RequireTurnSuccess}
+import cml.controller.messages.BattleRequest._
+import cml.controller.messages.BattleResponse.{ExistChallengerSuccess, NotifierExitSuccess, RequireEnterInArenaSuccess}
+import cml.model.base.Creature
+import cml.utils.ViewConfig.{ArenaWindow, VillageWindow}
 import cml.view.ViewSwitch
 import javafx.application.Platform
 import javafx.scene.Scene
@@ -21,53 +23,60 @@ import scala.collection.mutable.ListBuffer
 
 class BattleActor extends Actor with ActorLogging {
 
-  var remoteActor: ActorSelection = _
-  var challenger: ActorRef = _
-  var sceneContext: Scene = _
-  var turn: Int = _
-  var arenaActor: ActorRef = _
+  private var remoteActor: ActorSelection = _
+  private var challenger: ActorRef = _
+  private var sceneContext: Scene = _
+  private var turn: Int = _
+  private var arenaActor: ActorRef = _
+  private var challengerCreature: Option[Creature] = _
+  private val selectedCreature: Option[Creature] = Creature.selectedCreature
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
-    remoteActor = context.actorSelection("akka.tcp://CML@127.0.0.1:5150/user/RemoteActor")
+    remoteActor = context.actorSelection(RemoteActorInfo.Path)
     arenaActor = system.actorOf(Props(new ArenaActor()), "ArenaActor")
     remoteActor ! RequireEnterInArena()
   }
 
   override def postStop(): Unit = {
-    //TODO: remember actorSystem.shutdown? is correct even so (also sin stop clause )
     log.info("Actor is stopped")
   }
 
   override def receive: Receive = {
     case SceneInfo(scene) => sceneContext = scene
-    case RequireEnterInArenaSuccess() =>
-      remoteActor ! ExistChallenger()
+    case RequireEnterInArenaSuccess() => remoteActor ! ExistChallenger()
     case ExistChallengerSuccess(user) =>
       remoteActor ! ExitRequest()
-      log.info("User in list - " + user)
-      myChallenge(user)
+      challenger_(user)
+    case CreatureRequire(creature) =>
+      challengerCreature = creature
       self ! SwitchInArenaRequest()
     case SwitchInArenaRequest() =>
-      arenaActor ! ActorRefRequest(self)
+      arenaActor ! ActorRefRequest(self, challenger, challengerCreature, turn)
       Platform.runLater(() => switchInArena())
-    case AttackRequest(attackPower) => remoteActor ! RequireTurnRequest(attackPower, turn)
-    case RequireTurnSuccess(attackPower, turnValue) =>
+    case AttackRequest(attackPower, protection) => remoteActor ! RequireTurnRequest(attackPower, protection, turn)
+    case RequireTurnSuccess(attackPower, protection, turnValue) =>
       log.info("Turn" + turnValue)
-      if(turnValue equals turn) challenger ! AttackSuccess(attackPower)
-    case AttackSuccess(attackPower) =>
-      log.info("Attack " + attackPower)
-      arenaActor ! AttackSuccess(attackPower)
-    case StopRequest() => context.stop(self)
+      challenger ! AttackSuccess(attackPower, protection, turnValue)
+    case AttackSuccess(attackPower, isProtected, turnValue) =>
+      log.info("Attack " + attackPower + " is protected " + isProtected)
+      arenaActor ! AttackSuccess(attackPower, isProtected, turnValue)
+    case StopRequest(scene) =>
+      arenaActor ! NotifierExit(self)
+      Platform.runLater(() => ViewSwitch.activate(VillageWindow.path, scene))
+      context.stop(self)
+    case NotifierExitSuccess() => arenaActor ! NotifierExitSuccess()
+    case _ =>
   }
 
-  private def myChallenge(user: ListBuffer[ActorRef]): Unit = {
-    user.foreach(actor => if(!actor.equals(self)) challenger = actor)
+  private def challenger_(user: ListBuffer[ActorRef]): Unit = {
+    user.foreach{ actor => if(!actor.equals(self)) challenger = actor}
+    challenger ! CreatureRequire(selectedCreature)
     log.info("Im user: " + self + " and my challenger is - " + challenger)
     _turn(user)
   }
 
-  private def _turn(user: ListBuffer[ActorRef]): Unit = {
+  private def _turn(user:  ListBuffer[ActorRef]): Unit = {
     if(user.head equals self) turn = 0
     else turn = 1
     log.info("My turn is: " + turn)

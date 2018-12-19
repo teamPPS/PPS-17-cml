@@ -7,13 +7,10 @@ import java.util.Base64
   *
   * @author Chiara Volonnino
   */
-
-
 trait TokenAuthentication {
 
   /**
     * Create a header for http request
-    *
     * @param username is username of user
     * @param password is a password for authentication
     * @return header for a request or None
@@ -22,7 +19,6 @@ trait TokenAuthentication {
 
   /**
     * Check username and password for a request
-    *
     * @param header is header for http request
     * @return username and password or none
     */
@@ -30,14 +26,12 @@ trait TokenAuthentication {
 
   /**
     * Create a JWT header for http request
-    *
     * @param token is token to read
     * @return header or None
     */
   def authenticationToken(token: String):Option[String]
   /**
     * Check handler and return token for handler request
-    *
     * @param header for a request
     * @return token corresponds to the handler request
     */

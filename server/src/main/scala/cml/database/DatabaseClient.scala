@@ -12,7 +12,6 @@ import scala.concurrent.{ExecutionContext, Future}
   *
   * @author Filippo Portolani, Monica Gondolini
   */
-
 trait DatabaseClient{
 
   /**

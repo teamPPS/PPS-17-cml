@@ -7,7 +7,7 @@ import cml.utils.ModelConfig.Creature._
 import cml.utils.ModelConfig.Elements.FIRE
 
 /**
-  * Some tests for multiple creatures
+  * This test class matches if all creature class are corrects
   * @author Filippo Portolani
   */
 
@@ -21,11 +21,9 @@ class CreatureTest extends FunSuite {
   val y = 10
 
   val dragon : FireCreature = FireCreature(DRAGON_NAME, INITIAL_LEVEL)
-
-  val dragon2 : FireCreature = FireCreature("Saphira", dragonLevel)
+  val dragon2 : FireCreature = FireCreature(DRAGON2_NAME, dragonLevel)
   val golem1 : EarthCreature = EarthCreature(GOLEM_NAME, INITIAL_LEVEL)
-  val golem2 : EarthCreature = EarthCreature("Alduin", 10)
-
+  val golem2 : EarthCreature = EarthCreature(GOLEM2_NAME, 10)
   val kraken: WaterCreature = WaterCreature(WATERDEMON_NAME, INITIAL_LEVEL)
   val griffin: AirCreature = AirCreature(GRIFFIN_NAME, griffinLevel)
 
@@ -69,6 +67,11 @@ class CreatureTest extends FunSuite {
     val habitat = Habitat(FIRE, pos, B_INIT_LEVEL)
     habitat.addCreature(dragon)
     assert(habitat.creatureList.head.equals(dragon))
+  }
+
+  test("Set selected creature"){
+    Creature.setSelectedCreature(Option(dragon))
+    assert(Creature.selectedCreature.nonEmpty)
   }
 
 }

@@ -2,20 +2,18 @@ package cml.controller.fx
 
 import java.io.File
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import cml.controller.BattleActor
 import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
+import cml.controller.messages.BattleRequest.SceneInfo
 import cml.model.base.{Creature, VillageMap}
 import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
 import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
 import cml.utils.ViewConfig._
-import cml.view.ViewSwitch
+import cml.view.{DialogPaneUtils, ViewSwitch}
 import com.typesafe.config.ConfigFactory
 import javafx.collections.{FXCollections, ObservableList}
-import akka.actor.{ActorRef, ActorSystem, Props}
-import cml.controller.messages.BattleRequest.SceneInfo
 import javafx.fxml.FXML
-import javafx.scene.control.Alert.AlertType
 import javafx.scene.control.{ListView, _}
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Pane
@@ -53,8 +51,8 @@ class BattleViewController {
   def initialize(): Unit = {
 
     for (s <- village.villageStructure) {
-      if (s.creatures != null && s.creatures.nonEmpty) {
-        creatures = s.creatures
+      if (s.creatures.nonEmpty && s.creatures.get.nonEmpty) {
+        creatures = s.creatures.get
         obsCreatures add creatures.head
       }
     }
@@ -91,13 +89,10 @@ class BattleViewController {
 
   @FXML
   def startGame(): Unit = {
-    val alert = new Alert(AlertType.CONFIRMATION) {
-      setTitle("Confirmation Dialog")
-      setHeaderText(selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level)
-      setContentText("Are you sure want to confirm?")
-    }
-
-    val result = alert.showAndWait()
+    val headerText = selectedCreature.get.name + ", " + selectedCreature.get.creatureType +"\nLevel: " + selectedCreature.get.level
+    val alert = DialogPaneUtils()
+    alert.createConfirmationPane(headerText)
+    val result = alert.showPane()
     if (result.isPresent && result.get() == ButtonType.OK) {
       createBattleActor()
       battleActor ! SceneInfo(exitButton.getScene)
@@ -109,7 +104,6 @@ class BattleViewController {
     val config = ConfigFactory.parseFile(new File(configFile))
     val system = ActorSystem("LocalContext", config)
     battleActor = system.actorOf(Props[BattleActor], name=Name)
-    println("------ BattleActor is ready")
   }
 
   private def displayText(name: String, creatureType: String, level: Int, attackValue: Int): String = {

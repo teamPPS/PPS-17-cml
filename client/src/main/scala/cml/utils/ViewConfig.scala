@@ -1,5 +1,9 @@
 package cml.utils
 
+/**
+  * Utils for view configuration
+  */
+
 object ViewConfig {
 
   private val SMALL_WIDTH: Int = 600

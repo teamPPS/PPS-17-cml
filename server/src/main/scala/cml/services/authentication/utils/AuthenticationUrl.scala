@@ -5,7 +5,6 @@ package cml.services.authentication.utils
   *
   * @author Chiara Volonnino
   */
-
 object AuthenticationUrl {
   
     private val GeneralPath = "/api/authentication"
@@ -13,6 +12,5 @@ object AuthenticationUrl {
     val RegisterApi = s"$GeneralPath/register"
     val LoginApi = s"$GeneralPath/login"
     val LogoutApi = s"$GeneralPath/logout"
-    val DeleteApi = s"$GeneralPath/delete" // DA CANCELLARE
     val ValidationTokenApi = s"$GeneralPath/validationToken"
 }

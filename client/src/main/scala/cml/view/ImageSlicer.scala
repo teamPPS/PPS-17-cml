@@ -3,6 +3,14 @@ package cml.view
 import javafx.scene.image.Image
 import javafx.scene.canvas.Canvas
 
+/**
+  * This class utils for managements slicer image
+  * @author ecavina
+  *
+  * @param img Image in input
+  * @param xAmount x coordinate
+  * @param yAmount y coordinate
+  */
 class ImageSlicer(val img: Image, val xAmount: Int, val yAmount: Int) {
 
   val sliceWidth: Double = img.getWidth / xAmount

@@ -59,6 +59,9 @@ trait Creature {
   def creatureType: String
 }
 
+/**
+  * Object define general creature 
+  */
 object Creature{
   var selectedCreature: Option[Creature] = None
   def setSelectedCreature(creature: Option[Creature]): Unit = selectedCreature = creature

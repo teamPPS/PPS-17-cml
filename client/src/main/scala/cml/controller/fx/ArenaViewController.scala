@@ -1,18 +1,17 @@
 package cml.controller.fx
 
 import akka.actor.ActorSelection
-import cml.controller.ArenaActor
+import cml.controller.actor.utils.ActorUtils.ActorPath.ArenaActorPath
 import cml.controller.actor.utils.ActorUtils.ActorSystemInfo.system
-import cml.controller.messages.ArenaRequest.{AttackRequest, ControllerRefRequest, StopRequest}
+import cml.controller.messages.ArenaRequest._
 import cml.model.base.Creature
-import cml.utils.ViewConfig._
+import cml.utils.ModelConfig.Creature.{DRAGON, GOLEM, GRIFFIN, WATERDEMON}
+import cml.utils.ModelConfig.CreatureImage.{dragonImage, golemImage, griffinImage, waterdemonImage}
 import cml.view.BattleRule.BattleRulesImpl
-import cml.view.ViewSwitch
+import cml.view.DialogPaneUtils
 import javafx.fxml.FXML
-import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, Button, ButtonType, ProgressBar}
-
-
+import javafx.scene.control.{Button, ButtonType, ProgressBar}
+import javafx.scene.image.ImageView
 
 /**
   * Controller class for graphic arena view
@@ -26,16 +25,23 @@ class ArenaViewController {
   @FXML var userLifeBar: ProgressBar = _
   @FXML var challengerLifeBar: ProgressBar = _
   @FXML var attackButton: Button = _
+  @FXML var yourCreature: ImageView = _
+  @FXML var enemyCreature: ImageView = _
+
 
   private val battleGame: BattleRulesImpl = BattleRulesImpl()
   private val selectedCreature: Option[Creature] = Creature.selectedCreature
   private var userPowerAttack: Int = _
   private var _creatureLife: Int = _
   private var _challengerLife: Int = _
+  private var _isProtected: Boolean = _
+  private var _challengerIsProtected: Boolean = _
+  private var _turn: Int = _
+  private var currentTurn: Int = _
 
-  private val arenaActor: ActorSelection = system actorSelection "/user/ArenaActor"
+  private val arenaActor: ActorSelection = system actorSelection ArenaActorPath
 
-  def initialize(): Unit ={
+  def initialize(): Unit = {
     arenaActor ! ControllerRefRequest(this)
     battleGame.initialization()
     attackButton.setDisable(true)
@@ -43,81 +49,121 @@ class ArenaViewController {
     userLifeBar.setProgress(_creatureLife)
     _challengerLife = battleGame.creatureLife()
     challengerLifeBar.setProgress(_challengerLife)
-  }
-
-  @FXML
-  def pauseOption(): Unit = {
-    val alert = new Alert(AlertType.INFORMATION) {
-      setTitle("Information Dialog")
-      setHeaderText("PAUSE")
-      setContentText("Resume?")
-    }
-    alert.showAndWait()
+    myCreature(selectedCreature.get)
+    _isProtected = false
   }
 
   @FXML
   def exitOption(): Unit = {
-    val alert = new Alert(AlertType.CONFIRMATION) {
-      setTitle("Confirmation Dialog")
-      setHeaderText("Exit")
-      setContentText("Are you sure to exit?")
-    }
-
-    val result = alert.showAndWait()
+    val headerText = "Exit"
+    val contentTest = ""
+    val alert = DialogPaneUtils()
+    alert.crateInformationPane(headerText, contentTest)
+    val result = alert.showPane()
     if (result.isPresent && result.get() == ButtonType.OK) {
       Creature.setSelectedCreature(None)
-      arenaActor ! StopRequest()
-      ViewSwitch.activate(VillageWindow.path, exitButton.getScene)
+      closeOption()
     }
   }
 
   @FXML
   def attackOption(): Unit = {
-    battleGame.attack()
-    if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
-    userPowerAttack = game()
-    println(" attack -- > " + userPowerAttack)
-    challengerLifeBar_()
-    arenaActor ! AttackRequest(userPowerAttack)
+    winOption()
+    if(isTurn) {
+      battleGame.attack()
+      if(battleGame.attackPoint equals 0)  attackButton.setDisable(true)
+      userPowerAttack = game()
+      arenaActor ! AttackRequest(userPowerAttack, _isProtected)
+      challengerLifeBar_()
+    }
   }
 
   @FXML
   def chargeOption(): Unit = {
-    attackButton.setDisable(false)
-    battleGame.charge()
-    userPowerAttack = game()
-    println("charge attack -- > " + userPowerAttack)
-    arenaActor ! AttackRequest(userPowerAttack)
-    battleGame.isCharge_()
+    winOption()
+    if(isTurn) {
+      attackButton.setDisable(false)
+      battleGame.charge()
+      userPowerAttack = game()
+      arenaActor ! AttackRequest(userPowerAttack, _isProtected)
+      challengerLifeBar_()
+    }
   }
 
   @FXML
   def protectionOption(): Unit = {
-    battleGame.protection()
-    userPowerAttack = game()
-    println("protection attack -- > " + userPowerAttack)
-    arenaActor ! AttackRequest(userPowerAttack)
-    battleGame.isProtect_()
+    winOption()
+    if(isTurn) {
+      battleGame.protection()
+      userPowerAttack = game()
+      _isProtected = true
+      arenaActor ! AttackRequest(userPowerAttack, _isProtected)
+      challengerLifeBar_()
+    }
   }
 
-  def userLifeBar_(challengerPowerAttack: Int): Unit = {
-    println("_challengerPowerAttack ---> " + challengerPowerAttack)
-    _creatureLife -= challengerPowerAttack
-    println("_challengerPowerAttack ---> " + _creatureLife)
+  def userLifeBar_(challengerPowerAttack: Int, challengerP: Boolean, turnValue: Int): Unit = {
+    _challengerIsProtected = challengerP
+    if(_isProtected)  {
+      _creatureLife -= 0
+      creatureState()
+    }
+    else _creatureLife -= challengerPowerAttack
     val progress: Double = _creatureLife.toDouble / battleGame.creatureLife().toDouble
-    println("progress value --> " + progress)
     userLifeBar.setProgress(progress)
+    currentTurn = turnValue
+    winOption()
   }
 
   def challengerLifeBar_(): Unit = {
+    if(_challengerIsProtected) userPowerAttack = 0
     _challengerLife -= userPowerAttack
-    println("CHALLENGER LIFE BAR: " + _challengerLife)
     val progress: Double = _challengerLife.toDouble / battleGame.creatureLife().toDouble
     challengerLifeBar.setProgress(progress)
+  }
+
+  def challengeCreature(selection: Option[Creature]): Unit ={
+    setCreatureImage(selection.get, enemyCreature)
+  }
+
+  def turn_(turnValue: Int): Unit = {
+    _turn = turnValue
+  }
+
+  def closeOption(): Unit = {
+    arenaActor ! StopRequest(exitButton.getScene)
   }
 
   private def creatureAttackValue_(): Int = selectedCreature.get.attackValue
 
   private def game(): Int = battleGame.gameEngine(creatureAttackValue_())
 
+  private def setCreatureImage(selection: Creature, image: ImageView): Unit = {
+    selection.creatureType match {
+      case DRAGON => image setImage dragonImage
+      case GOLEM => image setImage golemImage
+      case GRIFFIN => image setImage griffinImage
+      case WATERDEMON => image setImage waterdemonImage
+    }
+  }
+
+  private def myCreature(selection: Creature): Unit = {
+    setCreatureImage(selection, yourCreature)
+    arenaActor ! ChallengerCreatureRequire()
+  }
+
+  private def isTurn: Boolean = {
+    val tmp = _turn equals currentTurn
+    tmp
+  }
+
+  private def creatureState() : Unit = {
+    _isProtected = false
+  }
+
+  private def winOption(): Unit ={
+    if(_creatureLife <= 0 || _challengerLife <= 0) {
+      arenaActor ! StopRequest(exitButton.getScene)
+    }
+  }
 }

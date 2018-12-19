@@ -1,5 +1,9 @@
 package cml.controller.actor.utils
 
+/**
+  * Object utils to managements view messages
+  */
+
 object ViewMessage {
 
   object ViewAuthenticationMessage {

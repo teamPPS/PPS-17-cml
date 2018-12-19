@@ -2,6 +2,10 @@ package cml.controller.actor.utils
 
 import akka.actor.ActorSystem
 
+/**
+  * This object implements utils val for managements actors
+  */
+
 object ActorUtils {
 
   object ActorSystemInfo {
@@ -12,13 +16,21 @@ object ActorUtils {
     val Configuration = "remote_actor.conf"
     val Context = "CML"
     val Name = "RemoteActor"
-    val Path = "akka.tcp://CML@127.0.0.1:5150/user/RemoteActor"
+    val Path = "akka.tcp://CML@127.0.0.1:5051/user/RemoteActor"
   }
 
   object BattleActorInfo{
     val Configuration = "actor/local_actor.conf"
     val Context = "LocalContext"
     val Name = "BattleActor"
+  }
+
+
+  object ActorPath {
+    val AuthenticationActorPath = "/user/AuthenticationActor"
+    val VillageActorPath = "/user/VillageActor"
+    val BattleActorPath = "/user/BattleActor"
+    val ArenaActorPath = "user/ArenaActor"
   }
 
 }

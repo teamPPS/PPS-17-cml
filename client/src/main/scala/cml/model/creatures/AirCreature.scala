@@ -7,8 +7,8 @@ import play.api.libs.json.Json
 
 /**
   * This class models a griffin
-  * @param creatureName name of the griffin
-  * @param creatureLevel set the griffin level
+  * @param creature_name name of the griffin
+  * @param creature_level set the griffin level
   * @author Filippo Portolani
   */
 

@@ -1,6 +1,7 @@
 package cml.controller.messages
 
 import akka.actor.ActorRef
+
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -15,16 +16,19 @@ object BattleResponse {
 
 
   /**
-    * Success response to add user into a list for require enter in battle arena
+    * Success response to add user into a list to require enter in battle arena
     */
   case class RequireEnterInArenaSuccess() extends BattleResponse
 
+  /**
+    *  Failure response to wait for a challenger()
+    */
   case class RequireChallengerFailure() extends BattleResponse
 
   /**
     * Success response for require challenger
     *
-    * @param user user list for battle
+    * @param user user list
     */
   case class ExistChallengerSuccess(user: ListBuffer[ActorRef]) extends BattleResponse
 
@@ -33,5 +37,9 @@ object BattleResponse {
     */
   case class ExitSuccess() extends BattleResponse
 
+  /**
+    * Success response for notified the challenger that you came out of the battle
+    */
+  case class NotifierExitSuccess() extends BattleResponse
 
 }

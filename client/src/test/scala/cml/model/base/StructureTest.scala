@@ -5,6 +5,7 @@ import cml.utils.ModelConfig.Elements.AIR
 import org.scalatest.FunSuite
 
 /**
+  * This test class matches if Structure class is correct
   * @author Monica Gondolini
   */
 class StructureTest extends FunSuite{

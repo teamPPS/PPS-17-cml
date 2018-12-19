@@ -9,7 +9,6 @@ import scala.util.{Failure, Success}
   *
   * @author Chiara Volonnino
   */
-
 object JWTAuthentication {
 
   val Username: String = "username"

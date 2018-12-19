@@ -44,21 +44,20 @@ trait BattleRule {
 
 case class BattleRulesImpl() extends BattleRule {
 
-  private var _creatureLife: Int = _
+  private val _creatureLife: Int = 50
   private var _attackPoint: Int = _
   private var isProtect: Boolean = _
   private var isAttack: Boolean = _
   private var isCharge: Boolean = _
 
   def initialization(): Unit = {
-    _creatureLife = 50
     _attackPoint = 0
     isProtect = false
     isAttack = false
     isCharge = false
   }
 
-  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint(); println("AttackPoint --> " + attackPoint)
+  override def attack(): Unit = if(isPossibleAttack) decrementAttackPoint()
 
   override def charge(): Unit = {
     incrementAttackPoint()
@@ -69,15 +68,20 @@ case class BattleRulesImpl() extends BattleRule {
 
   override def gameEngine(powerAttackValue: Int): Int = {
     var powerAttack = 0
-    if(isProtect) powerAttack = 0
-    else if(isCharge) powerAttack = 0
+    if(isProtect) {
+      powerAttack = 0
+      isProtect_()
+    }
+    else if(isCharge) {
+      powerAttack = 0
+      isCharge_()
+    }
     else powerAttack = powerAttackValue
     powerAttack
   }
 
   private def decrementAttackPoint(): Unit = {
     if(attackPoint > 0) _attackPoint -= 1
-    println("AttackPoint --> " + attackPoint)
   }
 
   private def incrementAttackPoint(): Unit = _attackPoint += 1
@@ -88,11 +92,12 @@ case class BattleRulesImpl() extends BattleRule {
     isAttack
   }
 
+  private def isProtect_(): Unit = isProtect = false
+
+  private def isCharge_(): Unit = isCharge = false
 
   def creatureLife(): Int = _creatureLife
   def attackPoint: Int = _attackPoint
-  def isProtect_(): Unit = isProtect = false
   def isProtection: Boolean = isProtect
-  def isCharge_(): Unit = isCharge = false
 
 }

@@ -2,6 +2,10 @@ package cml.utils
 
 import javafx.scene.image.Image
 
+/**
+  * Utils for model configuration
+  */
+
 object ModelConfig {
 
   object Creature {
@@ -10,7 +14,9 @@ object ModelConfig {
     val GRIFFIN: String = "Griffin"
     val GOLEM: String = "Golem"
     val DRAGON_NAME: String = "Smaug"
+    val DRAGON2_NAME: String = "Saphira"
     val GOLEM_NAME: String = "Astaroth"
+    val GOLEM2_NAME: String = "Alduin"
     val WATERDEMON_NAME: String = "Blagrox"
     val GRIFFIN_NAME: String = "Cerulea"
     val INITIAL_LEVEL: Int = 1
@@ -20,15 +26,17 @@ object ModelConfig {
 
   object Building {
     val B_INIT_LEVEL: Int = 1
+    val BUILDING: String = "BUILDING"
   }
 
   object Habitat{
     val H_INIT_LEVEL: Int = 1
+    val HABITAT: String = "HABITAT"
   }
 
   object Resource {
     val INC_BY_10: Int = 10
-    val INIT_VALUE: Int = 10
+    val INIT_VALUE: Int = 0
     val FOOD: String = "Food"
     val MONEY: String = "Money"
   }
@@ -44,6 +52,8 @@ object ModelConfig {
     val FARM_CLASS: String = "cml.model.base.Farm"
     val CAVE_CLASS: String = "cml.model.base.Cave"
     val HABITAT_CLASS: String = "cml.model.base.Habitat$Habitat"
+    val FOOD_CLASS: String = "cml.model.base.Food"
+    val MONEY_CLASS: String = "cml.model.base.Money"
   }
 
   object StructureType{

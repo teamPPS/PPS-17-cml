@@ -10,6 +10,10 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.{Parent, Scene}
 import javafx.stage.Stage
 
+/**
+  * Class prepare game execution
+  * @author ecavina
+  */
 class ViewMaster extends Application{
 
   override def start(primaryStage: Stage): Unit = {
