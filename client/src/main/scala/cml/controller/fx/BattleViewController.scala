@@ -1,7 +1,5 @@
 package cml.controller.fx
 
-import java.io.File
-
 import akka.actor.{ActorRef, ActorSystem, Props}
 import cml.controller.BattleActor
 import cml.controller.actor.utils.ActorUtils.BattleActorInfo._
@@ -100,8 +98,7 @@ class BattleViewController {
   }
 
   private def createBattleActor(): Unit ={
-    val configFile = getClass.getClassLoader.getResource(Configuration).getFile
-    val config = ConfigFactory.parseFile(new File(configFile))
+    val config = ConfigFactory.load(Configuration)
     val system = ActorSystem("LocalContext", config)
     battleActor = system.actorOf(Props[BattleActor], name=Name)
   }
@@ -111,7 +108,6 @@ class BattleViewController {
       "\nType: " + creatureType +"\n" +
       "Creature level: " + level +
       "\nAttack Value: " + attackValue
-
     text
   }
 
