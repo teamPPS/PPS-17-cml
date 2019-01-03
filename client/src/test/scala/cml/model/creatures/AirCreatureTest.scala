@@ -18,16 +18,16 @@ class AirCreatureTest extends FunSuite {
   val griffin: AirCreature = AirCreature(GRIFFIN_NAME, griffinLevel)
 
   test("Level manipulation test"){
-    //level up test
+
     griffin levelUp()
     assert(griffin.currentLevel > INITIAL_LEVEL)
 
-    //Setting level test
+
     griffin.level
     assert(griffin.currentLevel == griffinLevel)
   }
 
-  test("Set attack test"){ //griffin level is incremented twice so its attack power is now 15
+  test("Set attack test"){
     griffin levelUp()
     griffin levelUp()
     assert(griffin.attackValue == 15)
@@ -38,10 +38,9 @@ class AirCreatureTest extends FunSuite {
   }
 
   test("Name test"){
-    //name is correct
+
     assert(griffin.name.equals(GRIFFIN_NAME))
 
-    //name is wrong
     assert(griffin.name != GOLEM_NAME)
   }
 

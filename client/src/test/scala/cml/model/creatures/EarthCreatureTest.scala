@@ -18,11 +18,9 @@ class EarthCreatureTest extends FunSuite {
   val golem: EarthCreature = EarthCreature(GOLEM_NAME, golemLevel)
 
   test("Level manipulation test"){
-    //level up test
     golem levelUp()
     assert(golem.currentLevel > INITIAL_LEVEL)
 
-    //Setting level test
     golem.level
     assert(golem.currentLevel == golemLevel)
   }
@@ -37,10 +35,8 @@ class EarthCreatureTest extends FunSuite {
   }
 
   test("Name test"){
-    //name is correct
     assert(golem.name.equals(GOLEM_NAME))
-
-    //name is wrong
+    
     assert(golem.name != WATERDEMON_NAME)
   }
 

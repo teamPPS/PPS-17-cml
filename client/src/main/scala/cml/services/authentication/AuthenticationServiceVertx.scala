@@ -77,7 +77,7 @@ object AuthenticationServiceVertx{
       client.post(ServicePort, ServiceHostForRequest, RegisterApi)
         .putHeader(HttpHeaderNames.AUTHORIZATION.toString(), TokenAuthentication.base64Authentication(username, password).get)
         .sendFuture
-        .map(r => r.statusCode match { // technical debt?
+        .map(r => r.statusCode match {
           case `successfulRegisterResponse` => r.bodyAsString().getOrElse("")
           case _ => "Not a valid request"
         })

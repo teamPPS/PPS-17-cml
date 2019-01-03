@@ -19,9 +19,9 @@ object ServerMain extends App {
 
   vertx.deployVerticleFuture(AuthenticationVerticle()).onComplete {
     case Success(_) =>
-      println(s"Verticle authentication starting") // <3>
+      println(s"Verticle authentication starting")
       vertx.deployVerticleFuture(VillageVerticle()).onComplete{
-        case Success(_) => println(s"Verticle village starting") // <3>
+        case Success(_) => println(s"Verticle village starting")
         case Failure(exception) => exception.printStackTrace()
       }
     case Failure(exception) => exception.printStackTrace()

@@ -13,6 +13,7 @@ import play.api.libs.json.JsValue
 
 /**
   * This object utils for implements handler logic
+  * @author ecavina
   */
 
 object HandlerLogic {
